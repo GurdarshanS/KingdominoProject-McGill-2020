@@ -1,13 +1,13 @@
 # kingdomino-base-project
 
-                                                                KINGDOMINO
+                                                          KINGDOMINO
 Introduction
 
-        In an elaborate fusion between the classic game of Domino and strategic territory building, Kingdomino is an easy to learn tile-laying game that allows players to explore various landscapes with a virtually limitless number of playing styles. In a game of expand and conquer, you are Lord who must grow his kingdom by strategically choosing between wheat fields, forests, lakes, mountains, swamps and plains.
+In an elaborate fusion between the classic game of Domino and strategic territory building, Kingdomino is an easy to learn tile-laying game that allows players to explore various landscapes with a virtually limitless number of playing styles. In a game of expand and conquer, you are Lord who must grow his kingdom by strategically choosing between wheat fields, forests, lakes, mountains, swamps and plains.
 
 Summary
 
-        In short, the goal of the game is for you, one of the Lords, to build your kingdom inside a 5x5 playing field and attempt to earn the highest possible number of crowns in doing so.
+In short, the goal of the game is for you, one of the Lords, to build your kingdom inside a 5x5 playing field and attempt to earn the highest possible number of crowns in doing so.
 
 Setup:
 
@@ -40,7 +40,7 @@ For the first draft of every game, the playing order is randomly selected. Each 
 
 The Game:
 
-        During the actual gameplay, the playing order is determined by the selection of the drafted dominoes’ order: the player who selected the top domino will move first, the player who selected the second domino from the top moves second, etc.
+During the actual gameplay, the playing order is determined by the selection of the drafted dominoes’ order: the player who selected the top domino will move first, the player who selected the second domino from the top moves second, etc.
 
 The following actions will be done for every turn during the game:
 1.	The player will add their selected domino to the kingdom territory, always in accordance to the Connection Rules mentioned below.
@@ -52,7 +52,7 @@ In a 2-player game, steps 1 & 2 are repeated twice, once for every king.
 
 Connection Rules:
 
-        The player builds their kingdom in 5x5 grid, with the initial starting point being the castle in the middle of the kingdom. Each domino is composed of 2 squares.
+The player builds their kingdom in 5x5 grid, with the initial starting point being the castle in the middle of the kingdom. Each domino is composed of 2 squares.
 
 To place a domino, the player must follow these guidelines:
 -	Connect their domino to their starting piece, the castle. This piece is considered a wild card, meaning that literally any landscape can be connected to it.
@@ -64,7 +64,8 @@ The game requires a certain level of strategic planning. All the dominoes should
 
 End of The Game:
 
-        Once the players reach the last draft of cards, they will only perform action 1 from the list in The Game. By this point, the players will have completed their kingdom, this depending on the placement strategy of course. 
+Once the players reach the last draft of cards, they will only perform action 1 from the list in The Game. By this point, the players will have completed their kingdom, this depending on the placement strategy of course. 
+
 To calculate the total points for their kingdom, the player must follow these guidelines:
 -	Each kingdom is composed of different groups of LANDSCAPES (wheat fields, lakes, mountains, etc.) that are connected together. The size of each LANDSCAPE is dependent on the number of connected pieces that form this group.
 -	LANDSCAPES earn points only if they are connected to a piece of that same group who possesses a crown or multiple crowns on one of the domino’s tiles.
