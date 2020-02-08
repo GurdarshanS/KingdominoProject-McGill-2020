@@ -9,7 +9,7 @@ Summary
 
 In short, the goal of the game is for you, one of the Lords, to build your kingdom inside a 5x5 playing field and attempt to earn the highest possible number of crowns in doing so.
 
-Setup:
+Setup
 
 There is a total of 48 dominoes available. Each and every single domino is associated to a unique number from 1 to 48.
 The setup is simple but varies in accordance with the number of players. The main differences:
@@ -41,7 +41,7 @@ The dominoes undergo thorough shuffling to allow for a completely random draft s
 
 For the first draft of every game, the playing order is randomly selected. Each player will get a turn to place his king on a desired drafted and unchosen domino depending on the playing order. After the pieces have all been selected, a new draft will come out right beside the previous one.
 
-The Game:
+The Game
 
 During the actual gameplay, the playing order is determined by the selection of the drafted dominoes’ order: the player who selected the top domino will move first, the player who selected the second domino from the top moves second, etc.
 
@@ -54,7 +54,7 @@ The following actions will be done for every turn during the game:
 
 In a 2-player game, steps 1 & 2 are repeated twice, once for every king.
 
-Connection Rules:
+Connection Rules
 
 The player builds their kingdom in 5x5 grid, with the initial starting point being the castle in the middle of the kingdom. Each domino is composed of 2 squares.
 
@@ -67,7 +67,7 @@ If a domino can’t be added to the kingdom by following these rules, it is disc
 
 The game requires a certain level of strategic planning. All the dominoes should fit inside the 5x5 territory. If, due to a poor placement strategy, one or more of the dominoes cannot be placed inside this grid, it is also discarded, and the player continues the game as if it was placed normally.
 
-End of The Game:
+End of The Game
 
 Once the players reach the last draft of cards, they will only perform action 1 from the list in The Game. By this point, the players will have completed their kingdom, this depending on the placement strategy of course. 
 
@@ -92,7 +92,7 @@ There are also other ways of earning points, but these must be agreed upon befor
 
 Dynasty: The players will play the game 3 times and keep score of their total crowns after each game. At the end of the 3 games, the player with the highest number of total crowns wins!
 
-Team Background:
+Team Background
 
 Jay Han: U4 Mechanical, with a Software Eng. minor. Experience in Python and Machine Learning from leading the McGill Robotics Computer Vision subteam. Hoping to work on validating domino placement in the project. 
 
