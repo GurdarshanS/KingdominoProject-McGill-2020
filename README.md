@@ -13,18 +13,21 @@ Setup:
 
 There is a total of 48 dominoes available. Each and every single domino is associated to a unique number from 1 to 48.
 The setup is simple but varies in accordance with the number of players. The main differences:
+
 For 2-player games 
 -	Each player will have two kings of the same color. 
 -	There will only be 24 randomly selected dominoes each game.
 -	The number of drafted dominoes per round is 4.
 -	Each player will be placing his kings on two drafted dominoes per round.
 -	There will be 6 rounds of drafts.
+
 For 3-player games
 -	Each player will have a single king of their desired color.
 -	There will only be 36 randomly selected dominoes each game.
 -	The number of drafted dominoes per round is 3.
 -	Each player will be placing their king on a single drafted domino per round.
 -	There will be 12 rounds of drafts.
+
 For 4-player games
 -	Each player will have a single king of their desired color.
 -	All 48 available dominoes will be used.
@@ -43,6 +46,7 @@ The Game:
 During the actual gameplay, the playing order is determined by the selection of the drafted dominoes’ order: the player who selected the top domino will move first, the player who selected the second domino from the top moves second, etc.
 
 The following actions will be done for every turn during the game:
+
 1.	The player will add their selected domino to the kingdom territory, always in accordance to the Connection Rules mentioned below.
 2.	The player will then choose a new domino from the newest draft. Their king is placed on said domino to show that it has been selected. 
 3.	After this, it is the next player does step 1 & 2.
@@ -55,6 +59,7 @@ Connection Rules:
 The player builds their kingdom in 5x5 grid, with the initial starting point being the castle in the middle of the kingdom. Each domino is composed of 2 squares.
 
 To place a domino, the player must follow these guidelines:
+
 -	Connect their domino to their starting piece, the castle. This piece is considered a wild card, meaning that literally any landscape can be connected to it.
 -	Connect their domino to another domino that matches at least 1 of the landscapes on the piece. This can be done horizontally or vertically, however the two identical landscapes must always be in contact in order for it to be placed.
 
@@ -67,6 +72,7 @@ End of The Game:
 Once the players reach the last draft of cards, they will only perform action 1 from the list in The Game. By this point, the players will have completed their kingdom, this depending on the placement strategy of course. 
 
 To calculate the total points for their kingdom, the player must follow these guidelines:
+
 -	Each kingdom is composed of different groups of LANDSCAPES (wheat fields, lakes, mountains, etc.) that are connected together. The size of each LANDSCAPE is dependent on the number of connected pieces that form this group.
 -	LANDSCAPES earn points only if they are connected to a piece of that same group who possesses a crown or multiple crowns on one of the domino’s tiles.
 -	The number of crowns in this specific group is multiplied by the size of this LANDSCAPE.
@@ -74,6 +80,7 @@ To calculate the total points for their kingdom, the player must follow these gu
 -	LANDSCAPES with no crowns provide no points, no matter how large the LANDSCAPE.
 -	Each player must add up the points from each different LANDSCAPE. The total score is the final score for the game.
 The player with the highest final score wins the game.
+
 In case of a tie, there exists tie-breaker rules:
 The player with the most extended property will be the winner.
 If it is still a tie, the player with the most crowns in total will be the winner.
@@ -84,9 +91,6 @@ Bonus Rules
 There are also other ways of earning points, but these must be agreed upon before the start of each game by all the players!
 
 Dynasty: The players will play the game 3 times and keep score of their total crowns after each game. At the end of the 3 games, the player with the highest number of total crowns wins!
-Harmony: Players with a perfect territory, meaning kingdoms who did not have to discard any dominoes, earn 5 additional points.
-The Middle Kingdom: Players that have their initial piece, the castle, at the center of their kingdom at the end of the game earn 10 additional points.
-The Mighty Duel: This rule only applies to 2-player games. Use all 48 available dominoes and use a 7x7 grid instead of a 5x5 one. All the other regular game rules are applied as usual.
 
 Team Background:
 
