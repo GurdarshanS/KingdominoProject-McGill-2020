@@ -1,34 +1,34 @@
 # kingdomino-base-project
 
                                                           KINGDOMINO
-Introduction (see iteration 1 wiki report [here](https://github.com/McGill-ECSE223-Winter2020/ecse223-group-project-06/wiki/Iteration-%231))
+**Introduction** (see iteration 1 wiki report [here](https://github.com/McGill-ECSE223-Winter2020/ecse223-group-project-06/wiki/Iteration-%231))
 
 In an elaborate fusion between the classic game of Domino and strategic territory building, Kingdomino is an easy to learn tile-laying game that allows players to explore various landscapes with a virtually limitless number of playing styles. In a game of expand and conquer, you are Lord who must grow his kingdom by strategically choosing between wheat fields, forests, lakes, mountains, swamps and plains.
 
-Summary
+**Summary**
 
 In short, the goal of the game is for you, one of the Lords, to build your kingdom inside a 5x5 playing field and attempt to earn the highest possible number of crowns in doing so.
 
-Setup
+**Setup**
 
 There is a total of 48 dominoes available. Each and every single domino is associated to a unique number from 1 to 48.
 The setup is simple but varies in accordance with the number of players. The main differences:
 
-For 2-player games 
+*For 2-player games*
 -	Each player will have two kings of the same color. 
 -	There will only be 24 randomly selected dominoes each game.
 -	The number of drafted dominoes per round is 4.
 -	Each player will be placing his kings on two drafted dominoes per round.
 -	There will be 6 rounds of drafts.
 
-For 3-player games
+*For 3-player games*
 -	Each player will have a single king of their desired color.
 -	There will only be 36 randomly selected dominoes each game.
 -	The number of drafted dominoes per round is 3.
 -	Each player will be placing their king on a single drafted domino per round.
 -	There will be 12 rounds of drafts.
 
-For 4-player games
+*For 4-player games*
 -	Each player will have a single king of their desired color.
 -	All 48 available dominoes will be used.
 -	The number of drafted dominoes per round is 4.
@@ -41,7 +41,7 @@ The dominoes undergo thorough shuffling to allow for a completely random draft s
 
 For the first draft of every game, the playing order is randomly selected. Each player will get a turn to place his king on a desired drafted and unchosen domino depending on the playing order. After the pieces have all been selected, a new draft will come out right beside the previous one.
 
-The Game
+**The Game**
 
 During the actual gameplay, the playing order is determined by the selection of the drafted dominoes’ order: the player who selected the top domino will move first, the player who selected the second domino from the top moves second, etc.
 
@@ -54,7 +54,7 @@ The following actions will be done for every turn during the game:
 
 In a 2-player game, steps 1 & 2 are repeated twice, once for every king.
 
-Connection Rules
+*Connection Rules*
 
 The player builds their kingdom in 5x5 grid, with the initial starting point being the castle in the middle of the kingdom. Each domino is composed of 2 squares.
 
@@ -67,7 +67,7 @@ If a domino can’t be added to the kingdom by following these rules, it is disc
 
 The game requires a certain level of strategic planning. All the dominoes should fit inside the 5x5 territory. If, due to a poor placement strategy, one or more of the dominoes cannot be placed inside this grid, it is also discarded, and the player continues the game as if it was placed normally.
 
-End of The Game
+**End of The Game**
 
 Once the players reach the last draft of cards, they will only perform action 1 from the list in The Game. By this point, the players will have completed their kingdom, this depending on the placement strategy of course. 
 
@@ -86,13 +86,13 @@ The player with the most extended property will be the winner.
 If it is still a tie, the player with the most crowns in total will be the winner.
 If it is still a tie, both players are winners.
 
-Bonus Rules
+*Bonus Rules*
 
 There are also other ways of earning points, but these must be agreed upon before the start of each game by all the players!
 
 Dynasty: The players will play the game 3 times and keep score of their total crowns after each game. At the end of the 3 games, the player with the highest number of total crowns wins!
 
-Team Background
+T**eam Background**
 
 Jay Han: U4 Mechanical, with a Software Eng. minor. Experience in Python and Machine Learning from leading the McGill Robotics Computer Vision subteam. Hoping to work on validating domino placement in the project. 
 
