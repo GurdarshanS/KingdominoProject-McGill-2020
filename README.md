@@ -1,7 +1,7 @@
 # kingdomino-base-project
 
                                                           KINGDOMINO
-Introduction (see iteration 1 wiki report [here](https://github.com/McGill-ECSE223-Winter2020/ecse223-group-project-06/wiki/Iteration-%231)
+Introduction (see iteration 1 wiki report [here](https://github.com/McGill-ECSE223-Winter2020/ecse223-group-project-06/wiki/Iteration-%231))
 
 In an elaborate fusion between the classic game of Domino and strategic territory building, Kingdomino is an easy to learn tile-laying game that allows players to explore various landscapes with a virtually limitless number of playing styles. In a game of expand and conquer, you are Lord who must grow his kingdom by strategically choosing between wheat fields, forests, lakes, mountains, swamps and plains.
 
