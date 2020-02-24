@@ -34,7 +34,7 @@ public class KDController {
 		
 		Kingdom kingdom=player.getKingdom();
 		List<DominoInKingdom> errorneouslyPlacedDominos=KDQuery.getErroneouslyPrePlacedDomino(player);
-		System.out.println(errorneouslyPlacedDominos.size());
+//		System.out.println(errorneouslyPlacedDominos.size());
 		if (!errorneouslyPlacedDominos.isEmpty()) {
 			validity="invalid";
 		}
@@ -97,17 +97,6 @@ public class KDController {
 		}
 	}
 	
-//	public static void prePlaceDomino(Player player, Domino dominoToPlace, int posx, int posy, String dir) {
-//		dominoToPlace.setStatus(DominoStatus.ErroneouslyPreplaced);
-//		Kingdom kingdom=player.getKingdom();
-//		DominoInKingdom dInK = new DominoInKingdom(posx,posy,kingdom,dominoToPlace);
-//		dInK.setDirection(getDirection(dir));
-//		int maxSize = KDQuery.getPlayerKingdomSize(player);
-//		if (maxSize<=5) {
-//			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);
-//		}
-//	}
-
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////

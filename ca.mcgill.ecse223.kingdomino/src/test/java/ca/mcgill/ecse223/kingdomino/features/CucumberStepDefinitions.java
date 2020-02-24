@@ -53,7 +53,7 @@ public class CucumberStepDefinitions {
 			Integer posy = Integer.decode(map.get("posy"));
 
 			// Add the domino to a player's kingdom
-			Domino dominoToPlace = getdominoByID(id);
+			Domino dominoToPlace = getdominoByID(id); 
 			KDController.prePlaceDomino(player, dominoToPlace, posx, posy, dir);
 		}
 	}
@@ -83,12 +83,6 @@ public class CucumberStepDefinitions {
 		Domino dominoToPlace = getdominoByID(id);
 		KDController.prePlaceDomino(player, dominoToPlace, posx, posy, dir);
 	}
-
-
-	
-	
-
-
 
 
 //	@Given("domino {int} is in the current draft")
