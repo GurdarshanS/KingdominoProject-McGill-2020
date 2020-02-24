@@ -296,5 +296,7 @@ public class Kingdom
       existingPlayer.setKingdom(null);
     }
   }
+  
+  
 
 }
