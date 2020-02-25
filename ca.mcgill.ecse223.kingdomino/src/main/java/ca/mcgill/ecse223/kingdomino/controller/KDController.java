@@ -15,7 +15,6 @@ import java.util.*;
 public class KDController {
 
 	public KDController(){}
-	
 
 	public static void initiateEmptyGame() {
 		// Intialize empty game
@@ -29,12 +28,10 @@ public class KDController {
 		game.setNextPlayer(game.getPlayer(0));
 	}
 
-	public static String getKingdomSizeVerificationResult(Player player) {
+	public static String getKingdomVerificationResult(Player player) {
 		String validity="valid";
 		
-		Kingdom kingdom=player.getKingdom();
 		List<DominoInKingdom> errorneouslyPlacedDominos=KDQuery.getErroneouslyPrePlacedDomino(player);
-//		System.out.println(errorneouslyPlacedDominos.size());
 		if (!errorneouslyPlacedDominos.isEmpty()) {
 			validity="invalid";
 		}
@@ -43,14 +40,15 @@ public class KDController {
 		
 	}
 	
-	public static void prePlaceDomino(Player player, Domino dominoToPlace, int posx, int posy, String dir) {
-		dominoToPlace.setStatus(DominoStatus.ErroneouslyPreplaced);
+	public static DominoInKingdom prePlaceDomino(Player player, Domino dominoToPlace, int posx, int posy, String dir) {
+		dominoToPlace.setStatus(DominoStatus.CorrectlyPreplaced);
 		Kingdom kingdom=player.getKingdom();
 		DominoInKingdom dInK = new DominoInKingdom(posx,posy,kingdom,dominoToPlace);
 		dInK.setDirection(getDirection(dir));
+		return dInK;
 	}
 	
-	public static void verifyKingdom(Player player) {
+	public static void verifyGridSize(Player player) {
 		
 		List<KingdomTerritory> t = player.getKingdom().getTerritories();
 		List<Integer> xCoords = new ArrayList<Integer>();
@@ -68,16 +66,9 @@ public class KDController {
 			int x2;
 			int y2;
 			
-			if (each instanceof DominoInKingdom) {
-				((DominoInKingdom) each).getDomino().setStatus(DominoStatus.PlacedInKingdom);
-				int[] otherPos=calculateOtherPos((DominoInKingdom) each);
-				x2=otherPos[0];
-				y2=otherPos[1];
-			}
-			else {
-				x2=0;
-				y2=0;
-			}
+			int[] otherPos=calculateOtherPos(each);
+			x2=otherPos[0];
+			y2=otherPos[1];
 			
 			xCoords.add(x2);
 			yCoords.add(y2);
@@ -88,14 +79,77 @@ public class KDController {
 			int xSize=xCoords.get(xCoords.size()-1)-xCoords.get(0)+1;
 			int ySize=yCoords.get(yCoords.size()-1)-yCoords.get(0)+1;
 			
-			if (xSize>5 || ySize>5) {
-				if (each instanceof DominoInKingdom) {
+			if (each instanceof DominoInKingdom) {
+				if (xSize>5 || ySize>5) {
 					((DominoInKingdom) each).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
 				}
 			}
 			
 		}
 	}
+//	
+	public static void verifyNoOverlap(Player player) {
+		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
+		
+		if (territories.size()==1) {
+			return;
+		}
+		
+		else {
+			
+			KingdomTerritory tA;
+			KingdomTerritory tB;
+			
+			int tAx1;
+			int tAy1;
+			int tAx2;
+			int tAy2;
+			
+			int tBx1;
+			int tBy1;
+			int tBx2;
+			int tBy2;
+			
+			for (int i=territories.size()-1;i>0;i--) {
+				
+				tA=territories.get(i);
+				int [] tAotherPos=calculateOtherPos(tA);
+				
+				tAx1=tA.getX();
+				tAy1=tA.getY();
+				tAx2=tAotherPos[0];
+				tAy2=tAotherPos[1];
+				
+				for (int j=i-1;j>-1;j--) {
+					
+					tB=territories.get(j);
+					int [] tBotherPos=calculateOtherPos(tB);
+					
+					tBx1=tB.getX();
+					tBy1=tB.getY();
+					tBx2=tBotherPos[0];
+					tBy2=tBotherPos[1];
+					
+					if ((tAx1==tBx1 && tAy1==tBy1)||
+						(tAx1==tBx2 && tAy1==tBy2)||
+						(tAx2==tBx1 && tAy2==tBy1)||
+						(tAx2==tBx2 && tAy2==tBy2)) {
+						
+						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+						break;
+						
+					}
+					
+				}
+			}
+			
+		}
+		
+	}
+	
+	
+//	public static void
+	
 	
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
@@ -108,28 +162,38 @@ public class KDController {
 		return minmax;
 	}
 
-	public static int[] calculateOtherPos(DominoInKingdom d) {
-		int x2;
-		int y2;
+	public static int[] calculateOtherPos(KingdomTerritory d) {
 		
-		if (d.getDirection().equals(DirectionKind.Right)) {
-			x2=d.getX()+1;
-			y2=d.getY();
+		int [] coord2 = new int[2];
+		if (d instanceof Castle) {
+			coord2[0]=0;
+			coord2[1]=0;
 		}
-		else if (d.getDirection().equals(DirectionKind.Up)) {
-			x2=d.getX();
-			y2=d.getY()+1;
-		}
-		else if (d.getDirection().equals(DirectionKind.Left)) {
-			x2=d.getX()-1;
-			y2=d.getY();
-		}
+		
 		else {
-			x2=d.getX();
-			y2=d.getY()-1;
+			int x2;
+			int y2;
+			
+			if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Right)) {
+				x2=d.getX()+1;
+				y2=d.getY();
+			}
+			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Up)) {
+				x2=d.getX();
+				y2=d.getY()+1;
+			}
+			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Left)) {
+				x2=d.getX()-1;
+				y2=d.getY();
+			}
+			else {
+				x2=d.getX();
+				y2=d.getY()-1;
+			}
+			
+			coord2[0]=x2;
+			coord2[1]=y2;
 		}
-		
-		int [] coord2= {x2,y2};
 		return coord2;
 	}
 	
@@ -235,7 +299,6 @@ public class KDController {
 		}
 	}
 	
-
 	private int argmax (int[] x) {
 		int max=0;
 		int index=-1;
