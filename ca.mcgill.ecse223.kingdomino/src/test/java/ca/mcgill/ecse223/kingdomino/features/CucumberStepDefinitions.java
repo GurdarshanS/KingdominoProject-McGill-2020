@@ -37,7 +37,7 @@ public class CucumberStepDefinitions {
 	
 	@Given("the game is initialized for verify grid size")
 	public void the_game_is_initialized_for_verify_grid_size() {
-		KDController.initiateEmptyGame();
+		KDController.initiateEmptyGame(); 
 	}
 	
 	@Given("the player's kingdom has the following dominoes:")
@@ -131,12 +131,42 @@ public class CucumberStepDefinitions {
 		String validity=KDController.getKingdomVerificationResult(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
 		assertEquals(expectedValidity,validity);
 	}
+	
+	
+	/**
+	 * These methods checks if current domino 
+	 * is adjacent to the caslte
+	 * @see VerifyCastleAdjacency.feature
+	 * @author Jing Han 260528152
+	 */
+	
+	@Given("the game is initialized for castle adjacency")
+	public static void initialize_game_for_castle_adjacency() {
+		KDController.initiateEmptyGame();
+	}
+	
+//	@Given("the current player preplaced the domino with ID 1 at position {int}:{int} and direction {string}")
+//	public static void preplace_domino_for_castle_adjacency(Integer posx, Integer posy, String dir) {
+//		Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+//		Domino dominoToPlace = getdominoByID(1);
+//		KDController.prePlaceDomino(player, dominoToPlace, posx, posy, dir);
+//	}
+	
+	@When("check castle adjacency is initiated")
+	public static void initiate_castle_adjacency_check() {
+		KDController.verifyCastleAdjacency(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
+	}
 
+	@Then("the castle\\/domino adjacency is {string}")
+	public void get_castle_adjacency_verification_result(String expectedValidity) {
+		String validity=KDController.getKingdomVerificationResult(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
+		assertEquals(expectedValidity,validity);
+	}
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
 	
-	private Domino getdominoByID(int id) {
+	private static Domino getdominoByID(int id) {
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		for (Domino domino : game.getAllDominos()) {
 			if (domino.getId() == id) {

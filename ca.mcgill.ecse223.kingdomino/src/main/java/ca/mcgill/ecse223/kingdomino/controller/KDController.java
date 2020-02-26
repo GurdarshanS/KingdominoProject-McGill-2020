@@ -87,7 +87,7 @@ public class KDController {
 			
 		}
 	}
-//	
+	
 	public static void verifyNoOverlap(Player player) {
 		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
 		
@@ -99,45 +99,16 @@ public class KDController {
 			
 			KingdomTerritory tA;
 			KingdomTerritory tB;
-			
-			int tAx1;
-			int tAy1;
-			int tAx2;
-			int tAy2;
-			
-			int tBx1;
-			int tBy1;
-			int tBx2;
-			int tBy2;
-			
 			for (int i=territories.size()-1;i>0;i--) {
 				
 				tA=territories.get(i);
-				int [] tAotherPos=calculateOtherPos(tA);
-				
-				tAx1=tA.getX();
-				tAy1=tA.getY();
-				tAx2=tAotherPos[0];
-				tAy2=tAotherPos[1];
 				
 				for (int j=i-1;j>-1;j--) {
 					
 					tB=territories.get(j);
-					int [] tBotherPos=calculateOtherPos(tB);
-					
-					tBx1=tB.getX();
-					tBy1=tB.getY();
-					tBx2=tBotherPos[0];
-					tBy2=tBotherPos[1];
-					
-					if ((tAx1==tBx1 && tAy1==tBy1)||
-						(tAx1==tBx2 && tAy1==tBy2)||
-						(tAx2==tBx1 && tAy2==tBy1)||
-						(tAx2==tBx2 && tAy2==tBy2)) {
-						
+
+					if (checkOverlap(tA,tB)){
 						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-						break;
-						
 					}
 					
 				}
@@ -147,6 +118,76 @@ public class KDController {
 		
 	}
 	
+	public static void verifyCastleAdjacency(Player player) {
+		List <KingdomTerritory> t = player.getKingdom().getTerritories();
+		
+		if (t.size()==1) {
+			return;
+		}
+		
+		int castleX=t.get(0).getX();
+		int castleY=t.get(0).getY();
+//		System.out.println("----- castle coords -------");
+//		System.out.println(castleX);
+//		System.out.println(castleY);
+		
+		KingdomTerritory testD = t.get(t.size()-1);
+		int [] testOtherPos=calculateOtherPos(testD);
+		
+		int testX1=testD.getX();
+		int testY1=testD.getY();
+		int testX2=testOtherPos[0];
+		int testY2=testOtherPos[1];
+		
+//		System.out.println("----- test coords -------");
+//		System.out.println(testX1);
+//		System.out.println(testY1);
+//		System.out.println(testX2);
+//		System.out.println(testY2);
+
+		
+		int norm1=L2NormSquared(testX1,testY1,castleX,castleY);
+		int norm2=L2NormSquared(testX2,testY2,castleX,castleY);
+//		System.out.println("----- test norms -------");
+//		System.out.println(norm1);
+//		System.out.println(norm2);
+//		System.out.println("---------------");
+
+		
+		if (((norm1!=1)&&(norm2!=1))||(testX1==0 && testY1==0)||(testX2==0 && testY2==0)) {
+			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+		}
+	}
+	
+	
+	public static List<KingdomTerritory> findNeighbors(List<KingdomTerritory> t, int testX, int testY) {
+		
+		List <KingdomTerritory> neighbors=new ArrayList<KingdomTerritory>();
+		
+		int currentX1;
+		int currentY1;
+		int currentX2;
+		int currentY2;
+		
+		for (KingdomTerritory each:neighbors) {
+			
+			int[] otherPos=calculateOtherPos(each);
+			
+			currentX1=each.getX();
+			currentY1=each.getY();
+			currentX2=otherPos[0];
+			currentY2=otherPos[1];
+			
+			int norm1 = L2NormSquared(currentX1,currentY1,testX,testY);
+			int norm2 = L2NormSquared(currentX2,currentY2,testX,testY);
+			
+			if ((norm1==1)||(norm2==1)) {
+				neighbors.add(each);
+			}		
+		}
+		return neighbors;
+	}
+	
 	
 //	public static void
 	
@@ -154,6 +195,53 @@ public class KDController {
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
+	
+	public static boolean checkOverlap(KingdomTerritory a, KingdomTerritory b) {
+		
+		int[] otherA=calculateOtherPos(a);
+		int[] otherB=calculateOtherPos(b);
+		
+		int ax1=a.getX();
+		int ay1=a.getY();
+		int ax2=otherA[0];
+		int ay2=otherA[1];
+		
+//		System.out.println("("+ax1+","+ay1+")");
+//		System.out.println("("+ax2+","+ay2+")");
+		
+		int bx1=b.getX();
+		int by1=b.getY();
+		int bx2=otherB[0];
+		int by2=otherB[1];
+		
+//		System.out.println("("+bx1+","+by1+")");
+//		System.out.println("("+bx2+","+by2+")");
+		
+		if (ax1==bx1 && ay1==by1) {
+			return true;
+		}
+		else if (ax1==bx2 && ay2==by2) {
+			return true;
+		}
+		else if (ax2==bx1 && ay2==by1) {
+			return true;
+		}
+		else if (ax2==bx2 && ay2==by2) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	private static int L2NormSquared(int x1, int y1, int x2, int y2) {
+		int deltaX=x2-x1;
+		int deltaY=y2-y1;
+		
+		int norm = deltaX*deltaX+deltaY*deltaY;
+		
+		return norm;
+	}
 	
 	private static int[] minMaxArray(int[] x) {
 		int[] xTemp=x.clone();
