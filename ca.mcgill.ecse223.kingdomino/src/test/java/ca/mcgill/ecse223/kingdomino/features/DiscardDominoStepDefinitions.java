@@ -107,7 +107,7 @@ public class DiscardDominoStepDefinitions {
 			new Castle(0, 0, kingdom, player);
 		}
 	}
-
+	
 	private void createAllDominoes(Game game) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("src/main/resources/alldominoes.dat"));
