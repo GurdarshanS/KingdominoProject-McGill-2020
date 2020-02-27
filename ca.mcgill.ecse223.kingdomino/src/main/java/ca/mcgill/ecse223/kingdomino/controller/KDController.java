@@ -40,6 +40,8 @@ public class KDController {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * This method loads a saved game for the player
+	 * @param file: Name of the file input from the user.
+	 * @throws FileNotFoundException: Thrown when the file is not identifiable.
 	 */
 	public static void loadGame(File file) throws FileNotFoundException {
 		
@@ -58,7 +60,7 @@ public class KDController {
 	}
 	/**
 	 * @author Anthony Harissi Dagher
-	 * This method saves the game for the player
+	 * @param file: Name of the file saved by the user.
 	 */
 	public static void saveGame(File file){
 		
