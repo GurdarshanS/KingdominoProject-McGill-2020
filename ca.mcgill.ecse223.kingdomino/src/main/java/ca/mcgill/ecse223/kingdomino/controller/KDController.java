@@ -45,6 +45,7 @@ public class KDController {
 	 */
 	public static void loadGame(File file) throws FileNotFoundException {
 		
+		Kingdomino game = KingdominoApplication.getKingdomino();
 		try {
 			Scanner fileName = new Scanner(file);
 		}
@@ -53,8 +54,11 @@ public class KDController {
 			KingdominoApplication.getKingdomino().getCurrentGame().delete();
 			throw new FileNotFoundException("Sorry, this game does not exist");
 		}
-		if(KingdominoApplication.getKingdomino().hasCurrentGame() == true) {
+		if(game.hasCurrentGame() == true) {
 			
+			game.getCurrentGame().delete(); // Delete the current game, saved or not.
+			
+			//add loaded file game
 		}
 		
 	}
@@ -69,6 +73,7 @@ public class KDController {
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
+	
 	private static void addDefaultUsersAndPlayers(Game game) {
 		String[] users = { "User1", "User2", "User3", "User4" };
 		for (int i = 0; i < users.length; i++) {
