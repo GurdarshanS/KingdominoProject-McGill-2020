@@ -88,7 +88,10 @@ public class KDController {
 		}
 	}
 	
-	public static void verifyNoOverlap(Player player) {
+	public static void verifyNoOverlapAllTerritories(Player player) {
+		
+//		verifies all territories in kingdom
+		
 		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
 		
 		if (territories.size()==1) {
@@ -116,6 +119,37 @@ public class KDController {
 			
 		}
 		
+	}
+	
+	public static void verifyNoOverlapLastTerritory(Player player) {
+		
+//		only verifies the last preplaced domino
+		
+		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
+		
+		if (territories.size()==1) {
+			return;
+		}
+		
+		else {
+			
+			KingdomTerritory tA;
+			KingdomTerritory tB;
+	
+			tA=territories.get(territories.size()-1);
+				
+			for (int j=territories.size()-2;j>-1;j--) {
+					
+					tB=territories.get(j);
+
+					if (checkOverlap(tA,tB)){
+						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+						break;
+					}
+					
+				}
+			}
+			
 	}
 	
 	public static void verifyCastleAdjacency(Player player) {
@@ -159,44 +193,170 @@ public class KDController {
 		}
 	}
 	
-	
-	public static List<KingdomTerritory> findNeighbors(List<KingdomTerritory> t, int testX, int testY) {
+	public static void verifyNeighborAdjacencyLastTerritory(Player player) {
 		
-		List <KingdomTerritory> neighbors=new ArrayList<KingdomTerritory>();
+		List<KingdomTerritory> t =player.getKingdom().getTerritories();
 		
-		int currentX1;
-		int currentY1;
-		int currentX2;
-		int currentY2;
-		
-		for (KingdomTerritory each:neighbors) {
-			
-			int[] otherPos=calculateOtherPos(each);
-			
-			currentX1=each.getX();
-			currentY1=each.getY();
-			currentX2=otherPos[0];
-			currentY2=otherPos[1];
-			
-			int norm1 = L2NormSquared(currentX1,currentY1,testX,testY);
-			int norm2 = L2NormSquared(currentX2,currentY2,testX,testY);
-			
-			if ((norm1==1)||(norm2==1)) {
-				neighbors.add(each);
-			}		
+		if (t.size()==1) {
+			return;
 		}
-		return neighbors;
+		else {
+			
+			int validNeighborCount=0;
+			
+			DominoInKingdom prePlacedDomino = (DominoInKingdom) t.get(t.size()-1);
+			
+			Neighborhood leftNeighborhood = getDominoLeftNeighbors(t,prePlacedDomino);
+			Neighborhood rightNeighborhood =getDominoRightNeighbors(t,prePlacedDomino);
+			
+			System.out.println(leftNeighborhood);	
+			System.out.println("---------------------------------------------------------------------------------------------");
+			System.out.println(rightNeighborhood);	
+
+			List<TerrainType> leftTileNeighborTerrains = leftNeighborhood.getNeighborTerrainType();
+			List<TerrainType> rightTileNeighborTerrains = rightNeighborhood.getNeighborTerrainType();
+			
+			if (leftTileNeighborTerrains.isEmpty() && rightTileNeighborTerrains.isEmpty()) {
+				System.out.println("no neighbors at all");
+			}
+			
+			if (!leftTileNeighborTerrains.isEmpty()) {
+				for (TerrainType testTerrain:leftTileNeighborTerrains) {
+					if (testTerrain.name().equalsIgnoreCase(prePlacedDomino.getDomino().getLeftTile().name())){
+						System.out.println("found left match!");
+						validNeighborCount++;
+					}
+				}
+			}
+			
+			if (!rightTileNeighborTerrains.isEmpty()) {
+				for (TerrainType testTerrain:rightTileNeighborTerrains) {
+					if (testTerrain.name().equalsIgnoreCase(prePlacedDomino.getDomino().getRightTile().name())){
+						System.out.println("found right match!");
+						validNeighborCount++;
+					}
+				}
+			}
+			
+			if (validNeighborCount==0) {
+				prePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+			}
+			
+		}
 	}
-	
-	
-//	public static void
-	
-	
+		
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
 	
-	public static boolean checkOverlap(KingdomTerritory a, KingdomTerritory b) {
+	public static Neighborhood getDominoLeftNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
+		
+		List <KingdomTerritory> neighborTerritory=new ArrayList<KingdomTerritory>();
+		List <String> neighborTileType=new ArrayList<String>();
+		List <TerrainType> neighborTerrain = new ArrayList<TerrainType>();
+		List <int []> neighborCoord = new ArrayList<int[]>();
+	
+		int searchX=dInK.getX();
+		int searchY=dInK.getY();
+		
+		for (KingdomTerritory each:t) {
+			
+			int [] testRightCoord=calculateOtherPos(each);
+			
+			int testLeftX=each.getX();
+			int testLeftY=each.getY();
+			int testRightX=testRightCoord[0];
+			int testRightY=testRightCoord[1];
+			
+			int [] testLeftCoord = {testLeftX,testLeftY};
+			
+			int norm1=L2NormSquared(searchX,searchY,testLeftX,testLeftY);
+			int norm2=L2NormSquared(searchX,searchY,testRightX,testRightY);
+			
+			if (norm1==1 || norm2==1) {
+				if (each instanceof Castle) {
+					neighborTerritory.add(each);
+					neighborTileType.add("castle");
+					neighborTerrain.add(dInK.getDomino().getLeftTile());
+					neighborCoord.add(testLeftCoord);
+				}
+				else if (each instanceof DominoInKingdom) {
+					if (((DominoInKingdom) each).getDomino().getId()!=dInK.getDomino().getId()) {
+						neighborTerritory.add(each);
+						if (norm1==1) {
+							neighborTileType.add("left");
+							neighborTerrain.add(((DominoInKingdom) each).getDomino().getLeftTile());
+							neighborCoord.add(testLeftCoord);
+						}
+						else if (norm2==1) {
+							neighborTileType.add("right");
+							neighborTerrain.add(((DominoInKingdom) each).getDomino().getRightTile());
+							neighborCoord.add(testRightCoord);
+						}
+					}
+				}
+		}
+	}
+		
+	Neighborhood n = new Neighborhood(neighborTerritory,neighborTileType,neighborTerrain,neighborCoord);		
+	return n;
+}	
+
+	public static Neighborhood getDominoRightNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
+			
+			List <KingdomTerritory> neighborTerritory=new ArrayList<KingdomTerritory>();
+			List <String> neighborTileType=new ArrayList<String>();
+			List <TerrainType> neighborTerrain = new ArrayList<TerrainType>();
+			List <int []> neighborCoord = new ArrayList<int[]>();
+		
+			int [] otherXY=calculateOtherPos(dInK);
+			int searchX=otherXY[0];
+			int searchY=otherXY[1];
+			
+			for (KingdomTerritory each:t) {
+				
+				int [] testRightCoord=calculateOtherPos(each);
+				
+				int testLeftX=each.getX();
+				int testLeftY=each.getY();
+				int testRightX=testRightCoord[0];
+				int testRightY=testRightCoord[1];
+				
+				int [] testLeftCoord = {testLeftX,testLeftY};
+				
+				int norm1=L2NormSquared(searchX,searchY,testLeftX,testLeftY);
+				int norm2=L2NormSquared(searchX,searchY,testRightX,testRightY);
+	
+				if (norm1==1 || norm2==1) {
+					if (each instanceof Castle) {
+						neighborTerritory.add(each);
+						neighborTileType.add("castle");
+						neighborTerrain.add(dInK.getDomino().getRightTile());
+						neighborCoord.add(testLeftCoord);
+					}
+					else if (each instanceof DominoInKingdom) {
+						if (((DominoInKingdom) each).getDomino().getId()!=dInK.getDomino().getId()) {
+							neighborTerritory.add(each);
+							if (norm1==1) {
+								neighborTileType.add("left");
+								neighborTerrain.add(((DominoInKingdom) each).getDomino().getLeftTile());
+								neighborCoord.add(testLeftCoord);
+							}
+							else if (norm2==1) {
+								neighborTileType.add("right");
+								neighborTerrain.add(((DominoInKingdom) each).getDomino().getRightTile());
+								neighborCoord.add(testRightCoord);
+							}
+						}
+					}
+			}
+		}
+			
+		Neighborhood n = new Neighborhood(neighborTerritory,neighborTileType,neighborTerrain,neighborCoord);		
+		return n;
+	}	
+
+	private static boolean checkOverlap(KingdomTerritory a, KingdomTerritory b) {
 		
 		int[] otherA=calculateOtherPos(a);
 		int[] otherB=calculateOtherPos(b);

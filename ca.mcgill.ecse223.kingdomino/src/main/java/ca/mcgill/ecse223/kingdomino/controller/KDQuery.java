@@ -18,6 +18,9 @@ public class KDQuery {
 	
 	public KDQuery() {}
 	
+	
+	
+	
 	public static List<DominoInKingdom> getErroneouslyPrePlacedDomino(Player player) {
 		List<DominoInKingdom> errorDominos = new ArrayList<DominoInKingdom>();
 		List<KingdomTerritory> t = getPlayerTerritory(player);

@@ -13,41 +13,65 @@ public class NeigborAdjacencyTestDriver {
 //		#################################################
 //		#				neighbor adj test				#
 //		#################################################
-		int[] id= {7,8,20,22,23,24,30,31,32,38,40,43};
-		String[] dir= {"left","up","up","up","right","left","up","down","down","right","left","right"};
-		int[] x= {2,-1,-1,3,0,2,3,-1,0,1,2,2};
-		int[] y= {1,-3,-1,-2,-3,-1,0,1,-1,-2,0,-3};
+		
+//		populate kingdom with pre-existing dominos
+		int[] id= {27,38,1,22,46};
+		String[] dir= {"up","down","right","left","right"};
+		int[] x = {0,3,0,3,-1};
+		int[] y = {2,3,1,1,-1};
 		
 		Player player=KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
-//		
+
 		for (int i=0;i<id.length;i++) {
-			Domino dominoToPlace = KDController.getdominoByID(id[i]); 
+			Domino dominoToPlace = KDController.getdominoByID(id[i]);
 			KDController.prePlaceDomino(player, dominoToPlace, x[i], y[i], dir[i]);
 		}
 		
 		List<KingdomTerritory> t =player.getKingdom().getTerritories();
+		
+//		preplace a new domino
+		
+		int newId=42;
+		int newPosX=2;
+		int newPosY=2;
+		String newDir="up";
+		Domino newDominoToPlace = KDController.getdominoByID(newId); 
+		DominoInKingdom prePlacedDomino=KDController.prePlaceDomino(player, newDominoToPlace, newPosX,newPosY,newDir);
 	
-//		see status of dominos in kingdom before verification
-		System.out.println("Domino In Kingdom status before size verification: ");
-		for (int i=1;i<t.size();i++) {
-			DominoInKingdom dInK=(DominoInKingdom) t.get(i);
-			System.out.println(dInK.getDomino().getStatus());
-		}
-//		verify dominos in kingdom for grid size, changing status to either CorrectlyPreplaced or ErroneousPrePlaced
-		KDController.verifyGridSize(player);
+		KDController.verifyNeighborAdjacencyLastTerritory(player);
 		
-//		see status of dominos in kingdom after verification
-		System.out.println("---------------------------------------------------");
-		System.out.println("Domino In Kingdom status after size verification: ");
-		for (int i=1;i<t.size();i++) {
-			DominoInKingdom dInK=(DominoInKingdom) t.get(i);
-			System.out.println(dInK.getDomino().getStatus());
-		}
+		System.out.println(newDominoToPlace.getStatus());
 		
-//		get output of the verification result, either "valid" or "invalid"
-		String validity = KDController.getKingdomVerificationResult(player);
-		System.out.println("---------------------------------------------------");
-		System.out.println("size verification conclusion: kingdom size is "+validity);
+//		Neighborhood leftNeighborhood = KDController.getDominoLeftNeighbors(t,prePlacedDomino);
+//		System.out.println(leftNeighborhood);	
+//
+//		System.out.println("---------------------------------------------------------------------------------------------");
+//		
+//		Neighborhood rightNeighborhood = KDController.getDominoRightNeighbors(t,prePlacedDomino);
+//		System.out.println(rightNeighborhood);
+//		
+//		List<TerrainType> leftTileNeighborTerrains = leftNeighborhood.getNeighborTerrainType();
+//		List<TerrainType> rightTileNeighborTerrains = rightNeighborhood.getNeighborTerrainType();
+//		
+//		if (leftTileNeighborTerrains.isEmpty() && rightTileNeighborTerrains.isEmpty()) {
+//			System.out.println("no neighbors at all");
+//		}
+//		
+//		if (!leftTileNeighborTerrains.isEmpty()) {
+//			for (TerrainType testTerrain:leftTileNeighborTerrains) {
+//				if (testTerrain.name().equalsIgnoreCase(newDominoToPlace.getLeftTile().name())){
+//					System.out.println("found left match!");
+//				}
+//			}
+//		}
+//		
+//		if (!rightTileNeighborTerrains.isEmpty()) {
+//			for (TerrainType testTerrain:rightTileNeighborTerrains) {
+//				if (testTerrain.name().equalsIgnoreCase(newDominoToPlace.getRightTile().name())){
+//					System.out.println("found right match!");
+//				}
+//			}
+//		}		
 		
 	}
 

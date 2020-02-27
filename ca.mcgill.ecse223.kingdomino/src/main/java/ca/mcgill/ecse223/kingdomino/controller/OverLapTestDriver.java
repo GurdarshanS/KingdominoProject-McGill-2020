@@ -41,7 +41,8 @@ public class OverLapTestDriver {
 		}
 		
 //		verify dominos in kingdom for grid size, changing status to either CorrectlyPreplaced or ErroneousPrePlaced
-		KDController.verifyNoOverlap(player);
+//		KDController.verifyNoOverlapAllTerritories(player);
+		KDController.verifyNoOverlapAllTerritories(player);
 		
 //		see status of dominos in kingdom after verification
 		System.out.println("---------------------------------------------------");

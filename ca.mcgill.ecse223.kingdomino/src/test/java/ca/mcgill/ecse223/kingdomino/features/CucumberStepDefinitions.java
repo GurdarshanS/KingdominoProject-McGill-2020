@@ -102,7 +102,7 @@ public class CucumberStepDefinitions {
 		List<Map<String, String>> valueMaps = dataTable.asMaps();
 		for (Map<String, String> map : valueMaps) {
 			// Get values from cucumber table
-			Integer id = Integer.decode(map.get("domino"));
+			Integer id = Integer.decode(map.get("id"));
 			String dir = map.get("dominodir");
 			Integer posx = Integer.decode(map.get("posx"));
 			Integer posy = Integer.decode(map.get("posy"));
@@ -123,7 +123,7 @@ public class CucumberStepDefinitions {
 
 	@When("check current preplaced domino overlapping is initiated")
 	public void initiate_domino_overlap_verification() {
-		KDController.verifyNoOverlap(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
+		KDController.verifyNoOverlapLastTerritory(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
 	}
 
 	@Then("the current-domino\\/existing-domino overlapping is {string}")
@@ -145,13 +145,6 @@ public class CucumberStepDefinitions {
 		KDController.initiateEmptyGame();
 	}
 	
-//	@Given("the current player preplaced the domino with ID 1 at position {int}:{int} and direction {string}")
-//	public static void preplace_domino_for_castle_adjacency(Integer posx, Integer posy, String dir) {
-//		Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
-//		Domino dominoToPlace = getdominoByID(1);
-//		KDController.prePlaceDomino(player, dominoToPlace, posx, posy, dir);
-//	}
-	
 	@When("check castle adjacency is initiated")
 	public static void initiate_castle_adjacency_check() {
 		KDController.verifyCastleAdjacency(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
@@ -162,6 +155,31 @@ public class CucumberStepDefinitions {
 		String validity=KDController.getKingdomVerificationResult(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
 		assertEquals(expectedValidity,validity);
 	}
+	
+	
+	/**
+	 * These methods checks if current domino 
+	 * has at least one adjacent tile with same terrain type
+	 * @see VerifyNeighboAdjacency.feature
+	 * @author Jing Han 260528152
+	 */
+	
+	@When("the game is initialized for neighbor adjacency")
+	public static void initialize_game_for_neighbor_adjacency() {
+		KDController.initiateEmptyGame();
+	}
+	
+	@When("check current preplaced domino adjacency is initiated")
+	public static void initialize_neighbor_adjacency_verification() {
+		KDController.verifyNeighborAdjacencyLastTerritory(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
+	}
+	
+	@Then("the current-domino\\/existing-domino adjacency is {string}")
+	public static void get_neighbor_adjacency_verification_result(String expectedValidity) {
+		String validity=KDController.getKingdomVerificationResult(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
+		assertEquals(expectedValidity,validity);
+	}
+	
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
