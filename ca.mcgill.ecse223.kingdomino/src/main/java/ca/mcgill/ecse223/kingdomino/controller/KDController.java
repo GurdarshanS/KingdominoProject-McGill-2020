@@ -44,6 +44,7 @@ public class KDController {
 			Game game = new Game(48, kingdomino);
 		}
 	}
+	
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 3: This method starts a new game for the player.
@@ -52,7 +53,6 @@ public class KDController {
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = new Game(48, kingdomino);
-		List<Player> players = game.getPlayers();
 		
 		for (int i = 0; i < game.getNumberOfPlayers(); i++) {
 			
@@ -66,6 +66,7 @@ public class KDController {
 		createAllDominoes(game);
 		game.setNextPlayer(game.getPlayer(0));
 	}
+	
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 6: This method loads a saved game for the player.
@@ -87,17 +88,28 @@ public class KDController {
 			
 			game.getCurrentGame().delete(); // Delete the current game, saved or not.
 		}
-		
 	}
+	
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 7: This method saves the current game for the player.
 	 * @param file: Name of the file saved by the user.
 	 */
-	public static void saveGame(File file){
+	public static boolean saveGame(File file){
 		
+		boolean gameSaved = false;
 		Kingdomino game = new Kingdomino();
 		game.getCurrentGame();
+		String directory = "./src/main/resources/savedGames/"+file.toString();
+		File fileSearch = new File(directory);
+		
+		if(fileSearch.exists()== true) {
+			gameSaved = overwriteSave(directory); //If the file exists, overwrite it.
+		}
+		else {
+			gameSaved = newSave(directory); //If the file does not exist, new save.
+		}
+		return gameSaved;
 	}
 	
 	///////////////////////////////////////
