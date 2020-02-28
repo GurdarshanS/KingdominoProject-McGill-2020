@@ -18,6 +18,9 @@ public class KDController {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 1: This method sets the desired game options for the player.
+	 * @param numPlayers : Number of players for the game.
+	 * @param selectedBonusOptions: The chosen bonus options.
+	 * @throws IllegalArgumentException: Thrown when numPlayers is invalid.
 	 */
 	public static void setGameOptions(int numPlayers, List<BonusOption> selectedBonusOptions) 
 										throws IllegalArgumentException{
@@ -48,12 +51,12 @@ public class KDController {
 	public static void startANewGame() {
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		Game game = new Game(game.getNumberOfPlayers(), kingdomino);
+		Game game = new Game(48, kingdomino);
 		List<Player> players = game.getPlayers();
 		
 		for (int i = 0; i < game.getNumberOfPlayers(); i++) {
 			
-			game.getKingdomino().addUser(players[i]);
+			game.getKingdomino().addUser(game.getPlayer(i).toString());
 			Player player = new Player(game);
 			player.setColor(PlayerColor.values()[i]);
 			Kingdom kingdom = new Kingdom(player);

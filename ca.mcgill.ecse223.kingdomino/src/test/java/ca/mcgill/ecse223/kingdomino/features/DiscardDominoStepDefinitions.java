@@ -31,8 +31,8 @@ public class DiscardDominoStepDefinitions {
 	 * you get started. You may change the code if required.
 	 */
 
-	@Given("the game is initialized for discard domino")
-	public void the_game_is_initialized_for_discard_domino() {
+	@Given("the game is initialized for load game")
+	public void the_game_is_initialized_for_load_game() {
 		// Intialize empty game
 		Kingdomino kingdomino = new Kingdomino();
 		Game game = new Game(48, kingdomino);
@@ -44,7 +44,32 @@ public class DiscardDominoStepDefinitions {
 		game.setNextPlayer(game.getPlayer(0));
 		KingdominoApplication.setKingdomino(kingdomino);
 	}
-
+	@Given("the game is initialized for save game")
+	public void the_game_is_initialized_for_save_game() {
+		// Intialize empty game
+		Kingdomino kingdomino = new Kingdomino();
+		Game game = new Game(48, kingdomino);
+		game.setNumberOfPlayers(4);
+		kingdomino.setCurrentGame(game);
+		// Populate game
+		addDefaultUsersAndPlayers(game);
+		createAllDominoes(game);
+		game.setNextPlayer(game.getPlayer(0));
+		KingdominoApplication.setKingdomino(kingdomino);
+	}
+	@Given("the game is initialized for set game options")
+	public void the_game_is_initialized_for_set_game_options() {
+		// Intialize empty game
+		Kingdomino kingdomino = new Kingdomino();
+		Game game = new Game(48, kingdomino);
+		game.setNumberOfPlayers(4);
+		kingdomino.setCurrentGame(game);
+		// Populate game
+		addDefaultUsersAndPlayers(game);
+		createAllDominoes(game);
+		game.setNextPlayer(game.getPlayer(0));
+		KingdominoApplication.setKingdomino(kingdomino);
+	}
 	@Given("the player's kingdom has the following dominoes:")
 	public void the_player_s_kingdom_has_the_following_dominoes(io.cucumber.datatable.DataTable dataTable) {
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
