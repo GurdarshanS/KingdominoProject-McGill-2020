@@ -17,29 +17,55 @@ public class KDController {
 
 	/**
 	 * @author Anthony Harissi Dagher
-	 * This method sets the desired game options for the player
+	 * Feature 1: This method sets the desired game options for the player.
 	 */
-	public static void setGameOptions(Player player) {
+	public static void setGameOptions(int numPlayers, List<BonusOption> selectedBonusOptions) 
+										throws IllegalArgumentException{
 		
-	
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		if(numPlayers < 1 || numPlayers > 4) {
+			throw new IllegalArgumentException("Invalid amount of players. Try between 2 and 4.");
+		}
+		if(numPlayers == 2) {
+			Game game = new Game(24, kingdomino);
+			
+			for(int i=0; i<= selectedBonusOptions.size(); i++) {
+				
+				game.getSelectedBonusOption(i);
+			}
+		}
+		if(numPlayers == 3) {
+			Game game = new Game(36, kingdomino);
+		}
+		if(numPlayers == 4) {
+			Game game = new Game(48, kingdomino);
+		}
 	}
 	/**
 	 * @author Anthony Harissi Dagher
-	 * This method starts a new game for the player
+	 * Feature 3: This method starts a new game for the player.
 	 */
-	public static void startANewGame(List<Player> players) {
+	public static void startANewGame() {
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		Game game = new Game(48, kingdomino);
-		game.setNumberOfPlayers(4);
+		Game game = new Game(game.getNumberOfPlayers(), kingdomino);
+		List<Player> players = game.getPlayers();
+		
+		for (int i = 0; i < game.getNumberOfPlayers(); i++) {
+			
+			game.getKingdomino().addUser(players[i]);
+			Player player = new Player(game);
+			player.setColor(PlayerColor.values()[i]);
+			Kingdom kingdom = new Kingdom(player);
+			new Castle(0, 0, kingdom, player);
+		}
 		kingdomino.setCurrentGame(game);
-		addDefaultUsersAndPlayers(game);
 		createAllDominoes(game);
 		game.setNextPlayer(game.getPlayer(0));
 	}
 	/**
 	 * @author Anthony Harissi Dagher
-	 * This method loads a saved game for the player
+	 * Feature 6: This method loads a saved game for the player.
 	 * @param file: Name of the file input from the user.
 	 * @throws FileNotFoundException: Thrown when the file is not identifiable.
 	 */
@@ -51,23 +77,24 @@ public class KDController {
 		}
 		catch(FileNotFoundException f) {
 			
-			KingdominoApplication.getKingdomino().getCurrentGame().delete();
+			game.getCurrentGame().delete();
 			throw new FileNotFoundException("Sorry, this game does not exist");
 		}
 		if(game.hasCurrentGame() == true) {
 			
 			game.getCurrentGame().delete(); // Delete the current game, saved or not.
-			
-			//add loaded file game
 		}
 		
 	}
 	/**
 	 * @author Anthony Harissi Dagher
+	 * Feature 7: This method saves the current game for the player.
 	 * @param file: Name of the file saved by the user.
 	 */
 	public static void saveGame(File file){
 		
+		Kingdomino game = new Kingdomino();
+		game.getCurrentGame();
 	}
 	
 	///////////////////////////////////////
