@@ -13,6 +13,33 @@ import java.util.*;
 
 public class KDController {
 
-
+	public static void discardDomino(Domino aSelectedDomino, Player aPlayer) {
+		
+		//Finish later
+		
+		aPlayer.getDominoSelection().delete();
+		aSelectedDomino.setStatus(DominoStatus.Discarded);
+		
+	}
+	
+	public static void moveCurrentDomino() {
+		
+		
+		
+	}
+	
+	public static void placeCurrentDomino() {
+		
+		
+		
+		
+	}
+	
+	public static void rotateCurrentDomino() {
+		
+		
+		
+		
+	}
 
 }
