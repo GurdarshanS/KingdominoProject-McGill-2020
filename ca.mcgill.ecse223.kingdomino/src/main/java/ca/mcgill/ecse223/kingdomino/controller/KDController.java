@@ -1,6 +1,7 @@
 package ca.mcgill.ecse223.kingdomino.controller;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
+
 import ca.mcgill.ecse223.kingdomino.model.*;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
@@ -12,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class KDController {
 
@@ -31,6 +33,8 @@ public class KDController {
 		}
 		if(numPlayers == 2) {
 			Game game = new Game(24, kingdomino);
+			game.setNumberOfPlayers(2);
+			kingdomino.setCurrentGame(game);
 			
 			for(int i=0; i<= selectedBonusOptions.size(); i++) {
 				
@@ -39,11 +43,23 @@ public class KDController {
 		}
 		if(numPlayers == 3) {
 			Game game = new Game(36, kingdomino);
+			game.setNumberOfPlayers(3);
+			kingdomino.setCurrentGame(game);
+			for(int i=0; i<= selectedBonusOptions.size(); i++) {
+				
+				game.getSelectedBonusOption(i);
+			}
 		}
 		if(numPlayers == 4) {
 			Game game = new Game(48, kingdomino);
+			game.setNumberOfPlayers(4);
+			kingdomino.setCurrentGame(game);
+			for(int i=0; i<= selectedBonusOptions.size(); i++) {
+				
+				game.getSelectedBonusOption(i);
+			}
 		}
-	}
+	} 
 	
 	/**
 	 * @author Anthony Harissi Dagher
@@ -52,8 +68,9 @@ public class KDController {
 	public static void startANewGame() {
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		Game game = new Game(48, kingdomino);
-		
+		Game game = kingdomino.getCurrentGame();
+		int randomNum = ThreadLocalRandom.current().nextInt(0, game.getNumberOfPlayers()-1);
+				
 		for (int i = 0; i < game.getNumberOfPlayers(); i++) {
 			
 			game.getKingdomino().addUser(game.getPlayer(i).toString());
@@ -62,22 +79,24 @@ public class KDController {
 			Kingdom kingdom = new Kingdom(player);
 			new Castle(0, 0, kingdom, player);
 		}
-		kingdomino.setCurrentGame(game);
-		createAllDominoes(game);
-		game.setNextPlayer(game.getPlayer(0));
+		createAllDominoes(game); // FIND WAY TO GENERATE RANDOM DOMINOES, DEPENDING ON NUM OF PLAYERS
+		game.setNextPlayer(game.getPlayer(randomNum));
 	}
 	
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 6: This method loads a saved game for the player.
-	 * @param file: Name of the file input from the user.
+	 * @param file:  The file inputed from the user.
 	 * @throws FileNotFoundException: Thrown when the file is not identifiable.
 	 */
 	public static void loadGame(File file) throws FileNotFoundException {
 		
 		Kingdomino game = KingdominoApplication.getKingdomino();
 		try {
-			Scanner fileName = new Scanner(file);
+			Scanner fileSearch = new Scanner(file);
+			while(fileSearch.hasNext()) {
+				
+			}
 		}
 		catch(FileNotFoundException f) {
 			
@@ -98,8 +117,8 @@ public class KDController {
 	public static boolean saveGame(File file){
 		
 		boolean gameSaved = false;
-		Kingdomino game = new Kingdomino();
-		game.getCurrentGame();
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
 		String directory = "./src/main/resources/savedGames/"+file.toString();
 		File fileSearch = new File(directory);
 		
