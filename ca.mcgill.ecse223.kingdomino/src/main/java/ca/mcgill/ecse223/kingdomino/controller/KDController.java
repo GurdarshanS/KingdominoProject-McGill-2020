@@ -35,10 +35,9 @@ public class KDController {
 			Game game = new Game(24, kingdomino);
 			game.setNumberOfPlayers(2);
 			kingdomino.setCurrentGame(game);
-			
 			for(int i=0; i<= selectedBonusOptions.size(); i++) {
-				
-				game.getSelectedBonusOption(i);
+				BonusOption bonusOption = selectedBonusOptions.get(i);
+				game.addSelectedBonusOption(bonusOption);
 			}
 		}
 		if(numPlayers == 3) {
@@ -46,8 +45,8 @@ public class KDController {
 			game.setNumberOfPlayers(3);
 			kingdomino.setCurrentGame(game);
 			for(int i=0; i<= selectedBonusOptions.size(); i++) {
-				
-				game.getSelectedBonusOption(i);
+				BonusOption bonusOption = selectedBonusOptions.get(i);
+				game.addSelectedBonusOption(bonusOption);
 			}
 		}
 		if(numPlayers == 4) {
@@ -55,8 +54,8 @@ public class KDController {
 			game.setNumberOfPlayers(4);
 			kingdomino.setCurrentGame(game);
 			for(int i=0; i<= selectedBonusOptions.size(); i++) {
-				
-				game.getSelectedBonusOption(i);
+				BonusOption bonusOption = selectedBonusOptions.get(i);
+				game.addSelectedBonusOption(bonusOption);
 			}
 		}
 	} 
@@ -78,9 +77,9 @@ public class KDController {
 			player.setColor(PlayerColor.values()[i]);
 			Kingdom kingdom = new Kingdom(player);
 			new Castle(0, 0, kingdom, player);
+			game.setNextPlayer(game.getPlayer(randomNum));
 		}
 		createAllDominoes(game); // FIND WAY TO GENERATE RANDOM DOMINOES, DEPENDING ON NUM OF PLAYERS
-		game.setNextPlayer(game.getPlayer(randomNum));
 	}
 	
 	/**
@@ -135,6 +134,18 @@ public class KDController {
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
 	
+	public static void initializeGame() {
+		// Intialize empty game
+		Kingdomino kingdomino = new Kingdomino();
+		Game game = new Game(48, kingdomino);
+		game.setNumberOfPlayers(4);
+		kingdomino.setCurrentGame(game);
+		// Populate game
+		addDefaultUsersAndPlayers(game);
+		createAllDominoes(game);
+		game.setNextPlayer(game.getPlayer(0));
+		KingdominoApplication.setKingdomino(kingdomino);
+	}
 	private static void addDefaultUsersAndPlayers(Game game) {
 		String[] users = { "User1", "User2", "User3", "User4" };
 		for (int i = 0; i < users.length; i++) {
