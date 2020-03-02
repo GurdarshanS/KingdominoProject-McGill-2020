@@ -69,7 +69,8 @@ public class KDController {
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
 		int randomNum = ThreadLocalRandom.current().nextInt(0, game.getNumberOfPlayers()-1);
-				
+		int randID = ThreadLocalRandom.current().nextInt(0, 24);
+		List<Domino> dominoesInGame;
 		for (int i = 0; i < game.getNumberOfPlayers(); i++) {
 			
 			game.getKingdomino().addUser(game.getPlayer(i).toString());
@@ -77,52 +78,62 @@ public class KDController {
 			player.setColor(PlayerColor.values()[i]);
 			Kingdom kingdom = new Kingdom(player);
 			new Castle(0, 0, kingdom, player);
-			game.setNextPlayer(game.getPlayer(randomNum));
 		}
-		createAllDominoes(game); // FIND WAY TO GENERATE RANDOM DOMINOES, DEPENDING ON NUM OF PLAYERS
+		game.setNextPlayer(game.getPlayer(randomNum));
+		createAllDominoes(game);
+		
+		if(game.getNumberOfPlayers()==2) {
+			
+			dominoesInGame = pickRandDomino(game.getAllDominos(), 24);
+			game.setTopDominoInPile(aNewTopDominoInPile)
+		}
+		if(game.getNumberOfPlayers()==3) {
+			dominoesInGame = pickRandDomino(game.getAllDominos(), 36);
+			game.setTopDominoInPile(aNewTopDominoInPile)
+		}
+		if(game.getNumberOfPlayers()==4) {
+			dominoesInGame = pickRandDomino(game.getAllDominos(), 48);
+			game.setTopDominoInPile(aNewTopDominoInPile)
+		}
 	}
 	
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 6: This method loads a saved game for the player.
 	 * @param file:  The file inputed from the user.
-	 * @throws FileNotFoundException: Thrown when the file is not identifiable.
+	 * @return Method returns true if the game is loaded, false it cannot be.
 	 */
-	public static void loadGame(File file) throws FileNotFoundException {
+	public static boolean loadGame(String file) {
 		
+		boolean gameLoaded = false;
 		Kingdomino game = KingdominoApplication.getKingdomino();
-		try {
-			Scanner fileSearch = new Scanner(file);
-			while(fileSearch.hasNext()) {
-				
+		String directory = "./src/main/resources/savedGames/"+file;	
+	
+		File fileSearch = new File(directory);
+		if (fileSearch.isFile()) {
+			if(fileSearch.canRead()) {
+				gameLoaded = loadGameFile(directory);
 			}
 		}
-		catch(FileNotFoundException f) {
-			
-			game.getCurrentGame().delete();
-			throw new FileNotFoundException("Sorry, this game does not exist");
-		}
-		if(game.hasCurrentGame() == true) {
-			
-			game.getCurrentGame().delete(); // Delete the current game, saved or not.
-		}
+		return gameLoaded;
 	}
 	
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 7: This method saves the current game for the player.
 	 * @param file: Name of the file saved by the user.
+	 * @return Method returns true if file is saved, false if it cannot be.
 	 */
-	public static boolean saveGame(File file){
+	public static boolean saveGame(String file){
 		
 		boolean gameSaved = false;
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
-		String directory = "./src/main/resources/savedGames/"+file.toString();
+		String directory = "./src/main/resources/savedGames/"+file;
 		File fileSearch = new File(directory);
 		
 		if(fileSearch.exists()== true) {
-			gameSaved = overwriteSave(directory); //If the file exists, overwrite it.
+			gameSaved = overwriteSave(directory); //If the file exists, overwrite it.(basically just create new save but under same name)
 		}
 		else {
 			gameSaved = newSave(directory); //If the file does not exist, new save.
@@ -179,6 +190,20 @@ public class KDController {
 			throw new java.lang.IllegalArgumentException(
 					"Error occured while trying to read alldominoes.dat: " + e.getMessage());
 		}
+	}
+	public static Domino getdominoByID(int id) {
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		for (Domino domino : game.getAllDominos()) {
+			if (domino.getId() == id) {
+				return domino;
+			}
+		}
+		throw new java.lang.IllegalArgumentException("Domino with ID " + id + " not found.");
+	}
+	public static List<Domino> pickRandDomino(List<Domino> lst, int n) {
+	    List<Domino> copy = new LinkedList<Domino>(lst);
+	    Collections.shuffle(copy);
+	    return copy.subList(0, n);
 	}
 	private static TerrainType getTerrainType(String terrain) {
 		switch (terrain) {
