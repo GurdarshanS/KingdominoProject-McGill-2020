@@ -466,7 +466,7 @@ public class KDController {
 		if (ax1==bx1 && ay1==by1) {
 			return true;
 		}
-		else if (ax1==bx2 && ay2==by2) {
+		else if (ax1==bx2 && ay1==by2) {
 			return true;
 		}
 		else if (ax2==bx1 && ay2==by1) {
