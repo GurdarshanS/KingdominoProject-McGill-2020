@@ -17,7 +17,7 @@ public class KDController {
 	public KDController(){}
 
 	public static void initiateEmptyGame() {
-		// Intialize empty game
+		//start empty game
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = new Game(48, kingdomino);
 		game.setNumberOfPlayers(4);
@@ -28,6 +28,14 @@ public class KDController {
 		game.setNextPlayer(game.getPlayer(0));
 	}
 
+	public static DominoInKingdom prePlaceDomino(Player player, Domino dominoToPlace, int posx, int posy, String dir) {
+		dominoToPlace.setStatus(DominoStatus.CorrectlyPreplaced);
+		Kingdom kingdom=player.getKingdom();
+		DominoInKingdom dInK = new DominoInKingdom(posx,posy,kingdom,dominoToPlace);
+		dInK.setDirection(getDirection(dir));
+		return dInK;
+	}
+	
 	public static String getKingdomVerificationResult(Player player) {
 		String validity="valid";
 		
@@ -37,18 +45,79 @@ public class KDController {
 		}
 		
 		return validity;
+	}
+	
+	public static boolean verifyGridSizeNewDominoInKingdom(Player player, DominoInKingdom dInK) {
+		boolean valid=true;
 		
+		List <KingdomTerritory> t = player.getKingdom().getTerritories();
+		List<Integer> xCoords = new ArrayList<Integer>();
+		List<Integer> yCoords = new ArrayList<Integer>();
+		
+		for (KingdomTerritory each:t) {
+			int [] otherPos=calculateOtherPos(each);
+					
+			int x1=each.getX();
+			int y1=each.getY();
+			int x2=otherPos[0];
+			int y2=otherPos[1];
+			
+			xCoords.add(x1);
+			xCoords.add(x1);
+			yCoords.add(y1);
+			yCoords.add(y2);
+			
+		}
+		
+		Collections.sort(xCoords);
+		Collections.sort(yCoords);
+		
+		int xMin=xCoords.get(0);
+		int xMax=xCoords.get(xCoords.size()-1);
+		
+		int yMin=yCoords.get(0);
+		int yMax=yCoords.get(yCoords.size()-1);
+		
+		int xSize=xMax-xMin;
+		int ySize=yMax-yMin;
+		
+		if (xSize>5 || ySize>5) {
+			throw new IllegalArgumentException("Kingdom already have invalid sizse");
+		}
+		
+		int [] otherTestPos=calculateOtherPos(dInK);
+
+		int testX1=dInK.getX();
+		int testY1=dInK.getY();
+		int testX2=otherTestPos[0];
+		int testY2=otherTestPos[1];
+		
+		if (testX1<xMin || testX2<xMin) {
+			valid=false;
+			dInK.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+		}
+		
+		else if (testX1>xMax || testX2>xMax) {
+			valid=false;
+			dInK.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+		}
+		
+		else if (testY1<yMin || testY2<yMin) {
+			valid=false;
+			dInK.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+		}
+		
+		else if (testY1>yMax || testY2>yMax) {
+			valid=false;
+			dInK.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+		}
+		
+		return valid;
 	}
 	
-	public static DominoInKingdom prePlaceDomino(Player player, Domino dominoToPlace, int posx, int posy, String dir) {
-		dominoToPlace.setStatus(DominoStatus.CorrectlyPreplaced);
-		Kingdom kingdom=player.getKingdom();
-		DominoInKingdom dInK = new DominoInKingdom(posx,posy,kingdom,dominoToPlace);
-		dInK.setDirection(getDirection(dir));
-		return dInK;
-	}
-	
-	public static void verifyGridSize(Player player) {
+	public static void verifyGridSizeAllKingdom(Player player) {
+		
+		boolean valid=true;
 		
 		List<KingdomTerritory> t = player.getKingdom().getTerritories();
 		List<Integer> xCoords = new ArrayList<Integer>();
@@ -82,10 +151,17 @@ public class KDController {
 			if (each instanceof DominoInKingdom) {
 				if (xSize>5 || ySize>5) {
 					((DominoInKingdom) each).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+					valid=false;
 				}
 			}
 			
 		}
+//		if (valid==false) {
+//			System.out.println("failed verifyGridSizeAllKingdom");
+//		}
+//		else {
+//			System.out.println("passed verifyGrideSizeAllKingdom");
+//		}
 	}
 	
 	public static void verifyNoOverlapAllTerritories(Player player) {
@@ -161,9 +237,7 @@ public class KDController {
 		
 		int castleX=t.get(0).getX();
 		int castleY=t.get(0).getY();
-//		System.out.println("----- castle coords -------");
-//		System.out.println(castleX);
-//		System.out.println(castleY);
+
 		
 		KingdomTerritory testD = t.get(t.size()-1);
 		int [] testOtherPos=calculateOtherPos(testD);
@@ -173,23 +247,15 @@ public class KDController {
 		int testX2=testOtherPos[0];
 		int testY2=testOtherPos[1];
 		
-//		System.out.println("----- test coords -------");
-//		System.out.println(testX1);
-//		System.out.println(testY1);
-//		System.out.println(testX2);
-//		System.out.println(testY2);
-
 		
 		int norm1=L2NormSquared(testX1,testY1,castleX,castleY);
 		int norm2=L2NormSquared(testX2,testY2,castleX,castleY);
-//		System.out.println("----- test norms -------");
-//		System.out.println(norm1);
-//		System.out.println(norm2);
-//		System.out.println("---------------");
 
 		
-		if (((norm1!=1)&&(norm2!=1))||(testX1==0 && testY1==0)||(testX2==0 && testY2==0)) {
-			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+		if ((norm1!=1)&&(norm2!=1)){
+			if((testX1==0 && testY1==0)||(testX2==0 && testY2==0)) {
+				((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+			}
 		}
 	}
 	
@@ -209,21 +275,26 @@ public class KDController {
 			Neighborhood leftNeighborhood = getDominoLeftNeighbors(t,prePlacedDomino);
 			Neighborhood rightNeighborhood =getDominoRightNeighbors(t,prePlacedDomino);
 			
-			System.out.println(leftNeighborhood);	
-			System.out.println("---------------------------------------------------------------------------------------------");
-			System.out.println(rightNeighborhood);	
+//			System.out.println(leftNeighborhood);	
+//			System.out.println("---------------------------------------------------------------------------------------------");
+//			System.out.println(rightNeighborhood);	
 
 			List<TerrainType> leftTileNeighborTerrains = leftNeighborhood.getNeighborTerrainType();
+//			System.out.println(leftTileNeighborTerrains.size());
+			
 			List<TerrainType> rightTileNeighborTerrains = rightNeighborhood.getNeighborTerrainType();
+//			System.out.println(rightTileNeighborTerrains.size());
 			
 			if (leftTileNeighborTerrains.isEmpty() && rightTileNeighborTerrains.isEmpty()) {
-				System.out.println("no neighbors at all");
+//				System.out.println("no neighbors at all");
 			}
 			
 			if (!leftTileNeighborTerrains.isEmpty()) {
+				String leftTerrain=prePlacedDomino.getDomino().getLeftTile().name();
 				for (TerrainType testTerrain:leftTileNeighborTerrains) {
-					if (testTerrain.name().equalsIgnoreCase(prePlacedDomino.getDomino().getLeftTile().name())){
-						System.out.println("found left match!");
+					String testTerrainName=testTerrain.name();
+					if (testTerrainName.equalsIgnoreCase(leftTerrain)){
+//						System.out.println("found left match!");
 						validNeighborCount++;
 					}
 				}
@@ -232,7 +303,7 @@ public class KDController {
 			if (!rightTileNeighborTerrains.isEmpty()) {
 				for (TerrainType testTerrain:rightTileNeighborTerrains) {
 					if (testTerrain.name().equalsIgnoreCase(prePlacedDomino.getDomino().getRightTile().name())){
-						System.out.println("found right match!");
+//						System.out.println("found right match!");
 						validNeighborCount++;
 					}
 				}
@@ -244,7 +315,22 @@ public class KDController {
 			
 		}
 	}
-		
+	
+//	public static void discardDomino(Player player) {
+//		int x=-4;
+//		int y=-4;
+//		
+//		while (x<5) {
+//			while (y<5) {
+//				
+//			}
+//		}
+//		
+//	}
+	
+//	public static void discardDomino(Player player)
+	
+	
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
@@ -297,7 +383,7 @@ public class KDController {
 				}
 		}
 	}
-		
+	
 	Neighborhood n = new Neighborhood(neighborTerritory,neighborTileType,neighborTerrain,neighborCoord);		
 	return n;
 }	

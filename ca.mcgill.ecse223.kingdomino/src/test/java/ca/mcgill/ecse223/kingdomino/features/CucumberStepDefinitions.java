@@ -60,7 +60,7 @@ public class CucumberStepDefinitions {
 	
 	@When("validation of the grid size is initiated")
 	public void initiate_player_kingdom_grid_size_validation() {
-		KDController.verifyGridSize(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
+		KDController.verifyGridSizeAllKingdom(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
 	}
 	
 	@Then("the grid size of the player's kingdom shall be {string}")

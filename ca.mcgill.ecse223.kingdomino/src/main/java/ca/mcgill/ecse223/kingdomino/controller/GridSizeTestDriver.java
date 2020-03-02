@@ -34,7 +34,7 @@ public class GridSizeTestDriver {
 			System.out.println(dInK.getDomino().getStatus());
 		}
 //		verify dominos in kingdom for grid size, changing status to either CorrectlyPreplaced or ErroneousPrePlaced
-		KDController.verifyGridSize(player);
+		KDController.verifyGridSizeAllKingdom(player);
 		
 //		see status of dominos in kingdom after verification
 		System.out.println("---------------------------------------------------");
