@@ -15,6 +15,7 @@ public class CastleAdjacencyTestDriver {
 		KDController.initiateEmptyGame();
 		Kingdomino kd = KingdominoApplication.getKingdomino();
 		Player player = kd.getCurrentGame().getNextPlayer();
+		System.out.println(player.getKingdom().getTerritories());
 				
 //		#################################################
 //		#		       Castle Adjacency Test			#
@@ -32,22 +33,16 @@ public class CastleAdjacencyTestDriver {
 //	      |  1 | -1 | left      | valid   |
 		
 		Domino dominoToPlace = KDController.getdominoByID(1); 
-		KDController.prePlaceDomino(player, dominoToPlace, 0,0,"up");
-		
-//		view status of kingdom territories before castle adjacency verification
-		List<KingdomTerritory> t = player.getKingdom().getTerritories();
-		for (int i=1;i<t.size();i++) {
-			DominoInKingdom dInK=(DominoInKingdom) t.get(i);
-			System.out.println(dInK.getDomino().getStatus());
-		}
+		KDController.prePlaceDomino(player, dominoToPlace, 1,1,"right");
+		System.out.println("added domino");
+		System.out.println(player.getKingdom().getTerritories());
+
+
 		
 		KDController.verifyCastleAdjacency(player);
 		
-//		view status of kingdom territores after castle adjacencyu verification
-		for (int i=1;i<t.size();i++) {
-			DominoInKingdom dInK=(DominoInKingdom) t.get(i);
-			System.out.println(dInK.getDomino().getStatus());
-		}
+		String validity=KDController.getKingdomVerificationResult(player);
+		System.out.println(validity);
 		
 	}
 

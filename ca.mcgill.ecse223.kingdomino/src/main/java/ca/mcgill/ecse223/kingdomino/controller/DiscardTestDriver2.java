@@ -21,9 +21,9 @@ public class DiscardTestDriver2 {
 			KDController.initiateEmptyGame();
 			Player player=KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
 			
-			int testId=48;
+			int testId=41;
 			System.out.println("============================= Discard Test Domino "+testId+" ==================================");
-			Domino dominoToPlace = KDController.getdominoByID(41);	//change id here according to table below
+			Domino dominoToPlace = KDController.getdominoByID(testId);	//change id here according to table below
 			
 
 			int[] id= {7,20,22,23,24,30,31,32,38,40,43};
@@ -40,13 +40,28 @@ public class DiscardTestDriver2 {
 			List<KingdomTerritory> t =player.getKingdom().getTerritories();
 
 //			placing new test domino and start iterating through all possible positions and orientations
-			KDController.prePlaceDomino(player, dominoToPlace, 0, 1, "up");
-//			KingdomTerritory territoryToChange=t.get(t.size()-1);
-			System.out.println(t);
+			KDController.prePlaceDomino(player, dominoToPlace, 0, 1, "down");
 		
+			String validity="valid";
+			
 			KDController.verifyNoOverlapLastTerritory(player);
-			String validity=KDController.getKingdomVerificationResult(player);
-			System.out.println(validity);
+			KDController.verifyGridSizeAllKingdom(player);
+			KDController.verifyNeighborAdjacencyLastTerritory(player);
+
+			if (castleAvailable) {
+				KDController.verifyNeighborAdjacencyLastTerritory(player);
+			}
+				
+			
+			validity=KDController.getKingdomVerificationResult(player);
+
+			if (validity.equalsIgnoreCase("valid")) {
+//				do something
+			}
+			else {
+//				do something else
+			}
+			
 		}
 
 }

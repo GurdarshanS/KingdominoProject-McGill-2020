@@ -47,81 +47,20 @@ public class KDController {
 		return validity;
 	}
 	
-	public static boolean verifyGridSizeNewDominoInKingdom(Player player, DominoInKingdom dInK) {
-		boolean valid=true;
+	public static boolean verifyGridSizeAllKingdom(Player player) {
 		
-		List <KingdomTerritory> t = player.getKingdom().getTerritories();
-		List<Integer> xCoords = new ArrayList<Integer>();
-		List<Integer> yCoords = new ArrayList<Integer>();
-		
-		for (KingdomTerritory each:t) {
-			int [] otherPos=calculateOtherPos(each);
-					
-			int x1=each.getX();
-			int y1=each.getY();
-			int x2=otherPos[0];
-			int y2=otherPos[1];
-			
-			xCoords.add(x1);
-			xCoords.add(x1);
-			yCoords.add(y1);
-			yCoords.add(y2);
-			
-		}
-		
-		Collections.sort(xCoords);
-		Collections.sort(yCoords);
-		
-		int xMin=xCoords.get(0);
-		int xMax=xCoords.get(xCoords.size()-1);
-		
-		int yMin=yCoords.get(0);
-		int yMax=yCoords.get(yCoords.size()-1);
-		
-		int xSize=xMax-xMin;
-		int ySize=yMax-yMin;
-		
-		if (xSize>5 || ySize>5) {
-			throw new IllegalArgumentException("Kingdom already have invalid sizse");
-		}
-		
-		int [] otherTestPos=calculateOtherPos(dInK);
-
-		int testX1=dInK.getX();
-		int testY1=dInK.getY();
-		int testX2=otherTestPos[0];
-		int testY2=otherTestPos[1];
-		
-		if (testX1<xMin || testX2<xMin) {
-			valid=false;
-			dInK.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-		}
-		
-		else if (testX1>xMax || testX2>xMax) {
-			valid=false;
-			dInK.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-		}
-		
-		else if (testY1<yMin || testY2<yMin) {
-			valid=false;
-			dInK.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-		}
-		
-		else if (testY1>yMax || testY2>yMax) {
-			valid=false;
-			dInK.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-		}
-		
-		return valid;
-	}
-	
-	public static void verifyGridSizeAllKingdom(Player player) {
-		
-		boolean valid=true;
-		
+		int badCount=0;
+		boolean respectGrid=true;
+				
 		List<KingdomTerritory> t = player.getKingdom().getTerritories();
 		List<Integer> xCoords = new ArrayList<Integer>();
 		List<Integer> yCoords = new ArrayList<Integer>();
+		
+		if (t.size()==1) {
+			respectGrid=true;
+			System.out.println(respectGrid);
+			return true;
+		}
 
 		
 		for (KingdomTerritory each:t) {
@@ -151,27 +90,36 @@ public class KDController {
 			if (each instanceof DominoInKingdom) {
 				if (xSize>5 || ySize>5) {
 					((DominoInKingdom) each).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-					valid=false;
+					badCount++;
+				}
+				else {
+					((DominoInKingdom) each).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
 				}
 			}
 			
 		}
-//		if (valid==false) {
-//			System.out.println("failed verifyGridSizeAllKingdom");
-//		}
-//		else {
-//			System.out.println("passed verifyGrideSizeAllKingdom");
-//		}
+		if (badCount>0) {
+			respectGrid=false;
+		}
+		else {
+			respectGrid=true;
+		}
+		System.out.println(respectGrid);
+		return respectGrid;
 	}
 	
-	public static void verifyNoOverlapAllTerritories(Player player) {
+public static boolean verifyNoOverlapAllTerritories(Player player) {
 		
 //		verifies all territories in kingdom
+		int overlappedCount=0;
+		boolean noOverlap=true;
 		
 		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
 		
 		if (territories.size()==1) {
-			return;
+			noOverlap=true;
+			System.out.println(noOverlap);
+			return noOverlap;
 		}
 		
 		else {
@@ -188,23 +136,37 @@ public class KDController {
 
 					if (checkOverlap(tA,tB)){
 						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+						overlappedCount++;
+					}
+					else {
+						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
 					}
 					
 				}
 			}
-			
+			if (overlappedCount>0) {
+				noOverlap=false;
+			}
+			else {
+				noOverlap=true;
+			}
+			System.out.println(noOverlap);
+			return noOverlap;
 		}
 		
 	}
 	
-	public static void verifyNoOverlapLastTerritory(Player player) {
+	public static boolean verifyNoOverlapLastTerritory(Player player) {
 		
 //		only verifies the last preplaced domino
+		boolean noOverlap=true;
 		
 		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
 		
 		if (territories.size()==1) {
-			return;
+			noOverlap=true;
+			System.out.println(noOverlap);
+			return noOverlap;
 		}
 		
 		else {
@@ -220,19 +182,31 @@ public class KDController {
 
 					if (checkOverlap(tA,tB)){
 						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+						noOverlap=false;
 						break;
+					}
+					else {
+						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+						noOverlap=true;
 					}
 					
 				}
+			System.out.println(noOverlap);
+			return noOverlap;
 			}
 			
 	}
 	
-	public static void verifyCastleAdjacency(Player player) {
+	public static boolean verifyCastleAdjacency(Player player) {
+		
+		boolean castleAdj=true;
+		
 		List <KingdomTerritory> t = player.getKingdom().getTerritories();
 		
 		if (t.size()==1) {
-			return;
+			castleAdj=true;
+			System.out.println(castleAdj);
+			return castleAdj;
 		}
 		
 		int castleX=t.get(0).getX();
@@ -251,20 +225,34 @@ public class KDController {
 		int norm1=L2NormSquared(testX1,testY1,castleX,castleY);
 		int norm2=L2NormSquared(testX2,testY2,castleX,castleY);
 
-		
-		if ((norm1!=1)&&(norm2!=1)){
-			if((testX1==0 && testY1==0)||(testX2==0 && testY2==0)) {
-				((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-			}
+		if ((norm1==1)&&(norm2>1)){
+			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+			castleAdj=true;
 		}
+		else if ((norm1>1)&&(norm2==1)) {
+			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+			castleAdj=true;
+		}
+		else {
+			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+			castleAdj=false;
+		}
+		
+		System.out.println(castleAdj);
+		return castleAdj;
+		
 	}
 	
-	public static void verifyNeighborAdjacencyLastTerritory(Player player) {
+	public static boolean verifyNeighborAdjacencyLastTerritory(Player player) {
+		
+		boolean neighborAdj=true;
 		
 		List<KingdomTerritory> t =player.getKingdom().getTerritories();
 		
 		if (t.size()==1) {
-			return;
+			neighborAdj=true;
+			System.out.println(neighborAdj);
+			return neighborAdj;
 		}
 		else {
 			
@@ -311,9 +299,17 @@ public class KDController {
 			
 			if (validNeighborCount==0) {
 				prePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+				neighborAdj=false;
 			}
-			
+			else {
+				prePlacedDomino.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+				neighborAdj=true;
+			}
+		
+			System.out.println(neighborAdj);
+			return neighborAdj;
 		}
+		
 	}
 	
 //	public static void discardDomino(Player player) {

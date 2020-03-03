@@ -68,6 +68,7 @@ public static void main (String[] args) {
 		
 		boolean castleAvailable=KDQuery.CastleNeighborhoodAvailable(player);
 		List<KingdomTerritory> t =player.getKingdom().getTerritories();
+		System.out.println(t);
 
 
 
