@@ -6,13 +6,14 @@ Feature: Rotate Current Domino
 
   Scenario Outline: Player rotates a tentatively placed domino
     Given it is "<player>"'s turn
-    Given "<player>"'s kingdown has following dominoes:
+    Given "<player>"'s kingdom has following dominoes:
       | id | dir   | posx | posy |
       |  1 | right |    1 |    0 |
       | 12 | left  |    1 |   -1 |
-      | 38 | right |    1 |   -2 |
+      | 46 | right |    1 |   -2 |
       | 28 | right |   -2 |   -1 |
       | 18 | up    |   -1 |    0 |
+      
     Given "<player>" has selected domino <id>
     Given domino <id> is tentatively placed at position <posx>:<posy> with direction "<dir>"
     When "<player>" requests to rotate the domino with "<rotation>"
@@ -27,7 +28,7 @@ Feature: Rotate Current Domino
       | pink   | 48 |    1 |    1 | up    | clockwise        | right  | CorrectlyPreplaced   |
       | yellow | 22 |   -2 |   -1 | up    | counterclockwise | left   | ErroneouslyPreplaced |
       | yellow | 22 |   -2 |   -1 | left  | counterclockwise | down   | ErroneouslyPreplaced |
-      | yellow | 22 |   -2 |   -1 | down  | counterclockwise | right  | CorrectlyPreplaced   |
+      | yellow | 22 |   -2 |   -1 | down  | counterclockwise | right  | ErroneouslyPreplaced |
       | yellow | 22 |   -2 |   -1 | right | counterclockwise | up     | ErroneouslyPreplaced |
       | blue   |  8 |    2 |   -1 | up    | counterclockwise | left   | ErroneouslyPreplaced |
       | blue   |  8 |    2 |   -1 | up    | clockwise        | right  | ErroneouslyPreplaced |
@@ -35,8 +36,9 @@ Feature: Rotate Current Domino
       | green  | 10 |    0 |    2 | down  | clockwise        | left   | ErroneouslyPreplaced |
 
   Scenario Outline: Player attempts to rotate the tentatively placed domino but fails due to kingdom size restrictions
+    Given it is "<player>"'s turn
     Given "<player>" has selected domino <id>
-    Given "<player>"'s kingdom has following dominoes
+    Given "<player>"'s kingdom has following dominoes:
       | id | dir   | posx | posy |
       |  1 | right |    1 |    0 |
       | 13 | down  |    1 |   -1 |
@@ -59,3 +61,4 @@ Feature: Rotate Current Domino
       | yellow | 23 |    0 |   -4 | left  | counterclockwise | ErroneouslyPreplaced |
       | blue   |  5 |    4 |   -3 | down  | counterclockwise | CorrectlyPreplaced   |
       | blue   | 23 |   -2 |    4 | right | counterclockwise | ErroneouslyPreplaced |
+      

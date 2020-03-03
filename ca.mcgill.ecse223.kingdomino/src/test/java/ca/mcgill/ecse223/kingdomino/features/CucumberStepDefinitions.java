@@ -104,7 +104,6 @@ public class CucumberStepDefinitions {
 		
 		playerToSelectDomino.setDominoSelection(dSelection);
 		currentDraft.addSelection(dSelection);
-		dominoToSelect.setDominoSelection(dSelection);
 		
 	}									
 
@@ -117,23 +116,22 @@ public class CucumberStepDefinitions {
 		Domino dominoToPrePlace = getdominoByID(domID);
 		Kingdom currentPlayerKingdom = playerToPrePlaceDomino.getKingdom();
 		
-		DominoInKingdom dInKingdom = new DominoInKingdom(-1, -2, currentPlayerKingdom, dominoToPrePlace);
-		dominoToPrePlace.setStatus(DominoStatus.CorrectlyPreplaced);
+		DominoInKingdom dInKingdom = new DominoInKingdom(0, 0, currentPlayerKingdom, dominoToPrePlace);
+		dominoToPrePlace.setStatus(DominoStatus.ErroneouslyPreplaced);
 	
 		game.getCurrentDraft().removeIdSortedDomino(dominoToPrePlace);
 		
 	}
 
 	@When("the player attempts to discard the selected domino")
-	public void the_player_attempts_to_discard_the_selected_domino() { //////////////////////// FIIIIIIIIIX /////////////////////
+	public void the_player_attempts_to_discard_the_selected_domino() {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		Player playerToDiscardDomino = game.getPlayer(0);
-		Domino selectedDomino = playerToDiscardDomino.getDominoSelection().getDomino();
 		
 		try {
 			
-			KDController.discardDomino(game, selectedDomino, playerToDiscardDomino);
+			KDController.discardDomino(playerToDiscardDomino);
 			
 		} catch (Exception e) {
 			
@@ -181,6 +179,198 @@ public class CucumberStepDefinitions {
 	 * 
 	 */
 	
+	@Given("the game is initialized for move current domino")
+	public void the_game_is_initialized_for_move_current_domino() {
+	   
+		// Intialize empty game
+		Kingdomino kingdomino = new Kingdomino();
+		Game game = new Game(48, kingdomino);
+		game.setNumberOfPlayers(4);
+		kingdomino.setCurrentGame(game);
+		// Populate game
+		addDefaultUsersAndPlayers(game);
+		createAllDominoes(game);
+		game.setNextPlayer(game.getPlayer(0));
+		KingdominoApplication.setKingdomino(kingdomino);
+		
+	}
+
+	@Given("it is {string}'s turn")
+	public void it_is_s_turn(String string) {
+
+		Player player = getPlayerByColor(string);
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		
+		game.setNextPlayer(player);
+		
+	}
+
+	@Given("{string}'s kingdown has following dominoes:")
+	public void s_kingdown_has_following_dominoes(String string, io.cucumber.datatable.DataTable dataTable) {
+		
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		List<Map<String, String>> valueMaps = dataTable.asMaps();
+		
+		for (Map<String, String> map : valueMaps) {
+			
+			// Get values from cucumber table
+			Integer id = Integer.decode(map.get("id"));
+			DirectionKind dir = getDirection(map.get("dir"));
+			Integer posx = Integer.decode(map.get("posx"));
+			Integer posy = Integer.decode(map.get("posy"));
+
+			// Add the domino to a player's kingdom
+			Domino dominoToPlace = getdominoByID(id);
+			Kingdom kingdom = getPlayerByColor(string).getKingdom();
+			DominoInKingdom domInKingdom = new DominoInKingdom(posx, posy, kingdom, dominoToPlace);
+			domInKingdom.setDirection(dir);
+			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);
+			
+		}
+		
+	}
+
+	@Given("{string} has selected domino {int}")
+	public void has_selected_domino(String string, Integer int1) {
+
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+	
+		Domino dominoToSelect = getdominoByID(int1);
+		Player playerToSelectDomino = getPlayerByColor(string);
+		
+		Draft currentDraft = new Draft(DraftStatus.Sorted, game);
+		currentDraft.addIdSortedDomino(dominoToSelect);
+		game.addAllDraft(currentDraft);
+		game.setCurrentDraft(currentDraft);
+		
+		dominoToSelect.setStatus(DominoStatus.InCurrentDraft);
+		
+	
+		DominoSelection dSelection = new DominoSelection(playerToSelectDomino, dominoToSelect, currentDraft);
+		
+		playerToSelectDomino.setDominoSelection(dSelection);
+		currentDraft.addSelection(dSelection);
+		
+	}
+
+	@Given("domino {int} is tentatively placed at position {int}:{int} with direction {string}")
+	public void domino_is_tentatively_placed_at_position_with_direction(Integer int1, Integer int2, Integer int3, String string) {
+	   
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		
+		Domino dominoToBeTentativelyPlaced = getdominoByID(int1);
+		Kingdom playerKingdom = game.getNextPlayer().getKingdom();
+		
+		DominoInKingdom dInKingdom = new DominoInKingdom(int2, int3, playerKingdom, dominoToBeTentativelyPlaced);
+		dInKingdom.setDirection(getDirection(string));
+		
+		game.getCurrentDraft().removeIdSortedDomino(dominoToBeTentativelyPlaced);
+		dominoToBeTentativelyPlaced.setStatus(DominoStatus.ErroneouslyPreplaced);
+		
+	}
+
+	@When("{string} requests to rotate the domino with {string}")
+	public void requests_to_rotate_the_domino_with(String string, String string2) {
+	    
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		Player playerToRotateDomino = getPlayerByColor(string);
+		DominoInKingdom newlyPrePlacedDomino = (DominoInKingdom) playerToRotateDomino.getKingdom().getTerritory(playerToRotateDomino.getKingdom().getTerritories().size()-1);
+		
+		try {
+			
+			KDController.rotateCurrentDomino(playerToRotateDomino, newlyPrePlacedDomino, string2);
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Then("the domino {int} is still tentatively placed at {int}:{int} but with new direction {string}")
+	public void the_domino_is_still_tentatively_placed_at_but_with_new_direction(Integer int1, Integer int2, Integer int3, String string) {
+	  
+		Domino domino = getdominoByID(int1);
+		DominoInKingdom dInKingdom = (DominoInKingdom) domino.getDominoSelection().getPlayer().getKingdom().getTerritory(domino.getDominoSelection().getPlayer().getKingdom().getTerritories().size()-1);
+		
+		DirectionKind domDirection = dInKingdom.getDirection();
+		Integer xPos = dInKingdom.getX();
+		Integer yPos = dInKingdom.getY();
+		
+		assertEquals(domDirection, getDirection(string));
+		assertEquals(xPos, int2);
+		assertEquals(yPos, int3);
+		
+	}
+
+	@Then("the domino {int} should have status {string}")
+	public void the_domino_should_have_status(Integer int1, String string) {
+	   
+		Domino domino = getdominoByID(int1);
+		DominoStatus domStatus = domino.getStatus();
+		
+		assertEquals(domStatus, getDominoStatusCapital(string));
+		
+	}
+
+	@Given("{string}'s kingdom has following dominoes:")
+	public void s_kingdom_has_following_dominoes(String string, io.cucumber.datatable.DataTable dataTable) {
+	
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		List<Map<String, String>> valueMaps = dataTable.asMaps();
+		
+		for (Map<String, String> map : valueMaps) {
+			
+			// Get values from cucumber table
+			Integer id = Integer.decode(map.get("id"));
+			DirectionKind dir = getDirection(map.get("dir"));
+			Integer posx = Integer.decode(map.get("posx"));
+			Integer posy = Integer.decode(map.get("posy"));
+
+			// Add the domino to a player's kingdom
+			Domino dominoToPlace = getdominoByID(id);
+			Kingdom kingdom = getPlayerByColor(string).getKingdom();
+			DominoInKingdom domInKingdom = new DominoInKingdom(posx, posy, kingdom, dominoToPlace);
+			domInKingdom.setDirection(dir);
+			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);
+			
+		}
+		
+	}
+
+	@Given("domino {int} has status {string}")
+	public void domino_has_status(Integer int1, String string) {
+	 
+		Domino domino = getdominoByID(int1);
+		domino.setStatus(getDominoStatusCapital(string));
+		
+	}
+
+	@Then("domino {int} is tentatively placed at the same position {int}:{int} with the same direction {string}")
+	public void domino_is_tentatively_placed_at_the_same_position_with_the_same_direction(Integer int1, Integer int2, Integer int3, String string) {
+	   
+		Domino domino = getdominoByID(int1);
+		DominoInKingdom dInKingdom = (DominoInKingdom) domino.getDominoSelection().getPlayer().getKingdom().getTerritory(domino.getDominoSelection().getPlayer().getKingdom().getTerritories().size()-1);
+		
+		DirectionKind domDirection = dInKingdom.getDirection();
+		Integer xPos = dInKingdom.getX();
+		Integer yPos = dInKingdom.getY();
+		
+		assertEquals(domDirection, getDirection(string));
+		assertEquals(xPos, int2);
+		assertEquals(yPos, int3);
+		
+	}
+
+	@Then("domino {int} should still have status {string}")
+	public void domino_should_still_have_status(Integer int1, String string) {
+	   
+		Domino domino = getdominoByID(int1);
+		DominoStatus domStatus = domino.getStatus();
+		
+		assertEquals(domStatus, getDominoStatusCapital(string));
+		
+	}
 	
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
@@ -197,17 +387,28 @@ public class CucumberStepDefinitions {
 		}
 	}
 	
-	private Player getPlayerByName(String name) {
+	private Player getPlayerByColor(String color) {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		
 		for(Player player : game.getPlayers()) {
 			
-			if(player.getUser().getName().equals(name)) return player;
+			if(player.getColor().equals(getColor(color))) return player;
 			
 		}
 		
-		throw new java.lang.IllegalArgumentException("Player with name" + name + " not found.");
+		throw new java.lang.IllegalArgumentException("Player with color" + color + " not found.");
+		
+	}
+	
+	private PlayerColor getColor(String color) {
+		
+		if(color.equalsIgnoreCase("Blue")) return PlayerColor.Blue;
+		if(color.equalsIgnoreCase("Green")) return PlayerColor.Green;
+		if(color.equalsIgnoreCase("Yellow")) return PlayerColor.Yellow;
+		if(color.equalsIgnoreCase("Pink")) return PlayerColor.Pink;
+		
+		throw new java.lang.IllegalArgumentException("No player of this color exists");
 		
 	}
 
@@ -296,6 +497,29 @@ public class CucumberStepDefinitions {
 		case "placedInKingdom":
 			return DominoStatus.PlacedInKingdom;
 		case "discarded":
+			return DominoStatus.Discarded;
+		default:
+			throw new java.lang.IllegalArgumentException("Invalid domino status: " + status);
+		}
+	}
+	
+	private DominoStatus getDominoStatusCapital(String status) {
+		switch (status) {
+		case "InPile":
+			return DominoStatus.InPile;
+		case "Excluded":
+			return DominoStatus.Excluded;
+		case "InCurrentDraft":
+			return DominoStatus.InCurrentDraft;
+		case "InNextDraft":
+			return DominoStatus.InNextDraft;
+		case "ErroneouslyPreplaced":
+			return DominoStatus.ErroneouslyPreplaced;
+		case "CorrectlyPreplaced":
+			return DominoStatus.CorrectlyPreplaced;
+		case "PlacedInKingdom":
+			return DominoStatus.PlacedInKingdom;
+		case "Discarded":
 			return DominoStatus.Discarded;
 		default:
 			throw new java.lang.IllegalArgumentException("Invalid domino status: " + status);

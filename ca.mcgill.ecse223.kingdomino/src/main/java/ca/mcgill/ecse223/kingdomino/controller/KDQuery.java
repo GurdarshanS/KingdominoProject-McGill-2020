@@ -100,7 +100,52 @@ public class KDQuery {
 
 	}
 
-	
+
+
+	public static boolean CastleNeighborhoodAvailable(Player aPlayer) {
+		
+		List<KingdomTerritory> t = aPlayer.getKingdom().getTerritories();
+		int [][] existingCoords = KDQuery.getPlayerTerritoryCoordinates(aPlayer);
+		int [] existingX1=existingCoords[0];
+		int [] existingY1=existingCoords[1];
+		int [] existingX2=existingCoords[2];
+		int [] existingY2=existingCoords[3];
+			
+		boolean leftOccupied=false;
+		boolean rightOccupied=false;
+		boolean topOccupied=false;
+		boolean bottomOccupied=false;
+			
+		for (int k=0;k<existingX1.length;k++) {
+			int x1=existingX1[k];
+			int y1=existingY1[k];
+			int x2=existingX2[k];
+			int y2=existingY2[k];
+				
+			if ((x1==-1 && y1==0)||(x2==-1 && y2==0)) {
+				leftOccupied=true;
+			}
+				
+			if ((x1==1 && y1==0)||(x2==1 && y2==0)) {
+				rightOccupied=true;
+			}
+				
+			if ((x1==0 && y1==1)||(x2==0 && y2==1)) {
+				topOccupied=true;
+			}
+			if ((x1==0 && y1==-1)||(x2==0 && y2==-1)) {
+				bottomOccupied=true;
+			}
+		}
+			
+		if (leftOccupied && rightOccupied && topOccupied && bottomOccupied) {
+			return false;
+		}
+		else {
+			return true;
+		}
+		
+	}
 
 	
 
