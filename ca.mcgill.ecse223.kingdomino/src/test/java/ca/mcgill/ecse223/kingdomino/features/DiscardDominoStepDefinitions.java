@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
+import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -25,12 +26,17 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class DiscardDominoStepDefinitions {
-
+	
+	
 	/*
 	 * Note that these step definitions and helper methods just serve as a guide to help
 	 * you get started. You may change the code if required.
 	 */
-
+	
+	
+	
+	
+	
 	@Given("the game is initialized for discard domino")
 	public void the_game_is_initialized_for_discard_domino() {
 		// Intialize empty game

@@ -16,6 +16,8 @@ Feature: Shuffle Dominos
     Examples:
       | nplayers  | dominoesonboard| dominoesleft  |
       | 4         |             4 |          44  |
+      | 3         |             3 |          33  |
+      | 2         |             4 |          20  |
     # Bonus: Fill in data table for 2 and 3 players if you decide to
     # implement that functionality as a bonus feature.
 
