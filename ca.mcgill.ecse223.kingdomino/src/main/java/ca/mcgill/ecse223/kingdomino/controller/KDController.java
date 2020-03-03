@@ -16,12 +16,11 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class KDController {
-
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 1: This method sets the desired game options for the player.
 	 * @param numPlayers : Number of players for the game.
-	 * @param selectedBonusOptions: The chosen bonus options.
+	 * @param selectedBonusOptions: List of chosen bonus options.
 	 * @throws IllegalArgumentException: Thrown when numPlayers is invalid.
 	 */
 	public static void setGameOptions(int numPlayers, List<BonusOption> selectedBonusOptions) 
@@ -59,7 +58,6 @@ public class KDController {
 			}
 		}
 	} 
-	
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 3: This method starts a new game for the player.
@@ -69,11 +67,10 @@ public class KDController {
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
 		int randomNum = ThreadLocalRandom.current().nextInt(0, game.getNumberOfPlayers()-1);
-		int randID = ThreadLocalRandom.current().nextInt(0, 24);
 		List<Domino> dominoesInGame;
 		for (int i = 0; i < game.getNumberOfPlayers(); i++) {
 			
-			game.getKingdomino().addUser(game.getPlayer(i).toString());
+			game.getKingdomino().addUser(game.getPlayer(i).getUser());
 			Player player = new Player(game);
 			player.setColor(PlayerColor.values()[i]);
 			Kingdom kingdom = new Kingdom(player);
@@ -84,19 +81,32 @@ public class KDController {
 		
 		if(game.getNumberOfPlayers()==2) {
 			
+			int randDomino = ThreadLocalRandom.current().nextInt(0, 24);
 			dominoesInGame = pickRandDomino(game.getAllDominos(), 24);
-			game.setTopDominoInPile(aNewTopDominoInPile)
+			for(int i=0; i<= 24; i++) {
+				game.addAllDomino(dominoesInGame.get(i));
+			}
+			game.setTopDominoInPile(dominoesInGame.get(randDomino));
 		}
 		if(game.getNumberOfPlayers()==3) {
+			
+			int randDomino = ThreadLocalRandom.current().nextInt(0, 36);
 			dominoesInGame = pickRandDomino(game.getAllDominos(), 36);
-			game.setTopDominoInPile(aNewTopDominoInPile)
+			for(int i=0; i<= 36; i++) {
+				game.addAllDomino(dominoesInGame.get(i));
+			}
+			game.setTopDominoInPile(dominoesInGame.get(randDomino));
 		}
 		if(game.getNumberOfPlayers()==4) {
+			
+			int randDomino = ThreadLocalRandom.current().nextInt(0, 36);
 			dominoesInGame = pickRandDomino(game.getAllDominos(), 48);
-			game.setTopDominoInPile(aNewTopDominoInPile)
+			for(int i=0; i<= 48; i++) {
+				game.addAllDomino(dominoesInGame.get(i));
+			}
+			game.setTopDominoInPile(dominoesInGame.get(randDomino));
 		}
 	}
-	
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 6: This method loads a saved game for the player.
@@ -117,7 +127,6 @@ public class KDController {
 		}
 		return gameLoaded;
 	}
-	
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 7: This method saves the current game for the player.
@@ -146,7 +155,7 @@ public class KDController {
 	///////////////////////////////////////
 	
 	public static void initializeGame() {
-		// Intialize empty game
+		// Initialize empty game
 		Kingdomino kingdomino = new Kingdomino();
 		Game game = new Game(48, kingdomino);
 		game.setNumberOfPlayers(4);
@@ -167,7 +176,6 @@ public class KDController {
 			new Castle(0, 0, kingdom, player);
 		}
 	}
-	
 	private static void createAllDominoes(Game game) {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("src/main/resources/alldominoes.dat"));
