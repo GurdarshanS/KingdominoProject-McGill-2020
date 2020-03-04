@@ -29,7 +29,7 @@ import io.cucumber.java.en.When;
 
 public class RevolveTiebreak {
 	
-	private Integer[] ranking;
+	
 	
 	@Given("the game is initialized for resolve tiebreak")
 	public void the_game_is_initialized_for_resolve_tiebreak() {
@@ -44,7 +44,7 @@ public class RevolveTiebreak {
 		for (Map<String, String> map : valueMaps) {
 			// Get values from cucumber table
 			Integer standing = Integer.decode(map.get("standing"));
-			assertEquals(standing,ranking[n]);
+			assertEquals(standing,CalculateRankingStepDefinitions.ranking[n]);
 			n++;
 	}
 	}

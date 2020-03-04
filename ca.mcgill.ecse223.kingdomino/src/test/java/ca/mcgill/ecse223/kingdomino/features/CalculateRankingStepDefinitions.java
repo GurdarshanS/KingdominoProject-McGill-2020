@@ -34,7 +34,7 @@ public class CalculateRankingStepDefinitions {
 	int score2 = 0;
 	int score3 = 0;
 	int score4 = 0;
-	Integer[] ranking;
+	public static Integer[] ranking;
 	
 	@Given("the game is initialized for calculate ranking")
 	public void the_game_is_initialized_for_calculate_ranking() {
