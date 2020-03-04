@@ -2,6 +2,7 @@ package ca.mcgill.ecse223.kingdomino.controller;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 
+
 import ca.mcgill.ecse223.kingdomino.model.*;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
@@ -24,11 +25,11 @@ public class KDController {
 	 * @throws IllegalArgumentException: Thrown when numPlayers is invalid.
 	 */
 	public static void setGameOptions(int numPlayers, List<BonusOption> selectedBonusOptions) 
-										throws IllegalArgumentException{
+										throws InvalidInputException{
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		if(numPlayers < 1 || numPlayers > 4) {
-			throw new IllegalArgumentException("Invalid amount of players. Try between 2 and 4.");
+			throw new InvalidInputException("Must between 2 and 4 players for a game.");
 		}
 		if(numPlayers == 2) {
 			Game game = new Game(24, kingdomino);
@@ -122,7 +123,12 @@ public class KDController {
 		File fileSearch = new File(directory);
 		if (fileSearch.isFile()) {
 			if(fileSearch.canRead()) {
-				gameLoaded = loadGameFile(directory);
+				try{
+					gameLoaded = loadGameFile(directory);
+				}
+				catch(RuntimeException r) {
+					throw new InvalidInputException("Invalid file name.");
+				}
 			}
 		}
 		return gameLoaded;
@@ -133,7 +139,7 @@ public class KDController {
 	 * @param file: Name of the file saved by the user.
 	 * @return Method returns true if file is saved, false if it cannot be.
 	 */
-	public static boolean saveGame(String file){
+	public static boolean saveGame(String file) throws InvalidInputException {
 		
 		boolean gameSaved = false;
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
@@ -141,11 +147,16 @@ public class KDController {
 		String directory = "./src/test/resources/savedGames/"+file;
 		File fileSearch = new File(directory);
 		
-		if(fileSearch.exists()== true) {
-			gameSaved = overwriteSave(directory); //If the file exists, overwrite it.(basically just create new save but under same name)
+		try{
+			if(fileSearch.exists()== true) {
+				gameSaved = overwriteSave(directory); //If the file exists, overwrite it.(basically just create new save but under same name)
+			}
+			else {
+				gameSaved = newSave(directory); //If the file does not exist, new save.
+			}
 		}
-		else {
-			gameSaved = newSave(directory); //If the file does not exist, new save.
+		catch(RuntimeException r) {
+			throw new InvalidInputException("Invalid file input.");
 		}
 		return gameSaved;
 	}
@@ -154,6 +165,15 @@ public class KDController {
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
 	
+	public static class InvalidInputException extends Exception {
+		
+		private static final long serialVersionUID = -5633915762703837868L;
+		
+		public InvalidInputException(String errorMessage) {
+			super(errorMessage);
+		}
+
+	}
 	public static void initializeGame() {
 		// Initialize empty game
 		Kingdomino kingdomino = new Kingdomino();

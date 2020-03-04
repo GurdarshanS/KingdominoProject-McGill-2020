@@ -3,6 +3,7 @@ package ca.mcgill.ecse223.kingdomino.features;
 import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.Map;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
+import ca.mcgill.ecse223.kingdomino.controller.KDController.InvalidInputException;
+import ca.mcgill.ecse223.kingdomino.model.BonusOption;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -142,20 +145,22 @@ public class CucumberStepDefinitions {
 	}
 
 	@When("the user initiates saving the game to a file named {string}")
-	public void the_user_initiates_saving_the_game_to_a_file_named(String string) {
+	public void the_user_initiates_saving_the_game_to_a_file_named(String string) throws InvalidInputException {
 	    KDController.saveGame(string);
 	}
 
 	@Then("a file named {string} shall be created in the filesystem")
 	public void a_file_named_shall_be_created_in_the_filesystem(String string) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+		String directory = "./src/test/resources/savedGames/"+string;
+		newSave(directory);
 	}
 
 	@Given("the file named {string} exists in the filesystem")
 	public void the_file_named_exists_in_the_filesystem(String string) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+		String directory = "./src/test/resources/savedGames/"+string;
+		File fileSearch = new File(directory);
+		fileSearch.exists();
+		ovewriteSave(string);
 	}
 
 	@When("the user agrees to overwrite the existing file")
@@ -171,15 +176,21 @@ public class CucumberStepDefinitions {
 	}
 
 	@When("set game options is initiated")
-	public void set_game_options_is_initiated() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	public void set_game_options_is_initiated() throws InvalidInputException {
+		int numPlayers=4;
+		List<BonusOption> selectedBonusOptions = null;
+		try {	
+			KDController.setGameOptions(numPlayers, selectedBonusOptions);
+		}
+		catch(InvalidInputException i) {
+			throw new InvalidInputException(i.getMessage());
+		}
 	}
 
 	@When("the number of players is set to {int}")
-	public void the_number_of_players_is_set_to(Integer int1) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	public void the_number_of_players_is_set_to(Integer int1) throws InvalidInputException {
+		List<BonusOption> selectedBonusOptions = null;
+		KDController.setGameOptions(int1, selectedBonusOptions);
 	}
 
 	@When("Harmony {string} selected as bonus option")
