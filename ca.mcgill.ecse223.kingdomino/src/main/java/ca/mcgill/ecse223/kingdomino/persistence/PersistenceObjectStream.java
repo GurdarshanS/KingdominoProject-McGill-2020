@@ -22,15 +22,13 @@ public class PersistenceObjectStream {
 	       e.printStackTrace();
 	     }
 	  }
-		try (
-		    FileOutputStream fileOut = new FileOutputStream(file);
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-		) {
+		try (FileOutputStream fileOut = new FileOutputStream(file); 
+			ObjectOutputStream out = new ObjectOutputStream(fileOut);)
+		{
 			out.writeObject(object);
 		} catch (Exception e) {
-			throw new RuntimeException("Could not save data to file '" + filename + "'.");
+			throw new RuntimeException("Could not save data to file '" + filename + ".");
 		}
-
 	}
 
 	public static Object deserialize() {
@@ -52,7 +50,6 @@ public class PersistenceObjectStream {
       } catch (IOException e) {
         e.printStackTrace();
       }
-		 
 		  
 		} catch (EOFException e1) {
 		} catch (ClassNotFoundException e2) {
