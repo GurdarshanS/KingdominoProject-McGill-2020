@@ -15,6 +15,17 @@ import java.util.*;
 public class KDController {
 
 	public KDController(){}
+	
+	/**
+	 * 
+	 * This method checks initiates an empty game.
+	 * Useful for bring games up to a testable state
+	 * 
+	 * @see - no features associated
+	 * @author Jing Han 260528152
+	 * @param void
+	 * @return void
+	 */
 
 	public static void initiateEmptyGame() {
 		//start empty game
@@ -27,6 +38,21 @@ public class KDController {
 		createAllDominoes(game);
 		game.setNextPlayer(game.getPlayer(0));
 	}
+	
+	/**
+	 * 
+	 * This method preplaces a domino into a playe's kingdom
+	 * Useful for bring games up to a testable state in cucumber files
+	 * 
+	 * @see - no features associated
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @param dominoToPlace
+	 * @param posx
+	 * @param posy
+	 * @param dir
+	 * @return dInK
+	 */
 
 	public static DominoInKingdom prePlaceDomino(Player player, Domino dominoToPlace, int posx, int posy, String dir) {
 		dominoToPlace.setStatus(DominoStatus.CorrectlyPreplaced);
@@ -35,6 +61,20 @@ public class KDController {
 		dInK.setDirection(getDirection(dir));
 		return dInK;
 	}
+	
+	/**
+	 * 
+	 * This method checks a player's kingdom for any territory that
+	 * violates one of more of the verification methods that checks
+	 * kingdom grid size, castle adjacency (when applicable), 
+	 * neighbor adjacency, and overlap. When violations occur, return
+	 * an "invalid" string, "valid" otherwise.
+	 * 
+	 * @see - no features associated, but used in many When calls of cucumber features
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return validity
+	 */
 	
 	public static String getKingdomVerificationResult(Player player) {
 		String validity="valid";
@@ -46,6 +86,18 @@ public class KDController {
 		
 		return validity;
 	}
+	
+	/**
+	 * 
+	 * This method checks a player's kingdom to make sure that
+	 * all kingdom territories stay within a 5x5 grid (7x7 if 
+	 * Mighty Kingdom) mode is enabled
+	 * 
+	 * @see VerifyGridSize.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return void
+	 */
 	
 	public static boolean verifyGridSizeAllKingdom(Player player) {
 		
@@ -108,7 +160,18 @@ public class KDController {
 		return respectGrid;
 	}
 	
-public static boolean verifyNoOverlapAllTerritories(Player player) {
+	/**
+	 * 
+	 * This method checks a player's kingdom to make sure that
+	 * none of the kingdom territories overla each other
+	 * 
+	 * @see VerifyNoOverlapping.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return void
+	 */
+	
+	public static boolean verifyNoOverlapAllTerritories(Player player) {
 		
 //		verifies all territories in kingdom
 		int overlappedCount=0;
@@ -156,6 +219,18 @@ public static boolean verifyNoOverlapAllTerritories(Player player) {
 		
 	}
 	
+	/**
+	 * 
+	 * This method checks a player's kingdom to make sure that
+	 * the last placed kingdom territory does not overlap any
+	 * existing dominos
+	 *  
+	 * @see VerifyNoOverlapping.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return void
+	 */
+	
 	public static boolean verifyNoOverlapLastTerritory(Player player) {
 		
 //		only verifies the last preplaced domino
@@ -196,6 +271,17 @@ public static boolean verifyNoOverlapAllTerritories(Player player) {
 			}
 			
 	}
+	
+	/**
+	 * 
+	 * This method checks a player's kingdom to determine whether
+	 * the last placed domino is adjacent to the kingdom castle
+	 * 
+	 * @see VerifyCastleAdjacency.fature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return void
+	 */
 	
 	public static boolean verifyCastleAdjacency(Player player) {
 		
@@ -242,6 +328,17 @@ public static boolean verifyNoOverlapAllTerritories(Player player) {
 		return castleAdj;
 		
 	}
+	
+	/**
+	 * 
+	 * This method checks a player's kingdom to determine whether
+	 * the last placed domino is has at least 1 valid neighbor
+	 * 
+	 * @see VerifyNeighborAdjacency.fature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return void
+	 */
 	
 	public static boolean verifyNeighborAdjacencyLastTerritory(Player player) {
 		
@@ -311,25 +408,23 @@ public static boolean verifyNoOverlapAllTerritories(Player player) {
 		}
 		
 	}
-	
-//	public static void discardDomino(Player player) {
-//		int x=-4;
-//		int y=-4;
-//		
-//		while (x<5) {
-//			while (y<5) {
-//				
-//			}
-//		}
-//		
-//	}
-	
-//	public static void discardDomino(Player player)
-	
+		
 	
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
+	
+	/**
+	 * 
+	 * This helper method obtains the neighborhood of the leftTile
+	 * of a DominoInKingdom's associated Domino
+	 * 
+	 * @see verifyNeighborAdjacencyLastTerritory
+	 * @author Jing Han 260528152
+	 * @param t
+	 * @param dInK
+	 * @return n
+	 */
 	
 	public static Neighborhood getDominoLeftNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
 		
@@ -383,6 +478,18 @@ public static boolean verifyNoOverlapAllTerritories(Player player) {
 	Neighborhood n = new Neighborhood(neighborTerritory,neighborTileType,neighborTerrain,neighborCoord);		
 	return n;
 }	
+	
+	/**
+	 * 
+	 * This helper method obtains the neighborhood of the rightTile
+	 * of a DominoInKingdom's associated Domino
+	 * 
+	 * @see verifyNeighborAdjacencyLastTerritory
+	 * @author Jing Han 260528152
+	 * @param t
+	 * @param dInK
+	 * @return n
+	 */
 
 	public static Neighborhood getDominoRightNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
 			
@@ -437,6 +544,17 @@ public static boolean verifyNoOverlapAllTerritories(Player player) {
 		Neighborhood n = new Neighborhood(neighborTerritory,neighborTileType,neighborTerrain,neighborCoord);		
 		return n;
 	}	
+	
+	/**
+	 * 
+	 * This helper method checks of two KingdomTerritories overlap
+	 * 
+	 * @see verifyNoOverlapAllTerritories, verifyNoOverlapLastTerritory
+	 * @author Jing Han 260528152
+	 * @param a
+	 * @param b
+	 * @return boolean
+	 */
 
 	private static boolean checkOverlap(KingdomTerritory a, KingdomTerritory b) {
 		
@@ -476,6 +594,19 @@ public static boolean verifyNoOverlapAllTerritories(Player player) {
 		}
 	}
 	
+	/**
+	 * 
+	 * This helper method calculates the square of the L2 dist btwn two coordinates
+	 * 
+	 * @see all verification methods
+	 * @author Jing Han 260528152
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @return norm
+	 */
+	
 	private static int L2NormSquared(int x1, int y1, int x2, int y2) {
 		int deltaX=x2-x1;
 		int deltaY=y2-y1;
@@ -485,12 +616,17 @@ public static boolean verifyNoOverlapAllTerritories(Player player) {
 		return norm;
 	}
 	
-	private static int[] minMaxArray(int[] x) {
-		int[] xTemp=x.clone();
-		Arrays.sort(xTemp);
-		int[] minmax= {xTemp[0],xTemp[xTemp.length-1]};
-		return minmax;
-	}
+	/**
+	 * 
+	 * This helper method calculates the coordinate of a Domino's rightTile
+	 * based on the Domin's leftTile and orientation
+	 * 
+	 * @see all verification methods
+	 * @author Jing Han 260528152
+	 * @param d
+	 * @return coord2
+	 */
+	
 
 	public static int[] calculateOtherPos(KingdomTerritory d) {
 		
@@ -526,6 +662,10 @@ public static boolean verifyNoOverlapAllTerritories(Player player) {
 		}
 		return coord2;
 	}
+	
+	///////////////////////////////////////
+	/// ----Given TA Helper Methods---- ///
+	///////////////////////////////////////
 	
 	private static void addDefaultUsersAndPlayers(Game game) {
 		String[] users = { "User1", "User2", "User3", "User4" };
@@ -627,32 +767,6 @@ public static boolean verifyNoOverlapAllTerritories(Player player) {
 		default:
 			throw new java.lang.IllegalArgumentException("Invalid domino status: " + status);
 		}
-	}
-	
-	private int argmax (int[] x) {
-		int max=0;
-		int index=-1;
-		
-		for (int i=0;i<x.length;i++) {
-			if (x[i]>max) {
-				max=x[i];
-				index=i;
-			}
-		}
-		return index;
-	}
-	
-	private int argmin (int[] x) {
-		int min=0;
-		int index=-1;
-		
-		for (int i=0;i<x.length;i++) {
-			if (x[i]<min) {
-				min=x[i];
-				index=i;
-			}
-		}
-		return index;
 	}
 
 }

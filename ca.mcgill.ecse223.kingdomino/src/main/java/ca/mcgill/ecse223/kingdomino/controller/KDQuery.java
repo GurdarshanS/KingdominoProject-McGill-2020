@@ -18,6 +18,17 @@ public class KDQuery {
 	
 	public KDQuery() {}
 	
+	/**
+	 * 
+	 * This method checks to see if the coordinates around
+	 * the castle are available. This forms the premise for 
+	 * whether to initiate the VerifyCastleAdjacency checks
+	 * 
+	 * @see - no direct features, but associated with VerifyCastleAdjacency
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return boolean
+	 */
 	
 	public static boolean CastleNeighborhoodAvailable(Player player) {
 		List<KingdomTerritory> t =player.getKingdom().getTerritories();
@@ -62,6 +73,17 @@ public class KDQuery {
 		}
 	}
 	
+	/**
+	 * 
+	 * This method checks the kingdom and collects all DominoInKingdom whose
+	 * status is ErroneouslyPrePlaced
+	 * 
+	 * @see - no direct features, but associated with all the verification methods
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return errorDominos
+	 */
+	
 	public static List<DominoInKingdom> getErroneouslyPrePlacedDomino(Player player) {
 		List<DominoInKingdom> errorDominos = new ArrayList<DominoInKingdom>();
 		List<KingdomTerritory> t = getPlayerTerritory(player);
@@ -74,6 +96,15 @@ public class KDQuery {
 		}
 		return errorDominos;
 	}
+	
+	/**
+	 * 
+	 * wrapper for returning player territories
+	 * 
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return List<KingdomTerritory>
+	 */
 	
 	public static List<KingdomTerritory> getPlayerTerritory(Player player){
 		return player.getKingdom().getTerritories();		
@@ -95,15 +126,16 @@ public class KDQuery {
 	}
 	
 	
-	public static void prePlaceNextPlayerDomino(Domino dominoToPlace, String dir, int posx, int posy) {
-
-		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		Kingdom kingdom = game.getNextPlayer().getKingdom();
-		
-		DominoInKingdom domInKingdom = new DominoInKingdom(posx, posy, kingdom, dominoToPlace);
-		domInKingdom.setDirection(getDirection(dir));
-	}
 	
+	/**
+	 * 
+	 * This method finds the coordinates of all the KingdomTerritory objects of player
+	 * 
+	 * @see - no direct features, but associated with all the verification methods
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return dominoPos
+	 */
 	
 	public static int[][] getPlayerTerritoryCoordinates(Player player) {
 		
@@ -134,12 +166,27 @@ public class KDQuery {
 	
 //	private helper methods
 	
+	/**
+	 * 
+	 * This helper method returns the min and max of an array
+	 * @author Jing Han 260528152
+	 * @param x
+	 * @return minmax
+	 */
 	private static int[] minMaxArray(int[] x) {
 		int[] xTemp=x.clone();
 		Arrays.sort(xTemp);
 		int[] minmax= {xTemp[0],xTemp[xTemp.length-1]};
 		return minmax;
 	}
+	
+	/**
+	 * 
+	 * Duplicate of the TA's helper method to faciliate call here
+	 * 
+	 * @param dir
+	 * @return DirectionKind
+	 */
 	
 	private static DirectionKind getDirection(String dir) {
 		switch (dir) {

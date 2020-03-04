@@ -3,6 +3,19 @@ import ca.mcgill.ecse223.kingdomino.model.*;
 import java.util.*;
 
 class Neighborhood {
+	
+	/**
+	 * 
+	 * This class stores the neighborhood surrounding a tile
+	 * 
+	 * @see - no direct features, but associated with verifyNeighborAdjacencyLastTerritory of KDController
+	 * @author Jing Han 260528152
+	 * @param neighbors
+	 * @param leftOrRight
+	 * @param neighborTerrain
+	 * @param neighborCoord
+	 */
+	
 	private List<KingdomTerritory> neighborTerritory;
 	private List<String> leftOrRight;
 	private List<TerrainType> neighborTerrain;
