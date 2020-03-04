@@ -7,7 +7,7 @@ import io.cucumber.junit.CucumberOptions;
 @RunWith(Cucumber.class)
 @CucumberOptions(
 		plugin = "pretty", 
-		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features/PlaceDomino.feature",
+		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features",
 		glue = "ca.mcgill.ecse223.kingdomino.features")
 public class CucumberTestsRunner {
 }

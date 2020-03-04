@@ -32,13 +32,17 @@ public class CucumberStepDefinitions {
 
 	/**
 	 * 
-	 * 		DiscardDomino Feature
+	 * 	These methods check if a player
+	 *  is allowed to discard the domino
+	 *  they had selected from the draft.
+	 *  If they are, the domino is discarded.
+	 *  If not, the dominos state is changed.
 	 *  
 	 *  @see DiscardDomino.feature
-	 *  @author Massimo Vadacchino
+	 *  @author Massimo Vadacchino 260928064
 	 *  
 	 */
-	
+
 	
 	@Given("the game is initialized for discard domino")
 	public void the_game_is_initialized_for_discard_domino() {
@@ -150,10 +154,14 @@ public class CucumberStepDefinitions {
 	
 	/**
 	 * 
-	 *     MoveCurrentDomino Feature 
+	 *  These methods allow a player to move
+	 *  their selected domino, from the current
+	 *  draft, around (up, left, down, and right)
+	 *  their kingdom if and only if the move 
+	 *  respects the grid size. 
 	 * 
 	 * 	@see MoveCurrentDomino.feature
-	 *  @author Massimo Vadacchino
+	 *  @author Massimo Vadacchino 260928064
 	 * 
 	 */
 	
@@ -292,10 +300,15 @@ public class CucumberStepDefinitions {
 	
 	/**
 	 * 
-	 *  	PlaceDomino Feature 
+	 *  These methods allow a player to place
+	 *  their selected domino into their kingdom
+	 *  if and only if it respects the kingdom size,
+	 *  has a neighbour/next to the castle, does
+	 *  not overlap with other dominoes, and has the
+	 *  status "CorrectlyPreplaced". 
 	 *  
 	 *  @see PlaceDomino.feature
-	 *  @author Massimo Vadacchino
+	 *  @author Massimo Vadacchino 260928064
 	 * 
 	 */
 	
@@ -370,10 +383,14 @@ public class CucumberStepDefinitions {
 	
 	/**
 	 * 
-	 * 		RotateCurrentDomino Feature
+	 *  These methods allow a player to rotate
+	 *  their selected domino, from the current
+	 *  draft, counter-clockwise and clockwise in
+	 *  their kingdom if and only if the rotation 
+	 *  respects the grid size. 
 	 * 
 	 * 	@see RotateCurrentDomino.feature
-	 * 	@author Massimo Vadacchino
+	 *  @author Massimo Vadacchino 260928064
 	 * 
 	 */
 	
@@ -574,7 +591,7 @@ public class CucumberStepDefinitions {
 	
 
 	///////////////////////////////////////
-	/// -----Private Helper Methods---- ///
+	/*      Private Helper Methods       */
 	///////////////////////////////////////
 
 	private void addDefaultUsersAndPlayers(Game game) {

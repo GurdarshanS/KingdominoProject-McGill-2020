@@ -7,9 +7,29 @@ import java.util.*;
 
 public class KDController {
 
+	/**
+	 * 
+	 * This method checks if a player is allowed to
+	 * discard the domino they have selected and
+	 * prePlaced in their kingdom. If they are allowed
+	 * to do so, the domino is discarded and their
+	 * dominoSelected is deleted. If not, the dominos
+	 * status is changed to ErroneouslyPrePlaced.
+	 * 
+	 * @see DiscardDomino.feature
+	 * @author Massimo Vadacchino 260928064
+	 * @param aPlayer
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 */
+	
 	public static void discardDomino(Player aPlayer) throws java.lang.IllegalArgumentException{ 
+				
+		if(aPlayer == null) throw new java.lang.IllegalArgumentException("This player does not exist");
 		
 		DominoInKingdom newlyPrePlacedDomino = (DominoInKingdom) aPlayer.getKingdom().getTerritory(aPlayer.getKingdom().getTerritories().size()-1);
+		
+		if(newlyPrePlacedDomino.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in the players kingdom");
 
 		for(int i = -4; i<5; i++) {
 			
@@ -20,14 +40,14 @@ public class KDController {
 					newlyPrePlacedDomino.setX(i);
 					newlyPrePlacedDomino.setY(j);
 					
-					if(verifyKingdomSize(aPlayer) &&  verifyNoOverLap(aPlayer) && verifyNeighbourAdjacency(aPlayer)) {
+					if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyNeighborAdjacencyLastTerritory(aPlayer)) {
 						
 						newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
 						return;
 						
 					}
 					
-					else if(verifyKingdomSize(aPlayer) && verifyNoOverLap(aPlayer) && verifyCastleAdjacencyy(aPlayer)) {
+					else if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyCastleAdjacency(aPlayer)) {
 						
 						newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
 						return;
@@ -48,8 +68,33 @@ public class KDController {
 		
 	}
 	
+	/**
+	 * 
+	 * This method allows a player to rotate 
+	 * the domino they have selected and 
+	 * prePlaced in their kingdom in 2 directions,
+	 * ClockWise or Counter-ClockWise. This may only
+	 * be possible if the rotation does stay within
+	 * the 9x9 grid size. The dominoes status and direction
+	 * is updated accordingly.
+	 * 
+	 * 
+	 * @see RotateCurrentDomino.feature
+	 * @author Massimo Vadacchino 260928064
+	 * @param aPlayer
+	 * @param dInKingdom
+	 * @param rotation
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 * 
+	 */
+	
 	public static void rotateCurrentDomino(Player aPlayer, DominoInKingdom dInKingdom, String rotation) throws java.lang.IllegalArgumentException { 
 
+		if(aPlayer == null || dInKingdom == null) throw new java.lang.IllegalArgumentException("Invalid input");
+		if(!(((DominoInKingdom)aPlayer.getKingdom().getTerritory(aPlayer.getKingdom().getTerritories().size() -1)).equals(dInKingdom))) throw new java.lang.IllegalArgumentException("This domino does not belong to this players kingdom");
+		if(dInKingdom.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in the players kingdom");
+		
 		DirectionKind dominoDir = dInKingdom.getDirection();
 		
 		if(dominoDir.equals(DirectionKind.Up) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Right);
@@ -62,7 +107,7 @@ public class KDController {
 		else if(dominoDir.equals(DirectionKind.Down) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Right);
 		else if(dominoDir.equals(DirectionKind.Right) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Up);
 		
-		if(!verifyGridSizee(dInKingdom)) {
+		if(!verifyGridLimit(dInKingdom)) {
 	
 			dInKingdom.setDirection(dominoDir);
 			return;
@@ -71,14 +116,14 @@ public class KDController {
 		
 		else {
 			
-			if(verifyNeighbourAdjacency(aPlayer) && verifyNoOverLap(aPlayer)) {
+			if(verifyNeighborAdjacencyLastTerritory(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
 				
 				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
 				return;
 				
 			}
 				
-			else if(verifyCastleAdjacencyy(aPlayer) && verifyNoOverLap(aPlayer)) {
+			else if(verifyCastleAdjacency(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
 					
 				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
 				return;
@@ -91,16 +136,39 @@ public class KDController {
 	
 	}
 	
-	public static void placeDomino(Player aPlayer, Domino dominoToPlace) { 
+	/**
+	 * 
+	 * This method allows a player to place their
+	 * selected domino into their kingdom if and
+	 * only if their domino passes the verifications
+	 * (no overlapping, within kingdom size, has a neighbour,
+	 * and adjacent to the castle) and has a status
+	 * of "CorrectlyPrePlaced". If not, the domino will 
+	 * have the same attributes as before. 
+	 * 
+	 * @see PlaceDomino.feature
+	 * @author Massimo Vadacchino 260928064
+	 * @param aPlayer
+	 * @param dominoToPlace
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 * 
+	 */
+	
+	public static void placeDomino(Player aPlayer, Domino dominoToPlace) throws java.lang.IllegalArgumentException { 
 		
-		if(verifyKingdomSize(aPlayer) &&  verifyNoOverLap(aPlayer) && verifyNeighbourAdjacency(aPlayer) && dominoToPlace.getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
+		if(aPlayer == null || dominoToPlace == null) throw new java.lang.IllegalArgumentException("Invalid input");
+		if(!(dominoToPlace.getDominoSelection().getPlayer().equals(aPlayer))) throw new java.lang.IllegalArgumentException("This domino does not belong to this player");
+		if(dominoToPlace.getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in this players kingdom");
+		
+		if(verifyGridSizeAllKingdom(aPlayer) &&  verifyNoOverlapLastTerritory(aPlayer) && verifyNeighborAdjacencyLastTerritory(aPlayer) && dominoToPlace.getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
 			
 			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);
 			aPlayer.getDominoSelection().delete();
 			
 		}
 		
-		else if(verifyKingdomSize(aPlayer) && verifyNoOverLap(aPlayer) && verifyCastleAdjacencyy(aPlayer) && dominoToPlace.getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
+		else if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyCastleAdjacency(aPlayer) && dominoToPlace.getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
 			
 			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);	
 			aPlayer.getDominoSelection().delete();
@@ -109,8 +177,33 @@ public class KDController {
 		
 	}
 	
-	public static void moveCurrentDomino(Player aPlayer, DominoInKingdom dInKingdom, String movement) {
+	/**
+	 * 
+	 * This method allows a player to move 
+	 * the domino they have selected and 
+	 * prePlaced in their kingdom in 4 directions,
+	 * up, down, left, and right. This may only
+	 * be possible if the movement does stay within
+	 * the 9x9 grid size. The dominoes status and position
+	 * is updated accordingly.
+	 * 
+	 * 
+	 * @see MoveCurrentDomino.feature
+	 * @author Massimo Vadacchino 260928064
+	 * @param aPlayer
+	 * @param dInKingdom
+	 * @param movement
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 * 
+	 */
 	
+	public static void moveCurrentDomino(Player aPlayer, DominoInKingdom dInKingdom, String movement) throws java.lang.IllegalArgumentException{
+	
+		if(aPlayer == null || dInKingdom == null) throw new java.lang.IllegalArgumentException("Invalid input");
+		if(!(((DominoInKingdom)aPlayer.getKingdom().getTerritory(aPlayer.getKingdom().getTerritories().size() -1)).equals(dInKingdom))) throw new java.lang.IllegalArgumentException("This domino does not belong to this players kingdom");
+		if(dInKingdom.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in the players kingdom");
+		
 		int xPosPrevious = dInKingdom.getX();
 		int yPosPrevious = dInKingdom.getY();
 
@@ -119,7 +212,7 @@ public class KDController {
 		else if(movement.equalsIgnoreCase("Up")) dInKingdom.setY(yPosPrevious + 1);
 		else if(movement.equalsIgnoreCase("Down")) dInKingdom.setY(yPosPrevious - 1);
 		
-		if(!verifyGridSizee(dInKingdom)) {
+		if(!verifyGridLimit(dInKingdom)) {
 	
 			dInKingdom.setX(xPosPrevious);
 			dInKingdom.setY(yPosPrevious);
@@ -130,14 +223,14 @@ public class KDController {
 		
 		else {
 			
-			if(verifyNeighbourAdjacency(aPlayer) && verifyNoOverLap(aPlayer)) {
+			if(verifyNeighborAdjacencyLastTerritory(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
 				
 				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
 				return;
 				
 			}
 				
-			else if(verifyCastleAdjacencyy(aPlayer) && verifyNoOverLap(aPlayer)) {
+			else if(verifyCastleAdjacency(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
 					
 				
 				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
@@ -149,7 +242,6 @@ public class KDController {
 			
 		}
 		
-	
 	}
 	
 		////////////////////////////////////////////////
@@ -157,115 +249,22 @@ public class KDController {
 		////////////////////////////////////////////////
 	
 	
-	private static boolean verifyNoOverLap(Player player) {
-		
-		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
-		
-		KingdomTerritory newlyAddedTerritory = player.getKingdom().getTerritory(player.getKingdom().getTerritories().size()-1);
-		
-		if(territories.size() == 1) return true;
-		
-		else {
-			
-			for (int i = 0; i< territories.size(); i++) {
-
-				if(!territories.get(i).equals(newlyAddedTerritory)) {
-					
-					if(checkOverlap(newlyAddedTerritory, territories.get(i))) {
-						
-						return false;
-						
-					}
-					
-				}
-
-			}
-			
-			return true;
-			
-		}
-		
-	}
+	/**
+	 * 
+	 * This method verifies if the current prePlaced
+	 * dominos position and direction is respecting
+	 * the grid size limit of 9x9. If it does, then the
+	 * method returns true. If not, then it returns
+	 * false.
+	 * 
+	 * 
+	 * @author Massimo Vadacchino 260928064
+	 * @param dInKingdom
+	 * @return boolean
+	 * 
+	 */
 	
-	private static boolean verifyKingdomSize(Player player) {
-		
-		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
-		
-		KingdomTerritory newlyAddedTerritory = player.getKingdom().getTerritory(player.getKingdom().getTerritories().size()-1);
-		
-		int largestXCoord = territories.get(0).getX();
-		int largestYCoord = territories.get(0).getY();
-		
-		int smallestXCoord = territories.get(0).getX();
-		int smallestYCoord = territories.get(0).getY();
-
-		for (KingdomTerritory territory : territories) {
-			
-			if(territories.get(0).equals(territory)) continue;
-			
-			DominoInKingdom dInKingdom = (DominoInKingdom) territory;
-			
-			if(dInKingdom.getDirection().equals(DirectionKind.Up)) {
-				
-				if(territory.getY() + 1 > largestYCoord) 
-					largestYCoord = territory.getY() + 1;
-				
-				if(territory.getY() < smallestYCoord) smallestYCoord = territory.getY();
-				if(territory.getX() > largestXCoord) largestXCoord = territory.getX();
-				if(territory.getX() < smallestXCoord) smallestXCoord = territory.getX();
-				
-			}
-		
-			if(dInKingdom.getDirection().equals(DirectionKind.Down)) {
-				
-				if(territory.getY() - 1 < smallestYCoord)
-					smallestYCoord = territory.getY() - 1;
-				
-				if(territory.getY() > largestYCoord) largestYCoord = territory.getY();
-				if(territory.getX() > largestXCoord) largestXCoord = territory.getX();
-				if(territory.getX() < smallestXCoord) smallestXCoord = territory.getX();
-				
-			}
-			
-			if(dInKingdom.getDirection().equals(DirectionKind.Right)) {
-				
-				if(territory.getX() + 1 > largestXCoord)
-					largestXCoord = territory.getX() + 1;
-				
-				if(territory.getX() < smallestXCoord) smallestXCoord = territory.getX();
-				if(territory.getY() > largestYCoord) largestYCoord = territory.getY();
-				if(territory.getY() < smallestYCoord) smallestYCoord = territory.getY();
-				
-			}
-			
-			if(dInKingdom.getDirection().equals(DirectionKind.Left)) {
-				
-				if(territory.getX() - 1 < smallestXCoord)
-					smallestXCoord = territory.getX() - 1;
-				
-				if(territory.getX() > largestXCoord) largestXCoord = territory.getX();
-				if(territory.getY() > largestYCoord) largestYCoord = territory.getY();
-				if(territory.getY() < smallestYCoord) smallestYCoord = territory.getY();
-				
-			}
-
-		}
-		
-		if(largestXCoord - smallestXCoord >= 5) {
-			
-			return false;
-		}
-		
-		if(largestYCoord - smallestYCoord >= 5) {
-			
-			return false;
-		}
-	
-		return true;
-		
-	}
-	
-	private static boolean verifyGridSizee(DominoInKingdom dInKingdom) {
+	private static boolean verifyGridLimit(DominoInKingdom dInKingdom) {
 		
 		DirectionKind dKind = dInKingdom.getDirection();
 		
@@ -284,733 +283,387 @@ public class KDController {
 		return false;
 		
 	}
-	
-	private static boolean verifyCastleAdjacencyy(Player player) {
 
-		List <KingdomTerritory> territories = player.getKingdom().getTerritories();
-		KingdomTerritory newlyAddedTerritory = player.getKingdom().getTerritory(player.getKingdom().getTerritories().size() - 1);
 
-		if(territories.size() == 1) return true;
-		
-		int castleX = territories.get(0).getX();
-		int castleY = territories.get(0).getY();
-		
-		DominoInKingdom dInKingdom = (DominoInKingdom) newlyAddedTerritory;
+	////////////////////////////////////////////////
+	/*			Jay's Controller Methods          */
+    ////////////////////////////////////////////////
 	
-		if(dInKingdom.getDirection().equals(DirectionKind.Up)) {
+	public static boolean verifyGridSizeAllKingdom(Player player) {
+		
+		int badCount=0;
+		boolean respectGrid=true;
+				
+		List<KingdomTerritory> t = player.getKingdom().getTerritories();
+		List<Integer> xCoords = new ArrayList<Integer>();
+		List<Integer> yCoords = new ArrayList<Integer>();
+		
+		if (t.size()==1) {
+			respectGrid=true;
+			return true;
+		}
+		
+		for (KingdomTerritory each:t) {
 			
-			if(dInKingdom.getX() == castleX + 1 || dInKingdom.getX() == castleX - 1) {
-				
-				if(dInKingdom.getY() == castleY || dInKingdom.getY() + 1 == castleY) {
-				
-					return true;
-				
+			int x1=each.getX();
+			int y1=each.getY();
+			
+			xCoords.add(x1);
+			yCoords.add(y1);
+			
+			int x2;
+			int y2;
+			
+			int[] otherPos=calculateOtherPos(each);
+			x2=otherPos[0];
+			y2=otherPos[1];
+			
+			xCoords.add(x2);
+			yCoords.add(y2);
+			
+			Collections.sort(xCoords);
+			Collections.sort(yCoords);
+			
+			int xSize=xCoords.get(xCoords.size()-1)-xCoords.get(0)+1;
+			int ySize=yCoords.get(yCoords.size()-1)-yCoords.get(0)+1;
+			
+			if (each instanceof DominoInKingdom) {
+				if (xSize>5 || ySize>5) {
+					((DominoInKingdom) each).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+					badCount++;
 				}
-				
+				else {
+					((DominoInKingdom) each).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+				}
 			}
 			
-			if(dInKingdom.getY() == castleY +1 || dInKingdom.getY() + 1 == castleY - 1) {
+		}
+		if (badCount>0) {
+			respectGrid=false;
+		}
+		else {
+			respectGrid=true;
+		}
+		
+		return respectGrid;
+	}
+	
+	public static boolean verifyNoOverlapLastTerritory(Player player) {
+		
+		boolean noOverlap=true;
+		
+		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
+		
+		if (territories.size()==1) {
+			noOverlap=true;
+			return noOverlap;
+		}
+		
+		else {
+			
+			KingdomTerritory tA;
+			KingdomTerritory tB;
+	
+			tA=territories.get(territories.size()-1);
 				
-				if(dInKingdom.getX() == castleX) {
+			for (int j=territories.size()-2;j>-1;j--) {
 					
-					return true;
-				
-				}
-			}
-			
-		
-		}
-			
-		if(dInKingdom.getDirection().equals(DirectionKind.Down)) {
-			
-			if(dInKingdom.getX() == castleX + 1 || dInKingdom.getX() == castleX - 1) {
-				
-				if(dInKingdom.getY() == castleY || dInKingdom.getY() - 1 == castleY) {
-	
-					return true;
-				
-				}
-				
-			}
-			
-			if(dInKingdom.getY() - 1 == castleY + 1 || dInKingdom.getY() == castleY - 1) {
-				
-				if(dInKingdom.getX() == castleX) {
-	
-					return true;
-				
-				}
-			}
-			
-		}
-		
-		if(dInKingdom.getDirection().equals(DirectionKind.Right)) {
-			
-			if(dInKingdom.getX() == castleX + 1 || dInKingdom.getX() + 1 == castleX - 1) {
-				
-				if(dInKingdom.getY() == castleY) {
-					
-					return true;
-				
-				}
-			}
-			
-			if(dInKingdom.getY() == castleY +1 || dInKingdom.getY() == castleY - 1) {
-				
-				if(dInKingdom.getX() == castleX || dInKingdom.getX() + 1 == castleX) {
-					
-					return true;
-				
-				}
-			}
-			
-		}
-		
-		if(dInKingdom.getDirection().equals(DirectionKind.Left)) {
-			
-			if(dInKingdom.getX() - 1 == castleX + 1 || dInKingdom.getX() == castleX - 1) {
-				
-				if(dInKingdom.getY() == castleY) {
+					tB=territories.get(j);
 
-					return true;
-				
+					if (checkOverlap(tA,tB)){
+						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+						noOverlap=false;
+						break;
+					}
+					else {
+						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+						noOverlap=true;
+					}
+					
 				}
+	
+			return noOverlap;
 			}
 			
-			if(dInKingdom.getY() == castleY +1 || dInKingdom.getY() == castleY - 1) {
-				
-				if(dInKingdom.getX() == castleX || dInKingdom.getX() - 1 == castleX) {
-			
-					return true;
-				
-				}
-			}
-			
+	}
+	
+	public static boolean verifyCastleAdjacency(Player player) {
+		
+		boolean castleAdj=true;
+		
+		List <KingdomTerritory> t = player.getKingdom().getTerritories();
+		
+		if (t.size()==1) {
+			castleAdj=true;
+			return castleAdj;
 		}
+		
+		int castleX=t.get(0).getX();
+		int castleY=t.get(0).getY();
 
-		return false;
+		
+		KingdomTerritory testD = t.get(t.size()-1);
+		int [] testOtherPos=calculateOtherPos(testD);
+		
+		int testX1=testD.getX();
+		int testY1=testD.getY();
+		int testX2=testOtherPos[0];
+		int testY2=testOtherPos[1];
+		
+		
+		int norm1=L2NormSquared(testX1,testY1,castleX,castleY);
+		int norm2=L2NormSquared(testX2,testY2,castleX,castleY);
+
+		if ((norm1==1)&&(norm2>1)){
+			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+			castleAdj=true;
+		}
+		else if ((norm1>1)&&(norm2==1)) {
+			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+			castleAdj=true;
+		}
+		else {
+			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+			castleAdj=false;
+		}
+		
+		return castleAdj;
 		
 	}
 	
-	private static boolean verifyNeighbourAdjacency(Player player) {
+	public static boolean verifyNeighborAdjacencyLastTerritory(Player player) {
 		
-		List <KingdomTerritory> territories = player.getKingdom().getTerritories();
-		KingdomTerritory newlyAddedTerritory = player.getKingdom().getTerritory(player.getKingdom().getTerritories().size() - 1);
+		boolean neighborAdj=true;
 		
-		for(KingdomTerritory territory : territories) {
-			
-			if(territories.get(0).equals(territory)) continue;
-			if(territories.get(player.getKingdom().getTerritories().size()-1).equals(territory)) break;
-			
-			DominoInKingdom dInKingdomTerritory = (DominoInKingdom) territory;
-			DominoInKingdom dInKingdomMine = (DominoInKingdom) newlyAddedTerritory;
-			
-			int tileAPosX = dInKingdomTerritory.getX();
-			int tileAPosY = dInKingdomTerritory.getY();
-			TerrainType tileAType = dInKingdomTerritory.getDomino().getLeftTile();
-			
-			int tileBPosX = 0;
-			int tileBPosY = 0;
-			TerrainType tileBType = dInKingdomTerritory.getDomino().getRightTile();
-			
-			int myTileAPosX = dInKingdomMine.getX();
-			int myTileAPosY = dInKingdomMine.getY();
-			TerrainType myTileAType = dInKingdomMine.getDomino().getLeftTile();
-			
-			int myTileBPosX = 0;
-			int myTileBPosY = 0;
-			TerrainType myTileBType = dInKingdomMine.getDomino().getRightTile();
-			
-			if(dInKingdomTerritory.getDirection().equals(DirectionKind.Up)){
-				
-				tileBPosX = tileAPosX;
-				tileBPosY = tileAPosY + 1;
-				
-			}
-			
-			if(dInKingdomMine.getDirection().equals(DirectionKind.Up)) {
-				
-				myTileBPosX = myTileAPosX;
-				myTileBPosY = myTileAPosY + 1;
-				
-			}
-			
-			if(dInKingdomTerritory.getDirection().equals(DirectionKind.Down)) {
-				
-				tileBPosX = tileAPosX;
-				tileBPosY = tileAPosY - 1;
-			
-			}
-			
-			if(dInKingdomMine.getDirection().equals(DirectionKind.Down)) {
-				
-				myTileBPosX = myTileAPosX;
-				myTileBPosY = myTileAPosY - 1;
-				
-			}
-			
-			if(dInKingdomTerritory.getDirection().equals(DirectionKind.Right)) {
-	
-				tileBPosX = tileAPosX + 1;
-				tileBPosY = tileAPosY;
-			
-			}
-			
-			if(dInKingdomMine.getDirection().equals(DirectionKind.Right)) {
-				
-				myTileBPosX = myTileAPosX + 1;
-				myTileBPosY = myTileAPosY;
-				
-			}
-			
-			
-			if(dInKingdomTerritory.getDirection().equals(DirectionKind.Left)) {
-	
-				tileBPosX = tileAPosX - 1;
-				tileBPosY = tileAPosY;
-	
-			}
-			
-			if(dInKingdomMine.getDirection().equals(DirectionKind.Left)) {
-				
-				myTileBPosX = myTileAPosX - 1;
-				myTileBPosY = myTileAPosY;
-				
-			}
-			
+		List<KingdomTerritory> t =player.getKingdom().getTerritories();
 		
-			
-			// TILE A AND TILE A
-		
-			//left and right of tile A and tile A
-			if(myTileAPosX -1 == tileAPosX || myTileAPosX + 1 == tileAPosX) 
-				if(myTileAPosY == tileAPosY && tileAType.equals(myTileAType)) {
-					
-					return true;
-		
-				}
-			
-			//up and down of tile A and tile A
-			if(myTileAPosY -1 == tileAPosY || myTileAPosY + 1 == tileAPosY) 
-				if(myTileAPosX == tileAPosX && tileAType.equals(myTileAType)) {
-				
-					return true;
-			
-				}
-			
-			// TILE B AND TILE B
-			
-			//left and right of tile B and tile B
-			if(myTileBPosX -1 == tileBPosX || myTileBPosX + 1 == tileBPosX) 
-				if(myTileBPosY == tileBPosY && tileBType.equals(myTileBType)) {
-				
-					return true;
-				}
-			
-			
-			//up and down of tile B and tile B
-			if(myTileBPosY -1 == tileBPosY || myTileBPosY + 1 == tileBPosY)
-				if(myTileBPosX == tileBPosX && tileBType.equals(myTileBType)) {
-					
-					return true;
-				}
-			
-			
-			
-			// TILE A AND TILE B
-			
-			//left and right of tile A & B
-			if(myTileAPosX -1 == tileBPosX || myTileAPosX + 1 == tileBPosX)
-				if(myTileAPosY == tileBPosY && tileBType.equals(myTileAType)) {
-					
-					return true;
-				}
-			
-			
-			//up and down of tile A & B
-			if(myTileAPosY -1 == tileBPosY || myTileAPosY + 1 == tileBPosY) 
-				if(myTileAPosX == tileBPosX && tileBType.equals(myTileAType)) {
-					
-					return true;
-				}
-				
-				
-				
-				
-			// TILE B AND TILE A
-			
-			//left and right of tile B & A
-			if(myTileBPosX -1 == tileAPosX || myTileBPosX + 1 == tileAPosX) 
-				if(myTileBPosY == tileAPosY && tileAType.equals(myTileBType)) {
-			
-					return true;
-				}
-				
-				
-			//up and down of tile B & A
-			if(myTileBPosY -1 == tileAPosY || myTileBPosY + 1 == tileAPosY) 
-				if(myTileBPosX == tileAPosX && tileAType.equals(myTileBType)) {
-				
-					return true;
-				}
-			
+		if (t.size()==1) {
+			neighborAdj=true;
+			return neighborAdj;
 		}
+		else {
+			
+			int validNeighborCount=0;
+			
+			DominoInKingdom prePlacedDomino = (DominoInKingdom) t.get(t.size()-1);
+			
+			Neighborhood leftNeighborhood = getDominoLeftNeighbors(t,prePlacedDomino);
+			Neighborhood rightNeighborhood =getDominoRightNeighbors(t,prePlacedDomino);
+
+			List<TerrainType> leftTileNeighborTerrains = leftNeighborhood.getNeighborTerrainType();
+
+			List<TerrainType> rightTileNeighborTerrains = rightNeighborhood.getNeighborTerrainType();
+
+			if (!leftTileNeighborTerrains.isEmpty()) {
+				String leftTerrain=prePlacedDomino.getDomino().getLeftTile().name();
+				for (TerrainType testTerrain:leftTileNeighborTerrains) {
+					String testTerrainName=testTerrain.name();
+					if (testTerrainName.equalsIgnoreCase(leftTerrain)){
+						validNeighborCount++;
+					}
+				}
+			}
+			
+			if (!rightTileNeighborTerrains.isEmpty()) {
+				for (TerrainType testTerrain:rightTileNeighborTerrains) {
+					if (testTerrain.name().equalsIgnoreCase(prePlacedDomino.getDomino().getRightTile().name())){
+						validNeighborCount++;
+					}
+				}
+			}
+			
+			if (validNeighborCount==0) {
+				prePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+				neighborAdj=false;
+			}
+			else {
+				prePlacedDomino.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+				neighborAdj=true;
+			}
 	
-		return false;
-		
+			return neighborAdj;
+		}
 		
 	}
 	
-//
-//	
-//	////////////////////////////////////////////////
-//	/*			Jay's Controller Methods          */
-//    ////////////////////////////////////////////////
-//	
-//	public static boolean verifyGridSizeAllKingdom(Player player) {
-//		
-//		int badCount=0;
-//		boolean respectGrid=true;
-//				
-//		List<KingdomTerritory> t = player.getKingdom().getTerritories();
-//		List<Integer> xCoords = new ArrayList<Integer>();
-//		List<Integer> yCoords = new ArrayList<Integer>();
-//		
-//		if (t.size()==1) {
-//			respectGrid=true;
-//			return true;
-//		}
-//		
-//		for (KingdomTerritory each:t) {
-//			
-//			int x1=each.getX();
-//			int y1=each.getY();
-//			
-//			xCoords.add(x1);
-//			yCoords.add(y1);
-//			
-//			int x2;
-//			int y2;
-//			
-//			int[] otherPos=calculateOtherPos(each);
-//			x2=otherPos[0];
-//			y2=otherPos[1];
-//			
-//			xCoords.add(x2);
-//			yCoords.add(y2);
-//			
-//			Collections.sort(xCoords);
-//			Collections.sort(yCoords);
-//			
-//			int xSize=xCoords.get(xCoords.size()-1)-xCoords.get(0)+1;
-//			int ySize=yCoords.get(yCoords.size()-1)-yCoords.get(0)+1;
-//			
-//			if (each instanceof DominoInKingdom) {
-//				if (xSize>5 || ySize>5) {
-//					((DominoInKingdom) each).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-//					badCount++;
-//				}
-//				else {
-//					((DominoInKingdom) each).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-//				}
-//			}
-//			
-//		}
-//		if (badCount>0) {
-//			respectGrid=false;
-//		}
-//		else {
-//			respectGrid=true;
-//		}
-//		
-//		return respectGrid;
-//	}
-//	
-//	public static boolean verifyNoOverlapLastTerritory(Player player) {
-//		
-//		boolean noOverlap=true;
-//		
-//		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
-//		
-//		if (territories.size()==1) {
-//			noOverlap=true;
-//			return noOverlap;
-//		}
-//		
-//		else {
-//			
-//			KingdomTerritory tA;
-//			KingdomTerritory tB;
-//	
-//			tA=territories.get(territories.size()-1);
-//				
-//			for (int j=territories.size()-2;j>-1;j--) {
-//					
-//					tB=territories.get(j);
-//
-//					if (checkOverlap(tA,tB)){
-//						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-//						noOverlap=false;
-//						break;
-//					}
-//					else {
-//						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-//						noOverlap=true;
-//					}
-//					
-//				}
-//	
-//			return noOverlap;
-//			}
-//			
-//	}
-//	
-//	public static boolean verifyCastleAdjacency(Player player) {
-//		
-//		boolean castleAdj=true;
-//		
-//		List <KingdomTerritory> t = player.getKingdom().getTerritories();
-//		
-//		if (t.size()==1) {
-//			castleAdj=true;
-//			return castleAdj;
-//		}
-//		
-//		int castleX=t.get(0).getX();
-//		int castleY=t.get(0).getY();
-//
-//		
-//		KingdomTerritory testD = t.get(t.size()-1);
-//		int [] testOtherPos=calculateOtherPos(testD);
-//		
-//		int testX1=testD.getX();
-//		int testY1=testD.getY();
-//		int testX2=testOtherPos[0];
-//		int testY2=testOtherPos[1];
-//		
-//		
-//		int norm1=L2NormSquared(testX1,testY1,castleX,castleY);
-//		int norm2=L2NormSquared(testX2,testY2,castleX,castleY);
-//
-//		if ((norm1==1)&&(norm2>1)){
-//			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-//			castleAdj=true;
-//		}
-//		else if ((norm1>1)&&(norm2==1)) {
-//			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-//			castleAdj=true;
-//		}
-//		else {
-//			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-//			castleAdj=false;
-//		}
-//		
-//		return castleAdj;
-//		
-//	}
-//	
-//	public static boolean verifyNeighborAdjacencyLastTerritory(Player player) {
-//		
-//		boolean neighborAdj=true;
-//		
-//		List<KingdomTerritory> t =player.getKingdom().getTerritories();
-//		
-//		if (t.size()==1) {
-//			neighborAdj=true;
-//			return neighborAdj;
-//		}
-//		else {
-//			
-//			int validNeighborCount=0;
-//			
-//			DominoInKingdom prePlacedDomino = (DominoInKingdom) t.get(t.size()-1);
-//			
-//			Neighborhood leftNeighborhood = getDominoLeftNeighbors(t,prePlacedDomino);
-//			Neighborhood rightNeighborhood =getDominoRightNeighbors(t,prePlacedDomino);
-//
-//			List<TerrainType> leftTileNeighborTerrains = leftNeighborhood.getNeighborTerrainType();
-//
-//			List<TerrainType> rightTileNeighborTerrains = rightNeighborhood.getNeighborTerrainType();
-//
-//			if (!leftTileNeighborTerrains.isEmpty()) {
-//				String leftTerrain=prePlacedDomino.getDomino().getLeftTile().name();
-//				for (TerrainType testTerrain:leftTileNeighborTerrains) {
-//					String testTerrainName=testTerrain.name();
-//					if (testTerrainName.equalsIgnoreCase(leftTerrain)){
-//						validNeighborCount++;
-//					}
-//				}
-//			}
-//			
-//			if (!rightTileNeighborTerrains.isEmpty()) {
-//				for (TerrainType testTerrain:rightTileNeighborTerrains) {
-//					if (testTerrain.name().equalsIgnoreCase(prePlacedDomino.getDomino().getRightTile().name())){
-//						validNeighborCount++;
-//					}
-//				}
-//			}
-//			
-//			if (validNeighborCount==0) {
-//				prePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-//				neighborAdj=false;
-//			}
-//			else {
-//				prePlacedDomino.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-//				neighborAdj=true;
-//			}
-//	
-//			return neighborAdj;
-//		}
-//		
-//	}
-//	
-//	
-//	////////////////////////////////////////////////
-//	/*		  Jay's Private helper Methods        */
-//    ////////////////////////////////////////////////
-//	
-//	
-//	public static Neighborhood getDominoLeftNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
-//
-//		
-//
-//		List <KingdomTerritory> neighborTerritory=new ArrayList<KingdomTerritory>();
-//
-//		List <String> neighborTileType=new ArrayList<String>();
-//
-//		List <TerrainType> neighborTerrain = new ArrayList<TerrainType>();
-//
-//		List <int []> neighborCoord = new ArrayList<int[]>();
-//
-//	
-//
-//		int searchX=dInK.getX();
-//
-//		int searchY=dInK.getY();
-//
-//		
-//
-//		for (KingdomTerritory each:t) {
-//
-//			
-//
-//			int [] testRightCoord=calculateOtherPos(each);
-//
-//			
-//
-//			int testLeftX=each.getX();
-//
-//			int testLeftY=each.getY();
-//
-//			int testRightX=testRightCoord[0];
-//
-//			int testRightY=testRightCoord[1];
-//
-//			
-//
-//			int [] testLeftCoord = {testLeftX,testLeftY};
-//
-//			
-//
-//			int norm1=L2NormSquared(searchX,searchY,testLeftX,testLeftY);
-//
-//			int norm2=L2NormSquared(searchX,searchY,testRightX,testRightY);
-//
-//			
-//
-//			if (norm1==1 || norm2==1) {
-//
-//				if (each instanceof Castle) {
-//
-//					neighborTerritory.add(each);
-//
-//					neighborTileType.add("castle");
-//
-//					neighborTerrain.add(dInK.getDomino().getLeftTile());
-//
-//					neighborCoord.add(testLeftCoord);
-//
-//				}
-//
-//				else if (each instanceof DominoInKingdom) {
-//
-//					if (((DominoInKingdom) each).getDomino().getId()!=dInK.getDomino().getId()) {
-//
-//						neighborTerritory.add(each);
-//
-//						if (norm1==1) {
-//
-//							neighborTileType.add("left");
-//
-//							neighborTerrain.add(((DominoInKingdom) each).getDomino().getLeftTile());
-//
-//							neighborCoord.add(testLeftCoord);
-//
-//						}
-//
-//						else if (norm2==1) {
-//
-//							neighborTileType.add("right");
-//
-//							neighborTerrain.add(((DominoInKingdom) each).getDomino().getRightTile());
-//
-//							neighborCoord.add(testRightCoord);
-//
-//						}
-//
-//					}
-//
-//				}
-//
-//		}
-//
-//	}
-//
-//		
-//
-//	Neighborhood n = new Neighborhood(neighborTerritory,neighborTileType,neighborTerrain,neighborCoord);		
-//
-//	return n;
-//
-//	}	
-//
-//
-//
-//	public static Neighborhood getDominoRightNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
-//
-//			
-//
-//			List <KingdomTerritory> neighborTerritory=new ArrayList<KingdomTerritory>();
-//
-//			List <String> neighborTileType=new ArrayList<String>();
-//
-//			List <TerrainType> neighborTerrain = new ArrayList<TerrainType>();
-//
-//			List <int []> neighborCoord = new ArrayList<int[]>();
-//
-//		
-//
-//			int [] otherXY=calculateOtherPos(dInK);
-//
-//			int searchX=otherXY[0];
-//
-//			int searchY=otherXY[1];
-//
-//			
-//
-//			for (KingdomTerritory each:t) {
-//
-//				
-//
-//				int [] testRightCoord=calculateOtherPos(each);
-//
-//				
-//
-//				int testLeftX=each.getX();
-//
-//				int testLeftY=each.getY();
-//
-//				int testRightX=testRightCoord[0];
-//
-//				int testRightY=testRightCoord[1];
-//
-//				
-//
-//				int [] testLeftCoord = {testLeftX,testLeftY};
-//
-//				
-//
-//				int norm1=L2NormSquared(searchX,searchY,testLeftX,testLeftY);
-//
-//				int norm2=L2NormSquared(searchX,searchY,testRightX,testRightY);
-//
-//	
-//
-//				if (norm1==1 || norm2==1) {
-//
-//					if (each instanceof Castle) {
-//
-//						neighborTerritory.add(each);
-//
-//						neighborTileType.add("castle");
-//
-//						neighborTerrain.add(dInK.getDomino().getRightTile());
-//
-//						neighborCoord.add(testLeftCoord);
-//
-//					}
-//
-//					else if (each instanceof DominoInKingdom) {
-//
-//						if (((DominoInKingdom) each).getDomino().getId()!=dInK.getDomino().getId()) {
-//
-//							neighborTerritory.add(each);
-//
-//							if (norm1==1) {
-//
-//								neighborTileType.add("left");
-//
-//								neighborTerrain.add(((DominoInKingdom) each).getDomino().getLeftTile());
-//
-//								neighborCoord.add(testLeftCoord);
-//
-//							}
-//
-//							else if (norm2==1) {
-//
-//								neighborTileType.add("right");
-//
-//								neighborTerrain.add(((DominoInKingdom) each).getDomino().getRightTile());
-//
-//								neighborCoord.add(testRightCoord);
-//
-//							}
-//
-//						}
-//
-//					}
-//
-//			}
-//
-//		}	
-//
-//		Neighborhood n = new Neighborhood(neighborTerritory,neighborTileType,neighborTerrain,neighborCoord);		
-//
-//		return n;
-//
-//	}	
-//
-//
-//
+	
+	////////////////////////////////////////////////
+	/*		  Jay's Private helper Methods        */
+    ////////////////////////////////////////////////
+	
+	
+	public static Neighborhood getDominoLeftNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
+
+		List <KingdomTerritory> neighborTerritory=new ArrayList<KingdomTerritory>();
+		List <String> neighborTileType=new ArrayList<String>();
+		List <TerrainType> neighborTerrain = new ArrayList<TerrainType>();
+		List <int []> neighborCoord = new ArrayList<int[]>();
+
+	
+		int searchX=dInK.getX();
+		int searchY=dInK.getY();		
+
+		for (KingdomTerritory each:t) {
+
+			int [] testRightCoord=calculateOtherPos(each);
+
+			int testLeftX=each.getX();
+			int testLeftY=each.getY();
+			int testRightX=testRightCoord[0];
+			int testRightY=testRightCoord[1];
+
+			int [] testLeftCoord = {testLeftX,testLeftY};
+
+			int norm1=L2NormSquared(searchX,searchY,testLeftX,testLeftY);
+			int norm2=L2NormSquared(searchX,searchY,testRightX,testRightY);
+
+			
+
+			if (norm1==1 || norm2==1) {
+
+				if (each instanceof Castle) {
+
+					neighborTerritory.add(each);
+					neighborTileType.add("castle");
+					neighborTerrain.add(dInK.getDomino().getLeftTile());
+					neighborCoord.add(testLeftCoord);
+
+				}
+
+				else if (each instanceof DominoInKingdom) {
+
+					if (((DominoInKingdom) each).getDomino().getId()!=dInK.getDomino().getId()) {
+
+						neighborTerritory.add(each);
+
+						if (norm1==1) {
+
+							neighborTileType.add("left");
+							neighborTerrain.add(((DominoInKingdom) each).getDomino().getLeftTile());
+							neighborCoord.add(testLeftCoord);
+
+						}
+
+						else if (norm2==1) {
+
+							neighborTileType.add("right");
+							neighborTerrain.add(((DominoInKingdom) each).getDomino().getRightTile());
+							neighborCoord.add(testRightCoord);
+
+						}
+
+					}
+
+				}
+
+		}
+
+	}
+
+	Neighborhood n = new Neighborhood(neighborTerritory,neighborTileType,neighborTerrain,neighborCoord);		
+
+	return n;
+
+	}	
+
+
+
+	public static Neighborhood getDominoRightNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
+
+			List <KingdomTerritory> neighborTerritory=new ArrayList<KingdomTerritory>();
+			List <String> neighborTileType=new ArrayList<String>();
+			List <TerrainType> neighborTerrain = new ArrayList<TerrainType>();
+			List <int []> neighborCoord = new ArrayList<int[]>();
+
+			int [] otherXY=calculateOtherPos(dInK);
+			
+			int searchX=otherXY[0];
+			int searchY=otherXY[1];			
+
+			for (KingdomTerritory each:t) {
+
+				int [] testRightCoord=calculateOtherPos(each);
+
+				int testLeftX=each.getX();
+				int testLeftY=each.getY();
+				int testRightX=testRightCoord[0];
+				int testRightY=testRightCoord[1];
+
+				int [] testLeftCoord = {testLeftX,testLeftY};
+
+				int norm1=L2NormSquared(searchX,searchY,testLeftX,testLeftY);
+				int norm2=L2NormSquared(searchX,searchY,testRightX,testRightY);
+
+	
+
+				if (norm1==1 || norm2==1) {
+
+					if (each instanceof Castle) {
+
+						neighborTerritory.add(each);
+						neighborTileType.add("castle");
+						neighborTerrain.add(dInK.getDomino().getRightTile());
+						neighborCoord.add(testLeftCoord);
+
+					}
+
+					else if (each instanceof DominoInKingdom) {
+
+						if (((DominoInKingdom) each).getDomino().getId()!=dInK.getDomino().getId()) {
+
+							neighborTerritory.add(each);
+
+							if (norm1==1) {
+
+								neighborTileType.add("left");
+								neighborTerrain.add(((DominoInKingdom) each).getDomino().getLeftTile());
+								neighborCoord.add(testLeftCoord);
+
+							}
+
+							else if (norm2==1) {
+
+								neighborTileType.add("right");
+								neighborTerrain.add(((DominoInKingdom) each).getDomino().getRightTile());
+								neighborCoord.add(testRightCoord);
+
+							}
+
+						}
+
+					}
+
+			}
+
+		}	
+
+		Neighborhood n = new Neighborhood(neighborTerritory,neighborTileType,neighborTerrain,neighborCoord);		
+
+		return n;
+
+	}	
+
+
+
 	private static boolean checkOverlap(KingdomTerritory a, KingdomTerritory b) {
 
-		
 		int[] otherA=calculateOtherPos(a);
-
 		int[] otherB=calculateOtherPos(b);
 
-		
-
+	
 		int ax1=a.getX();
-
 		int ay1=a.getY();
 
 		int ax2=otherA[0];
-
 		int ay2=otherA[1];
 
-		
-
 		int bx1=b.getX();
-
 		int by1=b.getY();
 
 		int bx2=otherB[0];
-
 		int by2=otherB[1];
 
 		
-
 		if (ax1==bx1 && ay1==by1) {
 
 			return true;
@@ -1043,48 +696,28 @@ public class KDController {
 
 	}
 
-//	
-//
-//	private static int L2NormSquared(int x1, int y1, int x2, int y2) {
-//
-//		int deltaX=x2-x1;
-//
-//		int deltaY=y2-y1;
-//
-//
-//		int norm = deltaX*deltaX+deltaY*deltaY;
-//
-//		
-//
-//		return norm;
-//
-//	}
-//
-//	
-//
-//	private static int[] minMaxArray(int[] x) {
-//
-//		int[] xTemp=x.clone();
-//
-//		Arrays.sort(xTemp);
-//
-//		int[] minmax= {xTemp[0],xTemp[xTemp.length-1]};
-//
-//		return minmax;
-//
-//	}
-//
-//
-//
-	public static int[] calculateOtherPos(KingdomTerritory d) {
+	
+
+	private static int L2NormSquared(int x1, int y1, int x2, int y2) {
+
+		int deltaX=x2-x1;
+		int deltaY=y2-y1;
+
+		int norm = deltaX*deltaX+deltaY*deltaY;
+
+		return norm;
+
+	}
 
 	
+
+	public static int[] calculateOtherPos(KingdomTerritory d) {
+
 		int [] coord2 = new int[2];
 
 		if (d instanceof Castle) {
 
 			coord2[0]=0;
-
 			coord2[1]=0;
 
 		}
@@ -1094,15 +727,12 @@ public class KDController {
 		else {
 
 			int x2;
-
 			int y2;
 
-			
 
 			if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Right)) {
 
 				x2=d.getX()+1;
-
 				y2=d.getY();
 
 			}
@@ -1110,7 +740,6 @@ public class KDController {
 			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Up)) {
 
 				x2=d.getX();
-
 				y2=d.getY()+1;
 
 			}
@@ -1118,7 +747,6 @@ public class KDController {
 			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Left)) {
 
 				x2=d.getX()-1;
-
 				y2=d.getY();
 
 			}
@@ -1126,15 +754,11 @@ public class KDController {
 			else {
 
 				x2=d.getX();
-
 				y2=d.getY()-1;
 
 			}
 
-			
-
 			coord2[0]=x2;
-
 			coord2[1]=y2;
 
 		}
@@ -1143,164 +767,4 @@ public class KDController {
 
 	}
 
-	
-//	private static TerrainType getTerrainType(String terrain) {
-//
-//		switch (terrain) {
-//
-//		case "W":
-//
-//			return TerrainType.WheatField;
-//
-//		case "F":
-//
-//			return TerrainType.Forest;
-//
-//		case "M":
-//
-//			return TerrainType.Mountain;
-//
-//		case "G":
-//
-//			return TerrainType.Grass;
-//
-//		case "S":
-//
-//			return TerrainType.Swamp;
-//
-//		case "L":
-//
-//			return TerrainType.Lake;
-//
-//		default:
-//
-//			throw new java.lang.IllegalArgumentException("Invalid terrain type: " + terrain);
-//
-//		}
-//
-//	}
-//
-//	private static DirectionKind getDirection(String dir) {
-//
-//		switch (dir) {
-//
-//		case "up":
-//
-//			return DirectionKind.Up;
-//
-//		case "down":
-//
-//			return DirectionKind.Down;
-//
-//		case "left":
-//
-//			return DirectionKind.Left;
-//
-//		case "right":
-//
-//			return DirectionKind.Right;
-//
-//		default:
-//
-//			throw new java.lang.IllegalArgumentException("Invalid direction: " + dir);
-//
-//		}
-//
-//	}
-//
-//	private static DominoStatus getDominoStatus(String status) {
-//
-//		switch (status) {
-//
-//		case "inPile":
-//
-//			return DominoStatus.InPile;
-//
-//		case "excluded":
-//
-//			return DominoStatus.Excluded;
-//
-//		case "inCurrentDraft":
-//
-//			return DominoStatus.InCurrentDraft;
-//
-//		case "inNextDraft":
-//
-//			return DominoStatus.InNextDraft;
-//
-//		case "erroneouslyPreplaced":
-//
-//			return DominoStatus.ErroneouslyPreplaced;
-//
-//		case "correctlyPreplaced":
-//
-//			return DominoStatus.CorrectlyPreplaced;
-//
-//		case "placedInKingdom":
-//
-//			return DominoStatus.PlacedInKingdom;
-//
-//		case "discarded":
-//
-//			return DominoStatus.Discarded;
-//
-//		default:
-//
-//			throw new java.lang.IllegalArgumentException("Invalid domino status: " + status);
-//
-//		}
-//
-//	}
-//
-//	
-//
-//	private int argmax (int[] x) {
-//
-//		int max=0;
-//
-//		int index=-1;
-//
-//		
-//
-//		for (int i=0;i<x.length;i++) {
-//
-//			if (x[i]>max) {
-//
-//				max=x[i];
-//
-//				index=i;
-//
-//			}
-//
-//		}
-//
-//		return index;
-//
-//	}
-//
-//
-//	private int argmin (int[] x) {
-//
-//		int min=0;
-//
-//		int index=-1;
-//
-//		
-//
-//		for (int i=0;i<x.length;i++) {
-//
-//			if (x[i]<min) {
-//
-//				min=x[i];
-//
-//				index=i;
-//
-//			}
-//
-//		}
-//
-//		return index;
-//
-//	}
-//
 }
