@@ -5,7 +5,7 @@ import ca.mcgill.ecse223.kingdomino.model.*;
 
 public class KDPersistence {
 	
-	private static String Persistancefilename = "block-data.ser";
+	private static String Persistancefilename = "kingdomino-data.ser";
 
 	public static void save(Kingdomino kingdomino) {
 		PersistenceObjectStream.serialize(kingdomino);
