@@ -68,7 +68,7 @@ public class CucumberStepDefinitions {
 
 			// Add the domino to a player's kingdom
 			Domino dominoToPlace = getdominoByID(id);
-			Kingdom kingdom = game.getPlayer(0).getKingdom();
+			Kingdom kingdom = game.getNextPlayer().getKingdom();
 			DominoInKingdom domInKingdom = new DominoInKingdom(posx, posy, kingdom, dominoToPlace);
 			domInKingdom.setDirection(dir);
 			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);
@@ -96,7 +96,7 @@ public class CucumberStepDefinitions {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		
-		Player playerToSelectDomino = game.getPlayer(0);
+		Player playerToSelectDomino = game.getNextPlayer();
 		Domino dominoToSelect = getdominoByID(domID);
 		Draft currentDraft = game.getCurrentDraft();
 	
@@ -112,7 +112,7 @@ public class CucumberStepDefinitions {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		
-		Player playerToPrePlaceDomino = game.getPlayer(0);
+		Player playerToPrePlaceDomino = game.getNextPlayer();
 		Domino dominoToPrePlace = getdominoByID(domID);
 		Kingdom currentPlayerKingdom = playerToPrePlaceDomino.getKingdom();
 		
@@ -127,7 +127,7 @@ public class CucumberStepDefinitions {
 	public void the_player_attempts_to_discard_the_selected_domino() {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		Player playerToDiscardDomino = game.getPlayer(0);
+		Player playerToDiscardDomino = game.getNextPlayer();
 		
 		try {
 			
@@ -157,7 +157,138 @@ public class CucumberStepDefinitions {
 	 * 
 	 */
 	
+	@When("{string} removes his king from the domino {int}")
+	public void removes_his_king_from_the_domino(String string, Integer int1) {
+	
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		
+		Player player = getPlayerByColor(string);
+		Domino domino = getdominoByID(int1);
+		Kingdom currentPlayerKingdom = player.getKingdom();
+		
+		DominoInKingdom dInKingdom = new DominoInKingdom(0, 0, currentPlayerKingdom, domino);
+		domino.setStatus(DominoStatus.ErroneouslyPreplaced);
+		game.getCurrentDraft().removeIdSortedDomino(domino);
+		
+	}
 
+	@Then("domino {int} should be tentative placed at position {int}:{int} of {string}'s kingdom with ErroneouslyPreplaced status")
+	public void domino_should_be_tentative_placed_at_position_of_s_kingdom_with_ErroneouslyPreplaced_status(Integer int1, Integer int2, Integer int3, String string) {
+	   
+		Domino domino = getdominoByID(int1);
+		Player player = getPlayerByColor(string);
+		
+		DominoInKingdom dInKingdom = (DominoInKingdom) player.getKingdom().getTerritory(player.getKingdom().getTerritories().size()-1);
+		Integer xPos = dInKingdom.getX();
+		Integer yPos = dInKingdom.getY();
+		
+		assertEquals(int2, xPos);
+		assertEquals(int3, yPos);
+		assertEquals(DominoStatus.ErroneouslyPreplaced, dInKingdom.getDomino().getStatus());
+		
+	}
+
+	@When("{string} requests to move the domino {string}")
+	public void requests_to_move_the_domino(String string, String string2) {
+	  
+		String rotation = string2;
+		Player player = getPlayerByColor(string);
+		DominoInKingdom dInKingdom = (DominoInKingdom) player.getKingdom().getTerritory(player.getKingdom().getTerritories().size() -1);
+
+		try {
+			
+			KDController.moveCurrentDomino(player, dInKingdom, rotation);
+			
+		}
+		
+		catch(Exception e) {
+			
+			e.printStackTrace();
+			
+		}
+		
+	}
+
+	@Then("the domino {int} should be tentatively placed at position {int}:{int} with direction {string}")
+	public void the_domino_should_be_tentatively_placed_at_position_with_direction(Integer int1, Integer int2, Integer int3, String string) {
+	    
+		Domino domino = getdominoByID(int1);
+		
+		DominoInKingdom dInKingdom = (DominoInKingdom) domino.getDominoSelection().getPlayer().getKingdom().getTerritory(domino.getDominoSelection().getPlayer().getKingdom().getTerritories().size()-1);
+		Integer xPos = dInKingdom.getX();
+		Integer yPos = dInKingdom.getY();
+		DirectionKind dKind = dInKingdom.getDirection();
+		
+		assertEquals(int2, xPos);
+		assertEquals(int3, yPos);
+		
+	}
+
+	@Then("the new status of the domino is {string}")
+	public void the_new_status_of_the_domino_is(String string) {
+	   
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		Player player = game.getNextPlayer();
+		
+		DominoInKingdom dInKingdom = (DominoInKingdom) player.getKingdom().getTerritory(player.getKingdom().getTerritories().size()-1);
+		DominoStatus dStatus = dInKingdom.getDomino().getStatus();
+		
+		assertEquals(getDominoStatusCapital(string), dStatus);
+		
+	}
+
+	@Given("{string}'s kingdom has following dominoes")
+	public void the_s_kingdom_has_following_dominoes(String string, io.cucumber.datatable.DataTable dataTable) {
+	   
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		List<Map<String, String>> valueMaps = dataTable.asMaps();
+		
+		for (Map<String, String> map : valueMaps) {
+			
+			// Get values from cucumber table
+			Integer id = Integer.decode(map.get("id"));
+			DirectionKind dir = getDirection(map.get("dir"));
+			Integer posx = Integer.decode(map.get("x"));
+			Integer posy = Integer.decode(map.get("y"));
+
+			// Add the domino to a player's kingdom
+			Domino dominoToPlace = getdominoByID(id);
+			Kingdom kingdom = getPlayerByColor(string).getKingdom();
+			DominoInKingdom domInKingdom = new DominoInKingdom(posx, posy, kingdom, dominoToPlace);
+			domInKingdom.setDirection(dir);
+			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);
+			
+		}
+	}
+
+	@Then("the domino {int} is still tentatively placed at position {int}:{int}")
+	public void the_domino_is_still_tentatively_placed_at_position(Integer int1, Integer int2, Integer int3) {
+	    
+		Domino domino = getdominoByID(int1);
+		
+		DominoInKingdom dInKingdom = (DominoInKingdom) domino.getDominoSelection().getPlayer().getKingdom().getTerritory(domino.getDominoSelection().getPlayer().getKingdom().getTerritories().size()-1);
+		Integer xPos = dInKingdom.getX();
+		Integer yPos = dInKingdom.getY();
+		
+		assertEquals(int2, int2);
+		assertEquals(int3, int3);
+		
+	}
+
+	@Then("the domino should still have status {string}")
+	public void the_domino_should_still_have_status(String string) {
+	 
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		Player player = game.getNextPlayer();
+		
+		Domino domino = player.getDominoSelection().getDomino();
+		
+		DominoInKingdom dInKingdom = (DominoInKingdom) domino.getDominoSelection().getPlayer().getKingdom().getTerritory(domino.getDominoSelection().getPlayer().getKingdom().getTerritories().size()-1);
+		DominoStatus dStatus = domino.getStatus();
+		
+		assertEquals(getDominoStatusCapital(string), dStatus);
+		
+	}
 	
 	/**
 	 * 
@@ -168,6 +299,73 @@ public class CucumberStepDefinitions {
 	 * 
 	 */
 	
+	@Given("the {string}'s kingdom has the following dominoes:")
+	public void the_s_kingdom_has_the_following_dominoes(String string, io.cucumber.datatable.DataTable dataTable) {
+		
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		List<Map<String, String>> valueMaps = dataTable.asMaps();
+		
+		for (Map<String, String> map : valueMaps) {
+			
+			// Get values from cucumber table
+			Integer id = Integer.decode(map.get("domino"));
+			DirectionKind dir = getDirection(map.get("dominodir"));
+			Integer posx = Integer.decode(map.get("posx"));
+			Integer posy = Integer.decode(map.get("posy"));
+
+			// Add the domino to a player's kingdom
+			Domino dominoToPlace = getdominoByID(id);
+			Kingdom kingdom = getPlayerByColor(string).getKingdom();
+			DominoInKingdom domInKingdom = new DominoInKingdom(posx, posy, kingdom, dominoToPlace);
+			domInKingdom.setDirection(dir);
+			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);
+			
+		}
+	}
+
+	@Given("domino {int} is in {string} status")
+	public void domino_is_in_status(Integer int1, String string) {
+	   
+		Domino domino = getdominoByID(int1);
+		DominoStatus domStatus = getDominoStatusCapital(string);
+		
+		domino.setStatus(domStatus);
+		
+	}
+
+	@When("{string} requests to place the selected domino {int}")
+	public void requests_to_place_the_selected_domino(String string, Integer int1) {
+	  
+		Domino domino = getdominoByID(int1);
+		Player player = getPlayerByColor(string);
+		
+		try {
+			
+			KDController.placeDomino(player, domino);
+			
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+		
+	}
+
+	@Then("{string}'s kingdom should now have domino {int} at position {int}:{int} with direction {string}")
+	public void s_kingdom_should_now_have_domino_at_position_with_direction(String string, Integer int1, Integer int2, Integer int3, String string2) {
+	   
+		Player player = getPlayerByColor(string);
+		Domino domino = getdominoByID(int1);
+
+		DominoInKingdom dInKingdom = (DominoInKingdom) player.getKingdom().getTerritory(player.getKingdom().getTerritories().size()-1);
+		Integer xPos = dInKingdom.getX();
+		Integer yPos = dInKingdom.getY();
+		DirectionKind directionKind = dInKingdom.getDirection();
+		
+		assertEquals(int2, xPos);
+		assertEquals(int3, yPos);
+		assertEquals(getDirection(string2), directionKind);
+		
+	}
 	
 	
 	/**
@@ -238,6 +436,8 @@ public class CucumberStepDefinitions {
 		Domino dominoToSelect = getdominoByID(int1);
 		Player playerToSelectDomino = getPlayerByColor(string);
 		
+		game.setNextPlayer(playerToSelectDomino);
+		
 		Draft currentDraft = new Draft(DraftStatus.Sorted, game);
 		currentDraft.addIdSortedDomino(dominoToSelect);
 		game.addAllDraft(currentDraft);
@@ -297,9 +497,9 @@ public class CucumberStepDefinitions {
 		Integer xPos = dInKingdom.getX();
 		Integer yPos = dInKingdom.getY();
 		
-		assertEquals(domDirection, getDirection(string));
-		assertEquals(xPos, int2);
-		assertEquals(yPos, int3);
+		assertEquals(getDirection(string), domDirection);
+		assertEquals(int2, xPos);
+		assertEquals(int3, yPos);
 		
 	}
 
@@ -309,7 +509,7 @@ public class CucumberStepDefinitions {
 		Domino domino = getdominoByID(int1);
 		DominoStatus domStatus = domino.getStatus();
 		
-		assertEquals(domStatus, getDominoStatusCapital(string));
+		assertEquals(getDominoStatusCapital(string), domStatus);
 		
 	}
 
@@ -356,9 +556,9 @@ public class CucumberStepDefinitions {
 		Integer xPos = dInKingdom.getX();
 		Integer yPos = dInKingdom.getY();
 		
-		assertEquals(domDirection, getDirection(string));
-		assertEquals(xPos, int2);
-		assertEquals(yPos, int3);
+		assertEquals(getDirection(string), domDirection);
+		assertEquals(int2, xPos);
+		assertEquals(int3, yPos);
 		
 	}
 
@@ -368,10 +568,11 @@ public class CucumberStepDefinitions {
 		Domino domino = getdominoByID(int1);
 		DominoStatus domStatus = domino.getStatus();
 		
-		assertEquals(domStatus, getDominoStatusCapital(string));
+		assertEquals(getDominoStatusCapital(string), domStatus);
 		
 	}
 	
+
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////

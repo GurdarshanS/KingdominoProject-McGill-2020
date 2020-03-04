@@ -45,7 +45,6 @@ public class KDQuery {
 
 	}
 
-	
 
 	public static List<KingdomTerritory> getPlayerTerritory(Player player){
 
@@ -54,7 +53,6 @@ public class KDQuery {
 	}
 
 	
-
 	public static int getPlayerKingdomSize(Player player) {
 
 		
