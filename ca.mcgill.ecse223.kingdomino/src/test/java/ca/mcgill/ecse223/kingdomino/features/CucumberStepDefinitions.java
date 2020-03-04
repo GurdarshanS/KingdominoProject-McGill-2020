@@ -66,8 +66,7 @@ public class CucumberStepDefinitions {
 
 	@When("I initiate loading a saved game from {string}")
 	public void i_initiate_loading_a_saved_game_from(String string) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    KDController.loadGame(string);
 	}
 
 	@When("each tile placement is valid")
@@ -144,8 +143,7 @@ public class CucumberStepDefinitions {
 
 	@When("the user initiates saving the game to a file named {string}")
 	public void the_user_initiates_saving_the_game_to_a_file_named(String string) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    KDController.saveGame(string);
 	}
 
 	@Then("a file named {string} shall be created in the filesystem")

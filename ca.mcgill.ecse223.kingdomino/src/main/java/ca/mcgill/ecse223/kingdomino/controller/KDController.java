@@ -117,7 +117,7 @@ public class KDController {
 		
 		boolean gameLoaded = false;
 		Kingdomino game = KingdominoApplication.getKingdomino();
-		String directory = "./src/main/resources/savedGames/"+file;	
+		String directory = "./src/test/resources/savedGames/"+file;	
 	
 		File fileSearch = new File(directory);
 		if (fileSearch.isFile()) {
@@ -138,7 +138,7 @@ public class KDController {
 		boolean gameSaved = false;
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
-		String directory = "./src/main/resources/savedGames/"+file;
+		String directory = "./src/test/resources/savedGames/"+file;
 		File fileSearch = new File(directory);
 		
 		if(fileSearch.exists()== true) {
