@@ -9,6 +9,8 @@ import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.model.BonusOption;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
+import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom;
+import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
 import ca.mcgill.ecse223.kingdomino.model.Game;
 import ca.mcgill.ecse223.kingdomino.model.Kingdom;
 import ca.mcgill.ecse223.kingdomino.model.KingdomTerritory;
@@ -90,15 +92,45 @@ public class KDController {
 	
 	public static void sortKingdom(Player player) {
 		
-		KingdomTerritory territory = player.getKingdom().getTerritory(0);
+		List<KingdomTerritory> kingdomTerritories = player.getKingdom().getTerritories();
+		KingdomTerritory castle = player.getKingdom().getTerritory(0);
 		
 		for(int x = -4; x < 4; x++) {
+			
 			for(int y = 4; y > -4; y--) {
 				
-				territory.setX(x);
-				territory.setY(y);
+				for(KingdomTerritory territory: kingdomTerritories) {
+					
+					if(territory.getX() == x && territory.getY() == y && x != castle.getX() && y != castle.getY()) {
+						
+						if(territory instanceof DominoInKingdom) {
+							
+							DirectionKind direction = ((DominoInKingdom) territory).getDirection();
+							Domino leftDomino = ((DominoInKingdom) territory).getDomino();
+							Domino rightDomino = leftDomino;
+						}
+					}
+				}
 			}
 		}
+	}
+	
+	public static boolean isCastleInMiddle(Player player) {
+		
+		List<KingdomTerritory> kingdomTerritories = player.getKingdom().getTerritories();
+		
+		for(KingdomTerritory territory: kingdomTerritories) {
+				
+				
+			
+		}
+		
+		return false;
+	}
+	
+	public static boolean isHarmony(Player player) {
+		
+		return false;
 	}
 	
 	public static List<BonusOption> getBonusOptions() {
@@ -111,7 +143,5 @@ public class KDController {
 		}
 				
 		return null;
-	}
-	
-	
+	}	
 }

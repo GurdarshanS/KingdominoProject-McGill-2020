@@ -1,5 +1,8 @@
 package ca.mcgill.ecse223.kingdomino.features;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -20,8 +23,8 @@ public class CalculatePropertyAttributesStepDefinition {
 
 	@Then("the player shall have a total of {int} properties")
 	public void the_player_shall_have_a_total_of_properties(Integer int1) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    
+		assertEquals(int1, KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer().getPropertyScore());
 	}
 
 	@Then("the player shall have properties with the following attributes:")
