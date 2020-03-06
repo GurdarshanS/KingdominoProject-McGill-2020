@@ -35,29 +35,29 @@ public class KDController {
 		if(numPlayers == 2) {
 			Game game = new Game(24, kingdomino);
 			game.setNumberOfPlayers(2);
-			kingdomino.setCurrentGame(game);
 			for(int i=0; i<= selectedBonusOptions.size()-1; i++) {
 				BonusOption bonusOption = selectedBonusOptions.get(i);
 				game.addSelectedBonusOption(bonusOption);
 			}
+			kingdomino.setCurrentGame(game);
 		}
 		if(numPlayers == 3) {
 			Game game = new Game(36, kingdomino);
 			game.setNumberOfPlayers(3);
-			kingdomino.setCurrentGame(game);
 			for(int i=0; i<= selectedBonusOptions.size()-1; i++) {
 				BonusOption bonusOption = selectedBonusOptions.get(i);
 				game.addSelectedBonusOption(bonusOption);
 			}
+			kingdomino.setCurrentGame(game);
 		}
 		if(numPlayers == 4) {
 			Game game = new Game(48, kingdomino);
 			game.setNumberOfPlayers(4);
-			kingdomino.setCurrentGame(game);
 			for(int i=0; i<= selectedBonusOptions.size()-1; i++) {
 				BonusOption bonusOption = selectedBonusOptions.get(i);
 				game.addSelectedBonusOption(bonusOption);
 			}
+			kingdomino.setCurrentGame(game);
 		}
 	} 
 	/**
@@ -68,13 +68,22 @@ public class KDController {
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
-		int randomNum = ThreadLocalRandom.current().nextInt(0, game.getNumberOfPlayers()-1);
+		int randomNum = ThreadLocalRandom.current().nextInt(0, game.numberOfPlayers());
 		List<Domino> dominoesInGame;
-		for (int i = 0; i < game.getNumberOfPlayers(); i++) {
-			
-			Player player = game.getPlayer(i);
-			player.setColor(PlayerColor.values()[i]);
-			Kingdom kingdom = new Kingdom(player);
+		for (int i = 0; i <= game.numberOfPlayers()-1; i++) {
+			if(i==0) {
+				game.getPlayer(i).setColor(Player.PlayerColor.Blue);
+			}
+			if(i==1) {
+				game.getPlayer(i).setColor(Player.PlayerColor.Green);
+			}
+			if(i==2) {
+				game.getPlayer(i).setColor(Player.PlayerColor.Pink);
+			}
+			if(i==3) {
+				game.getPlayer(i).setColor(Player.PlayerColor.Yellow);
+			}
+			Kingdom kingdom = new Kingdom(game.getPlayer(i));
 			Castle castle = null;
 			kingdom.addTerritory(castle);
 		}
@@ -153,7 +162,7 @@ public class KDController {
 			if(fileSearch.exists()) {
 				gameSaved = overwriteSave(kingdomino); //If the file exists, overwrite it.(basically just create new save but under same name)
 				gameSaved = true;
-		}
+			}
 			else {
 				KDPersistence.save(kingdomino); //If the file does not exist, new save.
 				gameSaved = true;

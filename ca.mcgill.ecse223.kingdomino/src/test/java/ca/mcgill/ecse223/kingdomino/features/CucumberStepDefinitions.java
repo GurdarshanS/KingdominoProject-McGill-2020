@@ -2,6 +2,7 @@ package ca.mcgill.ecse223.kingdomino.features;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
@@ -20,6 +21,7 @@ import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
+import ca.mcgill.ecse223.kingdomino.model.Draft;
 import ca.mcgill.ecse223.kingdomino.model.Game;
 import ca.mcgill.ecse223.kingdomino.model.Kingdom;
 import ca.mcgill.ecse223.kingdomino.model.KingdomTerritory;
@@ -51,7 +53,11 @@ public class CucumberStepDefinitions {
 	 */
 	@When("I initiate loading a saved game from {string}")
 	public void i_initiate_loading_a_saved_game_from(String string) throws InvalidInputException {
-	    KDController.loadGame(string);
+	    try{
+	    	KDController.loadGame(string);
+	    }catch(InvalidInputException i) {
+	    	throw new InvalidInputException(i.getMessage());
+	    }
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -65,8 +71,7 @@ public class CucumberStepDefinitions {
 	 */
 	@When("the game result is not yet final")
 	public void the_game_result_is_not_yet_final() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+		KingdominoApplication.getKingdomino().getCurrentGame().hasNextDraft();
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -130,8 +135,15 @@ public class CucumberStepDefinitions {
 	public void the_game_shall_notify_the_user_that_the_game_file_is_invalid() {
 	    assertFalse(true);
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
+	@Then("the game shall notify the user that the loaded game is invalid")
+	public void the_game_shall_notify_the_user_that_the_loaded_game_is_invalid() {
+	    assertFalse(true);
+	}
 	
-	//-------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Test for saveGame
@@ -195,7 +207,15 @@ public class CucumberStepDefinitions {
 	 */
 	@When("the user agrees to overwrite the existing file")
 	public void the_user_agrees_to_overwrite_the_existing_file() {
-		KDController.saveGame(file);
+		assertTrue(true);
+	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param string
+	 */
+	@When("the user agrees to overwrite the existing file named {string}")
+	public void the_user_agrees_to_overwrite_the_existing_file_named(String string) {
+	    KDController.overwriteSave(string);
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -206,7 +226,7 @@ public class CucumberStepDefinitions {
 	    assertTrue(System.currentTimeMillis()- new File(string).lastModified()<900);
 	}
 	
-	//-------------------------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------------
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Test for setGameOptions
@@ -215,69 +235,76 @@ public class CucumberStepDefinitions {
 	@Given("the game is initialized for set game options")
 	public void the_game_is_initialized_for_set_game_options() {
 		KDController.initializeGame();
-	}
+	}/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@When("set game options is initiated")
 	public void set_game_options_is_initiated() throws InvalidInputException {
 		int numPlayers=4;
-		List<BonusOption> selectedBonusOptions = null;
 		try {	
-			KDController.setGameOptions(numPlayers, selectedBonusOptions);
+			KDController.setGameOptions(numPlayers, KingdominoApplication.getKingdomino().getCurrentGame().getSelectedBonusOptions());
 		}
 		catch(InvalidInputException i) {
 			throw new InvalidInputException(i.getMessage());
 		}
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param int1
+	 */
 	@When("the number of players is set to {int}")
 	public void the_number_of_players_is_set_to(Integer int1) throws InvalidInputException {
-		List<BonusOption> selectedBonusOptions = null;
-		KDController.setGameOptions(int1, selectedBonusOptions);
+		KingdominoApplication.getKingdomino().getCurrentGame().setNumberOfPlayers(int1);
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param string
+	 */
 	@When("Harmony {string} selected as bonus option")
 	public void harmony_selected_as_bonus_option(String string) throws InvalidInputException {
-		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		Game game = new Game(48, kingdomino);
-		BonusOption HarmonyOption = new BonusOption("Harmony", kingdomino);
-		game.addSelectedBonusOption(HarmonyOption);
-		List<BonusOption> selectedBonusOptions = game.getSelectedBonusOptions();
-		KDController.setGameOptions(4, selectedBonusOptions);
+		BonusOption HarmonyOption = new BonusOption("Harmony", KingdominoApplication.getKingdomino());
+		KingdominoApplication.getKingdomino().getCurrentGame().addSelectedBonusOption(HarmonyOption);
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param string
+	 */
 	@When("Middle Kingdom {string} selected as bonus option")
 	public void middle_Kingdom_selected_as_bonus_option(String string) throws InvalidInputException {
-		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		Game game = new Game(48, kingdomino);
-		BonusOption MKOption = new BonusOption("Middle Kingdom", kingdomino);
-		game.addSelectedBonusOption(MKOption);
-		List<BonusOption> selectedBonusOptions = game.getSelectedBonusOptions();
-		KDController.setGameOptions(4, selectedBonusOptions);
+		BonusOption MKOption = new BonusOption("Middle Kingdom", KingdominoApplication.getKingdomino());
+		KingdominoApplication.getKingdomino().getCurrentGame().addSelectedBonusOption(MKOption);
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param int1
+	 */
 	@Then("the number of players shall be {int}")
 	public void the_number_of_players_shall_be(Integer int1) {
-		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		if(int1 == 2) {
-			Game game = new Game(24, kingdomino);
-			game.setNumberOfPlayers(2);
-			game.getNumberOfPlayers();
+			KingdominoApplication.getKingdomino().getCurrentGame().setNumberOfPlayers(2);
 		}
 		if(int1 == 3) {
-			Game game = new Game(36, kingdomino);
-			game.setNumberOfPlayers(3);
-			game.getNumberOfPlayers();
-
+			KingdominoApplication.getKingdomino().getCurrentGame().setNumberOfPlayers(3);	
 		}
 		if(int1 == 4) {
-			Game game = new Game(48, kingdomino);
-			game.setNumberOfPlayers(4);
-			game.getNumberOfPlayers();
+			KingdominoApplication.getKingdomino().getCurrentGame().setNumberOfPlayers(4);
 		}
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param string
+	 */
 	@Then("Harmony {string} an active bonus")
 	public void harmony_an_active_bonus(String string) {
-	
+		KingdominoApplication.getKingdomino().getCurrentGame().hasSelectedBonusOptions();
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param string
+	 */
 	@Then("Middle Kingdom {string} an active bonus")
 	public void middle_Kingdom_an_active_bonus(String string) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+		KingdominoApplication.getKingdomino().getCurrentGame().hasSelectedBonusOptions();
 	}
 
 //-------------------------------------------------------------------------------------------
@@ -288,13 +315,11 @@ public class CucumberStepDefinitions {
 	 */
 	@Given("the program is started and ready for starting a new game")
 	public void the_program_is_started_and_ready_for_starting_a_new_game() {
-		Kingdomino program = KingdominoApplication.getKingdomino();
+		KDController.initializeGame();
 	}
 	@Given("there are four selected players")
 	public void there_are_four_selected_players() throws InvalidInputException {
-		Kingdomino program = KingdominoApplication.getKingdomino();
-		Game game = program.getCurrentGame();
-		game.setNumberOfPlayers(4);
+		KingdominoApplication.getKingdomino().getCurrentGame().setNumberOfPlayers(4);
 	}
 	@Given("bonus options Harmony and MiddleKingdom are selected")
 	public void bonus_options_Harmony_and_MiddleKingdom_are_selected() throws InvalidInputException {
@@ -346,8 +371,7 @@ public class CucumberStepDefinitions {
 	}
 	@Then("all the dominoes form the first draft are facing up")
 	public void all_the_dominoes_form_the_first_draft_are_facing_up() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    Draft.DraftStatus.FaceUp;
 	}
 	@Then("all the players have no properties")
 	public void all_the_players_have_no_properties() {
