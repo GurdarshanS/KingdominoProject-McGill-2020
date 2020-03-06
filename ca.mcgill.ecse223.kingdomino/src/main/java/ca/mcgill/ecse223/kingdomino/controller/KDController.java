@@ -43,32 +43,119 @@ public class KDController {
 
 	}//ProvidetUserProfile
 	
-	public static void CreateAndOrderNextDraft() {
+	public static void CreateNextDraft() {
+		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
 		
-
 		Draft nextDraft =  new Draft(Draft.DraftStatus.FaceDown ,game);
 		
-		Domino currentDomino = game.getTopDominoInPile();
-		
-		int[] domIDs = new int[nextDraft.maximumNumberOfIdSortedDominos()];
-		
-		domIDs[0] = currentDomino.getId();
-		
-		
-		for( int i = 1; i < nextDraft.maximumNumberOfIdSortedDominos(); i++) {
-			
-			domIDs[i] = currentDomino.getNextDomino().getId();
-			
-			
-		}
 	
 		
-		game.setTopDominoInPile(currentDomino.getNextDomino());
+		
+		if(game.getNumberOfPlayers() == 3) {
+			
+			
+			if(game.getAllDrafts().size()-1 == 12) {
+				
+				
+				Draft currentdDraft = game.getNextDraft();
+				game.setCurrentDraft(currentdDraft);
+				game.setNextDraft(null);
+				game.setTopDominoInPile(null);
+				
+				return;
+				
+				
+			}
+			
+			Domino currentDomino = game.getTopDominoInPile();
+			nextDraft.addIdSortedDomino(currentDomino);
+			currentDomino.setStatus(DominoStatus.InNextDraft);
+			
+			for(int i = 0; i < 3; i++) {
+			
+			nextDraft.addIdSortedDomino(currentDomino.getNextDomino());
+			currentDomino.setStatus(DominoStatus.InNextDraft);
+			currentDomino = currentDomino.getNextDomino();
+			
+			}
+			
+			game.setTopDominoInPile(currentDomino);
+			
+		}
+		
+		else {
+			
+			
+			
+			if(game.getAllDrafts().size()-1 == 12 && game.getNumberOfPlayers() == 4) {
+				
+				System.out.println("AAAAAAAAAWWWWWWWWWWWBBBB");
+				Draft currentdDraft = game.getNextDraft();
+				game.setCurrentDraft(currentdDraft);
+				game.setNextDraft(null);
+				game.setTopDominoInPile(null);
+				
+				
+				
+				return;
+				
+				
+					}
+			
+			else if(game.getNumberOfPlayers() == 2 && game.getAllDrafts().size()-1 == 6) {
+				
+				
+				Draft currentdDraft = game.getNextDraft();
+				game.setCurrentDraft(currentdDraft);
+				game.setNextDraft(null);
+				game.setTopDominoInPile(null);
+				
+				return;
+				
+				
+					}
+			
+			Domino currentDomino = game.getTopDominoInPile();
+			nextDraft.addIdSortedDomino(currentDomino);
+			currentDomino.setStatus(DominoStatus.InNextDraft);
+			
+			for(int i = 0; i < 4; i++) {
+			
+			nextDraft.addIdSortedDomino(currentDomino.getNextDomino());
+			currentDomino.setStatus(DominoStatus.InNextDraft);
+			currentDomino = currentDomino.getNextDomino();
+			
+			}
+			
+			game.setTopDominoInPile(currentDomino);
+			
+		}
+		
+		
+		game.addAllDraft(nextDraft);
+		Draft currentDraft = game.getNextDraft();
+		
+		game.setCurrentDraft(currentDraft);
 		game.setNextDraft(nextDraft);
 		
-	}//CreateNextDraft
+		
+		for(int i = 0 ; i < currentDraft.getIdSortedDominos().size(); i++) {
+			
+			
+			currentDraft.getIdSortedDomino(i).setStatus(DominoStatus.InCurrentDraft);
+		}
+		
+		
+	
+		
+		
+	} // createNewDraft
+		
+		
+		
+
 	
 //	public static void OrderNextDraft() {
 //		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
@@ -129,6 +216,16 @@ public class KDController {
 		
 		
 	}//ChoosNextDomino
+	
+	private static Domino getdominoByID(int id) {
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		for (Domino domino : game.getAllDominos()) {
+			if (domino.getId() == id) {
+				return domino;
+			}
+		}
+		throw new java.lang.IllegalArgumentException("Domino with ID " + id + " not found.");
+	}
 
 	
 }

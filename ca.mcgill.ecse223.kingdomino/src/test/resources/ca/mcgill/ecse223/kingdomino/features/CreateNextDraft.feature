@@ -30,8 +30,8 @@ Feature: Create Next Draft of Dominoes
     Then the former next draft is now the current draft
 
     Examples: 
-      | num_players | draftnum |
-      |           4 |       12 |
-#     |           2 |        6 |
-#     |           3 |       12 |
+     	| num_players | draftnum |
+     	|           4 |       12 |
+     	|           2 |        6 |
+     	|           3 |       12 |
 
