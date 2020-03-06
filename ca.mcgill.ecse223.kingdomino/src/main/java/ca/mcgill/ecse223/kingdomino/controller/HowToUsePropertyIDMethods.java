@@ -93,8 +93,8 @@ public class HowToUsePropertyIDMethods {
 			System.out.println(each);
 		}
 		
-		int playerScore=KDController.getPlayerScore(player);
+		KDController.calculatePlayerScore(player);
 		System.out.println("==================== total player score =================");
-		System.out.println(playerScore);
+		System.out.println(player.getTotalScore());
 	}
 }

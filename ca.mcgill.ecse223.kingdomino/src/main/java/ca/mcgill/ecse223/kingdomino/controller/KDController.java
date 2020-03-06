@@ -551,27 +551,32 @@ public class KDController {
 	 * @see  - CalculatePlayerScore.feature
 	 * @author Jing Han 260528152
 	 * @param player
-	 * @return allAttributes
+	 * @return void
 	 */
 	
-	public static int getPlayerScore(Player player) {
+	public static void calculatePlayerScore(Player player) {
+		identifyAllProperty(player);
 		List<Property> p = player.getKingdom().getProperties();
+//		System.out.println(p);
 		int score=0;
 		for (Property each:p) {
+//			System.out.println(each.getScore());
 			score+=each.getScore();
 		}
-		return score;
+		score=score+player.getBonusScore();
+		player.setPropertyScore(score);
+		calculateBonusScore(player);
 	}
 	
 	/**
 	 * 
-	 * This method checks whether a player's kingdom
-	 * is elgigible for the Middle Kingdom Bonus
-	 * ie the castle is positioned at the center
+	 * This method sets the bonus score of a player
+	 * according to the kingdom layout and the 
+	 * bonus options set in KD
 	 * @see  - CalculatePlayerScore.feature
 	 * @author Jing Han 260528152
 	 * @param player
-	 * @return allAttributes
+	 * @return void
 	 */
 	
 	public static void calculateBonusScore(Player player) {
@@ -582,7 +587,7 @@ public class KDController {
 		boolean useHarmony=false;
 		
 		for (BonusOption bo:boList) {
-			if (bo.getOptionName().equalsIgnoreCase("middlekingdom")) {
+			if (bo.getOptionName().equalsIgnoreCase("middlekingdom") || bo.getOptionName().equalsIgnoreCase("middle kingdom")) {
 				useMiddle=true;
 			}
 			if (bo.getOptionName().equalsIgnoreCase("harmony")) {
@@ -606,6 +611,17 @@ public class KDController {
 		
 		
 	}
+	
+	/**
+	 * 
+	 * This method checks whether a player's kingdom
+	 * is elgigible for the Middle Kingdom Bonus
+	 * ie the castle is positioned at the center
+	 * @see  - CalculatePlayerScore.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return boolean
+	 */
 	
 	public static boolean isMiddleKingdom(Player player) {
 		int [][] coords = KDQuery.getPlayerTerritoryCoordinates(player);
@@ -645,6 +661,17 @@ public class KDController {
 			return false;
 		}
 	}
+	
+	/**
+	 * 
+	 * This method checks whether a player's kingdom
+	 * is elgigible for the Harmony Bonus
+	 * ie the kingdom is a 5x5 grid
+	 * @see  - CalculatePlayerScore.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return boolean
+	 */
 	
 	
 	public static boolean isHarmony(Player player) {

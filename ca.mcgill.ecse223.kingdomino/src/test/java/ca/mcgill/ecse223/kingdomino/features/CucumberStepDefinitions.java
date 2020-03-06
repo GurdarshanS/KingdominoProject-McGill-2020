@@ -390,6 +390,39 @@ public class CucumberStepDefinitions {
 		 int actualScore=player.getBonusScore();
 		 assertEquals(expectedScore.intValue(),actualScore);
 	 }
+	 
+	 
+	 /**
+		 * These methods calculates Player totalScore
+		 * based on the Kingdom layout and bonus options
+		 * @see CalculateBonusScores.feature
+		 * @author Jing Han 260528152
+		 */
+	 
+	 @Given("the game is initialized for calculate player score")
+	 public static  void initialize_game_for_calculate_player_score() {
+		 KDController.initiateEmptyGame();
+	 }
+	 
+	 @Given("the game has {string} bonus option")
+	 public static void game_has_x_bonus_option(String option) {
+		 Kingdomino kd = KingdominoApplication.getKingdomino();
+		 kd.addBonusOption(option);
+	 }
+	 
+	 @When("calculate player score is initiated")
+	 public static void initiate_player_score_calculation() {
+		 Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+		 KDController.calculatePlayerScore(player);
+	 }
+	 
+	 @Then("the total score should be {int}")
+	 public static void check_resulting_score(Integer expectedScore) {
+		 Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+		 int totalScore=player.getTotalScore();
+		 assertEquals(expectedScore.intValue(),totalScore);
+	 }
+	 
 //		assertEquals(1,1);
 //		
 		
