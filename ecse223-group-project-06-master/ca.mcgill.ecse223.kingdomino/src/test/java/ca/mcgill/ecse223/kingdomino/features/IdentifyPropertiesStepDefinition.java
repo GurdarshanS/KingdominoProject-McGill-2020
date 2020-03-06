@@ -1,5 +1,7 @@
 package ca.mcgill.ecse223.kingdomino.features;
 
+import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
+import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -7,14 +9,14 @@ import io.cucumber.java.en.When;
 public class IdentifyPropertiesStepDefinition {
 	@Given("the game is initialized for identify properties")
 	public void the_game_is_initialized_for_identify_properties() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    
+		KDController.initializeGame();
 	}
 
 	@When("the properties of the player are identified")
 	public void the_properties_of_the_player_are_identified() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    
+		
 	}
 
 	@Then("the player shall have the following properties:")
