@@ -574,6 +574,39 @@ public class KDController {
 	 * @return allAttributes
 	 */
 	
+	public static void calculateBonusScore(Player player) {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		List<BonusOption> boList=kd.getBonusOptions();
+		
+		boolean useMiddle=false;
+		boolean useHarmony=false;
+		
+		for (BonusOption bo:boList) {
+			if (bo.getOptionName().equalsIgnoreCase("middlekingdom")) {
+				useMiddle=true;
+			}
+			if (bo.getOptionName().equalsIgnoreCase("harmony")) {
+				useHarmony=true;
+			}
+		}
+		
+		int bonus=0;
+		if (useMiddle) {
+			if (isMiddleKingdom(player)) {
+				bonus=bonus+10;
+			}
+		}
+		if (useHarmony) {
+			if (isHarmony(player)) {
+				bonus=bonus+5;
+			}
+		}
+		
+		player.setBonusScore(bonus);
+		
+		
+	}
+	
 	public static boolean isMiddleKingdom(Player player) {
 		int [][] coords = KDQuery.getPlayerTerritoryCoordinates(player);
 		
@@ -599,6 +632,7 @@ public class KDController {
 //		System.out.println(x2);		
 //		System.out.println(y2);
 		
+		
 		int minX=Math.min(x1.get(0), x2.get(0));
 		int maxX=Math.max(x1.get(x1.size()-1), x2.get(x2.size()-1));
 		int minY=Math.min(y1.get(0), y2.get(0));
@@ -610,6 +644,43 @@ public class KDController {
 		else {
 			return false;
 		}
+	}
+	
+	
+	public static boolean isHarmony(Player player) {
+		
+		int [][] coords = KDQuery.getPlayerTerritoryCoordinates(player);
+		
+		List<Integer> x1 = new ArrayList<Integer>();
+		List<Integer> y1 = new ArrayList<Integer>();
+		List<Integer> x2 = new ArrayList<Integer>();
+		List<Integer> y2 = new ArrayList<Integer>();
+		
+		for (int i=0;i<coords[0].length;i++) {
+			x1.add(coords[0][i]);
+			y1.add(coords[1][i]);
+			x2.add(coords[2][i]);
+			y2.add(coords[3][i]);
+		}
+		
+		x1.addAll(x2);
+		y1.addAll(y2);
+		
+//		the extra -1 below because castle's position is double counted as both left and right tile
+		if ((x1.size()-1)!=25){			
+			return false;
+		}
+		
+		Collections.sort(x1);
+		Collections.sort(y1);
+
+		if (((x1.get(x1.size()-1)-x1.get(0)+1)==5)&&((y1.get(y1.size()-1)-y1.get(0)+1)==5)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+
 	}
 	
 	

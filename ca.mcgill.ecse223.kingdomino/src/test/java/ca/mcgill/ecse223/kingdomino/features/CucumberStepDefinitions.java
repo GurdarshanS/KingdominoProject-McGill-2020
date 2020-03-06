@@ -18,6 +18,7 @@ import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
 import ca.mcgill.ecse223.kingdomino.model.Player.PlayerColor;
 import ca.mcgill.ecse223.kingdomino.controller.PropertyAttribute;
+import ca.mcgill.ecse223.kingdomino.model.BonusOption;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -34,7 +35,7 @@ public class CucumberStepDefinitions {
 	 * grid size of 5x5 (regular mode) or 7x7 (mighty kingdom)
 	 * @see VerifyGridSize.feature
 	 * @author Jing Han 260528152
-	 */
+	 */ 
 	
 	
 	@Given("the game is initialized for verify grid size")
@@ -349,22 +350,46 @@ public class CucumberStepDefinitions {
 	
 	 @Given("the player's kingdom also includes the domino {int} at position {int}:{int} with the direction {string}")
 	 public static void player_kingdom_also_includes(Integer id, Integer posX, Integer posY, String direction) {
-		 Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+		Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
 		Domino dominoToPlace = getdominoByID(id);
 		KDController.prePlaceDomino(player, dominoToPlace, posX, posY, direction);
 	 }
 	
 	 /**
-		 * These methods calculates Player Score
-		 * @see CalculatePlayerScore.feature
+		 * These methods calculates Player BonusScore
+		 * based on the Kingdom layout and bonus options
+		 * @see CalculateBonusScores.feature
 		 * @author Jing Han 260528152
 		 */
-			
-	 @Given("the game is initialized for calculate player score")
-	 public static void initiate_game_for_calculate_player_score() {
+	 
+	 @Given("the game is initialized for calculate bonus scores")
+	 public static void initiate_game_for_calculate_bonus_score() {
 		 KDController.initiateEmptyGame();
 	 }
-			
+	 @Given("Middle Kingdom is selected as bonus option")
+	 public static void middle_kingdom_is_selected() {
+		 Kingdomino kd = KingdominoApplication.getKingdomino();
+		 kd.addBonusOption("MiddleKingdom");
+	 }
+	 
+	 @Given("Harmony is selected as bonus option")
+	 public static void harmony_is_selected() {
+		 Kingdomino kd = KingdominoApplication.getKingdomino();
+		 kd.addBonusOption("Harmony");
+	 }
+	 
+	 @When ("calculate bonus score is initiated")
+	 public static void initiate_bonus_score() {
+		 Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+		 KDController.calculateBonusScore(player);
+	 }
+	 
+	 @Then("the bonus score should be {int}")
+	 public static void bonus_score_should_be(Integer expectedScore) {
+		 Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+		 int actualScore=player.getBonusScore();
+		 assertEquals(expectedScore.intValue(),actualScore);
+	 }
 //		assertEquals(1,1);
 //		
 		
