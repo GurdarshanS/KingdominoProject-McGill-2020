@@ -109,6 +109,7 @@ public class ShuffleDominosStepDefinitions {
 		}
 		
 		assertEquals(int1,DraftAmount);
+		DomArray = KDController.removeDraftDominos(string,int1);
 		
 		
 	}

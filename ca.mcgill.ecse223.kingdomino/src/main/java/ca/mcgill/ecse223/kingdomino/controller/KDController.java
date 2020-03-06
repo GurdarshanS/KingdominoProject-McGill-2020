@@ -129,6 +129,21 @@ public class KDController {
 		}
 		return DominoArray;
 	}
+	
+	public static Domino[] removeDraftDominos(String s1, int int1) {
+		Domino[] DominoArray = new Domino[48];
+		String[] StringArray = new String[48];
+		StringArray = s1.split(", ");
+		int count = 0;
+		for(int i = int1; i < DominoArray.length; i++) {
+			DominoArray[count] = KDController.getdominoByID(Integer.parseInt(StringArray[i]));
+			System.out.println(DominoArray[count].getId());
+			count++;
+		}
+		
+		return DominoArray;
+		
+	}
 
 
 	
