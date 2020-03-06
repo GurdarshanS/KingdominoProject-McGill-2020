@@ -234,7 +234,6 @@ public class CucumberStepDefinitions {
 		Kingdomino program = KingdominoApplication.getKingdomino();
 		Game game = program.getCurrentGame();
 		game.setNumberOfPlayers(4);
-		KDController.setGameOptions(game.getNumberOfPlayers(), game.getSelectedBonusOptions());
 	}
 	@Given("bonus options Harmony and MiddleKingdom are selected")
 	public void bonus_options_Harmony_and_MiddleKingdom_are_selected() throws InvalidInputException {
