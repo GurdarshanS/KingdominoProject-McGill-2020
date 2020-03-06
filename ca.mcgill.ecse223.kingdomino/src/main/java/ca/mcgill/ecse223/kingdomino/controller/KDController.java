@@ -36,7 +36,7 @@ public class KDController {
 			Game game = new Game(24, kingdomino);
 			game.setNumberOfPlayers(2);
 			kingdomino.setCurrentGame(game);
-			for(int i=0; i<= selectedBonusOptions.size(); i++) {
+			for(int i=0; i<= selectedBonusOptions.size()-1; i++) {
 				BonusOption bonusOption = selectedBonusOptions.get(i);
 				game.addSelectedBonusOption(bonusOption);
 			}
@@ -45,7 +45,7 @@ public class KDController {
 			Game game = new Game(36, kingdomino);
 			game.setNumberOfPlayers(3);
 			kingdomino.setCurrentGame(game);
-			for(int i=0; i<= selectedBonusOptions.size(); i++) {
+			for(int i=0; i<= selectedBonusOptions.size()-1; i++) {
 				BonusOption bonusOption = selectedBonusOptions.get(i);
 				game.addSelectedBonusOption(bonusOption);
 			}
@@ -54,7 +54,7 @@ public class KDController {
 			Game game = new Game(48, kingdomino);
 			game.setNumberOfPlayers(4);
 			kingdomino.setCurrentGame(game);
-			for(int i=0; i<= selectedBonusOptions.size(); i++) {
+			for(int i=0; i<= selectedBonusOptions.size()-1; i++) {
 				BonusOption bonusOption = selectedBonusOptions.get(i);
 				game.addSelectedBonusOption(bonusOption);
 			}
@@ -72,11 +72,11 @@ public class KDController {
 		List<Domino> dominoesInGame;
 		for (int i = 0; i < game.getNumberOfPlayers(); i++) {
 			
-			game.getKingdomino().addUser(game.getPlayer(i).getUser());
-			Player player = new Player(game);
+			Player player = game.getPlayer(i);
 			player.setColor(PlayerColor.values()[i]);
 			Kingdom kingdom = new Kingdom(player);
-			new Castle(0, 0, kingdom, player);
+			Castle castle = null;
+			kingdom.addTerritory(castle);
 		}
 		game.setNextPlayer(game.getPlayer(randomNum));
 		createAllDominoes(game);

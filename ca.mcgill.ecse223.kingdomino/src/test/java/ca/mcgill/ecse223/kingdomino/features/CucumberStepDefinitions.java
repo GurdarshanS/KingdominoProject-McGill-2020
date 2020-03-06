@@ -20,9 +20,11 @@ import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
 import ca.mcgill.ecse223.kingdomino.model.Game;
 import ca.mcgill.ecse223.kingdomino.model.Kingdom;
+import ca.mcgill.ecse223.kingdomino.model.KingdomTerritory;
 import ca.mcgill.ecse223.kingdomino.model.Kingdomino;
 import ca.mcgill.ecse223.kingdomino.model.Player;
 import ca.mcgill.ecse223.kingdomino.model.Player.PlayerColor;
+import ca.mcgill.ecse223.kingdomino.model.Property;
 import ca.mcgill.ecse223.kingdomino.model.TerrainType;
 import ca.mcgill.ecse223.kingdomino.persistence.KDPersistence;
 import io.cucumber.java.en.Given;
@@ -113,8 +115,9 @@ public class CucumberStepDefinitions {
 	}
 	@Given("no file named {string} exists in the filesystem")
 	public void no_file_named_exists_in_the_filesystem(String string) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+		String directory = "./src/test/resources/savedGames/"+string;
+		File fileSearch = new File(directory);
+		fileSearch.exists() = false;
 	}
 	@When("the user initiates saving the game to a file named {string}")
 	public void the_user_initiates_saving_the_game_to_a_file_named(String string) throws InvalidInputException {
@@ -169,24 +172,46 @@ public class CucumberStepDefinitions {
 		KDController.setGameOptions(int1, selectedBonusOptions);
 	}
 	@When("Harmony {string} selected as bonus option")
-	public void harmony_selected_as_bonus_option(String string) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	public void harmony_selected_as_bonus_option(String string) throws InvalidInputException {
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = new Game(48, kingdomino);
+		BonusOption HarmonyOption = new BonusOption("Harmony", kingdomino);
+		game.addSelectedBonusOption(HarmonyOption);
+		List<BonusOption> selectedBonusOptions = game.getSelectedBonusOptions();
+		KDController.setGameOptions(4, selectedBonusOptions);
 	}
 	@When("Middle Kingdom {string} selected as bonus option")
-	public void middle_Kingdom_selected_as_bonus_option(String string) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	public void middle_Kingdom_selected_as_bonus_option(String string) throws InvalidInputException {
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = new Game(48, kingdomino);
+		BonusOption MKOption = new BonusOption("Middle Kingdom", kingdomino);
+		game.addSelectedBonusOption(MKOption);
+		List<BonusOption> selectedBonusOptions = game.getSelectedBonusOptions();
+		KDController.setGameOptions(4, selectedBonusOptions);
 	}
 	@Then("the number of players shall be {int}")
 	public void the_number_of_players_shall_be(Integer int1) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		if(int1 == 2) {
+			Game game = new Game(24, kingdomino);
+			game.setNumberOfPlayers(2);
+			game.getNumberOfPlayers();
+		}
+		if(int1 == 3) {
+			Game game = new Game(36, kingdomino);
+			game.setNumberOfPlayers(3);
+			game.getNumberOfPlayers();
+
+		}
+		if(int1 == 4) {
+			Game game = new Game(48, kingdomino);
+			game.setNumberOfPlayers(4);
+			game.getNumberOfPlayers();
+		}
 	}
 	@Then("Harmony {string} an active bonus")
 	public void harmony_an_active_bonus(String string) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	
 	}
 	@Then("Middle Kingdom {string} an active bonus")
 	public void middle_Kingdom_an_active_bonus(String string) {
@@ -202,23 +227,29 @@ public class CucumberStepDefinitions {
 	 */
 	@Given("the program is started and ready for starting a new game")
 	public void the_program_is_started_and_ready_for_starting_a_new_game() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+		Kingdomino program = KingdominoApplication.getKingdomino();
 	}
 	@Given("there are four selected players")
-	public void there_are_four_selected_players() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	public void there_are_four_selected_players() throws InvalidInputException {
+		Kingdomino program = KingdominoApplication.getKingdomino();
+		Game game = program.getCurrentGame();
+		game.setNumberOfPlayers(4);
+		KDController.setGameOptions(game.getNumberOfPlayers(), game.getSelectedBonusOptions());
 	}
 	@Given("bonus options Harmony and MiddleKingdom are selected")
-	public void bonus_options_Harmony_and_MiddleKingdom_are_selected() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	public void bonus_options_Harmony_and_MiddleKingdom_are_selected() throws InvalidInputException {
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
+		game.setNumberOfPlayers(4);
+		BonusOption MKOption = new BonusOption("Middle Kingdom", kingdomino);
+		BonusOption HarmonyOption = new BonusOption("Harmony", kingdomino);
+		game.addSelectedBonusOption(MKOption);
+		game.addSelectedBonusOption(HarmonyOption);
+		KDController.setGameOptions(game.getNumberOfPlayers(), game.getSelectedBonusOptions());
 	}
 	@When("starting a new game is initiated")
 	public void starting_a_new_game_is_initiated() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    KDController.startANewGame();
 	}
 	@When("reveal first draft is initiated")
 	public void reveal_first_draft_is_initiated() {
@@ -227,13 +258,26 @@ public class CucumberStepDefinitions {
 	}
 	@Then("all kingdoms shall be initialized with a single castle")
 	public void all_kingdoms_shall_be_initialized_with_a_single_castle() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
+		for (int i = 0; i < game.getNumberOfPlayers(); i++) {
+			Player player = game.getPlayer(i);
+			Kingdom kingdom = new Kingdom(player);
+			Castle castle = null;
+			kingdom.addTerritory(castle);
+		}
 	}
 	@Then("all castle are placed at {int}:{int} in their respective kingdoms")
 	public void all_castle_are_placed_at_in_their_respective_kingdoms(Integer int1, Integer int2) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
+		for (int i = 0; i < game.getNumberOfPlayers(); i++) {
+			Player player = game.getPlayer(i);
+			Kingdom kingdom = player.getKingdom();
+			KingdomTerritory castle = kingdom.getTerritory(0);
+			castle.setX(int1);
+			castle.setY(int2);
+		}
 	}
 	@Then("the first draft of dominoes is revealed")
 	public void the_first_draft_of_dominoes_is_revealed() {
@@ -247,13 +291,26 @@ public class CucumberStepDefinitions {
 	}
 	@Then("all the players have no properties")
 	public void all_the_players_have_no_properties() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
+		for (int i = 0; i < game.getNumberOfPlayers(); i++) {
+			Player player = game.getPlayer(i);
+			Kingdom kingdom = player.getKingdom();
+			 while (kingdom.hasProperties()) {
+			      Property aProperty =	kingdom.getProperties().get(kingdom.getProperties().size()- 1);
+			      aProperty.delete();
+			      kingdom.getProperties().remove(aProperty);
+			 }
+		}
 	}
 	@Then("all player scores are initialized to zero")
 	public void all_player_scores_are_initialized_to_zero() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
+		for (int i = 0; i < game.getNumberOfPlayers(); i++) {
+			Player player = game.getPlayer(i);
+			player.setPropertyScore(0);
+		}
 	}
 	
 	///////////////////////////////////////
