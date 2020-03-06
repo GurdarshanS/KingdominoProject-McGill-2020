@@ -436,7 +436,73 @@ public class KDController {
 		identifyOneProperty(lakeGroup,TerrainType.Lake,player);
 		identifyOneProperty(forestGroup,TerrainType.Forest,player);
 	}
+	
+	/**
+	 * 
+	 * This method retrieves all the properties of a player's kingdom
+	 * 
+	 * @see  - no features explicitly
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return List<Property>
+	 */
+	
+	public static List<Property> getAllProperty(Player player){
+		return player.getKingdom().getProperties();
+	}
+	
+	/**
+	 * 
+	 * This method retrieves all Properties of a particular 
+	 * TerrainType of a player's kingdom
+	 * 
+	 * @see  - no features explicitly
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @param t
+	 * @return filteredProp
+	 */
+	
+	public static List<Property> getPropertyByTerrain(Player player, TerrainType t){
+		List<Property> allProp=getAllProperty(player);
+		List<Property> filteredProp = new ArrayList<Property>();
 		
+		for (Property testProp:allProp) {
+			if (testProp.getPropertyType().equals(t)) {
+				filteredProp.add(testProp);
+			}
+		}
+		return filteredProp;
+	}
+	
+	public static boolean checkPropertyMatch(TerrainType testTerrain, int[] testIds, Property property) {
+		
+		boolean match=true;
+		
+		if (!(testTerrain.equals(property.getPropertyType()))) {
+			match=false;
+		}
+		else {
+			List<Domino> dInP=property.getIncludedDominos();
+			List<Integer> ids = new ArrayList<Integer>();
+			for (Domino d: dInP) {
+				ids.add(d.getId());
+			}
+			
+			if (ids.size()!=testIds.length) {
+				match=false;
+			}
+			else {
+				for (int i:testIds) {
+					if (!(ids.contains(i))) {
+						match=false;
+						break;
+					}
+				}
+			}
+		}
+		return match;
+	}
 	
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
