@@ -342,7 +342,7 @@ public class CucumberStepDefinitions {
 					System.out.println("===========================================");
 							
 			}
-			assertEquals(true,true);
+//			assertEquals(true,true);
 
 		}
 	}
@@ -353,9 +353,17 @@ public class CucumberStepDefinitions {
 		Domino dominoToPlace = getdominoByID(id);
 		KDController.prePlaceDomino(player, dominoToPlace, posX, posY, direction);
 	 }
+	
+	 /**
+		 * These methods calculates Player Score
+		 * @see CalculatePlayerScore.feature
+		 * @author Jing Han 260528152
+		 */
 			
-			
-			
+	 @Given("the game is initialized for calculate player score")
+	 public static void initiate_game_for_calculate_player_score() {
+		 KDController.initiateEmptyGame();
+	 }
 			
 //		assertEquals(1,1);
 //		

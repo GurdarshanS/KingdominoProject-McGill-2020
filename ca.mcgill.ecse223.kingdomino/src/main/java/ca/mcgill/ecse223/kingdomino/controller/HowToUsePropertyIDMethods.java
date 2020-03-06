@@ -92,5 +92,9 @@ public class HowToUsePropertyIDMethods {
 		for (PropertyAttribute each:pa) {
 			System.out.println(each);
 		}
+		
+		int playerScore=KDController.getPlayerScore(player);
+		System.out.println("==================== total player score =================");
+		System.out.println(playerScore);
 	}
 }

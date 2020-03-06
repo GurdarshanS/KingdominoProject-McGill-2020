@@ -24,7 +24,7 @@ public class KDController {
 	 * @see - no features associated
 	 * @author Jing Han 260528152
 	 * @param void
-	 * @return void
+	 * @return void 
 	 */
 
 	public static void initiateEmptyGame() {
@@ -456,7 +456,7 @@ public class KDController {
 	 * This method retrieves all Properties of a particular 
 	 * TerrainType of a player's kingdom
 	 * 
-	 * @see  - no features explicitly
+	 * @see  - CalculatePropertyAttributes.feature
 	 * @author Jing Han 260528152
 	 * @param player
 	 * @param t
@@ -474,6 +474,20 @@ public class KDController {
 		}
 		return filteredProp;
 	}
+	
+	/**
+	 * 
+	 * This method checks to see if a Property matchs a given 
+	 * TerrainType and a list of given Domino IDs
+	 * 
+	 * @see  - CalculatePropertyAttributes.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @param testTerrain
+	 * @param testIds
+	 * @param property
+	 * @return match
+	 */
 	
 	public static boolean checkPropertyMatch(TerrainType testTerrain, int[] testIds, Property property) {
 		
@@ -504,6 +518,18 @@ public class KDController {
 		return match;
 	}
 	
+	/**
+	 * 
+	 * This method returns a list of PropertyAttribute
+	 * objects that captures the TerrainType,size,crown
+	 * and score of each Property object of the Player's 
+	 * Kingdom
+	 * @see  - CalculatePropertyAttributes.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return allAttributes
+	 */
+	
 	public static List<PropertyAttribute> getAllPropertyAttributes(Player player) {
 		List<Property> allProp=getAllProperty(player);
 		List<PropertyAttribute> allAttributes=new ArrayList<PropertyAttribute>();
@@ -518,6 +544,76 @@ public class KDController {
 		}
 		return allAttributes;
 	}
+	
+	/**
+	 * 
+	 * This method the score of a Player's kingdom
+	 * @see  - CalculatePlayerScore.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return allAttributes
+	 */
+	
+	public static int getPlayerScore(Player player) {
+		List<Property> p = player.getKingdom().getProperties();
+		int score=0;
+		for (Property each:p) {
+			score+=each.getScore();
+		}
+		return score;
+	}
+	
+	/**
+	 * 
+	 * This method checks whether a player's kingdom
+	 * is elgigible for the Middle Kingdom Bonus
+	 * ie the castle is positioned at the center
+	 * @see  - CalculatePlayerScore.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return allAttributes
+	 */
+	
+	public static boolean isMiddleKingdom(Player player) {
+		int [][] coords = KDQuery.getPlayerTerritoryCoordinates(player);
+		
+		List<Integer> x1 = new ArrayList<Integer>();
+		List<Integer> y1 = new ArrayList<Integer>();
+		List<Integer> x2 = new ArrayList<Integer>();
+		List<Integer> y2 = new ArrayList<Integer>();
+		
+		for (int i=0;i<coords[0].length;i++) {
+			x1.add(coords[0][i]);
+			y1.add(coords[1][i]);
+			x2.add(coords[2][i]);
+			y2.add(coords[3][i]);
+		}
+		
+		Collections.sort(x1);
+		Collections.sort(y1);
+		Collections.sort(x2);
+		Collections.sort(y2);
+		
+//		System.out.println(x1);
+//		System.out.println(y1);
+//		System.out.println(x2);		
+//		System.out.println(y2);
+		
+		int minX=Math.min(x1.get(0), x2.get(0));
+		int maxX=Math.max(x1.get(x1.size()-1), x2.get(x2.size()-1));
+		int minY=Math.min(y1.get(0), y2.get(0));
+		int maxY=Math.max(y1.get(y1.size()-1), y2.get(y2.size()-1));
+		
+		if ((Math.abs(minX)==maxX)&&(Math.abs(minY)==maxY)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	
+	
 	
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
