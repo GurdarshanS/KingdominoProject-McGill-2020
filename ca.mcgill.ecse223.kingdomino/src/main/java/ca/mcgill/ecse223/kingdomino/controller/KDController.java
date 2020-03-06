@@ -607,7 +607,7 @@ public class KDController {
 	 * @return norm
 	 */
 	
-	private static int L2NormSquared(int x1, int y1, int x2, int y2) {
+	public static int L2NormSquared(int x1, int y1, int x2, int y2) {
 		int deltaX=x2-x1;
 		int deltaY=y2-y1;
 		
