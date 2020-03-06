@@ -7,6 +7,7 @@ import ca.mcgill.ecse223.kingdomino.model.*;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
 import ca.mcgill.ecse223.kingdomino.model.Player.PlayerColor;
+import ca.mcgill.ecse223.kingdomino.persistence.KDPersistence;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -113,18 +114,19 @@ public class KDController {
 	 * Feature 6: This method loads a saved game for the player.
 	 * @param file:  The file inputed from the user.
 	 * @return Method returns true if the game is loaded, false it cannot be.
+	 * @throws InvalidInputException: Thrown if file cannot be loaded
 	 */
-	public static boolean loadGame(String file) {
+	public static boolean loadGame(String file) throws InvalidInputException {
 		
 		boolean gameLoaded = false;
-		Kingdomino game = KingdominoApplication.getKingdomino();
 		String directory = "./src/test/resources/savedGames/"+file;	
 	
 		File fileSearch = new File(directory);
 		if (fileSearch.isFile()) {
 			if(fileSearch.canRead()) {
 				try{
-					gameLoaded = loadGameFile(directory);
+					KDPersistence.load();
+					gameLoaded = true;
 				}
 				catch(RuntimeException r) {
 					throw new InvalidInputException("Invalid file name.");
@@ -138,25 +140,27 @@ public class KDController {
 	 * Feature 7: This method saves the current game for the player.
 	 * @param file: Name of the file saved by the user.
 	 * @return Method returns true if file is saved, false if it cannot be.
+	 * @throws InvalidInputException: Thrown if file cannot be saved
 	 */
 	public static boolean saveGame(String file) throws InvalidInputException {
 		
 		boolean gameSaved = false;
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		Game game = kingdomino.getCurrentGame();
 		String directory = "./src/test/resources/savedGames/"+file;
 		File fileSearch = new File(directory);
 		
 		try{
-			if(fileSearch.exists()== true) {
-				gameSaved = overwriteSave(directory); //If the file exists, overwrite it.(basically just create new save but under same name)
-			}
+			if(fileSearch.exists()) {
+				gameSaved = overwriteSave(kingdomino); //If the file exists, overwrite it.(basically just create new save but under same name)
+				gameSaved = true;
+		}
 			else {
-				gameSaved = newSave(directory); //If the file does not exist, new save.
+				KDPersistence.save(kingdomino); //If the file does not exist, new save.
+				gameSaved = true;
 			}
 		}
 		catch(RuntimeException r) {
-			throw new InvalidInputException("Invalid file input.");
+			throw new InvalidInputException(r.getMessage());
 		}
 		return gameSaved;
 	}

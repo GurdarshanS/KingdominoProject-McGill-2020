@@ -10,10 +10,10 @@ import java.io.ObjectOutputStream;
 
 public class PersistenceObjectStream {
 	
-	private static String filename;
+	private static String fileName;
 
 	public static void serialize(Object object) {
-	  File file = new File(filename);
+	  File file = new File(fileName);
 	  if(file.exists()){
 	  } else {
 	     try {
@@ -27,12 +27,12 @@ public class PersistenceObjectStream {
 		{
 			out.writeObject(object);
 		} catch (Exception e) {
-			throw new RuntimeException("Could not save data to file '" + filename + ".");
+			throw new RuntimeException("Could not save data to file '" + fileName + ".");
 		}
 	}
 
 	public static Object deserialize() {
-      File file = new File(filename);
+      File file = new File(fileName);
       if(file.exists()){
       } else {
          try {
@@ -53,7 +53,7 @@ public class PersistenceObjectStream {
 		  
 		} catch (EOFException e1) {
 		} catch (ClassNotFoundException e2) {
-		  throw new RuntimeException("Could not load data from file '" + filename + "'.");
+		  throw new RuntimeException("Could not load data from file '" + fileName + "'.");
         } catch (IOException e3) {
       e3.printStackTrace();
     } 
@@ -63,7 +63,7 @@ public class PersistenceObjectStream {
 		return o;
 	}
 	public static void setFilename(String newFilename) {
-		filename = newFilename;
+		fileName = newFilename;
 	}
 	
 }

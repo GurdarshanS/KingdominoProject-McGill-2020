@@ -5,15 +5,14 @@ import ca.mcgill.ecse223.kingdomino.model.*;
 
 public class KDPersistence {
 	
-	private static String Persistancefilename = "kingdomino-data.ser";
+	private static String fileName = "kingdomino-data.ser";
 
 	public static void save(Kingdomino kingdomino) {
 		PersistenceObjectStream.serialize(kingdomino);
 	}
 	
 	public static Kingdomino load() {
-		PersistenceObjectStream.setFilename(Persistancefilename);
-		
+		PersistenceObjectStream.setFilename(fileName);
 		Kingdomino kingdomino=null;
 		try{
 			 kingdomino = (Kingdomino) PersistenceObjectStream.deserialize();
@@ -29,11 +28,11 @@ public class KDPersistence {
 	}
 	
 	public static void setFilename(String newFilename) {
-		Persistancefilename = newFilename;
+		fileName = newFilename;
 	}
 	
 	public static String getFilename() {
-	  return Persistancefilename;
+	  return fileName;
 	}
 
 }
