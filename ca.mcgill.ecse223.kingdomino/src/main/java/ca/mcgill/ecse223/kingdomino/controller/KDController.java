@@ -504,10 +504,25 @@ public class KDController {
 		return match;
 	}
 	
+	public static List<PropertyAttribute> getAllPropertyAttributes(Player player) {
+		List<Property> allProp=getAllProperty(player);
+		List<PropertyAttribute> allAttributes=new ArrayList<PropertyAttribute>();
+		
+		for (Property p:allProp) {
+			int propertySize=p.getSize();
+			TerrainType t = p.getPropertyType();
+			int crown = p.getCrowns();
+			int score = p.getScore();
+			PropertyAttribute pa = new PropertyAttribute(t,propertySize,crown,score);
+			allAttributes.add(pa);
+		}
+		return allAttributes;
+	}
+	
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
-	
+
 	/**
 	 * 
 	 * This helper method obtains the neighborhood of the leftTile
@@ -806,6 +821,7 @@ public class KDController {
 			newProp.setCrowns(propertyCrowns.get(i));
 			newProp.setSize(propertySize.get(i));
 			newProp.setPropertyType(t);
+			newProp.setScore(propertySize.get(i)*propertyCrowns.get(i));
 			List<Integer> ids = propertyIds.get(i);
 			for (int j:ids) {
 				Domino aDomino = getdominoByID(j);

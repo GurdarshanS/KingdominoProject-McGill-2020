@@ -17,6 +17,7 @@ import ca.mcgill.ecse223.kingdomino.model.*;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
 import ca.mcgill.ecse223.kingdomino.model.Player.PlayerColor;
+import ca.mcgill.ecse223.kingdomino.controller.PropertyAttribute;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -181,6 +182,13 @@ public class CucumberStepDefinitions {
 		assertEquals(expectedValidity,validity);
 	}
 	
+	/**
+	 * These methods identifies the properties of a 
+	 * player's kingdom
+	 * @see IdentifyProperties.feature
+	 * @author Jing Han 260528152
+	 */
+	
 	@Given("the game is initialized for identify properties")
 	public static void initialize_game_for_id_property() {
 		KDController.initiateEmptyGame();
@@ -193,7 +201,7 @@ public class CucumberStepDefinitions {
 	}
 
 	@Then("the player shall have the following properties:")
-	public void the_kingdom_shall_have_following_properties(io.cucumber.datatable.DataTable dataTable) {
+	public static void the_kingdom_shall_have_following_properties(io.cucumber.datatable.DataTable dataTable) {
 		
 		boolean match=true;
 		
@@ -239,6 +247,105 @@ public class CucumberStepDefinitions {
 		assertEquals(true,match);
 		
 	}
+	
+	
+//	Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+	/**
+	 * These methods calculates Propety Attributes
+	 * @see CalculatePropertyAttributes.feature
+	 * @author Jing Han 260528152
+	 */
+	@Given("the game is initialized for calculate property attributes")
+	public static void game_initialized_for_calculate_property_attributes() {
+		KDController.initiateEmptyGame();
+	}
+	
+	@When("calculate property attributes is initiated")
+	public static void initiate_calculate_property() {
+		Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+		KDController.identifyAllProperty(player);
+	}
+	
+	@Then("the player shall have a total of {int} properties")
+	public static void the_player_shall_have_x_number_properties(Integer expectedPropertyNum) {
+		Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+		List<Property> p = player.getKingdom().getProperties();
+		int actualNum=p.size();
+		assertEquals(expectedPropertyNum.intValue(),actualNum);
+	}
+	
+	@Then("the player shall have properties with the following attributes:")
+	public static void player_has_properties_with_following_attributes(io.cucumber.datatable.DataTable dataTable) {
+		
+		Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+		List<PropertyAttribute> pa = KDController.getAllPropertyAttributes(player);
+		
+//		for (PropertyAttribute each:pa) {
+//			System.out.println(each);
+//		}
+//		
+		List<Map<String, String>> valueMaps = dataTable.asMaps();
+		
+		List<Integer> expectedSize = new ArrayList<Integer>();
+		List<Integer> expectedCrown = new ArrayList<Integer>();
+		List<String> expectedTerrains = new ArrayList<String>();
+	
+		
+		for (Map<String, String> map : valueMaps) {
+			// Get values from cucumber table
+			String propType = map.get("type");
+			int propSize = Integer.parseInt(map.get("size"));
+			int propCrown= Integer.parseInt(map.get("crowns"));
+			
+			expectedTerrains.add(propType);
+			expectedCrown.add(propCrown);
+			expectedSize.add(propSize);
+		}
+		
+//		System.out.println(expectedTerrains);
+//		System.out.println(expectedSize);
+//		System.out.println(expectedCrown);
+		
+		if (expectedSize.size()!=pa.size()) {
+			assertEquals(true,false);
+		}
+		
+		else {
+			
+			List<Integer> ignoreIndex=new ArrayList<Integer>();
+			for (int i=0;i<expectedSize.size();i++) {
+				
+					int currentSize=expectedSize.get(i);
+					int currentCrown=expectedCrown.get(i);
+					String currentTerrain=expectedTerrains.get(i);
+					
+					int num_match=0;
+					
+					for (int j=0;j<pa.size();j++) {
+						if (!ignoreIndex.contains(j)) {
+							int testSize=pa.get(j).getSize();
+							int testCrown=pa.get(j).getCrown();
+							String testTerrain=getStringByTerrainType(pa.get(j).getTerrain());
+							System.out.println("expected index: "+ i+" --- terrain: "+currentTerrain+" --- size: "+currentSize+" --- crown: "+currentCrown);
+							System.out.println("test     index: "+j+" --- terrain: "+testTerrain+" --- size: "+testSize+" --- crown: "+testCrown);
+							if (currentTerrain.equalsIgnoreCase(testTerrain) && testSize==currentSize && testCrown==currentCrown) {
+								num_match++;
+//								ignoreIndex.add(i);
+								ignoreIndex.add(j);
+								System.out.println("match!");
+								break;
+							}
+						}
+					}
+					if (num_match!=1) assertEquals(true,false);
+					
+					System.out.println("===========================================");
+							
+			}
+			assertEquals(true,true);
+
+		}
+	}
 			
 			
 			
@@ -279,6 +386,19 @@ public class CucumberStepDefinitions {
 		if (terrain.equalsIgnoreCase("lake")) return TerrainType.Lake;
 		if (terrain.equalsIgnoreCase("swamp")) return TerrainType.Swamp;
 		if (terrain.equalsIgnoreCase("forest")) return TerrainType.Forest;
+		else throw new IllegalArgumentException();
+
+		}
+	
+	private static String getStringByTerrainType(TerrainType terrain) {
+		
+		if (terrain.equals(TerrainType.WheatField)) return "wheat";
+		if (terrain.equals(TerrainType.Swamp)) return "swamp";
+		if (terrain.equals(TerrainType.Forest)) return "forest";
+		if (terrain.equals(TerrainType.Grass)) return "grass";
+		if (terrain.equals(TerrainType.Mountain)) return "mountain";
+		if (terrain.equals(TerrainType.Lake)) return "lake";
+		
 		else throw new IllegalArgumentException();
 
 		}

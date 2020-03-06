@@ -11,7 +11,7 @@ class Neighborhood {
 	 * @see - no direct features, but associated with verifyNeighborAdjacencyLastTerritory of KDController
 	 * @author Jing Han 260528152
 	 * @param neighbors
-	 * @param leftOrRight
+	 * @param leftOrRight 
 	 * @param neighborTerrain
 	 * @param neighborCoord
 	 */
