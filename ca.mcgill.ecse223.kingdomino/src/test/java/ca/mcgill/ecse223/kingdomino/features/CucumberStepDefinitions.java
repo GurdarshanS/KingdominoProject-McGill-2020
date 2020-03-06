@@ -1,6 +1,8 @@
 package ca.mcgill.ecse223.kingdomino.features;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -42,25 +44,42 @@ public class CucumberStepDefinitions {
 	public void the_game_is_initialized_for_load_game() {
 		KDController.initializeGame();
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param string
+	 * @throws InvalidInputException
+	 */
 	@When("I initiate loading a saved game from {string}")
 	public void i_initiate_loading_a_saved_game_from(String string) throws InvalidInputException {
 	    KDController.loadGame(string);
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@When("each tile placement is valid")
 	public void each_tile_placement_is_valid() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    assertTrue(true);
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@When("the game result is not yet final")
 	public void the_game_result_is_not_yet_final() {
 	    // Write code here that turns the phrase above into concrete actions
 	    throw new cucumber.api.PendingException();
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param int1
+	 */
 	@Then("it shall be player {int}'s turn")
 	public void it_shall_be_player_s_turn(Integer int1) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    assertEquals(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer(), int1);
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param dataTable
+	 */
 	@Then("each of the players should have the corresponding tiles on their grid:")
 	public void each_of_the_players_should_have_the_corresponding_tiles_on_their_grid(io.cucumber.datatable.DataTable dataTable) {
 	    // Write code here that turns the phrase above into concrete actions
@@ -72,6 +91,10 @@ public class CucumberStepDefinitions {
 	    // For other transformations you can register a DataTableType.
 	    throw new cucumber.api.PendingException();
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param dataTable
+	 */
 	@Then("each of the players should have claimed the corresponding tiles:")
 	public void each_of_the_players_should_have_claimed_the_corresponding_tiles(io.cucumber.datatable.DataTable dataTable) {
 	    // Write code here that turns the phrase above into concrete actions
@@ -83,22 +106,32 @@ public class CucumberStepDefinitions {
 	    // For other transformations you can register a DataTableType.
 	    throw new cucumber.api.PendingException();
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param string
+	 */
 	@Then("tiles {string} shall be unclaimed on the board")
 	public void tiles_shall_be_unclaimed_on_the_board(String string) {
 	    // Write code here that turns the phrase above into concrete actions
 	    throw new cucumber.api.PendingException();
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@Then("the game shall become ready to start")
 	public void the_game_shall_become_ready_to_start() {
 	    // Write code here that turns the phrase above into concrete actions
 	    throw new cucumber.api.PendingException();
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@Then("the game shall notify the user that the game file is invalid")
 	public void the_game_shall_notify_the_user_that_the_game_file_is_invalid() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    assertFalse(true);
 	}
-
+	
+	//-------------------------------------------------------------------------------------------
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Test for saveGame
@@ -108,44 +141,72 @@ public class CucumberStepDefinitions {
 	public void the_game_is_initialized_for_save_game() {
 		KDController.initializeGame();
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@Given("the game is still in progress")
 	public void the_game_is_still_in_progress() {
 	    // Write code here that turns the phrase above into concrete actions
 	    throw new cucumber.api.PendingException();
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param string
+	 */
 	@Given("no file named {string} exists in the filesystem")
 	public void no_file_named_exists_in_the_filesystem(String string) {
-		String directory = "./src/test/resources/savedGames/"+string;
-		File fileSearch = new File(directory);
-		fileSearch.exists() = false;
+		File file = new File(string);
+		if(file.exists()) {
+			file.delete();
+		}
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param string
+	 * @throws InvalidInputException
+	 */
 	@When("the user initiates saving the game to a file named {string}")
 	public void the_user_initiates_saving_the_game_to_a_file_named(String string) throws InvalidInputException {
 	    KDController.saveGame(string);
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param string
+	 */
 	@Then("a file named {string} shall be created in the filesystem")
 	public void a_file_named_shall_be_created_in_the_filesystem(String string) {
-		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		KDPersistence.save(kingdomino);
+		assertTrue(new File(string).exists());
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param string
+	 * @throws IOException
+	 */
 	@Given("the file named {string} exists in the filesystem")
-	public void the_file_named_exists_in_the_filesystem(String string) {
-		String directory = "./src/test/resources/savedGames/"+string;
-		File fileSearch = new File(directory);
-		fileSearch.exists();
-		ovewriteSave(string);
+	public void the_file_named_exists_in_the_filesystem(String string) throws IOException {
+		try{
+			new File(string).createNewFile();
+		}catch(IOException i) {
+			throw new IOException(i.getMessage());
+		}
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@When("the user agrees to overwrite the existing file")
 	public void the_user_agrees_to_overwrite_the_existing_file() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+		KDController.saveGame(file);
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param string
+	 */
 	@Then("the file named {string} shall be updated in the filesystem")
 	public void the_file_named_shall_be_updated_in_the_filesystem(String string) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    assertTrue(System.currentTimeMillis()- new File(string).lastModified()<900);
 	}
-
+	
+	//-------------------------------------------------------------------------------------------
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Test for setGameOptions
@@ -219,7 +280,7 @@ public class CucumberStepDefinitions {
 	    throw new cucumber.api.PendingException();
 	}
 
-	
+//-------------------------------------------------------------------------------------------
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Test for startANewGame
