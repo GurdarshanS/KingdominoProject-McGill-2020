@@ -346,6 +346,13 @@ public class CucumberStepDefinitions {
 
 		}
 	}
+	
+	 @Given("the player's kingdom also includes the domino {int} at position {int}:{int} with the direction {string}")
+	 public static void player_kingdom_also_includes(Integer id, Integer posX, Integer posY, String direction) {
+		 Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+		Domino dominoToPlace = getdominoByID(id);
+		KDController.prePlaceDomino(player, dominoToPlace, posX, posY, direction);
+	 }
 			
 			
 			
