@@ -45,7 +45,7 @@ public class Property
       throw new RuntimeException("Unable to create property due to kingdom");
     }
   }
-
+ 
   //------------------------
   // INTERFACE
   //------------------------
