@@ -35,6 +35,7 @@ public class CalculateRankingStepDefinitions {
 	int score3 = 0;
 	int score4 = 0;
 	public static Integer[] ranking;
+	public static PlayerColor[] colors;
 	
 	@Given("the game is initialized for calculate ranking")
 	public void the_game_is_initialized_for_calculate_ranking() {
@@ -52,7 +53,7 @@ public class CalculateRankingStepDefinitions {
 			DirectionKind dir1 = KDController.getDirection(map.get("dominodir1"));
 			Integer posx1 = Integer.decode(map.get("posx1"));
 			Integer posy1 = Integer.decode(map.get("posy1"));
-			
+			PlayerColor p = KDController.retrieveColor(map.get("player"));
 			Integer id2 = Integer.decode(map.get("domino2"));
 			DirectionKind dir2 = KDController.getDirection(map.get("dominodir2"));
 			Integer posx2 = Integer.decode(map.get("posx2"));
@@ -68,32 +69,20 @@ public class CalculateRankingStepDefinitions {
 			domInKingdom2.setDirection(dir2);
 			dominoToPlace1.setStatus(DominoStatus.PlacedInKingdom);
 			dominoToPlace2.setStatus(DominoStatus.PlacedInKingdom);
-			//game.getPlayer(n).setPropertyScore(KDController.setPlayerDoms(n,domInKingdom1,domInKingdom2));
-			//System.out.println(game.getPlayer(n).getPropertyScore());
-			score1 = 0;
-			score2 = 10;
-			score3 = 1;
-			score4 = 4;
+			KDController.calculatePlayerScore(game.getPlayer(n));		
+
 			if(n == 0) {
-				//Dom1 = d1.getDomino();
-				//Dom2 = d2.getDomino();
-				game.getPlayer(n).setColor(PlayerColor.Blue);
-				game.getPlayer(n).setPropertyScore(score1);
+				game.getPlayer(n).setColor(p);
+				score1 = game.getPlayer(n).getTotalScore();
 			} else if ( n == 1) {
-				//Dom1 = d1.getDomino();
-				//Dom2 = d2.getDomino();
-				game.getPlayer(n).setColor(PlayerColor.Green);
-				game.getPlayer(n).setPropertyScore(score2);
+				game.getPlayer(n).setColor(p);
+				score2 = game.getPlayer(n).getTotalScore();
 			} else if (n==2) {
-				//Dom1 = d1.getDomino();
-				//Dom2 = d2.getDomino();
-				game.getPlayer(n).setColor(PlayerColor.Pink);
-				game.getPlayer(n).setPropertyScore(score3);
+				game.getPlayer(n).setColor(p);
+				score3 = game.getPlayer(n).getTotalScore();
 			} else if (n==3) {
-				//Dom1 = d1.getDomino();
-				//Dom2 = d2.getDomino();
-				game.getPlayer(n).setColor(PlayerColor.Yellow);
-				game.getPlayer(n).setPropertyScore(score4);
+				game.getPlayer(n).setColor(p);
+				score4 = game.getPlayer(n).getTotalScore();
 			}
 			
 			n++;
@@ -115,6 +104,7 @@ public class CalculateRankingStepDefinitions {
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		Player[] scoreList = new Player[4];
 		ranking = new Integer[4];
+		colors = new PlayerColor[4];
 		int j = 4;
 		
 	    for(int i=0; i<scoreList.length; i++) {
@@ -125,8 +115,13 @@ public class CalculateRankingStepDefinitions {
 	    for(int i=0; i<4; i++) {
 	    	scoreList[i].setCurrentRanking(j);
 	    	j--;
+	    	System.out.println("=============================================================================");
+	    	System.out.println(scoreList[i].getTotalScore());
+	    	System.out.println("=============================================================================");
 	    }
-	
+	    for(int i=0; i<4; i++) {
+	    	colors[i] = scoreList[i].getColor();
+	    }
 	    for(int i=0; i<ranking.length; i++) {
 	    	ranking[i] = scoreList[ranking.length-1-i].getCurrentRanking();
 	    }
@@ -134,14 +129,18 @@ public class CalculateRankingStepDefinitions {
 
 	@Then("player standings shall be the followings:")
 	public void player_standings_shall_be_the_followings(io.cucumber.datatable.DataTable dataTable) {
-		int n = 0;	
+		int n = 0;
+		int j = 3;
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		List<Map<String, String>> valueMaps = dataTable.asMaps();
 		for (Map<String, String> map : valueMaps) {
 			// Get values from cucumber table
+			PlayerColor p = KDController.retrieveColor(map.get("player"));
 			Integer standing = Integer.decode(map.get("standing"));
 			assertEquals(standing,ranking[n]);
+			assertEquals(p,colors[j]);
 			n++;
+			j--;
 
 	}
 

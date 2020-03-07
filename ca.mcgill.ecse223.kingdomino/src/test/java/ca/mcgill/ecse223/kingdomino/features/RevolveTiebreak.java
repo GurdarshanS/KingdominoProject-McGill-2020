@@ -38,14 +38,19 @@ public class RevolveTiebreak {
 
 	@Then("player standings should be the followings:")
 	public void player_standings_should_be_the_followings(io.cucumber.datatable.DataTable dataTable) {
-		int n = 0;	
+		int n = 0;
+		int j = 3;
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		List<Map<String, String>> valueMaps = dataTable.asMaps();
 		for (Map<String, String> map : valueMaps) {
 			// Get values from cucumber table
+			PlayerColor p = KDController.retrieveColor(map.get("player"));
 			Integer standing = Integer.decode(map.get("standing"));
 			assertEquals(standing,CalculateRankingStepDefinitions.ranking[n]);
+			assertEquals(p,CalculateRankingStepDefinitions.colors[j]);
 			n++;
+			j--;
+
 	}
 	}
 }
