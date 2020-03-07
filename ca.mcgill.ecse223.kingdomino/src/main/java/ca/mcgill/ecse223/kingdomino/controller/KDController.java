@@ -9,6 +9,7 @@ import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
 import ca.mcgill.ecse223.kingdomino.model.Player.PlayerColor;
 import ca.mcgill.ecse223.kingdomino.persistence.KDPersistence;
 
+import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,6 +17,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+
+import javax.swing.Icon;
+import javax.swing.JOptionPane;
 
 public class KDController {
 	/**
@@ -68,25 +72,21 @@ public class KDController {
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
-		int randomNum = ThreadLocalRandom.current().nextInt(1, game.numberOfPlayers()+1);
+		int randomNum = ThreadLocalRandom.current().nextInt(0, game.numberOfPlayers());
 		List<Domino> dominoesInGame;
-		for (int i = 1; i <= game.numberOfPlayers(); i++) {
-			if(i==1) {
+		for (int i = 0; i <= game.numberOfPlayers(); i++) {
+			if(i==0) {
 				game.getPlayer(i).setColor(Player.PlayerColor.Blue);
 			}
-			if(i==2) {
+			if(i==1) {
 				game.getPlayer(i).setColor(Player.PlayerColor.Green);
 			}
-			if(i==3) {
+			if(i==2) {
 				game.getPlayer(i).setColor(Player.PlayerColor.Pink);
 			}
-			if(i==4) {
+			if(i==3) {
 				game.getPlayer(i).setColor(Player.PlayerColor.Yellow);
 			}
-			Kingdom kingdom = new Kingdom(game.getPlayer(i));
-			kingdom.setPlayer(game.getPlayer(i));
-			Castle castle = null;
-			kingdom.addTerritory(castle);
 		}
 		game.setNextPlayer(game.getPlayer(randomNum));
 		createAllDominoes(game);
@@ -94,7 +94,7 @@ public class KDController {
 		if(game.getNumberOfPlayers()==2) {
 			
 			int randDomino = ThreadLocalRandom.current().nextInt(0, 24);
-			dominoesInGame = pickRandDomino(game.getAllDominos(), 24);
+			dominoesInGame = pickRandDomino(game.getAllDominos(), 24+1);
 			for(int i=0; i<= 24; i++) {
 				game.addAllDomino(dominoesInGame.get(i));
 			}
@@ -103,7 +103,7 @@ public class KDController {
 		if(game.getNumberOfPlayers()==3) {
 			
 			int randDomino = ThreadLocalRandom.current().nextInt(0, 36);
-			dominoesInGame = pickRandDomino(game.getAllDominos(), 36);
+			dominoesInGame = pickRandDomino(game.getAllDominos(), 36+1);
 			for(int i=0; i<= 36; i++) {
 				game.addAllDomino(dominoesInGame.get(i));
 			}
@@ -112,7 +112,7 @@ public class KDController {
 		if(game.getNumberOfPlayers()==4) {
 			
 			int randDomino = ThreadLocalRandom.current().nextInt(0, 36);
-			dominoesInGame = pickRandDomino(game.getAllDominos(), 48);
+			dominoesInGame = pickRandDomino(game.getAllDominos(), 48+1);
 			for(int i=0; i<= 48; i++) {
 				game.addAllDomino(dominoesInGame.get(i));
 			}
@@ -122,7 +122,7 @@ public class KDController {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 6: This method loads a saved game for the player.
-	 * @param file:  The file inputed from the user.
+	 * @param file: The file inputed from the user.
 	 * @return Method returns true if the game is loaded, false it cannot be.
 	 * @throws InvalidInputException: Thrown if file cannot be loaded
 	 */
@@ -161,7 +161,7 @@ public class KDController {
 		
 		try{
 			if(fileSearch.exists()) {
-				overwriteSave(kingdomino); //If the file exists, overwrite it.(basically just create new save but under same name)
+				//overwriteSave(kingdomino); //If the file exists, overwrite it.
 				gameSaved = true;
 			}
 			else {
@@ -178,6 +178,13 @@ public class KDController {
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
+	
+	public static void overwriteFile(String filename) throws IOException {
+		
+		if (userOverwritePrompt(filename) == true) {
+			 saveCurrentGamePositionAsFile(filename);
+		}
+	}
 	
 	public static class InvalidInputException extends Exception {
 		
