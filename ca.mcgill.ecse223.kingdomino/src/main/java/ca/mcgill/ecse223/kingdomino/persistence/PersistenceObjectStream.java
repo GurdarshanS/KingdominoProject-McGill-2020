@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 
 public class PersistenceObjectStream {
 	
-	private static String fileName;
+	private static String fileName = "kingdomino.data";
 
 	public static void serialize(Object object) {
 		 FileOutputStream fileOutput;
@@ -23,7 +23,6 @@ public class PersistenceObjectStream {
 	        } catch (Exception e) {
 	            throw new RuntimeException("Couldn't save '" + fileName + "'.");
 	        }
-
 	    }
 
 	public static Object deserialize() {

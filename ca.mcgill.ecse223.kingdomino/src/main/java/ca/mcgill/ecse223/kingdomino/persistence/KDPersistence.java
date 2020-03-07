@@ -13,7 +13,7 @@ public class KDPersistence {
 	
 	public static Kingdomino load() {
 		PersistenceObjectStream.setFilename(fileName);
-		Kingdomino kingdomino= (Kingdomino) PersistenceObjectStream.deserialize()
+		Kingdomino kingdomino= (Kingdomino) PersistenceObjectStream.deserialize();
 		
 		if (kingdomino == null) {
 			kingdomino = new Kingdomino();

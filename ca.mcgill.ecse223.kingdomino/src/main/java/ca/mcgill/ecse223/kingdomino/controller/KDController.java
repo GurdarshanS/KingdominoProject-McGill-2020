@@ -154,21 +154,19 @@ public class KDController {
 		
 		boolean gameSaved = false;
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		String directory = "./src/test/resources/savedGames/"+file;
+		String directory = "./src/test/resources/"+file;
 		File fileSearch = new File(directory);
-		
-		try{
-			if(fileSearch.exists()) {
-				//overwriteSave(kingdomino); //If the file exists, overwrite it.
-				gameSaved = true;
-			}
-			else {
+		if(fileSearch.exists()) {
+			//overwriteSave(kingdomino); //If the file exists, overwrite it.
+			gameSaved = true;
+		}
+		else {
+			try {
 				KDPersistence.save(kingdomino); //If the file does not exist, new save.
 				gameSaved = true;
+			}catch(RuntimeException r) {
+				throw new InvalidInputException(r.getMessage());
 			}
-		}
-		catch(RuntimeException r) {
-			throw new InvalidInputException(r.getMessage());
 		}
 		return gameSaved;
 	}
