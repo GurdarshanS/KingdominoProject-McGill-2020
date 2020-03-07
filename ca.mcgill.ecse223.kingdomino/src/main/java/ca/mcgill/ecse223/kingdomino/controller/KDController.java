@@ -206,9 +206,23 @@ public class KDController {
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
+		
+		if(game.getNextDraft() == null) {
+			
+			Draft currentDraft =	game.getCurrentDraft();
+			
+			currentDraft.setDraftStatus(DraftStatus.FaceUp);
+			
+		}
+		
+		else{
+			
 		Draft nextDraft =	game.getNextDraft();
 		
+		
 		nextDraft.setDraftStatus(DraftStatus.FaceUp);
+		
+		}
 		
 	}
 	
