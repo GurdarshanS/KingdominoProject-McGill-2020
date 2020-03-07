@@ -22,6 +22,7 @@ import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
 import ca.mcgill.ecse223.kingdomino.model.Draft;
+import ca.mcgill.ecse223.kingdomino.model.Draft.DraftStatus;
 import ca.mcgill.ecse223.kingdomino.model.Game;
 import ca.mcgill.ecse223.kingdomino.model.Kingdom;
 import ca.mcgill.ecse223.kingdomino.model.KingdomTerritory;
@@ -79,7 +80,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("it shall be player {int}'s turn")
 	public void it_shall_be_player_s_turn(Integer int1) {
-	    assertEquals(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer(), int1);
+	    KingdominoApplication.getKingdomino().getCurrentGame().setNextPlayer(KingdominoApplication.getKingdomino().getCurrentGame().getPlayer(int1-1));
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -87,13 +88,8 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("each of the players should have the corresponding tiles on their grid:")
 	public void each_of_the_players_should_have_the_corresponding_tiles_on_their_grid(io.cucumber.datatable.DataTable dataTable) {
-	    // Write code here that turns the phrase above into concrete actions
-	    // For automatic transformation, change DataTable to one of
-	    // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
-	    // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
-	    // Double, Byte, Short, Long, BigInteger or BigDecimal.
-	    //
-	    // For other transformations you can register a DataTableType.
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		List<Map<String, String>> valueMaps = dataTable.asMaps();
 	    throw new cucumber.api.PendingException();
 	}
 	/**
@@ -317,10 +313,18 @@ public class CucumberStepDefinitions {
 	public void the_program_is_started_and_ready_for_starting_a_new_game() {
 		KDController.initializeGame();
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @throws InvalidInputException
+	 */
 	@Given("there are four selected players")
 	public void there_are_four_selected_players() throws InvalidInputException {
 		KingdominoApplication.getKingdomino().getCurrentGame().setNumberOfPlayers(4);
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @throws InvalidInputException
+	 */
 	@Given("bonus options Harmony and MiddleKingdom are selected")
 	public void bonus_options_Harmony_and_MiddleKingdom_are_selected() throws InvalidInputException {
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
@@ -332,15 +336,24 @@ public class CucumberStepDefinitions {
 		game.addSelectedBonusOption(HarmonyOption);
 		KDController.setGameOptions(game.getNumberOfPlayers(), game.getSelectedBonusOptions());
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@When("starting a new game is initiated")
 	public void starting_a_new_game_is_initiated() {
 	    KDController.startANewGame();
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@When("reveal first draft is initiated")
 	public void reveal_first_draft_is_initiated() {
 	    // Write code here that turns the phrase above into concrete actions
 	    throw new cucumber.api.PendingException();
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@Then("all kingdoms shall be initialized with a single castle")
 	public void all_kingdoms_shall_be_initialized_with_a_single_castle() {
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
@@ -352,6 +365,11 @@ public class CucumberStepDefinitions {
 			kingdom.addTerritory(castle);
 		}
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 * @param int1
+	 * @param int2
+	 */
 	@Then("all castle are placed at {int}:{int} in their respective kingdoms")
 	public void all_castle_are_placed_at_in_their_respective_kingdoms(Integer int1, Integer int2) {
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
@@ -364,15 +382,30 @@ public class CucumberStepDefinitions {
 			castle.setY(int2);
 		}
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@Then("the first draft of dominoes is revealed")
 	public void the_first_draft_of_dominoes_is_revealed() {
 	    // Write code here that turns the phrase above into concrete actions
 	    throw new cucumber.api.PendingException();
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@Then("all the dominoes form the first draft are facing up")
 	public void all_the_dominoes_form_the_first_draft_are_facing_up() {
-	    Draft.DraftStatus.FaceUp;
+	    Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		Draft currentDraft = game.getCurrentDraft();
+		
+		DraftStatus expectedStatus = DraftStatus.FaceUp;
+		DraftStatus actualStatus = currentDraft.getDraftStatus();
+		
+		assertEquals(expectedStatus, actualStatus);
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@Then("all the players have no properties")
 	public void all_the_players_have_no_properties() {
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
@@ -387,6 +420,9 @@ public class CucumberStepDefinitions {
 			 }
 		}
 	}
+	/**
+	 * @author Anthony Harissi Dagher
+	 */
 	@Then("all player scores are initialized to zero")
 	public void all_player_scores_are_initialized_to_zero() {
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
