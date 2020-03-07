@@ -148,17 +148,11 @@ public class KDController {
 	
 	
 	
-	
-	
-	
-	
-	
-	
 	public static Player[] bubbleSort(Player[] scoreList) 
     { 
         int n = scoreList.length; 
-        for (int i = 0; i < n-1; i++) 
-            for (int j = 0; j < n-i-1; j++) 
+        for (int i = 0; i < n-1; i++) {
+            for (int j = 0; j < n-i-1; j++) {
                 if (scoreList[j].getTotalScore() > scoreList[j+1].getTotalScore()) 
                 { 
                     // swap arr[j+1] and arr[i] 
@@ -166,7 +160,9 @@ public class KDController {
                     scoreList[j] = scoreList[j+1]; 
                     scoreList[j+1] = temp; 
                 } 
-        System.out.println(scoreList.toString());
+            }
+        }
+        
         return scoreList;
     } 
 	
@@ -184,46 +180,71 @@ public class KDController {
 		return p;
 	}
 	
-	public static Player[] tieBreakProperty(Player[] p1) {
-		
+	public static Player[] tieBreaker(Player[] p1) {
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		int crowns1 = 0;
+		int crowns2 = 0;
 		if( p1[2].getTotalScore() == p1[3].getTotalScore()) {
 			
-			List<Property> propW1 = getPropertyByTerrain(p1[2], TerrainType.WheatField);
-			List<Property> propF1 = getPropertyByTerrain(p1[2], TerrainType.Forest);
-			List<Property> propG1 = getPropertyByTerrain(p1[2], TerrainType.Grass);
-			List<Property> propL1 = getPropertyByTerrain(p1[2], TerrainType.Lake);
-			List<Property> propM1 = getPropertyByTerrain(p1[2], TerrainType.Mountain);
-			List<Property> propS1 = getPropertyByTerrain(p1[2], TerrainType.Swamp);
-			List<Property> propW2 = getPropertyByTerrain(p1[3], TerrainType.WheatField);
-			List<Property> propF2 = getPropertyByTerrain(p1[3], TerrainType.Forest);
-			List<Property> propG2 = getPropertyByTerrain(p1[3], TerrainType.Grass);
-			List<Property> propL2 = getPropertyByTerrain(p1[3], TerrainType.Lake);
-			List<Property> propM2 = getPropertyByTerrain(p1[3], TerrainType.Mountain);
-			List<Property> propS2 = getPropertyByTerrain(p1[3], TerrainType.Swamp);
+			List<Property> propertiesPlayer1 = p1[2].getKingdom().getProperties();
+			List<Property> propertiesPlayer2 = p1[3].getKingdom().getProperties();
+
 			
-			List<Integer> big = new ArrayList<>();
-			big.add(propW1.size());
-			big.add(propW2.size());
-			big.add(propF1.size());
-			big.add(propF2.size());
-			big.add(propG1.size());
-			big.add(propG2.size());
-			big.add(propL1.size());
-			big.add(propL2.size());
-			big.add(propM1.size());
-			big.add(propM2.size());
-			big.add(propS1.size());
-			big.add(propS2.size());
+			Property biggestPropertyPlayer1 = getBiggestProperty(propertiesPlayer1);
+			Property biggestPropertyPlayer2 = getBiggestProperty(propertiesPlayer2);
 			
-			Collections.sort(big);
+			if(biggestPropertyPlayer1.getSize() > biggestPropertyPlayer2.getSize()) {
+				p1[2].setPropertyScore(p1[2].getPropertyScore()+1);
+				Player temp = p1[3];
+				p1[3] = p1[2];
+				p1[2] = temp;
+				return p1;
+			} else if (biggestPropertyPlayer1.getSize() < biggestPropertyPlayer2.getSize()) {
+				p1[3].setPropertyScore(p1[3].getPropertyScore()+1);
+				return p1;
+			} else if (biggestPropertyPlayer1.getSize() == biggestPropertyPlayer2.getSize()) {
 			
+			for(int i=0; i<propertiesPlayer1.size(); i++) {
+				crowns1 = crowns1 + propertiesPlayer1.get(i).getCrowns();
+			}
 			
+			for(int i=0; i<propertiesPlayer2.size(); i++) {
+				crowns2 = crowns2 + propertiesPlayer2.get(i).getCrowns();
 			}
 			
 			
+			if(crowns1 > crowns2) {
+				p1[2].setPropertyScore(p1[2].getPropertyScore()+1);
+				Player temp = p1[3];
+				p1[3] = p1[2];
+				p1[2] = temp;
+				return p1;
+			} else if(crowns1 < crowns2) {
+				p1[3].setPropertyScore(p1[3].getPropertyScore()+1);
+				return p1;
+			} 
+			
+			}
 		}
 		
 		return p1;
+	}
+	
+	private static Property getBiggestProperty(List<Property> properties) {
+		
+		int biggest = properties.get(0).getSize();
+		Property biggestProperty = properties.get(0);
+		
+		for(int i=1; i<properties.size(); i++) {
+			
+			if(properties.get(i).getSize() > biggest) {
+				
+				biggestProperty = properties.get(i);
+				biggest = properties.get(i).getSize();
+			}
+		}
+		
+		return biggestProperty;
 	}
 	
 	public static List<PropertyAttribute> getAllPropertyAttributes(Player player) {

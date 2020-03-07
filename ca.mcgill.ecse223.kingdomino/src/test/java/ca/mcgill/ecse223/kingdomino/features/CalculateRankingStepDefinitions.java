@@ -34,7 +34,7 @@ public class CalculateRankingStepDefinitions {
 	int score2 = 0;
 	int score3 = 0;
 	int score4 = 0;
-	public static Integer[] ranking;
+	public static  Integer[] ranking;
 	public static PlayerColor[] colors;
 	
 	@Given("the game is initialized for calculate ranking")
@@ -106,12 +106,23 @@ public class CalculateRankingStepDefinitions {
 		ranking = new Integer[4];
 		colors = new PlayerColor[4];
 		int j = 4;
-		
+		System.out.println(game.getPlayer(0).getColor().toString());
+		System.out.println(game.getPlayer(1).getColor().toString());
+		System.out.println(game.getPlayer(2).getColor().toString());
+		System.out.println(game.getPlayer(3).getColor().toString());
 	    for(int i=0; i<scoreList.length; i++) {
 	    	scoreList[i] = game.getPlayer(i);
+	    	
 	    }
 	    scoreList = KDController.bubbleSort(scoreList);
+	    scoreList = KDController.tieBreaker(scoreList);
 	    
+	    if(scoreList[2].getTotalScore() == scoreList[3].getTotalScore()) {
+	    	scoreList[0].setCurrentRanking(3);
+	    	scoreList[1].setCurrentRanking(2);
+	    	scoreList[2].setCurrentRanking(1);
+	    	scoreList[3].setCurrentRanking(1);
+	    } else {
 	    for(int i=0; i<4; i++) {
 	    	scoreList[i].setCurrentRanking(j);
 	    	j--;
@@ -119,8 +130,10 @@ public class CalculateRankingStepDefinitions {
 	    	System.out.println(scoreList[i].getTotalScore());
 	    	System.out.println("=============================================================================");
 	    }
+	    }
 	    for(int i=0; i<4; i++) {
 	    	colors[i] = scoreList[i].getColor();
+	    	System.out.println(colors[i]);
 	    }
 	    for(int i=0; i<ranking.length; i++) {
 	    	ranking[i] = scoreList[ranking.length-1-i].getCurrentRanking();
@@ -142,10 +155,7 @@ public class CalculateRankingStepDefinitions {
 			n++;
 			j--;
 
-	}
-
-	
-	
+		}
 	}
 	
 }

@@ -35,7 +35,7 @@ public class RevolveTiebreak {
 	public void the_game_is_initialized_for_resolve_tiebreak() {
 		KDController.initiateEmptyGame();
 	}
-
+	
 	@Then("player standings should be the followings:")
 	public void player_standings_should_be_the_followings(io.cucumber.datatable.DataTable dataTable) {
 		int n = 0;
