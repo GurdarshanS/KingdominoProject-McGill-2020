@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -135,7 +136,7 @@ public class CucumberStepDefinition {
 		
 		//Game game = KingdominoApplication.getKingdomino().getCurrentGame(); ????
 		
-		KDController.CreateNextDraft();
+		KDController.createNextDraft();
 		
 		//
 	}
@@ -280,6 +281,164 @@ public class CucumberStepDefinition {
 		
 		
 	}
+	
+	
+	 @Given("the game is initialized for order next draft of dominoes")
+	 public void the_game_is_initialized_for_order_next_draft() {
+		 
+			Kingdomino kingdomino = new Kingdomino();
+			Game game = new Game(48, kingdomino);
+			game.setNumberOfPlayers(4);
+			kingdomino.setCurrentGame(game);
+			// Populate game
+			addDefaultUsersAndPlayers(game);
+			createAllDominoes(game);
+			game.setNextPlayer(game.getPlayer(0));
+			KingdominoApplication.setKingdomino(kingdomino);
+		 
+		 
+	 }// game initialized for order next draft
+	 
+	 
+	 @Given("the next draft is {string}")
+	 public void the_next_draft(String aString) {
+		 
+		 Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+			
+			String[] strArray = aString.split(",");
+			int[] intArray = new int[strArray.length];
+	
+			Draft nextDraft = new Draft(DraftStatus.FaceDown, game);
+			
+			for(int i = 0; i < strArray.length; i++) {
+			    intArray[i] = Integer.parseInt(strArray[i]);
+			}
+			
+			for(int i = 0; i < intArray.length; i++) {
+			   
+				
+				
+				nextDraft.addIdSortedDomino(getdominoByID(intArray[i]));
+			   
+			 
+			  }
+			
+			
+		game.setNextDraft(nextDraft);
+		 
+	 }
+	 
+	 @Given("the dominoes in next draft are facing down")
+	 public void the_dominoes_in_next_draft_are_facing_down() {
+		 
+		 Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		 
+		 game.getNextDraft().setDraftStatus(DraftStatus.FaceDown);
+		 
+		 
+	 }
+	 
+	 @When("the ordering of the dominoes in the next draft is initiated")
+	 public void the_ordering_of_next_draft_initiated() {
+		 
+		 KDController.OrderNextDraft();
+	 }
+	 
+	 @Then("the status of the next draft is sorted")
+	 public void the_status_of_next_draft_sorted() {
+		 
+		 Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		 
+		 DraftStatus expectedStatus = DraftStatus.Sorted;
+		 
+		 DraftStatus actualStatus = game.getNextDraft().getDraftStatus();
+		 
+		 assertEquals(expectedStatus, actualStatus);
+		 
+	 }
+	 
+	 @Then("the order of dominoes in the draft will be {string}")
+	 public void then_the_order_of_dominoes_in_draft(String aString) {
+		 
+		 Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+			
+			String[] strArray = aString.split(",");
+			int[] intArray = new int[strArray.length];
+			
+		Draft nextDraft = game.getNextDraft();
+			
+			
+			for(int i = 0; i < strArray.length; i++) {
+			    intArray[i] = Integer.parseInt(strArray[i]);
+			}
+			
+			for(int i = 0; i < intArray.length; i++) {
+			   
+				int expectedID = intArray[i];
+				
+				int actualID = nextDraft.getIdSortedDomino(i).getId();
+				
+				assertEquals(expectedID, actualID);
+			   
+			 
+			  
+			
+			}
+		 
+		 
+	 }
+	 
+	 
+	 //reveal next draft
+	 
+	 @Given("the game is initialized for reveal next draft of dominoes")
+	 public  void the_game_is_initialized_for_reveal_next_draft_of_dominoes(){
+		 
+			// Intialize empty game
+			Kingdomino kingdomino = new Kingdomino();
+			Game game = new Game(48, kingdomino);
+			game.setNumberOfPlayers(4);
+			kingdomino.setCurrentGame(game);
+			// Populate game
+			addDefaultUsersAndPlayers(game);
+			createAllDominoes(game);
+			game.setNextPlayer(game.getPlayer(0));
+			KingdominoApplication.setKingdomino(kingdomino);
+		 
+		  }
+	 
+	 
+	 @Given("the dominoes in next draft are sorted")
+	 public void the_dominoes_in_next_draft_are_sorted() {
+		 
+		 Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		 Draft nextDraft = game.getNextDraft();
+		 
+		 nextDraft.setDraftStatus(DraftStatus.Sorted);
+		 
+	 }
+	 
+	 @When("the revealing of the dominoes in the next draft is initiated")
+	 public void the_revealing_of_the_dominoes_in_the_next_draft_initiated() {
+		 
+		 KDController.RevealNextDraft();
+		 
+	 }
+	 
+	 @Then("the status of the next draft is face up")
+	 public void the_status_of_the_next_draft_is_face_up() {
+		 
+		 Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		 Draft nextDraft = game.getNextDraft();
+		 
+		 DraftStatus expectedStatus = DraftStatus.FaceUp;
+		 DraftStatus actualStatus = nextDraft.getDraftStatus();
+		 
+		 assertEquals(expectedStatus, actualStatus);
+		 
+	 }
+	 
+	 
 	/*
 	 * Note that these step definitions and helper methods just serve as a guide to help
 	 * you get started. You may change the code if required.
@@ -312,7 +471,7 @@ public class CucumberStepDefinition {
 
 			// Add the domino to a player's kingdom
 			Domino dominoToPlace = getdominoByID(id);
-			Kingdom kingdom = game.getPlayer(0).getKingdom();
+			 Kingdom kingdom = game.getPlayer(0).getKingdom();
 			DominoInKingdom domInKingdom = new DominoInKingdom(posx, posy, kingdom, dominoToPlace);
 			domInKingdom.setDirection(dir);
 			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);

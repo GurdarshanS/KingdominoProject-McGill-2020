@@ -32,7 +32,7 @@ public static void main (String [] args) {
 	
 	System.out.println(game.getAllDrafts());
 	
-	KDController.CreateNextDraft();
+	KDController.createNextDraft();
 
 	
 	System.out.println(game.getAllDrafts());
