@@ -96,16 +96,16 @@ public class KDController {
 			int randDomino = ThreadLocalRandom.current().nextInt(0, 24);
 			dominoesInGame = pickRandDomino(game.getAllDominos(), 24+1);
 			for(int i=0; i<= 24; i++) {
-				game.addAllDomino(dominoesInGame.get(i));
+				game.removeAllDomino(dominoesInGame.get(i));
 			}
 			game.setTopDominoInPile(dominoesInGame.get(randDomino));
 		}
 		if(game.getNumberOfPlayers()==3) {
 			
 			int randDomino = ThreadLocalRandom.current().nextInt(0, 36);
-			dominoesInGame = pickRandDomino(game.getAllDominos(), 36+1);
-			for(int i=0; i<= 36; i++) {
-				game.addAllDomino(dominoesInGame.get(i));
+			dominoesInGame = pickRandDomino(game.getAllDominos(), 12+1);
+			for(int i=0; i<= 12; i++) {
+				game.removeAllDomino(dominoesInGame.get(i));
 			}
 			game.setTopDominoInPile(dominoesInGame.get(randDomino));
 		}
@@ -113,11 +113,9 @@ public class KDController {
 			
 			int randDomino = ThreadLocalRandom.current().nextInt(0, 36);
 			dominoesInGame = pickRandDomino(game.getAllDominos(), 48+1);
-			for(int i=0; i<= 48; i++) {
-				game.addAllDomino(dominoesInGame.get(i));
-			}
 			game.setTopDominoInPile(dominoesInGame.get(randDomino));
 		}
+		//revealNextDraft();
 	}
 	/**
 	 * @author Anthony Harissi Dagher

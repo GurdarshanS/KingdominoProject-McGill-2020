@@ -5,7 +5,7 @@ import ca.mcgill.ecse223.kingdomino.model.*;
 
 public class KDPersistence {
 	
-	private static String fileName = "kingdomino-data.ser";
+	private static String fileName = "kingdomino.data";
 
 	public static void save(Kingdomino kingdomino) {
 		PersistenceObjectStream.serialize(kingdomino);
@@ -13,14 +13,8 @@ public class KDPersistence {
 	
 	public static Kingdomino load() {
 		PersistenceObjectStream.setFilename(fileName);
-		Kingdomino kingdomino=null;
-		try{
-			 kingdomino = (Kingdomino) PersistenceObjectStream.deserialize();
-
-		} catch (Exception e) {
-			kingdomino = new Kingdomino();
-			System.out.println("Serialization exception.");
-		}
+		Kingdomino kingdomino= (Kingdomino) PersistenceObjectStream.deserialize()
+		
 		if (kingdomino == null) {
 			kingdomino = new Kingdomino();
 		}

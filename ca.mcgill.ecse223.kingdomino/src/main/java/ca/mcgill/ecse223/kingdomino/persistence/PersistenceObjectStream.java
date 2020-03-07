@@ -13,23 +13,18 @@ public class PersistenceObjectStream {
 	private static String fileName;
 
 	public static void serialize(Object object) {
-	  File file = new File(fileName);
-	  if(file.exists()){
-	  } else {
-	     try {
-	       file.createNewFile();
-	     } catch (IOException e) {
-	       e.printStackTrace();
-	     }
-	  }
-		try (FileOutputStream fileOut = new FileOutputStream(file); 
-			ObjectOutputStream out = new ObjectOutputStream(fileOut);)
-		{
-			out.writeObject(object);
-		} catch (Exception e) {
-			throw new RuntimeException("Could not save data to file '" + fileName + ".");
-		}
-	}
+		 FileOutputStream fileOutput;
+	        try {
+	            fileOutput = new FileOutputStream(fileName);
+	            ObjectOutputStream output = new ObjectOutputStream(fileOutput);
+	            output.writeObject(object);
+	            output.close();
+	            fileOutput.close();
+	        } catch (Exception e) {
+	            throw new RuntimeException("Couldn't save '" + fileName + "'.");
+	        }
+
+	    }
 
 	public static Object deserialize() {
       File file = new File(fileName);
