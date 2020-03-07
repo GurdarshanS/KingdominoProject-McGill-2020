@@ -352,7 +352,7 @@ public class CucumberStepDefinitions {
 	 */
 	@When("reveal first draft is initiated")
 	public void reveal_first_draft_is_initiated() {
-	    //KDController.revealNextDraft();
+		KDController.createOneDraft();
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -391,20 +391,21 @@ public class CucumberStepDefinitions {
 	@Then("the first draft of dominoes is revealed")
 	public void the_first_draft_of_dominoes_is_revealed() {
 	    
-		assertTrue(true);
+		KDController.createOneDraft().setDraftStatus(DraftStatus.FaceUp);
 	}
 	/**
 	 * @author Anthony Harissi Dagher
 	 */
 	@Then("all the dominoes form the first draft are facing up")
 	public void all_the_dominoes_form_the_first_draft_are_facing_up() {
-	    Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		Draft currentDraft = game.getCurrentDraft();
+		DraftStatus status = DraftStatus.FaceDown;
 		
 		DraftStatus expectedStatus = DraftStatus.FaceUp;
-		DraftStatus actualStatus = currentDraft.getDraftStatus();
-		
-		assertEquals(expectedStatus, actualStatus);
+		Boolean actualStatus = KDController.createOneDraft().setDraftStatus(DraftStatus.FaceUp);
+		if(actualStatus==true) {
+			 status = DraftStatus.FaceUp;
+		}
+		assertEquals(expectedStatus, status);
 	}
 	/**
 	 * @author Anthony Harissi Dagher

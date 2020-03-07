@@ -6,6 +6,7 @@ import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.model.*;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
+import ca.mcgill.ecse223.kingdomino.model.Draft.DraftStatus;
 import ca.mcgill.ecse223.kingdomino.model.Player.PlayerColor;
 import ca.mcgill.ecse223.kingdomino.persistence.KDPersistence;
 
@@ -115,7 +116,7 @@ public class KDController {
 			dominoesInGame = pickRandDomino(game.getAllDominos(), 48+1);
 			game.setTopDominoInPile(dominoesInGame.get(randDomino));
 		}
-		//revealNextDraft();
+		createOneDraft();
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -175,6 +176,43 @@ public class KDController {
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
 	
+	public static void revealNextDraft() {
+		
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
+		
+		if(game.getNextDraft() == null) {
+			
+			Draft currentDraft = game.getCurrentDraft();
+			currentDraft.setDraftStatus(DraftStatus.FaceUp);
+		}
+		
+		else{
+			
+		Draft nextDraft = game.getNextDraft();
+		nextDraft.setDraftStatus(DraftStatus.FaceUp);
+		
+		}
+	}
+	public static Draft createOneDraft() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
+		
+		int numPlayer=kd.getCurrentGame().getNumberOfPlayers();
+		int dominoNum=0;
+		
+		if ((numPlayer==2)||(numPlayer==4)) dominoNum=4;
+		if (numPlayer==3) dominoNum=3;
+		
+		Draft draft = new Draft(Draft.DraftStatus.FaceDown,game);
+		
+		for (int i=0;i<dominoNum;i++) {
+			Domino dominoToAdd=game.getTopDominoInPile();
+			draft.addIdSortedDomino(dominoToAdd);
+		}
+		
+		return draft;
+	}
 	public static void overwriteFile(String filename) throws IOException {
 		
 		if (userOverwritePrompt(filename) == true) {
