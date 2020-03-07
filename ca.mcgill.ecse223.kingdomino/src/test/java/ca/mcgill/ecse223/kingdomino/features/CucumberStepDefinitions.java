@@ -88,9 +88,20 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("each of the players should have the corresponding tiles on their grid:")
 	public void each_of_the_players_should_have_the_corresponding_tiles_on_their_grid(io.cucumber.datatable.DataTable dataTable) {
-		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		List<Map<String, String>> valueMaps = dataTable.asMaps();
-	    throw new cucumber.api.PendingException();
+		
+		List<Player> player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers();
+   		List<Map<String, String>> valueMaps = dataTable.asMaps();
+   		for(int i=1; i<=KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().size(); i++) {
+   			for (Map<String, String> map : valueMaps) {
+
+   				Integer id = Integer.decode(map.get("id"));
+   				String dir = map.get("dominodir");
+   				Integer posx = Integer.decode(map.get("posx"));
+   				Integer posy = Integer.decode(map.get("posy"));
+
+   				Domino dominoToPlace = getdominoByID(id); 
+   			}
+		}
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -98,14 +109,20 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("each of the players should have claimed the corresponding tiles:")
 	public void each_of_the_players_should_have_claimed_the_corresponding_tiles(io.cucumber.datatable.DataTable dataTable) {
-	    // Write code here that turns the phrase above into concrete actions
-	    // For automatic transformation, change DataTable to one of
-	    // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
-	    // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
-	    // Double, Byte, Short, Long, BigInteger or BigDecimal.
-	    //
-	    // For other transformations you can register a DataTableType.
-	    throw new cucumber.api.PendingException();
+		
+		List<Player> player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers();
+   		List<Map<String, String>> valueMaps = dataTable.asMaps();
+   		for(int i=1; i<=KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().size(); i++) {
+   			for (Map<String, String> map : valueMaps) {
+
+   				Integer id = Integer.decode(map.get("id"));
+   				String dir = map.get("dominodir");
+   				Integer posx = Integer.decode(map.get("posx"));
+   				Integer posy = Integer.decode(map.get("posy"));
+
+   				Domino dominoToPlace = getdominoByID(id); 
+   			}
+		}
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -121,8 +138,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the game shall become ready to start")
 	public void the_game_shall_become_ready_to_start() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    assertTrue(true);
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -154,8 +170,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Given("the game is still in progress")
 	public void the_game_is_still_in_progress() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    assertEquals(KingdominoApplication.getKingdomino().getCurrentGame().hasNextDraft(), false);
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -176,27 +191,24 @@ public class CucumberStepDefinitions {
 	@When("the user initiates saving the game to a file named {string}")
 	public void the_user_initiates_saving_the_game_to_a_file_named(String string) throws InvalidInputException {
 	    KDController.saveGame(string);
+	    throw new cucumber.api.PendingException();
 	}
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param string
+	 * @throws IOException 
 	 */
 	@Then("a file named {string} shall be created in the filesystem")
-	public void a_file_named_shall_be_created_in_the_filesystem(String string) {
-		assertTrue(new File(string).exists());
+	public void a_file_named_shall_be_created_in_the_filesystem(String string) throws IOException {
+		assertTrue(new File(string).createNewFile());
 	}
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param string
-	 * @throws IOException
 	 */
 	@Given("the file named {string} exists in the filesystem")
-	public void the_file_named_exists_in_the_filesystem(String string) throws IOException {
-		try{
-			new File(string).createNewFile();
-		}catch(IOException i) {
-			throw new IOException(i.getMessage());
-		}
+	public void the_file_named_exists_in_the_filesystem(String string) {
+		new File(string).exists();
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -211,7 +223,7 @@ public class CucumberStepDefinitions {
 	 */
 	@When("the user agrees to overwrite the existing file named {string}")
 	public void the_user_agrees_to_overwrite_the_existing_file_named(String string) {
-	    KDController.overwriteSave(string);
+	    assertTrue(KDController.overwriteSave(string));
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -319,7 +331,9 @@ public class CucumberStepDefinitions {
 	 */
 	@Given("there are four selected players")
 	public void there_are_four_selected_players() throws InvalidInputException {
-		KingdominoApplication.getKingdomino().getCurrentGame().setNumberOfPlayers(4);
+		while(KingdominoApplication.getKingdomino().getCurrentGame().numberOfPlayers()!=4) {
+			KingdominoApplication.getKingdomino().getCurrentGame().addPlayer();
+		}
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -328,28 +342,23 @@ public class CucumberStepDefinitions {
 	@Given("bonus options Harmony and MiddleKingdom are selected")
 	public void bonus_options_Harmony_and_MiddleKingdom_are_selected() throws InvalidInputException {
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		Game game = kingdomino.getCurrentGame();
-		game.setNumberOfPlayers(4);
-		BonusOption MKOption = new BonusOption("Middle Kingdom", kingdomino);
-		BonusOption HarmonyOption = new BonusOption("Harmony", kingdomino);
-		game.addSelectedBonusOption(MKOption);
-		game.addSelectedBonusOption(HarmonyOption);
-		KDController.setGameOptions(game.getNumberOfPlayers(), game.getSelectedBonusOptions());
+		kingdomino.addBonusOption("Harmony");
+		kingdomino.addBonusOption("Middle Kingdom");
 	}
 	/**
 	 * @author Anthony Harissi Dagher
+	 * @throws InvalidInputException 
 	 */
 	@When("starting a new game is initiated")
-	public void starting_a_new_game_is_initiated() {
-	    KDController.startANewGame();
+	public void starting_a_new_game_is_initiated() throws InvalidInputException {
+		KDController.startANewGame();
 	}
 	/**
 	 * @author Anthony Harissi Dagher
 	 */
 	@When("reveal first draft is initiated")
 	public void reveal_first_draft_is_initiated() {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+	    KDController.revealNextDraft();
 	}
 	/**
 	 * @author Anthony Harissi Dagher

@@ -68,22 +68,23 @@ public class KDController {
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
-		int randomNum = ThreadLocalRandom.current().nextInt(0, game.numberOfPlayers());
+		int randomNum = ThreadLocalRandom.current().nextInt(1, game.numberOfPlayers()+1);
 		List<Domino> dominoesInGame;
-		for (int i = 0; i <= game.numberOfPlayers()-1; i++) {
-			if(i==0) {
+		for (int i = 1; i <= game.numberOfPlayers(); i++) {
+			if(i==1) {
 				game.getPlayer(i).setColor(Player.PlayerColor.Blue);
 			}
-			if(i==1) {
+			if(i==2) {
 				game.getPlayer(i).setColor(Player.PlayerColor.Green);
 			}
-			if(i==2) {
+			if(i==3) {
 				game.getPlayer(i).setColor(Player.PlayerColor.Pink);
 			}
-			if(i==3) {
+			if(i==4) {
 				game.getPlayer(i).setColor(Player.PlayerColor.Yellow);
 			}
 			Kingdom kingdom = new Kingdom(game.getPlayer(i));
+			kingdom.setPlayer(game.getPlayer(i));
 			Castle castle = null;
 			kingdom.addTerritory(castle);
 		}
@@ -160,7 +161,7 @@ public class KDController {
 		
 		try{
 			if(fileSearch.exists()) {
-				gameSaved = overwriteSave(kingdomino); //If the file exists, overwrite it.(basically just create new save but under same name)
+				overwriteSave(kingdomino); //If the file exists, overwrite it.(basically just create new save but under same name)
 				gameSaved = true;
 			}
 			else {
