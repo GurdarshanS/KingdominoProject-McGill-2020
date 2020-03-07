@@ -96,7 +96,7 @@ public class KDController {
 	 * @see VerifyGridSize.feature
 	 * @author Jing Han 260528152
 	 * @param player
-	 * @return void
+	 * @return respectGrid
 	 */
 	
 	public static boolean verifyGridSizeAllKingdom(Player player) {
@@ -159,6 +159,8 @@ public class KDController {
 		System.out.println(respectGrid);
 		return respectGrid;
 	}
+	
+	
 	
 	/**
 	 * 
@@ -710,7 +712,135 @@ public class KDController {
 
 	}
 	
+	/**
+	 * 
+	 * This method creates the current and next
+	 * draft of the game. takes care of the beginning case
+	 * when there is no current or next drafts, takes care
+	 * of regular play by swapping current with next and 
+	 * then generate a new next, and takes care of the
+	 * end game when there is no more domino for  next 
+	 * and it is set to null
+	 * 
+	 * @see  - CreateNextDraft.feature
+	 * @author Keon Olsz, refactored by Jing Han
+	 * @param player
+	 * @return boolean
+	 */
 	
+	public static void createNextDraft() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
+		int draftNumLimit=0;
+		
+		if ((game.getNumberOfPlayers()==4)||(game.getNumberOfPlayers()==3)) draftNumLimit=12;
+		if (game.getNumberOfPlayers()==2) draftNumLimit=6;
+		
+//		System.out.println("draft number limit: "+draftNumLimit);
+		if (game.getAllDrafts().size()==0) {
+			Draft currentDraft=createOneDraft();
+			currentDraft.setDraftStatus(Draft.DraftStatus.FaceUp);
+			game.setCurrentDraft(currentDraft);
+			changeDraftDominoStatus(currentDraft,Domino.DominoStatus.InCurrentDraft);
+
+			Draft nextDraft = createOneDraft();
+			nextDraft.setDraftStatus(Draft.DraftStatus.FaceDown);
+			game.setNextDraft(nextDraft);
+			changeDraftDominoStatus(nextDraft,Domino.DominoStatus.InNextDraft);
+		}
+		else if (game.getAllDrafts().size()<draftNumLimit) {
+			changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
+			game.setCurrentDraft(game.getNextDraft());
+			game.getCurrentDraft().setDraftStatus(Draft.DraftStatus.FaceUp);
+			
+			Draft nextDraft=createOneDraft();
+			changeDraftDominoStatus(nextDraft,DominoStatus.InNextDraft);
+			game.setNextDraft(nextDraft);
+			game.getNextDraft().setDraftStatus(Draft.DraftStatus.FaceDown);
+		}
+		else {
+//			changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
+			game.setCurrentDraft(game.getNextDraft());
+			game.getCurrentDraft().setDraftStatus(Draft.DraftStatus.FaceUp);
+			
+			game.setNextDraft(null);
+		}
+	
+	}
+	
+	/**
+	 * 
+	 * This method changes the status of dominos in a game
+	 * 
+	 * @see  - CreateNextDraft.feature
+	 * @author Keon Olsz, refactored by Jing Han
+	 * @param player
+	 * @return boolean
+	 */
+	
+	public static void changeDraftDominoStatus(Draft draft, Domino.DominoStatus status) {
+		
+		if(!((status.equals(Domino.DominoStatus.InCurrentDraft))||(status.equals(Domino.DominoStatus.InNextDraft)))) {
+			throw new IllegalArgumentException("status must be either InCurrentDraft or InNextDraft");
+		}
+		
+		List<Domino> draftDominos = draft.getIdSortedDominos();
+		for (Domino each:draftDominos) {
+			each.setStatus(status);
+		}
+	}
+	
+	/**
+	 * 
+	 * This method one draft based on the number
+	 * of players in the game
+	 * 
+	 * @see  - CreateNextDraft.feature
+	 * @author Keon Olsz, refactored by Jing Han
+	 * @param player
+	 * @return boolean
+	 */
+	
+	public static Draft createOneDraft() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
+		
+		int numPlayer=kd.getCurrentGame().getNumberOfPlayers();
+//		System.out.println("number of players: "+numPlayer);
+		int dominoNum=0;
+		
+		if ((numPlayer==2)||(numPlayer==4)) dominoNum=4;
+		if (numPlayer==3) dominoNum=3;
+		
+		Draft draft = new Draft(Draft.DraftStatus.FaceDown,game);
+		
+		for (int i=0;i<dominoNum;i++) {
+			Domino dominoToAdd=game.getTopDominoInPile();
+			game.setTopDominoInPile(game.getTopDominoInPile().getNextDomino());
+			draft.addIdSortedDomino(dominoToAdd);
+		}
+		
+		return draft;
+	}
+	
+	public static List<Domino> getAvailableDominoPile(){
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
+		List<Domino> availableDomino=new ArrayList<Domino>();
+		List<Domino> allDomino=game.getAllDominos();
+		
+		for (Domino test:allDomino) {
+			if (test.getStatus().equals(Domino.DominoStatus.InPile)) {
+				availableDomino.add(test);
+			}
+		}
+		
+		return availableDomino;
+		
+	}
+	
+	
+
 	
 	
 	///////////////////////////////////////

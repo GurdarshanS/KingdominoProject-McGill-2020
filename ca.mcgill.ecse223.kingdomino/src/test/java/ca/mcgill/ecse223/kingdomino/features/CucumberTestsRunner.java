@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
 		plugin = "pretty", 
 		features = "src/test/resources",
+//		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features/CalculateBonusScores.feature",
 		glue = "ca.mcgill.ecse223.kingdomino.features")
 public class CucumberTestsRunner {
 }
