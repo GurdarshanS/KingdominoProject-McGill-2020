@@ -9,8 +9,11 @@ import java.util.Map;
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.model.BonusOption;
+import ca.mcgill.ecse223.kingdomino.model.Domino;
+import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
 import ca.mcgill.ecse223.kingdomino.model.Game;
+import ca.mcgill.ecse223.kingdomino.model.KingdomTerritory;
 import ca.mcgill.ecse223.kingdomino.model.Kingdomino;
 import ca.mcgill.ecse223.kingdomino.model.Player;
 import io.cucumber.java.en.Given;
@@ -27,23 +30,11 @@ public class CalculateBonusScoresStepDefinition {
 	
 	@Given("the player's kingdom also includes the following dominoes:")
 	public void the_player_s_kingdom_also_includes_the_following_dominoes(io.cucumber.datatable.DataTable dataTable) {
-	    // Write code here that turns the phrase above into concrete actions
-	    // For automatic transformation, change DataTable to one of
-	    // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
-	    // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
-	    // Double, Byte, Short, Long, BigInteger or BigDecimal.
-	    //
-	    // For other transformations you can register a DataTableType.
-	    throw new cucumber.api.PendingException();
-	}
-	
-	@Given("the following dominoes are present in a player's kingdom:")
-	public void the_following_dominoes_are_present_in_a_player_s_kingdom(io.cucumber.datatable.DataTable dataTable) {
-	   
+		
 		List<Map<String, String>> dataMap = dataTable.asMaps();
-		List<int[]> dominoId = new ArrayList<int[]>();
-		List<int[]> dominoX = new ArrayList<int[]>();
-		List<int[]> dominoY = new ArrayList<int[]>();
+		List<Integer> dominoId = new ArrayList<Integer>();
+		List<Integer> dominoX = new ArrayList<Integer>();
+		List<Integer> dominoY = new ArrayList<Integer>();
 		List<DirectionKind> dominoDir = new ArrayList<DirectionKind>();
 		
 		for (Map<String, String> map : dataMap) {
@@ -53,9 +44,37 @@ public class CalculateBonusScoresStepDefinition {
 			String x = map.get("posx");
 			String y = map.get("posy");
 			
-			int[] domId = str2int(id);
-			int[] domX = str2int(x);
-			int[] domY = str2int(y);
+			int domId = Integer.parseInt(id);
+			int domX = Integer.parseInt(x);
+			int domY = Integer.parseInt(y);
+			DirectionKind domDir = getDirectionKindByFullString(direction);
+			
+			dominoX.add(domX);
+			dominoId.add(domId);
+			dominoY.add(domY);
+			dominoDir.add(domDir);
+		}
+	}
+	
+	@Given("the following dominoes are present in a player's kingdom:")
+	public void the_following_dominoes_are_present_in_a_player_s_kingdom(io.cucumber.datatable.DataTable dataTable) {
+	   
+		List<Map<String, String>> dataMap = dataTable.asMaps();
+		List<Integer> dominoId = new ArrayList<Integer>();
+		List<Integer> dominoX = new ArrayList<Integer>();
+		List<Integer> dominoY = new ArrayList<Integer>();
+		List<DirectionKind> dominoDir = new ArrayList<DirectionKind>();
+		
+		for (Map<String, String> map : dataMap) {
+			
+			String id = map.get("domino");
+			String direction = map.get("dominodir");
+			String x = map.get("posx");
+			String y = map.get("posy");
+			
+			int domId = Integer.parseInt(id);
+			int domX = Integer.parseInt(x);
+			int domY = Integer.parseInt(y);
 			DirectionKind domDir = getDirectionKindByFullString(direction);
 			
 			dominoX.add(domX);
@@ -86,12 +105,25 @@ public class CalculateBonusScoresStepDefinition {
 	@Given("the player's kingdom also includes the domino {int} at position {int}:{int} with the direction {string}")
 	public void the_player_s_kingdom_also_includes_the_domino_at_position_with_the_direction(Integer int1, Integer int2, Integer int3, String string) {
 	    
+		List<Integer> dominoId = new ArrayList<Integer>();
+		List<Integer> dominoX = new ArrayList<Integer>();
+		List<Integer> dominoY = new ArrayList<Integer>();
+		List<DirectionKind> dominoDir = new ArrayList<DirectionKind>();
+		
+		DirectionKind domDir = getDirectionKindByFullString(string);
+		
+		dominoId.add(int1);
+		dominoX.add(int2);
+		dominoY.add(int3);
+		dominoDir.add(domDir);
 		
 	}
 	
 	@Given("Middle Kingdom is selected as bonus option")
 	public void middle_Kingdom_is_selected_as_bonus_option() {
 		
+		List<BonusOption> bonus = KingdominoApplication.getKingdomino().getCurrentGame().getSelectedBonusOptions();
+		//bonus.add(Middle Castle)
 		KDController.isCastleInMiddle(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
 	}
 
@@ -109,14 +141,33 @@ public class CalculateBonusScoresStepDefinition {
 	
 	@Given("the player's kingdom has the following dominoes:")
 	public void the_player_s_kingdom_has_the_following_dominoes(io.cucumber.datatable.DataTable dataTable) {
-	    // Write code here that turns the phrase above into concrete actions
-	    // For automatic transformation, change DataTable to one of
-	    // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
-	    // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
-	    // Double, Byte, Short, Long, BigInteger or BigDecimal.
-	    //
-	    // For other transformations you can register a DataTableType.
-	    throw new cucumber.api.PendingException();
+		
+		List<Map<String, String>> dataMap = dataTable.asMaps();
+		List<Integer> dominoId = new ArrayList<Integer>();
+		List<Integer> dominoX = new ArrayList<Integer>();
+		List<Integer> dominoY = new ArrayList<Integer>();
+		List<DirectionKind> dominoDir = new ArrayList<DirectionKind>();
+		
+		Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+		
+		for (Map<String, String> map : dataMap) {
+			
+			String id = map.get("domino");
+			String direction = map.get("dominodir");
+			String x = map.get("posx");
+			String y = map.get("posy");
+			
+			int domId = Integer.parseInt(id);
+			int domX = Integer.parseInt(x);
+			int domY = Integer.parseInt(y);
+			DirectionKind domDir = getDirectionKindByFullString(direction);
+			
+			dominoX.add(domX);
+			dominoId.add(domId);
+			dominoY.add(domY);
+			dominoDir.add(domDir);
+	
+		}
 	}
 	
 	@Given("Harmony is selected as bonus option")
@@ -125,14 +176,6 @@ public class CalculateBonusScoresStepDefinition {
 		KDController.isHarmony(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
 	}
 	
-	private static int[] str2int(String str) {
-		String splits []= str.split(",");
-		int [] num = new int[splits.length];
-		for (int i=0;i<splits.length;i++) {
-			num[i]=Integer.parseInt(splits[i]);
-		}
-		return num;
-	}
 	private static DirectionKind getDirectionKindByFullString(String direction) {
 		
 		if (direction.equalsIgnoreCase("right")) return DirectionKind.Right;

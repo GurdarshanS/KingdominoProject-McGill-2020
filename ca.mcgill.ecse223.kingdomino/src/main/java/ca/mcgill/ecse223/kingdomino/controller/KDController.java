@@ -680,24 +680,27 @@ public class KDController {
 	 * @return boolean
 	 */
 	
-	public static boolean isCastleInMiddle(Player player) {
+	public static int isCastleInMiddle(Player player) {
 		
 		if(player == null) {
 			
 			throw new java.lang.IllegalArgumentException("This player does not exist");
 		}
-		
+		int score = 0;
 		boolean middle = true;
 		List<KingdomTerritory> kingdomTerritories = player.getKingdom().getTerritories(); 
-		
-		for(KingdomTerritory domino: kingdomTerritories) {
+		System.out.println(kingdomTerritories.size());
+		for (KingdomTerritory domino: kingdomTerritories) {
 			
-			if(domino.getX()<=-3||domino.getX()>=3||domino.getY()>=3||domino.getY()<=-3) {
+			if (domino.getX()<=-3||domino.getX()>=3||domino.getY()>=3||domino.getY()<=-3) {
 				
 				middle = false;
 			}
 		}
-		return middle;
+		if (middle) {
+			score = 10;
+		}
+		return score;
 	}
 	
 	/**
@@ -710,25 +713,28 @@ public class KDController {
 	 * @return boolean
 	 */
 	
-	public static boolean isHarmony(Player player) {
+	public static int isHarmony(Player player) {
 		
 		if(player == null) {
 			
 			throw new java.lang.IllegalArgumentException("This player does not exist");
 		}
-		
+		int score = 0;
 		boolean harmony = false;
 		List<KingdomTerritory> kingdomTerritories = player.getKingdom().getTerritories(); 
-		
-		for(int dominoCount = 0; dominoCount < kingdomTerritories.size(); dominoCount++) {
+		System.out.println(kingdomTerritories.size());
 			
-			if(dominoCount == 12) {
+			if(kingdomTerritories.size() >= 12) {
 				
 				harmony = true;
 			}
-		}
 		
-		return harmony;
+		if (harmony) {
+			
+			score = 5;
+		}
+		return score;
+		
 	}
 	
 	/**
@@ -774,17 +780,8 @@ public class KDController {
 		}
 		
 		int bonus = 0;
-		player.setBonusScore(bonus);
 		
-		if(isCastleInMiddle(player)) {
-			
-			bonus += 10;
-		}
-		
-		if(isHarmony(player)) {
-			
-			bonus += 5;
-		}
+		bonus = isHarmony(player) + isCastleInMiddle(player);
 		
 		player.setBonusScore(bonus);
 	}

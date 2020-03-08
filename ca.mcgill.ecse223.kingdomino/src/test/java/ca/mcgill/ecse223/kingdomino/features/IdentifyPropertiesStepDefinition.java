@@ -41,7 +41,7 @@ public class IdentifyPropertiesStepDefinition {
 			// Get values from cucumber table
 			String propType = map.get("type");
 			String propIds = map.get("dominoes");
-			int [] numIds=str2int(propIds);
+			int [] numIds = str2int(propIds);
 			
 			expectedIds.add(numIds);
 			expectedTerrains.add(propType);
