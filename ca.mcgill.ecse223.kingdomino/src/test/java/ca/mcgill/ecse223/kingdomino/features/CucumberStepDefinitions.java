@@ -89,6 +89,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("each of the players should have the corresponding tiles on their grid:")
 	public void each_of_the_players_should_have_the_corresponding_tiles_on_their_grid(io.cucumber.datatable.DataTable dataTable) {
+		
 		List<Integer> tiles = new ArrayList<Integer>();
 		Integer playerTiles;
    		List<Map<String, String>> valueMaps = dataTable.asMaps();
@@ -165,7 +166,7 @@ public class CucumberStepDefinitions {
 	 */
 	@Given("the game is still in progress")
 	public void the_game_is_still_in_progress() {
-		//assertEquals(KingdominoApplication.getKingdomino().getCurrentGame().hasNextDraft(), true);
+		assertEquals(KingdominoApplication.getKingdomino().getCurrentGame().hasNextPlayer(), true);
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -182,10 +183,13 @@ public class CucumberStepDefinitions {
 	 * @author Anthony Harissi Dagher
 	 * @param string
 	 * @throws InvalidInputException
+	 * @throws IOException 
 	 */
 	@When("the user initiates saving the game to a file named {string}")
-	public void the_user_initiates_saving_the_game_to_a_file_named(String string) throws InvalidInputException {
-	    KDController.saveGame(string);
+	public void the_user_initiates_saving_the_game_to_a_file_named(String string) throws InvalidInputException, IOException {
+		File file = new File(string);
+		file.createNewFile();
+		KDController.saveGame(file);
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -194,15 +198,16 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("a file named {string} shall be created in the filesystem")
 	public void a_file_named_shall_be_created_in_the_filesystem(String string) throws IOException {
-		assertTrue(new File(string).createNewFile());
+		assertTrue(new File(string).exists());
 	}
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param string
+	 * @throws IOException 
 	 */
 	@Given("the file named {string} exists in the filesystem")
-	public void the_file_named_exists_in_the_filesystem(String string) {
-		new File(string).exists();
+	public void the_file_named_exists_in_the_filesystem(String string) throws IOException {
+		new File(string).createNewFile();
 	}
 	/**
 	 * @author Anthony Harissi Dagher

@@ -151,11 +151,11 @@ public class KDController {
 	 * @return Method returns true if file is saved, false if it cannot be.
 	 * @throws InvalidInputException: Thrown if file cannot be saved
 	 */
-	public static boolean saveGame(String file) throws InvalidInputException {
+	public static boolean saveGame(File file) throws InvalidInputException {
 		
 		boolean gameSaved = false;
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		String directory = "./src/test/resources/"+file;
+		String directory = "./src/test/resources/"+file.getName();
 		File fileSearch = new File(directory);
 		if(fileSearch.exists()) {
 			//overwriteSave(kingdomino); //If the file exists, overwrite it.

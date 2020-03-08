@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 
 public class PersistenceObjectStream {
 	
-	private static String fileName = "kingdomino.data";
+	private static String fileName = "kingdomino.txt";
 
 	public static void serialize(Object object) {
 		 FileOutputStream fileOutput;
