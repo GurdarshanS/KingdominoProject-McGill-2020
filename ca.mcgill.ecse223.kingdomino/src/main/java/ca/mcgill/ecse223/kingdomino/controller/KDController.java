@@ -576,17 +576,88 @@ public class KDController {
 		
 	}
 	
+	/**
+	 * 
+	 * This method returns the size of a property at a certain index of a certain player
+	 * 
+	 * @see CalculatePropertyAttributes.feature
+	 * @author Eric Guan 260930210
+	 * @param player, index
+	 * @return propertySize 
+	 */
+	
 	public static int propertySize(Player player, int index) {
 		
-		return player.getKingdom().getProperty(index).getSize();
+		if(player == null) {
+			
+			throw new java.lang.IllegalArgumentException("This player does not exist");
+		}
+		
+		int propertySize = player.getKingdom().getProperty(index).getSize();
+		return propertySize;
 	}
+	
+	/**
+	 * 
+	 * This method returns the number of crowns of a property at a certain index of a certain player
+	 * 
+	 * @see CalculatePropertyAttributes.feature
+	 * @author Eric Guan 260930210
+	 * @param player, index
+	 * @return propertyCrown 
+	 */
 	
 	public static int getPropertyCrown(Player player, int index) {
 		
-		return player.getKingdom().getProperty(index).getCrowns();
+		if(player == null) {
+			
+			throw new java.lang.IllegalArgumentException("This player does not exist");
+		}
+		
+		int propertyCrown = player.getKingdom().getProperty(index).getCrowns();
+		return propertyCrown;
 	}
 	
+	public static int getNumberOfProperties(Player player) {
+		
+		int numberOfProperties = 0;
+		
+		if(player == null) {
+			
+			throw new java.lang.IllegalArgumentException("This player does not exist");
+		}
+
+		List<Property> properties = player.getKingdom().getProperties();
+		
+		for(int index = 0; index < properties.size(); index++) {
+			
+			numberOfProperties++;
+		}
+		
+		return numberOfProperties;
+	}
+	public static List<Property> getPropertyAttributes(Player player) {
+		
+		
+		return null;
+	}
+	
+	/**
+	 * 
+	 * This method calculates and updates the property score of a player
+	 * 
+	 * @see CalculatePropertyAttributes.feature
+	 * @author Eric Guan 260930210
+	 * @param player
+	 * @return void 
+	 */
+	
 	public static void propertyScore(Player player) {
+		
+		if(player == null) {
+			
+			throw new java.lang.IllegalArgumentException("This player does not exist");
+		}
 		
 		player.setPropertyScore(0);
 		List<Property> properties = player.getKingdom().getProperties();
@@ -599,14 +670,29 @@ public class KDController {
 		player.setPropertyScore(totalPropertyScore);
 	}
 	
+	/**
+	 * 
+	 * This method check if the castle is in the middle of the Kingdom
+	 * 
+	 * @see CalculateBonusScore.feature
+	 * @author Eric Guan 260930210
+	 * @param player
+	 * @return boolean
+	 */
+	
 	public static boolean isCastleInMiddle(Player player) {
+		
+		if(player == null) {
+			
+			throw new java.lang.IllegalArgumentException("This player does not exist");
+		}
 		
 		boolean middle = true;
 		List<KingdomTerritory> kingdomTerritories = player.getKingdom().getTerritories(); 
 		
 		for(KingdomTerritory domino: kingdomTerritories) {
 			
-			if(domino.getX()==-3||domino.getX()==3||domino.getY()==3||domino.getY()==-3) {
+			if(domino.getX()<=-3||domino.getX()>=3||domino.getY()>=3||domino.getY()<=-3) {
 				
 				middle = false;
 			}
@@ -614,26 +700,78 @@ public class KDController {
 		return middle;
 	}
 	
+	/**
+	 * 
+	 * This method check if the Kingdom respects the rules for Harmony
+	 * 
+	 * @see CalculateBonusScore.feature
+	 * @author Eric Guan 260930210
+	 * @param player
+	 * @return boolean
+	 */
+	
 	public static boolean isHarmony(Player player) {
 		
+		if(player == null) {
+			
+			throw new java.lang.IllegalArgumentException("This player does not exist");
+		}
+		
 		boolean harmony = false;
+		List<KingdomTerritory> kingdomTerritories = player.getKingdom().getTerritories(); 
+		
+		for(int dominoCount = 0; dominoCount < kingdomTerritories.size(); dominoCount++) {
+			
+			if(dominoCount == 12) {
+				
+				harmony = true;
+			}
+		}
 		
 		return harmony;
 	}
 	
-	public static List<BonusOption> getBonusOptions() {
+	/**
+	 * 
+	 * This method return the bonus options selected
+	 * 
+	 * @see CalculateBonusScore.feature
+	 * @author Eric Guan 260930210
+	 * @param game
+	 * @return List
+	 */
+	
+	public static List<BonusOption> getBonusOptions(Game game) {
 		
-		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		
-		if(kingdomino.getCurrentGame().hasSelectedBonusOptions()) {
+		if(game == null) {
 			
-			return kingdomino.getCurrentGame().getSelectedBonusOptions();
+			throw new java.lang.IllegalArgumentException("This game does not exist");
+		}
+		
+		if(game.hasSelectedBonusOptions()) {
+			
+			return game.getSelectedBonusOptions();
 		}
 				
 		return null;
 	}
 	
+	/**
+	 * 
+	 * This method calculates and updates the bonus score of a player
+	 * 
+	 * @see CalculateBonusScore.feature
+	 * @author Eric Guan 260930210
+	 * @param player
+	 * @return void 
+	 */
+	
 	public static void bonusScore(Player player) {
+		
+		if(player == null) {
+			
+			throw new java.lang.IllegalArgumentException("This player does not exist");
+		}
 		
 		int bonus = 0;
 		player.setBonusScore(bonus);
@@ -650,12 +788,26 @@ public class KDController {
 		
 		player.setBonusScore(bonus);
 	}
+	
+	/**
+	 * 
+	 * This method calculates and updates the total score of a player
+	 * 
+	 * @see CalculatePlayerScore.feature
+	 * @author Eric Guan 260930210
+	 * @param player
+	 * @return void 
+	 */
 
 	public static void playerScore(Player player) {
 		
+		if(player == null) {
+			
+			throw new java.lang.IllegalArgumentException("This player does not exist");
+		}
+		
 		propertyScore(player);
 		bonusScore(player);
-		player.getTotalScore();
 	}	
 	
 	///////////////////////////////////////
