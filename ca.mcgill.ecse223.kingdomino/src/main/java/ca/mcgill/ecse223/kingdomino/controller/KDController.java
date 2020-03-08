@@ -705,13 +705,11 @@ public class KDController {
 		}
 		
 		Set<Integer> uniqueScores = new HashSet<Integer>(playerScores);
-		System.out.println(uniqueScores.size());
-		System.out.println(playerScores.size());
+
 		if (uniqueScores.size()==playerScores.size()) {
 			exist=false;
 		}
 		
-		System.out.println(exist);
 		return exist;
 	}
 	
@@ -739,6 +737,7 @@ public class KDController {
 		List<Integer> scoreCopy = new ArrayList<Integer>();
 		List<Integer> ignoreIndex = new ArrayList<Integer>();
 		
+		System.out.println(" =========== unranked ============");
 		for (Player p:allPlayers) {
 			System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
 		}
@@ -750,10 +749,8 @@ public class KDController {
 		
 		Collections.sort(scoreCopy);
 		Collections.reverse(scoreCopy);
-		
-		System.out.println(scoreCopy);
-		
-		System.out.println("+++++++++ ranked +++++++++++++++");
+				
+		System.out.println(" ============ ranked =============");
 		
 		for (int i=0;i<scoreCopy.size();i++) {
 			int refVal=scoreCopy.get(i);

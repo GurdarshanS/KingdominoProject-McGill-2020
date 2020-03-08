@@ -6,6 +6,7 @@ public class scratch {
 		List<String> playerNames=new ArrayList<String>();
 		List<Integer> playerScores = new ArrayList<Integer>();
 		List<Integer> scoreCopy = new ArrayList<Integer>();
+		List<Integer> ignoreIndex = new ArrayList<Integer>();
 		
 		playerNames.add("blue");
 		playerNames.add("red");
@@ -27,7 +28,20 @@ public class scratch {
 		
 		System.out.println(scoreCopy);
 		
+		for (int i=0;i<scoreCopy.size();i++) {
+			int refVal=scoreCopy.get(i);
+			for (int j=0;j<playerScores.size();j++) {
+				if (!ignoreIndex.contains(j)) {
+					int testVal=playerScores.get(j);
+					if (testVal==refVal) {
+						ignoreIndex.add(j);
+						
+					}
+				}
+			}
+		}
 		
 
 	}
+	
 }

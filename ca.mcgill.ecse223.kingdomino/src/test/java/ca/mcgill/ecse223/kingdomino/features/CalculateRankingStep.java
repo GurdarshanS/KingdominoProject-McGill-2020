@@ -42,9 +42,6 @@ public class CalculateRankingStep {
 	 *  
 	 */
 	
-	
-	
-	
 	@Given("the game is initialized for calculate ranking")
 	public void the_game_is_initialized_for_calculate_ranking() {
 	    KDController.initiateEmptyGame();
@@ -58,38 +55,37 @@ public class CalculateRankingStep {
 		for (Map<String, String> map : valueMaps) {
 			// Get values from cucumber table
 			Integer id1 = Integer.decode(map.get("domino1"));
-			DirectionKind dir1 = sharedCucumberMethods.getDirection(map.get("dominodir1"));
+			String dir1 = map.get("dominodir1");
 			Integer posx1 = Integer.decode(map.get("posx1"));
 			Integer posy1 = Integer.decode(map.get("posy1"));
 			PlayerColor p = KDController.retrieveColor(map.get("player"));
 			Integer id2 = Integer.decode(map.get("domino2"));
-			DirectionKind dir2 = sharedCucumberMethods.getDirection(map.get("dominodir2"));
+			String dir2 = map.get("dominodir2");
 			Integer posx2 = Integer.decode(map.get("posx2"));
 			Integer posy2 = Integer.decode(map.get("posy2"));
-
+			
 			// Add the domino to a player's kingdom
+			
+			Player player = game.getPlayer(n);
+			player.setColor(p);
+			
 			Domino dominoToPlace1 = KDController.getdominoByID(id1);
 			Domino dominoToPlace2 = KDController.getdominoByID(id2);
-			Kingdom kingdom = game.getPlayer(n).getKingdom();
-			DominoInKingdom domInKingdom1 = new DominoInKingdom(posx1, posy1, kingdom, dominoToPlace1);
-			DominoInKingdom domInKingdom2 = new DominoInKingdom(posx2, posy2, kingdom, dominoToPlace2);
-			domInKingdom1.setDirection(dir1);
-			domInKingdom2.setDirection(dir2);
+						
+			KDController.prePlaceDomino(player, dominoToPlace1, posx1, posy1, dir1);
+			KDController.prePlaceDomino(player, dominoToPlace2, posx2, posy2, dir2);
+
 			dominoToPlace1.setStatus(DominoStatus.PlacedInKingdom);
 			dominoToPlace2.setStatus(DominoStatus.PlacedInKingdom);
+		
 			KDController.calculatePlayerScore(game.getPlayer(n));					
 			n++;
 		}
-		
-		for (Player p:game.getPlayers()) {
-			System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
-		}
-	
 	}
 
 	@Given("the players have no tiebreak")
 	public void the_players_have_no_tiebreak() {
-//		KDController.existTieBreak();
+		KDController.existTieBreak();
 		assertEquals(true,true);
 	}
 
@@ -99,38 +95,33 @@ public class CalculateRankingStep {
 	}
 	
 	
-//	@Then("player standings shall be the followings:")
-//
-//	public void player_standings_shall_be_the_followings(io.cucumber.datatable.DataTable dataTable) {
-//		List<Map<String, String>> valueMaps = dataTable.asMaps();
-//		Player[] rankedPlayers = KDController.getRankedPlayers();
-//		
-//		boolean match=true;
-//		
-//		int counter=0;
-//		for (Map<String, String> map : valueMaps) {
-//			
-//			// Get values from cucumber table
-//			PlayerColor expectedColor = KDController.retrieveColor(map.get("player"));
-//			Integer expectedRanking = (Integer.decode(map.get("standing"))).intValue();
-//			
-//			Player actualPlayer=rankedPlayers[counter];
-//			PlayerColor actualColor=actualPlayer.getColor();
-//			int actualRanking=actualPlayer.getCurrentRanking();
-//			
-//			counter++;
-//			
-//			if (!((actualColor.equals(expectedColor))&&(actualRanking==expectedRanking))) {
-//				match=false;
-//				break;
-//			}
-//		}
-//		
-////		for (Player p:rankedPlayers) {
-////			System.out.println(p.getColor()+"----"+p.getCurrentRanking());
-////		}
-////		
-//		
-//		assertEquals(true,match);
-//	}	
+	@Then("player standings shall be the followings:")
+
+	public void player_standings_shall_be_the_followings(io.cucumber.datatable.DataTable dataTable) {
+		List<Map<String, String>> valueMaps = dataTable.asMaps();
+		Player[] rankedPlayers = KDController.getRankedPlayers();
+		
+		boolean match=true;
+		
+		int counter=0;
+		for (Map<String, String> map : valueMaps) {
+			
+			// Get values from cucumber table
+			PlayerColor expectedColor = KDController.retrieveColor(map.get("player"));
+			Integer expectedRanking = (Integer.decode(map.get("standing"))).intValue();
+			
+			Player actualPlayer=rankedPlayers[counter];
+			PlayerColor actualColor=actualPlayer.getColor();
+			int actualRanking=actualPlayer.getCurrentRanking();
+			
+			counter++;
+			
+			if (!((actualColor.equals(expectedColor))&&(actualRanking==expectedRanking))) {
+				match=false;
+				break;
+			}
+		}
+		
+		assertEquals(true,match);
+	}	
 }

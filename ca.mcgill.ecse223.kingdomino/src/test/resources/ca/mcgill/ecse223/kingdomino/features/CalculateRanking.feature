@@ -14,9 +14,9 @@ Feature: Calculate ranking
       | yellow |      23 | down       |     0 |     2 |      21 | up         |     1 |     0 |
     Given the players have no tiebreak
     When calculate ranking is initiated
-    #Then player standings shall be the followings:
-      #| player | standing |
-      #| green  |        1 |
-      #| yellow |        2 |
-      #| pink   |        3 |
-      #| blue   |        4 |
+    Then player standings shall be the followings:
+      | player | standing |
+      | green  |        1 |
+      | yellow |        2 |
+      | pink   |        3 |
+      | blue   |        4 |
