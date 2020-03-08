@@ -41,6 +41,189 @@ public class KDController {
 	
 	/**
 	 * 
+	 * This method retrieves all the possible dominos that are a part
+	 * of the game and stores them into an array.
+	 * 
+	 * @see BrowseDominoPile.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param null
+	 * @return Domino[]
+	 */
+	
+	public static Domino[] listDominos() {
+		Domino[] myDominos = new Domino[48];
+		for(int i = 1; i < 49 ; i++) {
+			Domino dom = KDController.getdominoByID(i);
+			myDominos[i-1] = dom;
+			
+		}
+		return myDominos;
+	}
+	
+	/**
+	 * 
+	 * This method looks at all the dominos and separates them according to the
+	 * terrain type that is provided whether it's the right tile or the left tile that contains it.
+	 * 
+	 * @see BrowseDominoPile.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return ArrayList<Integer>
+	 */
+	public static ArrayList<Integer> filterbyTerrain (String s1) {
+		
+		ArrayList<Integer> myDominos = new ArrayList<Integer>();
+		TerrainType t1 = KDController.retrieveTerrainType(s1);
+		for (int i = 1; i < 49 ; i++) {
+			Domino dom = KDController.getdominoByID(i);
+			
+			if ( dom.getLeftTile().toString().equalsIgnoreCase(t1.toString()) || dom.getRightTile().toString().equalsIgnoreCase(t1.toString()) ) {
+				
+				myDominos.add(dom.getId());
+			}			
+		}	
+		
+
+		return myDominos;
+	}
+	
+	/**
+	 * 
+	 * This method sets up a game according to the number of players specified.
+	 * 
+	 * @see ShuffleDominos.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param int
+	 * @return void
+	 */
+	
+	public static void numOfPlayers(int number) {
+		
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		int DomAmount = 0;
+		if(number == 4) {
+			DomAmount = 48;
+		} else if (number == 3) {
+			DomAmount = 36;
+		} else if (number == 2) {
+			DomAmount = 24;
+		}
+		Game game = new Game(DomAmount, kingdomino);
+		game.setNumberOfPlayers(number);
+		kingdomino.setCurrentGame(game);
+		// Populate game
+		addDefaultUsersAndPlayers(game);
+		createAllDominoes(game);
+		game.setNextPlayer(game.getPlayer(0));
+		System.out.println(game.getNumberOfPlayers());
+	}
+	
+	/**
+	 * 
+	 * This method takes all the dominos and shuffles them in a random order in order to start the game.
+	 * The shuffling is done via the Collections method of ArrayLists.
+	 * 
+	 * @see ShuffleDominos.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param null
+	 * @return Domino[]
+	 */
+	
+	public static Domino[] shuffleDominos() {
+
+			int count = 0;
+			Domino[] DominoArray = new Domino[48];
+			
+			for (int i = 1; i < DominoArray.length+1 ; i++) {
+				Domino dom = KDController.getdominoByID(i);
+				DominoArray[count] = dom;
+				count++;
+			}
+			
+			ArrayList<Domino> Dominos = new ArrayList<Domino>();
+			for (int i = 0; i < DominoArray.length; i++) {
+				Dominos.add(DominoArray[i]);
+			}		
+			Collections.shuffle(Dominos);
+			
+			for(int i=0; i<DominoArray.length; i++) {
+				DominoArray[i] = (Domino) Dominos.get(i);
+			}
+			return DominoArray;
+	}
+	
+	/**
+	 * 
+	 * This method arranges the domino IDs in the order that is provided in the string accordingly.
+	 * 
+	 * @see ShuffleDomino.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return Integer[]
+	 */
+	
+	public static Integer[] arrangeDominos(String s1) {
+		
+		Integer[] DominoArray = new Integer[48];
+		String[] StringArray = new String[48];
+		StringArray = s1.split(", ");
+		
+		for(int i = 0; i < DominoArray.length; i++) {
+			DominoArray[i] = (Integer.parseInt(StringArray[i]));			
+		}
+		return DominoArray;
+	}
+	
+	
+	/**
+	 * 
+	 * This method arranges the domino in the order that is provided in the string accordingly.
+	 * 
+	 * @see ShuffleDomino.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return Domino[]
+	 */
+	
+	public static Domino[] arrangeTheDominos(String s1) {
+		
+		Domino[] DominoArray = new Domino[48];
+		String[] StringArray = new String[48];
+		StringArray = s1.split(", ");
+		
+		for(int i = 0; i < DominoArray.length; i++) {
+			DominoArray[i] = KDController.getdominoByID(Integer.parseInt(StringArray[i]));
+		}
+		return DominoArray;
+	}
+	
+	/**
+	 * 
+	 * This method removes the amount of dominos specified from the list.
+	 * 
+	 * @see ShuffleDomino.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String, Int
+	 * @return Domino[]
+	 */
+	
+	public static Domino[] removeDraftDominos(String s1, int int1) {
+		Domino[] DominoArray = new Domino[48];
+		String[] StringArray = new String[48];
+		StringArray = s1.split(", ");
+		int count = 0;
+		for(int i = int1; i < DominoArray.length; i++) {
+			DominoArray[count] = KDController.getdominoByID(Integer.parseInt(StringArray[i]));
+			count++;
+		}
+		
+		return DominoArray;
+		
+	}
+
+	
+	/**
+	 * 
 	 * This method preplaces a domino into a playe's kingdom
 	 * Useful for bring games up to a testable state in cucumber files
 	 * 
@@ -110,7 +293,7 @@ public class KDController {
 		
 		if (t.size()==1) {
 			respectGrid=true;
-			System.out.println(respectGrid);
+//			System.out.println(respectGrid);
 			return true;
 		}
 
@@ -156,7 +339,7 @@ public class KDController {
 		else {
 			respectGrid=true;
 		}
-		System.out.println(respectGrid);
+//		System.out.println(respectGrid);
 		return respectGrid;
 	}
 	
@@ -183,7 +366,7 @@ public class KDController {
 		
 		if (territories.size()==1) {
 			noOverlap=true;
-			System.out.println(noOverlap);
+//			System.out.println(noOverlap);
 			return noOverlap;
 		}
 		
@@ -215,7 +398,7 @@ public class KDController {
 			else {
 				noOverlap=true;
 			}
-			System.out.println(noOverlap);
+//			System.out.println(noOverlap);
 			return noOverlap;
 		}
 		
@@ -242,7 +425,7 @@ public class KDController {
 		
 		if (territories.size()==1) {
 			noOverlap=true;
-			System.out.println(noOverlap);
+//			System.out.println(noOverlap);
 			return noOverlap;
 		}
 		
@@ -268,7 +451,7 @@ public class KDController {
 					}
 					
 				}
-			System.out.println(noOverlap);
+//			System.out.println(noOverlap);
 			return noOverlap;
 			}
 			
@@ -293,7 +476,7 @@ public class KDController {
 		
 		if (t.size()==1) {
 			castleAdj=true;
-			System.out.println(castleAdj);
+//			System.out.println(castleAdj);
 			return castleAdj;
 		}
 		
@@ -326,7 +509,7 @@ public class KDController {
 			castleAdj=false;
 		}
 		
-		System.out.println(castleAdj);
+//		System.out.println(castleAdj);
 		return castleAdj;
 		
 	}
@@ -350,7 +533,7 @@ public class KDController {
 		
 		if (t.size()==1) {
 			neighborAdj=true;
-			System.out.println(neighborAdj);
+//			System.out.println(neighborAdj);
 			return neighborAdj;
 		}
 		else {
@@ -405,7 +588,7 @@ public class KDController {
 				neighborAdj=true;
 			}
 		
-			System.out.println(neighborAdj);
+//			System.out.println(neighborAdj);
 			return neighborAdj;
 		}
 		
@@ -428,36 +611,57 @@ public class KDController {
 	 * @throws java.lang.IllegalArgumentException
 	 */
 	
+	/**
+	 * 
+	 * This method checks if a player is allowed to
+	 * discard the domino they have selected and
+	 * prePlaced in their kingdom. If they are allowed
+	 * to do so, the domino is discarded and their
+	 * dominoSelected is deleted. If not, the dominos
+	 * status is changed to ErroneouslyPrePlaced.
+	 * 
+	 * @see DiscardDomino.feature
+	 * @author Massimo Vadacchino 260928064
+	 * @param aPlayer
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 */
+	
 	public static void discardDomino(Player aPlayer) throws java.lang.IllegalArgumentException{ 
 				
 		if(aPlayer == null) throw new java.lang.IllegalArgumentException("This player does not exist");
 		
 		DominoInKingdom newlyPrePlacedDomino = (DominoInKingdom) aPlayer.getKingdom().getTerritory(aPlayer.getKingdom().getTerritories().size()-1);
-		
 		if(newlyPrePlacedDomino.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in the players kingdom");
 
+		int[] availableSpaceInKingdom = getAvailableSpaceInGrid(aPlayer);
+		
 		for(int i = -4; i<5; i++) {
 			
 			for(int j = -4; j<5; j++) {
 				
 				for(int z = 0; z<4; z++) {
 					
-					newlyPrePlacedDomino.setX(i);
-					newlyPrePlacedDomino.setY(j);
+					if(i > availableSpaceInKingdom[0] && j > availableSpaceInKingdom[1] && i < availableSpaceInKingdom[2] && j < availableSpaceInKingdom[3]){
+				
+						newlyPrePlacedDomino.setX(i);
+						newlyPrePlacedDomino.setY(j);
+						
+						if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyNeighborAdjacencyLastTerritory(aPlayer)) {
+						
+							newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+							return;
+							
+						}
+						
+						else if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyCastleAdjacency(aPlayer)) {
+						
+							newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+							return;
+							
+						}
 					
-					if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyNeighborAdjacencyLastTerritory(aPlayer)) {
-						
-						newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-						return;
-						
 					}
-					
-					else if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyCastleAdjacency(aPlayer)) {
-						
-						newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-						return;
-						
-					}	
 					
 					rotateCurrentDomino(aPlayer, newlyPrePlacedDomino, "Clockwise");
 				
@@ -466,7 +670,7 @@ public class KDController {
 			}
 		
 		}
-		
+	
 		newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.Discarded);
 		newlyPrePlacedDomino.delete();
 		aPlayer.getDominoSelection().delete();
@@ -1379,6 +1583,96 @@ public class KDController {
 	
 	/**
 	 * 
+	 * This method returns the largest and smallest possible
+	 * x and y values that a domino can be within in order
+	 * to be considered for a valid position.
+	 * 
+	 * @author Massimo Vadacchino
+	 * @param player
+	 * @return int[]
+	 */
+
+	private static int[] getAvailableSpaceInGrid(Player player) {
+		
+		List<KingdomTerritory> territories = player.getKingdom().getTerritories(); 
+	
+		int largestXCoord = territories.get(0).getX();
+		int largestYCoord = territories.get(0).getY();
+
+		int smallestXCoord = territories.get(0).getX();
+		int smallestYCoord = territories.get(0).getY();
+
+		for (KingdomTerritory territory : territories) {
+			
+			if(territories.get(0).equals(territory)) continue;
+
+			DominoInKingdom dInKingdom = (DominoInKingdom) territory;
+
+			if(dInKingdom.getDirection().equals(DirectionKind.Up)) {
+				
+				if(territory.getY() + 1 > largestYCoord) largestYCoord = territory.getY() + 1;
+
+				if(territory.getY() < smallestYCoord) smallestYCoord = territory.getY();
+
+				if(territory.getX() > largestXCoord) largestXCoord = territory.getX();
+
+				if(territory.getX() < smallestXCoord) smallestXCoord = territory.getX();
+
+			}
+
+			if(dInKingdom.getDirection().equals(DirectionKind.Down)) {
+
+				if(territory.getY() - 1 < smallestYCoord) smallestYCoord = territory.getY() - 1;
+
+				if(territory.getY() > largestYCoord) largestYCoord = territory.getY();
+
+				if(territory.getX() > largestXCoord) largestXCoord = territory.getX();
+
+				if(territory.getX() < smallestXCoord) smallestXCoord = territory.getX();
+
+
+			}
+
+			if(dInKingdom.getDirection().equals(DirectionKind.Right)) {
+
+				if(territory.getX() + 1 > largestXCoord) largestXCoord = territory.getX() + 1;
+
+				if(territory.getX() < smallestXCoord) smallestXCoord = territory.getX();
+
+				if(territory.getY() > largestYCoord) largestYCoord = territory.getY();
+
+				if(territory.getY() < smallestYCoord) smallestYCoord = territory.getY();
+
+			}
+
+			if(dInKingdom.getDirection().equals(DirectionKind.Left)) {
+
+				if(territory.getX() - 1 < smallestXCoord) smallestXCoord = territory.getX() - 1;
+
+				if(territory.getX() > largestXCoord) largestXCoord = territory.getX();
+
+				if(territory.getY() > largestYCoord) largestYCoord = territory.getY();
+
+				if(territory.getY() < smallestYCoord) smallestYCoord = territory.getY();
+				
+			}
+
+		}
+		
+		int[] availableSpaceInGrid = new int[4];
+	
+		availableSpaceInGrid[0] = smallestXCoord - 2;
+		availableSpaceInGrid[1] = smallestYCoord - 2;
+		availableSpaceInGrid[2] = largestXCoord + 2;
+		availableSpaceInGrid[3] = largestYCoord + 2;
+
+		return availableSpaceInGrid;
+		
+	}
+
+	
+	/**
+	 * 
 	 * This method checks which player has the largest property.
 	 * 
 	 * @see ResolveTiebreaker.feature
@@ -2150,6 +2444,35 @@ public class KDController {
 			}
 		}
 		throw new java.lang.IllegalArgumentException("Domino with ID " + id + " not found.");
+	}
+	
+	/**
+	 * 
+	 * This method returns a terrain type depending on the input string.
+	 * 
+	 * @see BrowseDominoPile.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return TerrainType
+	 */
+	
+	public static TerrainType retrieveTerrainType(String terrain) {
+		switch (terrain) {
+		case "wheat":
+			return TerrainType.WheatField;
+		case "forest":
+			return TerrainType.Forest;
+		case "mountain":
+			return TerrainType.Mountain;
+		case "grass":
+			return TerrainType.Grass;
+		case "swamp":
+			return TerrainType.Swamp;
+		case "lake":
+			return TerrainType.Lake;
+		default:
+			throw new java.lang.IllegalArgumentException("Invalid terrain type: " + terrain);
+		}
 	}
 
 	private static TerrainType getTerrainType(String terrain) {
