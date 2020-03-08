@@ -15,9 +15,6 @@ import java.util.*;
 	
 public class KDController {
 
-	private static int DraftAmount;
-	private static int DomAmount;
-
 	
 	public static void initiateEmptyGame() {
 		// Intialize empty game
@@ -65,7 +62,7 @@ public class KDController {
 	public static void numOfPlayers(int number) {
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		DomAmount = 0;
+		int DomAmount = 0;
 		if(number == 4) {
 			DomAmount = 48;
 		} else if (number == 3) {
@@ -174,7 +171,7 @@ public class KDController {
 			p = PlayerColor.Green;
 		} else if(s1.equals("pink")) {
 			p = PlayerColor.Pink;
-		} else if(s1.equals("yellow")) {
+		} else if(s1.equals("yellow") || s1.equals("yelow")) {
 			p = PlayerColor.Yellow;
 		}
 		return p;
@@ -247,20 +244,7 @@ public class KDController {
 		return biggestProperty;
 	}
 	
-	public static List<PropertyAttribute> getAllPropertyAttributes(Player player) {
-	List<Property> allProp=getAllProperty(player);
-	List<PropertyAttribute> allAttributes=new ArrayList<PropertyAttribute>();
-	
-	for (Property p:allProp) {
-		int propertySize=p.getSize();
-		TerrainType t = p.getPropertyType();
-		int crown = p.getCrowns();
-		int score = p.getScore();
-		PropertyAttribute pa = new PropertyAttribute(t,propertySize,crown,score);
-		allAttributes.add(pa);
-	}
-	return allAttributes;
-}
+
 
 	public static List<Property> getPropertyByTerrain(Player player, TerrainType t){
 		List<Property> allProp=getAllProperty(player);
