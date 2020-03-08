@@ -38,7 +38,7 @@ public class CalculateRankingStep {
 	 * based on the points of each player and then provide the calculated rankings.
 	 *  
 	 *  @see CalculateRanking.feature
-	 *  @author Gurdarshan Singh 260927466
+	 *  @author Gurdarshan Singh 260927466, refactored by Jing Han
 	 *  
 	 */
 	
@@ -85,7 +85,7 @@ public class CalculateRankingStep {
 
 	@Given("the players have no tiebreak")
 	public void the_players_have_no_tiebreak() {
-		KDController.existTieBreak();
+		KDController.existScoreTieBreak();
 		assertEquals(true,true);
 	}
 

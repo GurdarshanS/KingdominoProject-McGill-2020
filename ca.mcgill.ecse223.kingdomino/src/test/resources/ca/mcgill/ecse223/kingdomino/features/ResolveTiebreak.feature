@@ -36,7 +36,7 @@ Feature: Resolve Tiebreak
       | green  |        2 |
       | pink   |        3 |
       | blue   |        4 |
-
+#
   Scenario: Tiebreak for first place results in shared victory
     Given the players have the following two dominoes in their respective kingdoms:
       | player | domino1 | dominodir1 | posx1 | posy1 | domino2 | dominodir2 | posx2 | posy2 |

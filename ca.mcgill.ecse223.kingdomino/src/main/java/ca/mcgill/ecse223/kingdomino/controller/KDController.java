@@ -668,11 +668,24 @@ public class KDController {
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		
 		List<Player> allPlayers = game.getPlayers();
-		Player[] rankedPlayers = new Player[allPlayers.size()];
+		List<Integer> allRanks=new ArrayList<Integer>();
 		
-		for (Player player:allPlayers) {
-			rankedPlayers[player.getCurrentRanking()-1]=player;
+		Player[] rankedPlayers = new Player[allPlayers.size()];
+
+		for (Player p:allPlayers) {
+			allRanks.add(p.getCurrentRanking());
 		}
+		
+		int[][] rankAndDuplicity=argsort(allRanks);
+		int [] rank=rankAndDuplicity[0];
+		
+		int i=0;
+		for (int j=rank.length-1;j>-1;j--) {
+			rankedPlayers[i]=allPlayers.get(rank[j]);
+			i++;
+		}
+		
+//		System.out.println(Arrays.toString(rankedPlayers));
 		
 		return rankedPlayers;
 	
@@ -691,9 +704,9 @@ public class KDController {
 	 */
 	
 	
-	public static boolean existTieBreak() {
+	public static boolean existScoreTieBreak() {
 		
-		boolean exist=false;
+		boolean exist=true;
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		
@@ -705,6 +718,9 @@ public class KDController {
 		}
 		
 		Set<Integer> uniqueScores = new HashSet<Integer>(playerScores);
+		
+//		System.out.println(uniqueScores);
+//		System.out.println(playerScores);
 
 		if (uniqueScores.size()==playerScores.size()) {
 			exist=false;
@@ -724,56 +740,205 @@ public class KDController {
 	 * @param void
 	 * @return void
 	 */
-	
+
 	
 	public static void calculatePlayerRanking() {
-		
-
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		
 		List<Player> allPlayers = game.getPlayers();
 		List<Integer> playerScores = new ArrayList<Integer>();
-		List<Integer> scoreCopy = new ArrayList<Integer>();
-		List<Integer> ignoreIndex = new ArrayList<Integer>();
+
 		
 		System.out.println(" =========== unranked ============");
 		for (Player p:allPlayers) {
+			playerScores.add(p.getTotalScore());
 			System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
 		}
 		
-		for (Player each:allPlayers) {
-			playerScores.add(each.getTotalScore());
-			scoreCopy.add(each.getTotalScore());
+		rankByValue(allPlayers,playerScores);
+		
+		if (!existScoreTieBreak()) {
+			System.out.println(" ============ no tiebreak ranked =============");
+			Player[] p2 = getRankedPlayers();
+			for (Player p:p2) {
+				System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
+			}
+		}
+		else {
+			tieBreakByLargestProperty();
+		}
+	}
+	
+	/**
+	 * 
+	 * This helper method applies ranking to a list of players
+	 * based on an arbitrary value list
+	 * 
+	 * @see CalculateRanking.feature
+	 * @author Gurdarshan Singh 260927466, refactored by Jing Han
+	 * @param void
+	 * @return void
+	 */
+	public static void rankByValue(List<Player> allPlayers,List<Integer> value) {
+		int[][] orderAndDuplicity = argsort(value);
+		int[] order=orderAndDuplicity[0];
+		int[] duplicity=orderAndDuplicity[1];
+		int rank=1;
+		
+		for (int i=0;i<order.length;i++) {
+			int index=order[i];
+			int dupe=duplicity[i];
+			
+			allPlayers.get(index).setCurrentRanking(rank);
+			
+			if (dupe==1) {
+				rank++;
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * This method resolves tie break by property size
+	 * or moves on to resolve by crown if property size equal
+	 * of the game according to their total
+	 * scores
+	 * 
+	 * @see CalculateRanking.feature
+	 * @author Gurdarshan Singh 260927466, refactored by Jing Han
+	 * @param void
+	 * @return void
+	 */
+	
+	public static void tieBreakByLargestProperty() {
+			
+		Player[] rankedPlayers = KDController.getRankedPlayers();
+		List<Integer> sameRankIndex= new ArrayList<Integer>();
+		List<Player> sameRankPlayers=new ArrayList<Player>();
+		
+		for (int i=0;i<rankedPlayers.length-1;i++) {
+			Player nowPlayer = rankedPlayers[i];
+			Player nextPlayer=rankedPlayers[i+1];
+			if (nowPlayer.getCurrentRanking()==nextPlayer.getCurrentRanking()) {
+				if (!(sameRankIndex.contains((i)))) {
+					sameRankPlayers.add(nowPlayer);
+					sameRankIndex.add(i);
+				}
+				if (!(sameRankIndex.contains((i+1)))) {
+					sameRankPlayers.add(nextPlayer);
+					sameRankIndex.add(i+1);
+				}
+			}
+		}
+
+		
+		List<Integer> sameRankPropSize = new ArrayList<Integer>();
+		for (Player p:sameRankPlayers) {
+			List<Property> tempProp=p.getKingdom().getProperties();
+			int maxPropSize=0;
+			for (Property tempP:tempProp) {
+				if (tempP.getSize()>maxPropSize) maxPropSize=tempP.getSize();
+			}
+			sameRankPropSize.add(maxPropSize);
+		}
+			
+		Set<Integer> set = new HashSet<Integer>(sameRankPropSize);
+		
+		if (set.size()!=sameRankPropSize.size()) {
+			tieBreakByCrown();
+		}
+		else {
+			
+			for (int i=0;i<rankedPlayers.length;i++) {
+				if (!sameRankIndex.contains(i)) {
+					(rankedPlayers[i]).setCurrentRanking(rankedPlayers[i].getCurrentRanking()+1);
+				}
+			}
+			
+			rankByValue(sameRankPlayers,sameRankPropSize);
+			
+			System.out.println("\n\n================= tie broken by size ====================");
+			Player[] tieBrokenPlayers=getRankedPlayers();
+			for (Player p:tieBrokenPlayers) {
+				System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
+			}
 		}
 		
-		Collections.sort(scoreCopy);
-		Collections.reverse(scoreCopy);
-				
-		System.out.println(" ============ ranked =============");
 		
-		for (int i=0;i<scoreCopy.size();i++) {
-			int refVal=scoreCopy.get(i);
-			for (int j=0;j<playerScores.size();j++) {
-				if (!ignoreIndex.contains(j)) {
-					int testVal=playerScores.get(j);
-					if (testVal==refVal) {
-						ignoreIndex.add(j);
-						allPlayers.get(j).setCurrentRanking(i+1);					
-					}
+	}
+	
+	/**
+	 * 
+	 * This method resolves tie break by crown number
+	 * or moves on shared victory if crown number equal
+	 * of the game according to their total
+	 * scores
+	 * 
+	 * @see CalculateRanking.feature
+	 * @author Gurdarshan Singh 260927466, refactored by Jing Han
+	 * @param void
+	 * @return void
+	 */
+	
+	public static void tieBreakByCrown() {
+		Player[] rankedPlayers = KDController.getRankedPlayers();
+		List<Integer> sameRankIndex= new ArrayList<Integer>();
+		List<Player> sameRankPlayers=new ArrayList<Player>();
+		
+		for (int i=0;i<rankedPlayers.length-1;i++) {
+			Player nowPlayer = rankedPlayers[i];
+			Player nextPlayer=rankedPlayers[i+1];
+			if (nowPlayer.getCurrentRanking()==nextPlayer.getCurrentRanking()) {
+				if (!(sameRankIndex.contains((i)))) {
+					sameRankPlayers.add(nowPlayer);
+					sameRankIndex.add(i);
+				}
+				if (!(sameRankIndex.contains((i+1)))) {
+					sameRankPlayers.add(nextPlayer);
+					sameRankIndex.add(i+1);
 				}
 			}
 		}
 		
-		for (Player p:allPlayers) {
-			System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
-		}
 		
+		List<Integer> sameRankCrownSize = new ArrayList<Integer>();
+		for (Player p:sameRankPlayers) {
+			int crown=0;
+			List<Property> tempProperty=p.getKingdom().getProperties();
+			for (Property prop:tempProperty) {
+				crown+=prop.getCrowns();
+			}
+			sameRankCrownSize.add(crown);
+		}
+			
+		Set<Integer> set = new HashSet<Integer>(sameRankCrownSize);
+		
+		if (set.size()!=sameRankCrownSize.size()) {
+			System.out.println("================= shared victory=====================");
+			Player[] tieBrokenPlayers=getRankedPlayers();
+			for (Player p:tieBrokenPlayers) {
+				System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
+			}
+		}
+
+		else {
+			
+			for (int i=0;i<rankedPlayers.length;i++) {
+				if (!sameRankIndex.contains(i)) {
+					(rankedPlayers[i]).setCurrentRanking(rankedPlayers[i].getCurrentRanking()+1);
+				}
+			}
+			
+			rankByValue(sameRankPlayers,sameRankCrownSize);
+			
+			System.out.println("\n\n================= tie broken by crown ====================");
+			Player[] tieBrokenPlayers=getRankedPlayers();
+			for (Player p:tieBrokenPlayers) {
+				System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
+			}
+		}
 	}
-	
-	
-	
-	
 	
 	
 	/**
@@ -1240,99 +1405,6 @@ public class KDController {
 	}
 	
 	
-	/**
-	 * 
-	 * This method takes in an array of all the players and adjusts the ranking to have a tiebreak.
-	 * First it checks who has the biggest property, whoever does get's first place.
-	 * If the property size is the same, the amount of crowns on those properties is compared.
-	 * The greatest amount of crowns wins it. In the end, an updated array is returned depending on
-	 * the new standings.
-	 * 
-	 * @see ResolveTiebreak.feature
-	 * @author Gurdarshan Singh 260927466
-	 * @param Player[]
-	 * @return Player[]
-	 */
-	
-	public static Player[] tieBreaker(Player[] p1) {
-		int crowns1 = 0;
-		int crowns2 = 0;
-		if( p1[2].getTotalScore() == p1[3].getTotalScore()) {
-			
-			List<Property> propertiesPlayer1 = p1[2].getKingdom().getProperties();
-			List<Property> propertiesPlayer2 = p1[3].getKingdom().getProperties();
-
-			
-			Property biggestPropertyPlayer1 = getBiggestProperty(propertiesPlayer1);
-			Property biggestPropertyPlayer2 = getBiggestProperty(propertiesPlayer2);
-			
-			if(biggestPropertyPlayer1.getSize() > biggestPropertyPlayer2.getSize()) {
-				p1[2].setPropertyScore(p1[2].getPropertyScore()+1);
-				Player temp = p1[3];
-				p1[3] = p1[2];
-				p1[2] = temp;
-				return p1;
-			} else if (biggestPropertyPlayer1.getSize() < biggestPropertyPlayer2.getSize()) {
-				p1[3].setPropertyScore(p1[3].getPropertyScore()+1);
-				return p1;
-			} else if (biggestPropertyPlayer1.getSize() == biggestPropertyPlayer2.getSize()) {
-			
-			for(int i=0; i<propertiesPlayer1.size(); i++) {
-				crowns1 = crowns1 + propertiesPlayer1.get(i).getCrowns();
-			}
-			
-			for(int i=0; i<propertiesPlayer2.size(); i++) {
-				crowns2 = crowns2 + propertiesPlayer2.get(i).getCrowns();
-			}
-			
-			
-			if(crowns1 > crowns2) {
-				p1[2].setPropertyScore(p1[2].getPropertyScore()+1);
-				Player temp = p1[3];
-				p1[3] = p1[2];
-				p1[2] = temp;
-				return p1;
-			} else if(crowns1 < crowns2) {
-				p1[3].setPropertyScore(p1[3].getPropertyScore()+1);
-				return p1;
-			} 
-			
-			}
-		}
-		
-		return p1;
-	}
-	
-	
-	/**
-	 * 
-	 * This method sorts the player array so that the player with the lowest score is at the start 
-	 * and the player with the highest score is at the end.
-	 * 
-	 * @see ShuffleDomino.feature
-	 * @author Gurdarshan Singh 260927466
-	 * @param Player[]
-	 * @return Player[]
-	 */
-	
-	public static Player[] bubbleSort(Player[] scoreList) 
-    { 
-        int n = scoreList.length; 
-        for (int i = 0; i < n-1; i++) {
-            for (int j = 0; j < n-i-1; j++) {
-                if (scoreList[j].getTotalScore() > scoreList[j+1].getTotalScore()) 
-                { 
-                    // swap arr[j+1] and arr[i] 
-                    Player temp = scoreList[j]; 
-                    scoreList[j] = scoreList[j+1]; 
-                    scoreList[j+1] = temp; 
-                } 
-            }
-        }
-        
-        return scoreList;
-    } 
-	
 	
 	/**
 	 * 
@@ -1573,6 +1645,66 @@ public class KDController {
 			return false;
 		}
 	}
+	
+	/**
+	 * 
+	 * This helper method performs the equivalent
+	 * of argsort in Python
+	 * 
+	 * @author Jing Han 260528152
+	 * @param x
+	 * @return sortedIndices
+	 */
+	
+	public static int[][] argsort(List<Integer> x) {
+		List<Integer> sortOrder = new ArrayList<Integer>();
+		List<Integer> xCopy = new ArrayList<Integer>();
+		int [] dupe = new int[x.size()];
+		
+		for (Integer val:x) {
+			xCopy.add(val);
+		}
+		
+		Collections.sort(xCopy);
+		Collections.reverse(xCopy);
+		
+		for (int val:xCopy) {
+			for (int index=0;index<x.size();index++) {
+				if (!(sortOrder.contains(index))) {
+					int ref=x.get(index);
+					if (ref==val) {
+						sortOrder.add(index);
+						break;
+					}
+				}
+			}
+		}
+		
+		
+		for (int i=0;i<sortOrder.size()-1;i++) {
+			int val1=x.get(sortOrder.get(i));
+			int val2=x.get(sortOrder.get(i+1));
+			if (val1==val2) {
+				dupe[i]=0;
+			}
+			else {
+				dupe[i]=1;
+			}
+		}
+		
+		int [] finalOrder=new int[sortOrder.size()];
+		
+		for(int j=0;j<sortOrder.size();j++) {
+			finalOrder[j]=sortOrder.get(j);
+		}
+		
+		int[][] orderAndDuplicity= {finalOrder,dupe};
+			
+		
+		
+		return orderAndDuplicity;
+	}
+	
 	
 	/**
 	 * 
