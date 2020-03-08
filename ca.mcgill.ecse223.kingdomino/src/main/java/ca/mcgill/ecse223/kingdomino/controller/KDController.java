@@ -720,19 +720,59 @@ public class KDController {
 			
 			throw new java.lang.IllegalArgumentException("This player does not exist");
 		}
+		
+		boolean right= false, left = false, top = false, bottom = false;
 		int score = 0;
-		boolean middle = true;
-		List<KingdomTerritory> kingdomTerritories = player.getKingdom().getTerritories(); 
-		System.out.println(kingdomTerritories.size());
-		for (KingdomTerritory domino: kingdomTerritories) {
+
+		if (true) {//isBonusOption("Middle Castle")) { //this doesnt work
+		
+			List<KingdomTerritory> kingdomTerritories = player.getKingdom().getTerritories(); 
+			System.out.println(kingdomTerritories.size());
 			
-			if (domino.getX()<=-3||domino.getX()>=3||domino.getY()>=3||domino.getY()<=-3) {
+			for (int index = 1; index < kingdomTerritories.size(); index++) {
 				
-				middle = false;
-			}
+				KingdomTerritory domino = kingdomTerritories.get(index);
+				
+				if (domino.getX()==2) {
 			
+					right = true;
+				}
+				
+				if (domino.getX()==-2) {
+					
+					left = true;
+				}
+				
+				if (domino.getY()==2) {
+					
+					top = true;
+				}
+				
+				if (domino.getY()==-2) {
+					
+					bottom = true;
+				}
+				
+				if (((DominoInKingdom) domino).getDirection().equals(DirectionKind.Right) && domino.getX()==1) {
+					
+					right = true;
+				}
+				
+				if (((DominoInKingdom) domino).getDirection().equals(DirectionKind.Left) && domino.getX()==-1) {
+					
+					left = true;
+				}
+				if (((DominoInKingdom) domino).getDirection().equals(DirectionKind.Up) && domino.getY()==1) {
+	
+					top = true;
+				}
+				if (((DominoInKingdom) domino).getDirection().equals(DirectionKind.Down) && domino.getY()==-1) {
+	
+					bottom = true;
+				}
+			}
 		}
-		if (middle) {
+		if (top && right && left && bottom) {
 			
 			score = 10;
 		}
@@ -756,21 +796,24 @@ public class KDController {
 			throw new java.lang.IllegalArgumentException("This player does not exist");
 		}
 		int score = 0;
-		boolean harmony = false;
-		List<KingdomTerritory> kingdomTerritories = player.getKingdom().getTerritories(); 
-		System.out.println(kingdomTerritories.size());
+		
+		if (true) {//isBonusOption("Harmony")) { //this doesnt work
+			
+			boolean harmony = false;
+			List<KingdomTerritory> kingdomTerritories = player.getKingdom().getTerritories(); 
+			System.out.println(kingdomTerritories.size());
 			
 			if(kingdomTerritories.size() > 12) {
-				
+			
 				harmony = true;
 			}
-		
-		if (harmony) {
 			
-			score = 5;
+			if (harmony) {
+			
+				score = 5;
+			}
 		}
 		return score;
-		
 	}
 	
 	/**
@@ -783,19 +826,20 @@ public class KDController {
 	 * @return List
 	 */
 	
-	public static List<BonusOption> getBonusOptions(Game game) {
+	public static boolean isBonusOption(String string) {
 		
-		if(game == null) {
-			
-			throw new java.lang.IllegalArgumentException("This game does not exist");
-		}
+		boolean selected = false;
 		
-		if(game.hasSelectedBonusOptions()) {
+		List<BonusOption> bonusOptions = KingdominoApplication.getKingdomino().getCurrentGame().getSelectedBonusOptions();
+		
+		for (int i = 0; i < bonusOptions.size(); i++) {
 			
-			return game.getSelectedBonusOptions();
-		}
+			if (bonusOptions.get(i).getOptionName().equalsIgnoreCase(string)) {
 				
-		return null;
+				selected = true;
+			}
+		}
+		return selected;
 	}
 	
 	/**
