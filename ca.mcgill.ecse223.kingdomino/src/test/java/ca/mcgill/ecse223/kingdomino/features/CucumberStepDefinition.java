@@ -127,7 +127,7 @@ public class CucumberStepDefinition {
 		getdominoByID(intArray[0]).setNextDomino(getdominoByID(intArray[1]));
 		getdominoByID(intArray[intArray.length-1]).setPrevDomino(getdominoByID(intArray[intArray.length-2]));
 		
-		//./gradlew test --info
+		
 	} //the_top_5_dominoes_in_pile
 	
 	@When("create next draft is initiated")
