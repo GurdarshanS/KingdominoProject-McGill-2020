@@ -93,23 +93,23 @@ public class CucumberStepDefinitions {
 	@Then("each of the players should have the corresponding tiles on their grid:")
 	public void each_of_the_players_should_have_the_corresponding_tiles_on_their_grid(io.cucumber.datatable.DataTable dataTable) {
 		
-		String[] StringArray = new String[48];
-		Integer[] IntArray = new Integer[48];
 		Domino domino;
 		List<Domino> dominoList = new ArrayList<Domino>();
    		List<Map<String, String>> valueMaps = dataTable.asMaps();
    		for(int i=0; i<KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().size(); i++) {
+   			String[] StringArray = new String[48];
    			for (Map<String, String> map : valueMaps) {
    				Integer playerNum = Integer.decode(map.get("playerNumber"));
-   				StringArray = map.get("playerTiles").split(", ");
+   				StringArray = map.get("playerTiles").split(",");
    			}
-   			for(int j = 0; j < StringArray.length; j++) {
-				IntArray[j] = (Integer.parseInt(StringArray[j]));
-				domino = KDController.getdominoByID(IntArray[j]);
+   			for(int j = 0; j <StringArray.length; j++) {
+   				String numberString = StringArray[j];
+   				int id = Integer.parseInt(numberString);
+   				domino = KDController.getdominoByID(id);
 				dominoList.add(domino);
    			}
    			Player player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().get(i);
-			assertEquals(player.getGame().getAllDominos(),dominoList);
+			assertEquals(dominoList, player.getKingdom().getProperties());
 		} 
 	}
 	/**
@@ -119,23 +119,23 @@ public class CucumberStepDefinitions {
 	@Then("each of the players should have claimed the corresponding tiles:")
 	public void each_of_the_players_should_have_claimed_the_corresponding_tiles(io.cucumber.datatable.DataTable dataTable) {
 		
-		String[] StringArray = new String[48];
-		Integer[] IntArray = new Integer[48];
 		Domino domino;
 		List<Domino> dominoList = new ArrayList<Domino>();
    		List<Map<String, String>> valueMaps = dataTable.asMaps();
    		for(int i=0; i<KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().size(); i++) {
+   			String[] StringArray = new String[48];
    			for (Map<String, String> map : valueMaps) {
    				Integer playerNum = Integer.decode(map.get("playerNumber"));
-   				StringArray = map.get("claimedTile").split(", ");
+   				StringArray = map.get("claimedTile").split(",");
    			}
-   			for(int j = 0; j < StringArray.length; j++) {
-				IntArray[j] = (Integer.parseInt(StringArray[j]));
-				domino = KDController.getdominoByID(IntArray[j]);
+   			for(int j = 0; j <StringArray.length; j++) {
+   				String numberString = StringArray[j];
+   				int id = Integer.parseInt(numberString);
+   				domino = KDController.getdominoByID(id);
 				dominoList.add(domino);
    			}
    			Player player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().get(i);
-			assertEquals(player.getGame().getAllDominos(),dominoList);
+			assertEquals(player.getKingdom().getProperties(),dominoList);
 		} 
 	}
 	/**
