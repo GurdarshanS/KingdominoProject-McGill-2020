@@ -29,6 +29,23 @@ import io.cucumber.java.en.When;
 
 public class ShuffleDominosStepDefinitions {
 
+	
+	/**
+	 * 
+	 * 	These methods create a game depending on the amount of players provided.
+	 * They then shuffle all the dominos randomly and make a first draft with
+	 * an amount that varies depending on the amount of players. You then verify the
+	 * amount of dominos drafted and the amount left. Then, they arrange the dominos
+	 * in the order that is specified and perform a draft.
+	 *  
+	 *  @see ShuffleDomino.feature
+	 *  @author Gurdarshan Singh 260927466
+	 *  
+	 */
+	
+	
+	
+	
 	Draft firstDraft ;
 	Domino[] DomArray;
 	Integer DraftAmount;

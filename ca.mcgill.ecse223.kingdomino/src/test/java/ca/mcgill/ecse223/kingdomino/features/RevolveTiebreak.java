@@ -29,7 +29,18 @@ import io.cucumber.java.en.When;
 
 public class RevolveTiebreak {
 	
-	
+	/**
+	 * 
+	  * 	These methods retrieves the values from the table and places the two specified dominos in the 
+	 * kingdoms of the players.The methods will calculate the rankings based on the points of each player 
+	 * If there is a tie break, the given tie break will be solved using the biggest property check, the most
+	 * amount of crowns or they will both achieve the same ranking. The rankings that were calculated
+	 * will then be provided
+	 *  
+	 *  @see ResolveTiebreak.feature
+	 *  @author Gurdarshan Singh 260927466
+	 *  
+	 */
 	
 	@Given("the game is initialized for resolve tiebreak")
 	public void the_game_is_initialized_for_resolve_tiebreak() {

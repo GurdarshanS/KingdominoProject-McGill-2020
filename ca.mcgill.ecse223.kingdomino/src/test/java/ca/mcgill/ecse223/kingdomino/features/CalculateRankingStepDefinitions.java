@@ -30,6 +30,19 @@ import io.cucumber.java.en.When;
 public class CalculateRankingStepDefinitions {
 
 	
+	/**
+	 * 
+	 * 	These methods retrieves the values from the table and places the two specified dominos in the 
+	 * kingdoms of the players. If there are no tie breaks, the methods will calculate the rankings
+	 * based on the points of each player and then provide the calculated rankings.
+	 *  
+	 *  @see CalculateRanking.feature
+	 *  @author Gurdarshan Singh 260927466
+	 *  
+	 */
+	
+	
+	
 	int score1 = 0;
 	int score2 = 0;
 	int score3 = 0;

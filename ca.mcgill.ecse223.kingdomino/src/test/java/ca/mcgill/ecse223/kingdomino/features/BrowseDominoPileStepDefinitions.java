@@ -28,6 +28,20 @@ import io.cucumber.java.en.When;
 
 public class BrowseDominoPileStepDefinitions {
 
+	/**
+	 * 
+	 * 	These methods retrieve all of the dominos present in the game and lists them in increasing order.
+	 * Afterwards, depending on the given ID, they give either the terrain or the amount of crowns of a 
+	 * certain tile. They also filter the dominos in order to return the dominos of the specified
+	 * terrain type.
+	 *  
+	 *  @see BrowseDominoPile.feature
+	 *  @author Gurdarshan Singh 260927466
+	 *  
+	 */
+	
+	
+	
 	Domino dom;
 	ArrayList myDominoes;
 	Domino[] Dominos;

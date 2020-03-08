@@ -28,6 +28,17 @@ public class KDController {
 		game.setNextPlayer(game.getPlayer(0));
 	}
 	
+	/**
+	 * 
+	 * This method retrieves all the possible dominos that are a part
+	 * of the game and stores them into an array.
+	 * 
+	 * @see BrowseDominoPile.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param null
+	 * @return Domino[]
+	 */
+	
 	public static Domino[] listDominos() {
 		Domino[] myDominos = new Domino[48];
 		for(int i = 1; i < 49 ; i++) {
@@ -38,9 +49,20 @@ public class KDController {
 		return myDominos;
 	}
 
-	public static ArrayList filterbyTerrain (String s1) {
+	
+	/**
+	 * 
+	 * This method looks at all the dominos and separates them according to the
+	 * terrain type that is provided whether it's the right tile or the left tile that contains it.
+	 * 
+	 * @see BrowseDominoPile.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return ArrayList<Integer>
+	 */
+	public static ArrayList<Integer> filterbyTerrain (String s1) {
 		
-		ArrayList myDominos = new ArrayList();
+		ArrayList<Integer> myDominos = new ArrayList<Integer>();
 		TerrainType t1 = KDController.retrieveTerrainType(s1);
 		for (int i = 1; i < 49 ; i++) {
 			Domino dom = KDController.getdominoByID(i);
@@ -57,7 +79,15 @@ public class KDController {
 	
 	
 	
-	
+	/**
+	 * 
+	 * This method sets up a game according to the number of players specified.
+	 * 
+	 * @see ShuffleDominos.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param int
+	 * @return void
+	 */
 	
 	public static void numOfPlayers(int number) {
 		
@@ -80,6 +110,17 @@ public class KDController {
 		System.out.println(game.getNumberOfPlayers());
 	}
 	
+	/**
+	 * 
+	 * This method takes all the dominos and shuffles them in a random order in order to start the game.
+	 * The shuffling is done via the Collections method of ArrayLists.
+	 * 
+	 * @see ShuffleDominos.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param null
+	 * @return Domino[]
+	 */
+	
 	public static Domino[] shuffleDominos() {
 
 			int count = 0;
@@ -91,7 +132,7 @@ public class KDController {
 				count++;
 			}
 			
-			ArrayList Dominos = new ArrayList();
+			ArrayList<Domino> Dominos = new ArrayList<Domino>();
 			for (int i = 0; i < DominoArray.length; i++) {
 				Dominos.add(DominoArray[i]);
 			}		
@@ -102,6 +143,16 @@ public class KDController {
 			}
 			return DominoArray;
 	}
+	
+	/**
+	 * 
+	 * This method arranges the domino IDs in the order that is provided in the string accordingly.
+	 * 
+	 * @see ShuffleDomino.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return Integer[]
+	 */
 	
 	public static Integer[] arrangeDominos(String s1) {
 		
@@ -115,6 +166,17 @@ public class KDController {
 		return DominoArray;
 	}
 	
+	
+	/**
+	 * 
+	 * This method arranges the domino in the order that is provided in the string accordingly.
+	 * 
+	 * @see ShuffleDomino.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return Domino[]
+	 */
+	
 	public static Domino[] arrangeTheDominos(String s1) {
 		
 		Domino[] DominoArray = new Domino[48];
@@ -126,6 +188,16 @@ public class KDController {
 		}
 		return DominoArray;
 	}
+	
+	/**
+	 * 
+	 * This method removes the amount of dominos specified from the list.
+	 * 
+	 * @see ShuffleDomino.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String, Int
+	 * @return Domino[]
+	 */
 	
 	public static Domino[] removeDraftDominos(String s1, int int1) {
 		Domino[] DominoArray = new Domino[48];
@@ -143,7 +215,16 @@ public class KDController {
 
 
 	
-	
+	/**
+	 * 
+	 * This method sorts the player array so that the player with the lowest score is at the start 
+	 * and the player with the highest score is at the end.
+	 * 
+	 * @see ShuffleDomino.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param Player[]
+	 * @return Player[]
+	 */
 	
 	public static Player[] bubbleSort(Player[] scoreList) 
     { 
@@ -163,6 +244,16 @@ public class KDController {
         return scoreList;
     } 
 	
+	/**
+	 * 
+	 * This method returns the color of the player depending on the input string.
+	 * 
+	 * @see CalculateRanking.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return PlayerColor
+	 */
+	
 	public static PlayerColor retrieveColor(String s1) {
 		PlayerColor p = null;
 		if(s1.equals("blue")) {
@@ -177,8 +268,21 @@ public class KDController {
 		return p;
 	}
 	
+	/**
+	 * 
+	 * This method takes in an array of all the players and adjusts the ranking to have a tiebreak.
+	 * First it checks who has the biggest property, whoever does get's first place.
+	 * If the property size is the same, the amount of crowns on those properties is compared.
+	 * The greatest amount of crowns wins it. In the end, an updated array is returned depending on
+	 * the new standings.
+	 * 
+	 * @see ResolveTiebreak.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param Player[]
+	 * @return Player[]
+	 */
+	
 	public static Player[] tieBreaker(Player[] p1) {
-		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		int crowns1 = 0;
 		int crowns2 = 0;
 		if( p1[2].getTotalScore() == p1[3].getTotalScore()) {
@@ -226,6 +330,16 @@ public class KDController {
 		
 		return p1;
 	}
+	
+	/**
+	 * 
+	 * This method checks which player has the largest property.
+	 * 
+	 * @see ResolveTiebreaker.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param List<Property>
+	 * @return Property
+	 */
 	
 	private static Property getBiggestProperty(List<Property> properties) {
 		
@@ -776,6 +890,16 @@ public class KDController {
 		throw new java.lang.IllegalArgumentException("Domino with ID " + id + " not found.");
 	}
 	
+	/**
+	 * 
+	 * This method returns a terrain type depending on the input string.
+	 * 
+	 * @see BrowseDominoPile.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return TerrainType
+	 */
+	
 	public static TerrainType retrieveTerrainType(String terrain) {
 		switch (terrain) {
 		case "wheat":
@@ -794,6 +918,7 @@ public class KDController {
 			throw new java.lang.IllegalArgumentException("Invalid terrain type: " + terrain);
 		}
 	}
+	
 	public static DirectionKind getDirection(String dir) {
 		switch (dir) {
 		case "up":
