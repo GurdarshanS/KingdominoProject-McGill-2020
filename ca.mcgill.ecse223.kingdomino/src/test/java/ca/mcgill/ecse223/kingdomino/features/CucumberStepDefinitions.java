@@ -95,6 +95,7 @@ public class CucumberStepDefinitions {
 		
 		Domino domino;
 		List<Domino> dominoList = new ArrayList<Domino>();
+		List<Domino> dominoInKingdom = new ArrayList<Domino>();
    		List<Map<String, String>> valueMaps = dataTable.asMaps();
    		for(int i=0; i<KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().size(); i++) {
    			String[] StringArray = new String[48];
@@ -105,11 +106,14 @@ public class CucumberStepDefinitions {
    			for(int j = 0; j <StringArray.length; j++) {
    				String numberString = StringArray[j];
    				int id = Integer.parseInt(numberString);
-   				domino = KDController.getdominoByID(id);
+   				domino = KDController.getDominoByID(id);
 				dominoList.add(domino);
    			}
    			Player player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().get(i);
-			assertEquals(player.getKingdom().getProperties(),dominoList);
+   			for(int l = 0; l < player.getKingdom().getProperties().size(); l++) {
+   				dominoInKingdom = player.getKingdom().getProperty(l).getIncludedDominos();
+   			}
+			assertEquals(dominoInKingdom, dominoList);
 		} 
 	}
 	/**
@@ -121,6 +125,7 @@ public class CucumberStepDefinitions {
 		
 		Domino domino;
 		List<Domino> dominoList = new ArrayList<Domino>();
+		List<Domino> dominoInKingdom = new ArrayList<Domino>();
    		List<Map<String, String>> valueMaps = dataTable.asMaps();
    		for(int i=0; i<KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().size(); i++) {
    			String[] StringArray = new String[48];
@@ -131,11 +136,14 @@ public class CucumberStepDefinitions {
    			for(int j = 0; j <StringArray.length; j++) {
    				String numberString = StringArray[j];
    				int id = Integer.parseInt(numberString);
-   				domino = KDController.getdominoByID(id);
+   				domino = KDController.getDominoByID(id);
 				dominoList.add(domino);
    			}
    			Player player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().get(i);
-			assertEquals(player.getKingdom().getProperties(),dominoList);
+   			for(int l = 0; l<player.getKingdom().getProperties().size(); l++) {
+   				dominoInKingdom = player.getKingdom().getProperty(l).getIncludedDominos();
+   			}
+			assertEquals(dominoInKingdom, dominoList);
 		} 
 	}
 	/**
@@ -220,7 +228,7 @@ public class CucumberStepDefinitions {
 	 * @throws IOException 
 	 */
 	@Given("the file named {string} exists in the filesystem")
-	public void the_file_named_exists_in_the_filesystem(String string) throws IOException {
+	public void the_file_named_exists_in_the_filesystem(String string) throws IOException  {
 		new File(string).createNewFile();
 	}
 	/**

@@ -152,9 +152,8 @@ public class KDController {
 	 * @param file: Name of the file saved by the user.
 	 * @return Method returns true if file is saved, false if it cannot be.
 	 * @throws InvalidInputException: Thrown if file cannot be saved
-	 * @throws IOException 
 	 */
-	public static boolean saveGame(File file, boolean overwrite) throws InvalidInputException, IOException {
+	public static boolean saveGame(File file, boolean overwrite) throws InvalidInputException {
 		
 		boolean gameSaved;
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
@@ -223,7 +222,6 @@ public class KDController {
 		public InvalidInputException(String errorMessage) {
 			super(errorMessage);
 		}
-
 	}
 	public static void initializeGame() {
 		// Initialize empty game
@@ -270,7 +268,7 @@ public class KDController {
 					"Error occured while trying to read alldominoes.dat: " + e.getMessage());
 		}
 	}
-	public static Domino getdominoByID(int id) {
+	public static Domino getDominoByID(int id) {
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		for (Domino domino : game.getAllDominos()) {
 			if (domino.getId() == id) {
