@@ -28,8 +28,8 @@ import ca.mcgill.ecse223.kingdomino.features.CucumberCleanUp;
 public class IdentifyPropertiesStep {
 	
 	/**
-	 * These methods identifies the properties of a 
-	 * player's kingdom
+	 * These methods check the Property 
+	 * identifications of a player's kingdom
 	 * @see IdentifyProperties.feature
 	 * @author Jing Han 260528152
 	 */

@@ -27,8 +27,8 @@ import ca.mcgill.ecse223.kingdomino.features.CucumberCleanUp;
 public class VerifyGridSizeStep {
 	
 	/**
-	 * These methods checks if a player's kingdom respects the maximum 
-	 * grid size of 5x5 (regular mode) or 7x7 (mighty kingdom)
+	 * These methods checks if a player's kingdom 
+	 * respects the maximum grid size of 5x5 
 	 * @see VerifyGridSize.feature
 	 * @author Jing Han 260528152
 	 */ 

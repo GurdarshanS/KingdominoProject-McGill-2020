@@ -411,6 +411,374 @@ public class KDController {
 		
 	}
 	
+	
+	/**
+	 * 
+	 * This method checks if a player is allowed to
+	 * discard the domino they have selected and
+	 * prePlaced in their kingdom. If they are allowed
+	 * to do so, the domino is discarded and their
+	 * dominoSelected is deleted. If not, the dominos
+	 * status is changed to ErroneouslyPrePlaced.
+	 * 
+	 * @see DiscardDomino.feature
+	 * @author Massimo Vadacchino 260928064
+	 * @param aPlayer
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 */
+	
+	public static void discardDomino(Player aPlayer) throws java.lang.IllegalArgumentException{ 
+				
+		if(aPlayer == null) throw new java.lang.IllegalArgumentException("This player does not exist");
+		
+		DominoInKingdom newlyPrePlacedDomino = (DominoInKingdom) aPlayer.getKingdom().getTerritory(aPlayer.getKingdom().getTerritories().size()-1);
+		
+		if(newlyPrePlacedDomino.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in the players kingdom");
+
+		for(int i = -4; i<5; i++) {
+			
+			for(int j = -4; j<5; j++) {
+				
+				for(int z = 0; z<4; z++) {
+					
+					newlyPrePlacedDomino.setX(i);
+					newlyPrePlacedDomino.setY(j);
+					
+					if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyNeighborAdjacencyLastTerritory(aPlayer)) {
+						
+						newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+						return;
+						
+					}
+					
+					else if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyCastleAdjacency(aPlayer)) {
+						
+						newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+						return;
+						
+					}	
+					
+					rotateCurrentDomino(aPlayer, newlyPrePlacedDomino, "Clockwise");
+				
+				}
+				
+			}
+		
+		}
+		
+		newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.Discarded);
+		newlyPrePlacedDomino.delete();
+		aPlayer.getDominoSelection().delete();
+		
+	}
+	
+	
+	/**
+	 * 
+	 * This method allows a player to rotate 
+	 * the domino they have selected and 
+	 * prePlaced in their kingdom in 2 directions,
+	 * ClockWise or Counter-ClockWise. This may only
+	 * be possible if the rotation does stay within
+	 * the 9x9 grid size. The dominoes status and direction
+	 * is updated accordingly.
+	 * 
+	 * 
+	 * @see RotateCurrentDomino.feature
+	 * @author Massimo Vadacchino 260928064
+	 * @param aPlayer
+	 * @param dInKingdom
+	 * @param rotation
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 * 
+	 */
+	
+	public static void rotateCurrentDomino(Player aPlayer, DominoInKingdom dInKingdom, String rotation) throws java.lang.IllegalArgumentException { 
+
+		if(aPlayer == null || dInKingdom == null) throw new java.lang.IllegalArgumentException("Invalid input");
+		if(!(((DominoInKingdom)aPlayer.getKingdom().getTerritory(aPlayer.getKingdom().getTerritories().size() -1)).equals(dInKingdom))) throw new java.lang.IllegalArgumentException("This domino does not belong to this players kingdom");
+		if(dInKingdom.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in the players kingdom");
+		
+		DirectionKind dominoDir = dInKingdom.getDirection();
+		
+		if(dominoDir.equals(DirectionKind.Up) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Right);
+		else if(dominoDir.equals(DirectionKind.Right) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Down);
+		else if(dominoDir.equals(DirectionKind.Down) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Left);
+		else if(dominoDir.equals(DirectionKind.Left) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Up);
+			
+		if(dominoDir.equals(DirectionKind.Up) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Left);
+		else if(dominoDir.equals(DirectionKind.Left) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Down);
+		else if(dominoDir.equals(DirectionKind.Down) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Right);
+		else if(dominoDir.equals(DirectionKind.Right) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Up);
+		
+		if(!verifyGridLimit(dInKingdom)) {
+	
+			dInKingdom.setDirection(dominoDir);
+			return;
+			
+		}
+		
+		else {
+			
+			if(verifyNeighborAdjacencyLastTerritory(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
+				
+				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+				return;
+				
+			}
+				
+			else if(verifyCastleAdjacency(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
+					
+				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+				return;
+				
+			}
+		
+			dInKingdom.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+			
+		}
+	
+	}
+	
+	/**
+	 * 
+	 * This method allows a player to place their
+	 * selected domino into their kingdom if and
+	 * only if their domino passes the verifications
+	 * (no overlapping, within kingdom size, has a neighbour,
+	 * and adjacent to the castle) and has a status
+	 * of "CorrectlyPrePlaced". If not, the domino will 
+	 * have the same attributes as before. 
+	 * 
+	 * @see PlaceDomino.feature
+	 * @author Massimo Vadacchino 260928064
+	 * @param aPlayer
+	 * @param dominoToPlace
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 * 
+	 */
+	
+	public static void placeDomino(Player aPlayer, Domino dominoToPlace) throws java.lang.IllegalArgumentException { 
+		
+		if(aPlayer == null || dominoToPlace == null) throw new java.lang.IllegalArgumentException("Invalid input");
+		if(!(dominoToPlace.getDominoSelection().getPlayer().equals(aPlayer))) throw new java.lang.IllegalArgumentException("This domino does not belong to this player");
+		if(dominoToPlace.getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in this players kingdom");
+		
+		if(verifyGridSizeAllKingdom(aPlayer) &&  verifyNoOverlapLastTerritory(aPlayer) && verifyNeighborAdjacencyLastTerritory(aPlayer) && dominoToPlace.getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
+			
+			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);
+			aPlayer.getDominoSelection().delete();
+			
+		}
+		
+		else if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyCastleAdjacency(aPlayer) && dominoToPlace.getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
+			
+			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);	
+			aPlayer.getDominoSelection().delete();
+			
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * This method allows a player to move 
+	 * the domino they have selected and 
+	 * prePlaced in their kingdom in 4 directions,
+	 * up, down, left, and right. This may only
+	 * be possible if the movement does stay within
+	 * the 9x9 grid size. The dominoes status and position
+	 * is updated accordingly.
+	 * 
+	 * 
+	 * @see MoveCurrentDomino.feature
+	 * @author Massimo Vadacchino 260928064
+	 * @param aPlayer
+	 * @param dInKingdom
+	 * @param movement
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 * 
+	 */
+	
+	public static void moveCurrentDomino(Player aPlayer, DominoInKingdom dInKingdom, String movement) throws java.lang.IllegalArgumentException{
+	
+		if(aPlayer == null || dInKingdom == null) throw new java.lang.IllegalArgumentException("Invalid input");
+		if(!(((DominoInKingdom)aPlayer.getKingdom().getTerritory(aPlayer.getKingdom().getTerritories().size() -1)).equals(dInKingdom))) throw new java.lang.IllegalArgumentException("This domino does not belong to this players kingdom");
+		if(dInKingdom.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in the players kingdom");
+		
+		int xPosPrevious = dInKingdom.getX();
+		int yPosPrevious = dInKingdom.getY();
+
+		if(movement.equalsIgnoreCase("Right")) dInKingdom.setX(xPosPrevious + 1);
+		else if(movement.equalsIgnoreCase("Left")) dInKingdom.setX(xPosPrevious - 1);
+		else if(movement.equalsIgnoreCase("Up")) dInKingdom.setY(yPosPrevious + 1);
+		else if(movement.equalsIgnoreCase("Down")) dInKingdom.setY(yPosPrevious - 1);
+		
+		if(!verifyGridLimit(dInKingdom)) {
+	
+			dInKingdom.setX(xPosPrevious);
+			dInKingdom.setY(yPosPrevious);
+			
+			return;
+			
+		}
+		
+		else {
+			
+			if(verifyNeighborAdjacencyLastTerritory(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
+				
+				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+				return;
+				
+			}
+				
+			else if(verifyCastleAdjacency(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
+					
+				
+				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+				return;
+				
+			}
+		
+			dInKingdom.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+			
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * This method returns the ranked players
+	 * of the game according to their total
+	 * scores
+	 * 
+	 * @see CalculateRanking.feature
+	 * @author Gurdarshan Singh 260927466, refactored by Jing Han
+	 * @param void
+	 * @return rankedPlayers
+	 */
+	
+	
+	public static Player[] getRankedPlayers() {
+		
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		
+		List<Player> allPlayers = game.getPlayers();
+		Player[] rankedPlayers = new Player[allPlayers.size()];
+		
+		for (Player player:allPlayers) {
+			rankedPlayers[player.getCurrentRanking()-1]=player;
+		}
+		
+		return rankedPlayers;
+	
+	}
+	
+	/**
+	 * 
+	 * This method determines whether a tiebreak exists
+	 * between player scores. Returns true of exist, false
+	 * if doesn't exist
+	 * 
+	 * @see CalculateRanking.feature
+	 * @author Gurdarshan Singh 260927466, refactored by Jing Han
+	 * @param void
+	 * @return boolean
+	 */
+	
+	
+	public static boolean existTieBreak() {
+		
+		boolean exist=false;
+		
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		
+		List<Player> allPlayers = game.getPlayers();
+		List<Integer> playerScores = new ArrayList<Integer>();
+
+		for (Player each:allPlayers) {
+			playerScores.add(each.getTotalScore());
+		}
+		
+		Set<Integer> uniqueScores = new HashSet<Integer>(playerScores);
+		System.out.println(uniqueScores.size());
+		System.out.println(playerScores.size());
+		if (uniqueScores.size()==playerScores.size()) {
+			exist=false;
+		}
+		
+		System.out.println(exist);
+		return exist;
+	}
+	
+	/**
+	 * 
+	 * This method ranks the currrent players
+	 * of the game according to their total
+	 * scores
+	 * 
+	 * @see CalculateRanking.feature
+	 * @author Gurdarshan Singh 260927466, refactored by Jing Han
+	 * @param void
+	 * @return void
+	 */
+	
+	
+	public static void calculatePlayerRanking() {
+		
+
+		
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		
+		List<Player> allPlayers = game.getPlayers();
+		List<Integer> playerScores = new ArrayList<Integer>();
+		List<Integer> scoreCopy = new ArrayList<Integer>();
+		List<Integer> ignoreIndex = new ArrayList<Integer>();
+		
+		for (Player p:allPlayers) {
+			System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
+		}
+		
+		for (Player each:allPlayers) {
+			playerScores.add(each.getTotalScore());
+			scoreCopy.add(each.getTotalScore());
+		}
+		
+		Collections.sort(scoreCopy);
+		Collections.reverse(scoreCopy);
+		
+		System.out.println(scoreCopy);
+		
+		System.out.println("+++++++++ ranked +++++++++++++++");
+		
+		for (int i=0;i<scoreCopy.size();i++) {
+			int refVal=scoreCopy.get(i);
+			for (int j=0;j<playerScores.size();j++) {
+				if (!ignoreIndex.contains(j)) {
+					int testVal=playerScores.get(j);
+					if (testVal==refVal) {
+						ignoreIndex.add(j);
+						allPlayers.get(j).setCurrentRanking(i+1);					
+					}
+				}
+			}
+		}
+		
+		for (Player p:allPlayers) {
+			System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
 	/**
 	 * 
 	 * This method identifies all the properties of a player's kingdom
@@ -846,6 +1214,188 @@ public class KDController {
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
+	
+	/**
+	 * 
+	 * This method checks which player has the largest property.
+	 * 
+	 * @see ResolveTiebreaker.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param List<Property>
+	 * @return Property
+	 */
+	
+	private static Property getBiggestProperty(List<Property> properties) {
+		
+		int biggest = properties.get(0).getSize();
+		Property biggestProperty = properties.get(0);
+		
+		for(int i=1; i<properties.size(); i++) {
+			
+			if(properties.get(i).getSize() > biggest) {
+				
+				biggestProperty = properties.get(i);
+				biggest = properties.get(i).getSize();
+			}
+		}
+		
+		return biggestProperty;
+	}
+	
+	
+	/**
+	 * 
+	 * This method takes in an array of all the players and adjusts the ranking to have a tiebreak.
+	 * First it checks who has the biggest property, whoever does get's first place.
+	 * If the property size is the same, the amount of crowns on those properties is compared.
+	 * The greatest amount of crowns wins it. In the end, an updated array is returned depending on
+	 * the new standings.
+	 * 
+	 * @see ResolveTiebreak.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param Player[]
+	 * @return Player[]
+	 */
+	
+	public static Player[] tieBreaker(Player[] p1) {
+		int crowns1 = 0;
+		int crowns2 = 0;
+		if( p1[2].getTotalScore() == p1[3].getTotalScore()) {
+			
+			List<Property> propertiesPlayer1 = p1[2].getKingdom().getProperties();
+			List<Property> propertiesPlayer2 = p1[3].getKingdom().getProperties();
+
+			
+			Property biggestPropertyPlayer1 = getBiggestProperty(propertiesPlayer1);
+			Property biggestPropertyPlayer2 = getBiggestProperty(propertiesPlayer2);
+			
+			if(biggestPropertyPlayer1.getSize() > biggestPropertyPlayer2.getSize()) {
+				p1[2].setPropertyScore(p1[2].getPropertyScore()+1);
+				Player temp = p1[3];
+				p1[3] = p1[2];
+				p1[2] = temp;
+				return p1;
+			} else if (biggestPropertyPlayer1.getSize() < biggestPropertyPlayer2.getSize()) {
+				p1[3].setPropertyScore(p1[3].getPropertyScore()+1);
+				return p1;
+			} else if (biggestPropertyPlayer1.getSize() == biggestPropertyPlayer2.getSize()) {
+			
+			for(int i=0; i<propertiesPlayer1.size(); i++) {
+				crowns1 = crowns1 + propertiesPlayer1.get(i).getCrowns();
+			}
+			
+			for(int i=0; i<propertiesPlayer2.size(); i++) {
+				crowns2 = crowns2 + propertiesPlayer2.get(i).getCrowns();
+			}
+			
+			
+			if(crowns1 > crowns2) {
+				p1[2].setPropertyScore(p1[2].getPropertyScore()+1);
+				Player temp = p1[3];
+				p1[3] = p1[2];
+				p1[2] = temp;
+				return p1;
+			} else if(crowns1 < crowns2) {
+				p1[3].setPropertyScore(p1[3].getPropertyScore()+1);
+				return p1;
+			} 
+			
+			}
+		}
+		
+		return p1;
+	}
+	
+	
+	/**
+	 * 
+	 * This method sorts the player array so that the player with the lowest score is at the start 
+	 * and the player with the highest score is at the end.
+	 * 
+	 * @see ShuffleDomino.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param Player[]
+	 * @return Player[]
+	 */
+	
+	public static Player[] bubbleSort(Player[] scoreList) 
+    { 
+        int n = scoreList.length; 
+        for (int i = 0; i < n-1; i++) {
+            for (int j = 0; j < n-i-1; j++) {
+                if (scoreList[j].getTotalScore() > scoreList[j+1].getTotalScore()) 
+                { 
+                    // swap arr[j+1] and arr[i] 
+                    Player temp = scoreList[j]; 
+                    scoreList[j] = scoreList[j+1]; 
+                    scoreList[j+1] = temp; 
+                } 
+            }
+        }
+        
+        return scoreList;
+    } 
+	
+	
+	/**
+	 * 
+	 * This method returns the color of the player depending on the input string.
+	 * 
+	 * @see CalculateRanking.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return PlayerColor
+	 */
+	
+	public static PlayerColor retrieveColor(String s1) {
+		PlayerColor p = null;
+		if(s1.equals("blue")) {
+			p = PlayerColor.Blue;
+		} else if(s1.equals("green")) {
+			p = PlayerColor.Green;
+		} else if(s1.equals("pink")) {
+			p = PlayerColor.Pink;
+		} else if(s1.equals("yellow") || s1.equals("yelow")) {
+			p = PlayerColor.Yellow;
+		}
+		return p;
+	}
+	
+	/**
+	 * 
+	 * This method verifies if the current prePlaced
+	 * dominos position and direction is respecting
+	 * the grid size limit of 9x9. If it does, then the
+	 * method returns true. If not, then it returns
+	 * false.
+	 * 
+	 * 
+	 * @author Massimo Vadacchino 260928064
+	 * @param dInKingdom
+	 * @return boolean
+	 * 
+	 */
+	
+	private static boolean verifyGridLimit(DominoInKingdom dInKingdom) {
+		
+		DirectionKind dKind = dInKingdom.getDirection();
+		
+		int largestXPos = dInKingdom.getX();
+		int largestYPos = dInKingdom.getY();
+		int smallestXPos = dInKingdom.getX();
+		int smallestYPos = dInKingdom.getY();
+		
+		if(dKind.equals(DirectionKind.Right)) largestXPos += 1;
+		if(dKind.equals(DirectionKind.Up)) largestYPos += 1;
+		if(dKind.equals(DirectionKind.Left)) smallestXPos -= 1;
+		if(dKind.equals(DirectionKind.Down)) smallestYPos -= 1;
+		
+		if(largestXPos <= 4 && smallestXPos >= -4 && largestYPos <= 4 && smallestYPos >= -4) return true;
+		
+		return false;
+		
+	}
+	
 
 	/**
 	 * 

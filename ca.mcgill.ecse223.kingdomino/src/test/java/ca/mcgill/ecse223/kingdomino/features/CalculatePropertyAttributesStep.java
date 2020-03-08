@@ -26,7 +26,7 @@ import io.cucumber.java.en.When;
 import ca.mcgill.ecse223.kingdomino.features.CucumberCleanUp;
 
 
-public class CalculatePlayerAttributesStep {
+public class CalculatePropertyAttributesStep {
 	/**
 	 * These methods calculates Propety Attributes
 	 * @see CalculatePropertyAttributes.feature
