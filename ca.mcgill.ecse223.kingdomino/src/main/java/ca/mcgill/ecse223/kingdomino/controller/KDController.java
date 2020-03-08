@@ -12,9 +12,11 @@ import ca.mcgill.ecse223.kingdomino.persistence.KDPersistence;
 
 import java.awt.Component;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -150,16 +152,16 @@ public class KDController {
 	 * @param file: Name of the file saved by the user.
 	 * @return Method returns true if file is saved, false if it cannot be.
 	 * @throws InvalidInputException: Thrown if file cannot be saved
+	 * @throws IOException 
 	 */
-	public static boolean saveGame(File file) throws InvalidInputException {
+	public static boolean saveGame(File file, boolean overwrite) throws InvalidInputException, IOException {
 		
-		boolean gameSaved = false;
+		boolean gameSaved;
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		String directory = "./src/test/resources/"+file.getName();
 		File fileSearch = new File(directory);
-		if(fileSearch.exists()) {
-			//overwriteSave(kingdomino); //If the file exists, overwrite it.
-			gameSaved = true;
+		if(fileSearch.exists() && overwrite == false) {
+			gameSaved = false;
 		}
 		else {
 			try {
@@ -212,12 +214,6 @@ public class KDController {
 		}
 		
 		return draft;
-	}
-	public static void overwriteFile(String filename) throws IOException {
-		
-		if (userOverwritePrompt(filename) == true) {
-			 saveCurrentGamePositionAsFile(filename);
-		}
 	}
 	
 	public static class InvalidInputException extends Exception {

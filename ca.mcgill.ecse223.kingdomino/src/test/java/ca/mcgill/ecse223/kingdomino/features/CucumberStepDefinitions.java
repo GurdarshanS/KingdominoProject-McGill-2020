@@ -189,7 +189,7 @@ public class CucumberStepDefinitions {
 	public void the_user_initiates_saving_the_game_to_a_file_named(String string) throws InvalidInputException, IOException {
 		File file = new File(string);
 		file.createNewFile();
-		KDController.saveGame(file);
+		KDController.saveGame(file, false);
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -211,18 +211,14 @@ public class CucumberStepDefinitions {
 	}
 	/**
 	 * @author Anthony Harissi Dagher
-	 */
-	@When("the user agrees to overwrite the existing file")
-	public void the_user_agrees_to_overwrite_the_existing_file() {
-		// Requires UI no?
-	}
-	/**
-	 * @author Anthony Harissi Dagher
 	 * @param string
+	 * @throws InvalidInputException 
+	 * @throws IOException 
 	 */
 	@When("the user agrees to overwrite the existing file named {string}")
-	public void the_user_agrees_to_overwrite_the_existing_file_named(String string) {
-	    assertTrue(KDController.overwriteSave(string));
+	public void the_user_agrees_to_overwrite_the_existing_file_named(String string) throws InvalidInputException, IOException {
+		
+		KDController.saveGame(new File(string), true);
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -230,7 +226,10 @@ public class CucumberStepDefinitions {
 	 */
 	@Then("the file named {string} shall be updated in the filesystem")
 	public void the_file_named_shall_be_updated_in_the_filesystem(String string) {
-	    assertTrue(System.currentTimeMillis()- new File(string).lastModified()<900);
+		long time = System.currentTimeMillis();
+		long fileModTime = new File(string).lastModified();
+		int maxTime = 1500;
+		assertTrue((time - fileModTime) < maxTime);
 	}
 	
 //-------------------------------------------------------------------------------------------
