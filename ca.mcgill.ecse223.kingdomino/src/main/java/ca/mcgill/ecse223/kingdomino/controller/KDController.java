@@ -22,8 +22,6 @@ public class KDController {
 	
 	// 2, 8, 9, 10
 
-//	a comments
-	
 
 	public static void ProvidetUserProfile(String username) throws IllegalArgumentException {
 
@@ -57,9 +55,9 @@ public class KDController {
 	 * and it is set to null
 	 * 
 	 * @see  - CreateNextDraft.feature
-	 * @author Keon Olsz, refactored by Jing Han
-	 * @param player
-	 * @return boolean
+	 * @author Keon Olszewski 260927813, refactored by Jing Han
+	 * @param void
+	 * @return void
 	 */
 	
 	public static void createNextDraft() {
@@ -109,9 +107,10 @@ public class KDController {
 	 * This method changes the status of dominos in a game
 	 * 
 	 * @see  - CreateNextDraft.feature
-	 * @author Keon Olsz, refactored by Jing Han
-	 * @param player
-	 * @return boolean
+	 * @author Keon Olszewski, refactored by Jing Han
+	 * @param draft
+	 * @param status
+	 * @return void
 	 */
 	
 	public static void changeDraftDominoStatus(Draft draft, Domino.DominoStatus status) {
@@ -132,9 +131,9 @@ public class KDController {
 	 * of players in the game
 	 * 
 	 * @see  - CreateNextDraft.feature
-	 * @author Keon Olsz, refactored by Jing Han
-	 * @param player
-	 * @return boolean
+	 * @author Keon Olszewski 260927813, refactored by Jing Han
+	 * @param void
+	 * @return void
 	 */
 	
 	public static Draft createOneDraft() {
@@ -158,23 +157,18 @@ public class KDController {
 		return draft;
 	}
 	
-	public static List<Domino> getAvailableDominoPile(){
-		Kingdomino kd = KingdominoApplication.getKingdomino();
-		Game game = kd.getCurrentGame();
-		List<Domino> availableDomino=new ArrayList<Domino>();
-		List<Domino> allDomino=game.getAllDominos();
-		
-		for (Domino test:allDomino) {
-			if (test.getStatus().equals(Domino.DominoStatus.InPile)) {
-				availableDomino.add(test);
-			}
-		}
-		
-		return availableDomino;
-		
-	}	
-		
 
+		
+	/**
+	 * 
+	 * This method orders the dominoes in the next draft
+	 * by ID number
+	 * 
+	 * @see  - OrderAndRevealNextDraft.feature
+	 * @author Keon Olszewski 260927813
+	 * @param void
+	 * @return void
+	 */
 	
 	public static void OrderNextDraft() {
 		
@@ -203,7 +197,16 @@ public class KDController {
 
 	}// OrderNextDraft
 	
-	
+	/**
+	 * 
+	 * This method Reveals next Draft by Setting
+	 * Next Draft status to FaceUp 
+	 * 
+	 * @see  - OrderAndRevealNextDraft.feature
+	 * @author Keon Olszewski 260927813
+	 * @param void
+	 * @return void
+	 */
 	public static void RevealNextDraft() {
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
@@ -212,66 +215,54 @@ public class KDController {
 		if(game.getNextDraft() == null) {
 			
 			Draft currentDraft =	game.getCurrentDraft();
-			
 			currentDraft.setDraftStatus(DraftStatus.FaceUp);
-			
 		}
 		
 		else{
 			
 		Draft nextDraft =	game.getNextDraft();
-		
-		
 		nextDraft.setDraftStatus(DraftStatus.FaceUp);
 		
 		}
-		
 	}
 	
+	/**
+	 * 
+	 * This method Adds a domino selection to the 
+	 * next draft
+	 * 
+	 * @see  - ChooseNextDomino.feature
+	 * @author Keon Olszewski 260927813
+	 * @param aDomino
+	 * @return void
+	 */
 	
-	
-//	
-//	public static void RevealNextDraft() {
-//		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-//		Game game = kingdomino.getCurrentGame();
-//		//maybe if statements checking is its the right time
-//		
-//		Draft nextDraft = game.getNextDraft();
-//		game.setCurrentDraft(nextDraft);
-//		nextDraft.setDraftStatus(Draft.DraftStatus.FaceUp);
-//		
-//		
-//		
-//	}//RevealNextDraft
-	
+
 	public static void ChoosNextDomino(Domino aDomino){
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
-		
-		Draft currentDraft = game.getNextDraft();
+		Draft nextDraft = game.getNextDraft();
 		Player currentPlayer = game.getNextPlayer();
 		
-		
-		 if( aDomino.hasDominoSelection()) {
+		if( aDomino.hasDominoSelection()) {
 			
 			return;
 			
 			}
 		else {
 			
-			System.out.println("UUUUUUUUUUU"+currentPlayer);
-			
-			//DominoSelection currentSelection = new DominoSelection(currentPlayer, aDomino, currentDraft);
-			
-			DominoSelection currentSelection = currentDraft.addSelection(currentPlayer, aDomino);
+			DominoSelection currentSelection = nextDraft.addSelection(currentPlayer, aDomino);
 			aDomino.setDominoSelection(currentSelection);
 	        currentPlayer.setDominoSelection(currentSelection);
 	
 		}
-		
-		
 	}//ChoosNextDomino
+	
+	
+	///////////////////////////////////////
+	/// -----Keon's Helper Methods  ---- ///
+	///////////////////////////////////////
 	
 	private static Domino getdominoByID(int id) {
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
