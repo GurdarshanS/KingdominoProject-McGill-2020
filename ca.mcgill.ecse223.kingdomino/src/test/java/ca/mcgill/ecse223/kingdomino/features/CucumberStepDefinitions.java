@@ -109,7 +109,7 @@ public class CucumberStepDefinitions {
 				dominoList.add(domino);
    			}
    			Player player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().get(i);
-			assertEquals(dominoList, player.getKingdom().getProperties());
+			assertEquals(player.getKingdom().getProperties(),dominoList);
 		} 
 	}
 	/**
