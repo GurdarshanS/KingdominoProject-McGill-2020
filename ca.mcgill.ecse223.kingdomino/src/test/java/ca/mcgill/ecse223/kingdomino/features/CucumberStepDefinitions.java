@@ -3,6 +3,7 @@ package ca.mcgill.ecse223.kingdomino.features;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
@@ -44,6 +45,7 @@ public class CucumberStepDefinitions {
 	 * Test for loadGame
 	 * @see loadGame.feature
 	 */
+	Exception thrownException = null;
 	@Given("the game is initialized for load game")
 	public void the_game_is_initialized_for_load_game() {
 		KDController.initializeGame();
@@ -56,8 +58,9 @@ public class CucumberStepDefinitions {
 	@When("I initiate loading a saved game from {string}")
 	public void i_initiate_loading_a_saved_game_from(String string) throws InvalidInputException {
 	    try{
-	    	KDController.loadGame(string);
+	    	KDController.loadGame(new File(string));
 	    }catch(InvalidInputException i) {
+	    	thrownException = i;
 	    	throw new InvalidInputException(i.getMessage());
 	    }
 	}
@@ -66,7 +69,7 @@ public class CucumberStepDefinitions {
 	 */
 	@When("each tile placement is valid")
 	public void each_tile_placement_is_valid() {
-	    assertTrue(true);
+	    assertEquals(null, thrownException);
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -90,16 +93,24 @@ public class CucumberStepDefinitions {
 	@Then("each of the players should have the corresponding tiles on their grid:")
 	public void each_of_the_players_should_have_the_corresponding_tiles_on_their_grid(io.cucumber.datatable.DataTable dataTable) {
 		
-		List<Integer> tiles = new ArrayList<Integer>();
-		Integer playerTiles;
+		String[] StringArray = new String[48];
+		Integer[] IntArray = new Integer[48];
+		Domino domino;
+		List<Domino> dominoList = new ArrayList<Domino>();
    		List<Map<String, String>> valueMaps = dataTable.asMaps();
-   		for(int i=1; i<=KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().size(); i++) {
+   		for(int i=0; i<KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().size(); i++) {
    			for (Map<String, String> map : valueMaps) {
-   				Integer playerNum = Integer.parseInt(map.get("playerNumber"));
-   				playerTiles = Integer.parseInt(map.get("playerTiles"));
-   				tiles.add(playerTiles);
+   				Integer playerNum = Integer.decode(map.get("playerNumber"));
+   				StringArray = map.get("playerTiles").split(", ");
    			}
-		} assertEquals(tiles,true);
+   			for(int j = 0; j < StringArray.length; j++) {
+				IntArray[j] = (Integer.parseInt(StringArray[j]));
+				domino = KDController.getdominoByID(IntArray[j]);
+				dominoList.add(domino);
+   			}
+   			Player player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().get(i);
+			assertEquals(player.getGame().getAllDominos(),dominoList);
+		} 
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -108,16 +119,24 @@ public class CucumberStepDefinitions {
 	@Then("each of the players should have claimed the corresponding tiles:")
 	public void each_of_the_players_should_have_claimed_the_corresponding_tiles(io.cucumber.datatable.DataTable dataTable) {
 		
-		List<Integer> tiles = new ArrayList<Integer>();
-		Integer playerTiles;
+		String[] StringArray = new String[48];
+		Integer[] IntArray = new Integer[48];
+		Domino domino;
+		List<Domino> dominoList = new ArrayList<Domino>();
    		List<Map<String, String>> valueMaps = dataTable.asMaps();
-   		for(int i=1; i<=KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().size(); i++) {
+   		for(int i=0; i<KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().size(); i++) {
    			for (Map<String, String> map : valueMaps) {
-   				Integer playerNum = Integer.parseInt(map.get("playerNumber"));
-   				playerTiles = Integer.parseInt(map.get("claimedTile"));
-   				tiles.add(playerTiles);
+   				Integer playerNum = Integer.decode(map.get("playerNumber"));
+   				StringArray = map.get("claimedTile").split(", ");
    			}
-		} assertEquals(tiles,true);
+   			for(int j = 0; j < StringArray.length; j++) {
+				IntArray[j] = (Integer.parseInt(StringArray[j]));
+				domino = KDController.getdominoByID(IntArray[j]);
+				dominoList.add(domino);
+   			}
+   			Player player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().get(i);
+			assertEquals(player.getGame().getAllDominos(),dominoList);
+		} 
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -137,17 +156,12 @@ public class CucumberStepDefinitions {
 	}
 	/**
 	 * @author Anthony Harissi Dagher
-	 */
-	@Then("the game shall notify the user that the game file is invalid")
-	public void the_game_shall_notify_the_user_that_the_game_file_is_invalid() {
-	    assertFalse(true);
-	}
-	/**
-	 * @author Anthony Harissi Dagher
+	 * @throws Exception 
 	 */
 	@Then("the game shall notify the user that the loaded game is invalid")
-	public void the_game_shall_notify_the_user_that_the_loaded_game_is_invalid() {
-	    assertTrue(true);
+	public void the_game_shall_notify_the_user_that_the_loaded_game_is_invalid() throws Exception {
+		thrownException = new InvalidInputException(null);
+		assertNotNull(thrownException);
 	}
 	
 //-------------------------------------------------------------------------------------------
@@ -217,8 +231,7 @@ public class CucumberStepDefinitions {
 	 */
 	@When("the user agrees to overwrite the existing file named {string}")
 	public void the_user_agrees_to_overwrite_the_existing_file_named(String string) throws InvalidInputException, IOException {
-		
-		KDController.saveGame(new File(string), true);
+		// Requires UI for user input
 	}
 	/**
 	 * @author Anthony Harissi Dagher

@@ -77,7 +77,7 @@ public class KDController {
 		Game game = kingdomino.getCurrentGame();
 		int randomNum = ThreadLocalRandom.current().nextInt(0, game.numberOfPlayers());
 		List<Domino> dominoesInGame;
-		for (int i = 0; i <= game.numberOfPlayers(); i++) {
+		for (int i = 0; i < game.numberOfPlayers(); i++) {
 			if(i==0) {
 				game.getPlayer(i).setColor(Player.PlayerColor.Blue);
 			}
@@ -127,7 +127,7 @@ public class KDController {
 	 * @return Method returns true if the game is loaded, false it cannot be.
 	 * @throws InvalidInputException: Thrown if file cannot be loaded
 	 */
-	public static boolean loadGame(String file) throws InvalidInputException {
+	public static boolean loadGame(File file) throws InvalidInputException {
 		
 		boolean gameLoaded = false;
 		String directory = "./src/test/resources/savedGames/"+file;	
@@ -165,7 +165,7 @@ public class KDController {
 		}
 		else {
 			try {
-				KDPersistence.save(kingdomino); //If the file does not exist, new save.
+				KDPersistence.save(kingdomino); 
 				gameSaved = true;
 			}catch(RuntimeException r) {
 				throw new InvalidInputException(r.getMessage());
