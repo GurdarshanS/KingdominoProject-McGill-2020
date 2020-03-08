@@ -29,7 +29,12 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class CucumberStepDefinitions {
-
+	
+	///////////////////////////////////////
+	/*       DiscardDomino Feature       */
+	///////////////////////////////////////
+	
+	
 	/**
 	 * 
 	 * 	These methods check if a player
@@ -42,7 +47,6 @@ public class CucumberStepDefinitions {
 	 *  @author Massimo Vadacchino 260928064
 	 *  
 	 */
-
 	
 	@Given("the game is initialized for discard domino")
 	public void the_game_is_initialized_for_discard_domino() {
@@ -59,6 +63,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 * 	These methods check if a player
+	 *  is allowed to discard the domino
+	 *  they had selected from the draft.
+	 *  If they are, the domino is discarded.
+	 *  If not, the dominos state is changed.
+	 *  
+	 *  @see DiscardDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 *  
+	 */
+	
 	@Given("the player's kingdom has the following dominoes:")
 	public void the_player_s_kingdom_has_the_following_dominoes(io.cucumber.datatable.DataTable dataTable) {
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
@@ -80,6 +97,19 @@ public class CucumberStepDefinitions {
 		}
 	}																								
 
+	/**
+	 * 
+	 * 	These methods check if a player
+	 *  is allowed to discard the domino
+	 *  they had selected from the draft.
+	 *  If they are, the domino is discarded.
+	 *  If not, the dominos state is changed.
+	 *  
+	 *  @see DiscardDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 *  
+	 */
+	
 	@Given("domino {int} is in the current draft")
 	public void domino_is_in_the_current_draft(Integer domID) {
 		
@@ -95,6 +125,19 @@ public class CucumberStepDefinitions {
 			
 	}													
 
+	/**
+	 * 
+	 * 	These methods check if a player
+	 *  is allowed to discard the domino
+	 *  they had selected from the draft.
+	 *  If they are, the domino is discarded.
+	 *  If not, the dominos state is changed.
+	 *  
+	 *  @see DiscardDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 *  
+	 */
+	
 	@Given("the current player has selected domino {int}")
 	public void the_current_player_has_selected_domino(Integer domID) { 
 		
@@ -109,7 +152,20 @@ public class CucumberStepDefinitions {
 		playerToSelectDomino.setDominoSelection(dSelection);
 		currentDraft.addSelection(dSelection);
 		
-	}									
+	}		
+	
+	/**
+	 * 
+	 * 	These methods check if a player
+	 *  is allowed to discard the domino
+	 *  they had selected from the draft.
+	 *  If they are, the domino is discarded.
+	 *  If not, the dominos state is changed.
+	 *  
+	 *  @see DiscardDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 *  
+	 */
 
 	@Given("the player preplaces domino {int} at its initial position")
 	public void the_player_preplaces_domino_at_its_initial_position(Integer domID) { 
@@ -126,6 +182,19 @@ public class CucumberStepDefinitions {
 		game.getCurrentDraft().removeIdSortedDomino(dominoToPrePlace);
 		
 	}
+	
+	/**
+	 * 
+	 * 	These methods check if a player
+	 *  is allowed to discard the domino
+	 *  they had selected from the draft.
+	 *  If they are, the domino is discarded.
+	 *  If not, the dominos state is changed.
+	 *  
+	 *  @see DiscardDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 *  
+	 */
 
 	@When("the player attempts to discard the selected domino")
 	public void the_player_attempts_to_discard_the_selected_domino() {
@@ -144,6 +213,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 * 	These methods check if a player
+	 *  is allowed to discard the domino
+	 *  they had selected from the draft.
+	 *  If they are, the domino is discarded.
+	 *  If not, the dominos state is changed.
+	 *  
+	 *  @see DiscardDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 *  
+	 */
+	
 	@Then("domino {int} shall have status {string}")
 	public void domino_shall_have_status(Integer domID, String domStatus) {
 		DominoStatus actualStatus = getdominoByID(domID).getStatus();
@@ -151,6 +233,13 @@ public class CucumberStepDefinitions {
 		assertEquals(expectedStatus, actualStatus);
 	}
 
+	
+	
+		///////////////////////////////////////
+		/*     MoveCurrentDomino Feature     */
+		///////////////////////////////////////
+
+	
 	
 	/**
 	 * 
@@ -180,6 +269,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to move
+	 *  their selected domino, from the current
+	 *  draft, around (up, left, down, and right)
+	 *  their kingdom if and only if the move 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see MoveCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Then("domino {int} should be tentative placed at position {int}:{int} of {string}'s kingdom with ErroneouslyPreplaced status")
 	public void domino_should_be_tentative_placed_at_position_of_s_kingdom_with_ErroneouslyPreplaced_status(Integer int1, Integer int2, Integer int3, String string) {
 	   
@@ -196,6 +298,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to move
+	 *  their selected domino, from the current
+	 *  draft, around (up, left, down, and right)
+	 *  their kingdom if and only if the move 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see MoveCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@When("{string} requests to move the domino {string}")
 	public void requests_to_move_the_domino(String string, String string2) {
 	  
@@ -217,6 +332,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to move
+	 *  their selected domino, from the current
+	 *  draft, around (up, left, down, and right)
+	 *  their kingdom if and only if the move 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see MoveCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Then("the domino {int} should be tentatively placed at position {int}:{int} with direction {string}")
 	public void the_domino_should_be_tentatively_placed_at_position_with_direction(Integer int1, Integer int2, Integer int3, String string) {
 	    
@@ -232,6 +360,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to move
+	 *  their selected domino, from the current
+	 *  draft, around (up, left, down, and right)
+	 *  their kingdom if and only if the move 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see MoveCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Then("the new status of the domino is {string}")
 	public void the_new_status_of_the_domino_is(String string) {
 	   
@@ -245,6 +386,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to move
+	 *  their selected domino, from the current
+	 *  draft, around (up, left, down, and right)
+	 *  their kingdom if and only if the move 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see MoveCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Given("{string}'s kingdom has following dominoes")
 	public void the_s_kingdom_has_following_dominoes(String string, io.cucumber.datatable.DataTable dataTable) {
 	   
@@ -269,6 +423,19 @@ public class CucumberStepDefinitions {
 		}
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to move
+	 *  their selected domino, from the current
+	 *  draft, around (up, left, down, and right)
+	 *  their kingdom if and only if the move 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see MoveCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Then("the domino {int} is still tentatively placed at position {int}:{int}")
 	public void the_domino_is_still_tentatively_placed_at_position(Integer int1, Integer int2, Integer int3) {
 	    
@@ -283,6 +450,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to move
+	 *  their selected domino, from the current
+	 *  draft, around (up, left, down, and right)
+	 *  their kingdom if and only if the move 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see MoveCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Then("the domino should still have status {string}")
 	public void the_domino_should_still_have_status(String string) {
 	 
@@ -297,6 +477,14 @@ public class CucumberStepDefinitions {
 		assertEquals(getDominoStatusCapital(string), dStatus);
 		
 	}
+	
+	
+	
+		///////////////////////////////////////
+		/*         PlaceDomino Feature       */
+		///////////////////////////////////////
+
+	
 	
 	/**
 	 * 
@@ -336,6 +524,20 @@ public class CucumberStepDefinitions {
 		}
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to place
+	 *  their selected domino into their kingdom
+	 *  if and only if it respects the kingdom size,
+	 *  has a neighbour/next to the castle, does
+	 *  not overlap with other dominoes, and has the
+	 *  status "CorrectlyPreplaced". 
+	 *  
+	 *  @see PlaceDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Given("domino {int} is in {string} status")
 	public void domino_is_in_status(Integer int1, String string) {
 	   
@@ -346,6 +548,20 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to place
+	 *  their selected domino into their kingdom
+	 *  if and only if it respects the kingdom size,
+	 *  has a neighbour/next to the castle, does
+	 *  not overlap with other dominoes, and has the
+	 *  status "CorrectlyPreplaced". 
+	 *  
+	 *  @see PlaceDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@When("{string} requests to place the selected domino {int}")
 	public void requests_to_place_the_selected_domino(String string, Integer int1) {
 	  
@@ -363,6 +579,20 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to place
+	 *  their selected domino into their kingdom
+	 *  if and only if it respects the kingdom size,
+	 *  has a neighbour/next to the castle, does
+	 *  not overlap with other dominoes, and has the
+	 *  status "CorrectlyPreplaced". 
+	 *  
+	 *  @see PlaceDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Then("{string}'s kingdom should now have domino {int} at position {int}:{int} with direction {string}")
 	public void s_kingdom_should_now_have_domino_at_position_with_direction(String string, Integer int1, Integer int2, Integer int3, String string2) {
 	   
@@ -380,6 +610,11 @@ public class CucumberStepDefinitions {
 		
 	}
 	
+	
+		///////////////////////////////////////
+		/*    RotateCurrentDomino Feature    */
+		///////////////////////////////////////
+			
 	
 	/**
 	 * 
@@ -410,6 +645,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to rotate
+	 *  their selected domino, from the current
+	 *  draft, counter-clockwise and clockwise in
+	 *  their kingdom if and only if the rotation 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see RotateCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Given("it is {string}'s turn")
 	public void it_is_s_turn(String string) {
 
@@ -420,6 +668,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to rotate
+	 *  their selected domino, from the current
+	 *  draft, counter-clockwise and clockwise in
+	 *  their kingdom if and only if the rotation 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see RotateCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Given("{string}'s kingdown has following dominoes:")
 	public void s_kingdown_has_following_dominoes(String string, io.cucumber.datatable.DataTable dataTable) {
 		
@@ -445,6 +706,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to rotate
+	 *  their selected domino, from the current
+	 *  draft, counter-clockwise and clockwise in
+	 *  their kingdom if and only if the rotation 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see RotateCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Given("{string} has selected domino {int}")
 	public void has_selected_domino(String string, Integer int1) {
 
@@ -470,6 +744,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to rotate
+	 *  their selected domino, from the current
+	 *  draft, counter-clockwise and clockwise in
+	 *  their kingdom if and only if the rotation 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see RotateCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Given("domino {int} is tentatively placed at position {int}:{int} with direction {string}")
 	public void domino_is_tentatively_placed_at_position_with_direction(Integer int1, Integer int2, Integer int3, String string) {
 	   
@@ -486,6 +773,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to rotate
+	 *  their selected domino, from the current
+	 *  draft, counter-clockwise and clockwise in
+	 *  their kingdom if and only if the rotation 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see RotateCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@When("{string} requests to rotate the domino with {string}")
 	public void requests_to_rotate_the_domino_with(String string, String string2) {
 	    
@@ -504,6 +804,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to rotate
+	 *  their selected domino, from the current
+	 *  draft, counter-clockwise and clockwise in
+	 *  their kingdom if and only if the rotation 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see RotateCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Then("the domino {int} is still tentatively placed at {int}:{int} but with new direction {string}")
 	public void the_domino_is_still_tentatively_placed_at_but_with_new_direction(Integer int1, Integer int2, Integer int3, String string) {
 	  
@@ -519,6 +832,19 @@ public class CucumberStepDefinitions {
 		assertEquals(int3, yPos);
 		
 	}
+	
+	/**
+	 * 
+	 *  These methods allow a player to rotate
+	 *  their selected domino, from the current
+	 *  draft, counter-clockwise and clockwise in
+	 *  their kingdom if and only if the rotation 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see RotateCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
 
 	@Then("the domino {int} should have status {string}")
 	public void the_domino_should_have_status(Integer int1, String string) {
@@ -530,6 +856,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to rotate
+	 *  their selected domino, from the current
+	 *  draft, counter-clockwise and clockwise in
+	 *  their kingdom if and only if the rotation 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see RotateCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Given("{string}'s kingdom has following dominoes:")
 	public void s_kingdom_has_following_dominoes(String string, io.cucumber.datatable.DataTable dataTable) {
 	
@@ -555,6 +894,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to rotate
+	 *  their selected domino, from the current
+	 *  draft, counter-clockwise and clockwise in
+	 *  their kingdom if and only if the rotation 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see RotateCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Given("domino {int} has status {string}")
 	public void domino_has_status(Integer int1, String string) {
 	 
@@ -563,6 +915,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to rotate
+	 *  their selected domino, from the current
+	 *  draft, counter-clockwise and clockwise in
+	 *  their kingdom if and only if the rotation 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see RotateCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Then("domino {int} is tentatively placed at the same position {int}:{int} with the same direction {string}")
 	public void domino_is_tentatively_placed_at_the_same_position_with_the_same_direction(Integer int1, Integer int2, Integer int3, String string) {
 	   
@@ -579,6 +944,19 @@ public class CucumberStepDefinitions {
 		
 	}
 
+	/**
+	 * 
+	 *  These methods allow a player to rotate
+	 *  their selected domino, from the current
+	 *  draft, counter-clockwise and clockwise in
+	 *  their kingdom if and only if the rotation 
+	 *  respects the grid size. 
+	 * 
+	 * 	@see RotateCurrentDomino.feature
+	 *  @author Massimo Vadacchino 260928064
+	 * 
+	 */
+	
 	@Then("domino {int} should still have status {string}")
 	public void domino_should_still_have_status(Integer int1, String string) {
 	   

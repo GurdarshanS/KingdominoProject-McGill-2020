@@ -28,31 +28,36 @@ public class KDController {
 		if(aPlayer == null) throw new java.lang.IllegalArgumentException("This player does not exist");
 		
 		DominoInKingdom newlyPrePlacedDomino = (DominoInKingdom) aPlayer.getKingdom().getTerritory(aPlayer.getKingdom().getTerritories().size()-1);
-		
 		if(newlyPrePlacedDomino.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in the players kingdom");
 
+		int[] availableSpaceInKingdom = getAvailableSpaceInGrid(aPlayer);
+		
 		for(int i = -4; i<5; i++) {
 			
 			for(int j = -4; j<5; j++) {
 				
 				for(int z = 0; z<4; z++) {
 					
-					newlyPrePlacedDomino.setX(i);
-					newlyPrePlacedDomino.setY(j);
+					if(i > availableSpaceInKingdom[0] && j > availableSpaceInKingdom[1] && i < availableSpaceInKingdom[2] && j < availableSpaceInKingdom[3]){
+				
+						newlyPrePlacedDomino.setX(i);
+						newlyPrePlacedDomino.setY(j);
+						
+						if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyNeighborAdjacencyLastTerritory(aPlayer)) {
+						
+							newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+							return;
+							
+						}
+						
+						else if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyCastleAdjacency(aPlayer)) {
+						
+							newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+							return;
+							
+						}
 					
-					if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyNeighborAdjacencyLastTerritory(aPlayer)) {
-						
-						newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-						return;
-						
 					}
-					
-					else if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyCastleAdjacency(aPlayer)) {
-						
-						newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-						return;
-						
-					}	
 					
 					rotateCurrentDomino(aPlayer, newlyPrePlacedDomino, "Clockwise");
 				
@@ -61,7 +66,7 @@ public class KDController {
 			}
 		
 		}
-		
+	
 		newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.Discarded);
 		newlyPrePlacedDomino.delete();
 		aPlayer.getDominoSelection().delete();
@@ -245,7 +250,7 @@ public class KDController {
 	}
 	
 		////////////////////////////////////////////////
-		/*			   My Helper Methods              */
+		/*	         Massimo's Helper Methods         */
 		////////////////////////////////////////////////
 	
 	
@@ -281,6 +286,95 @@ public class KDController {
 		if(largestXPos <= 4 && smallestXPos >= -4 && largestYPos <= 4 && smallestYPos >= -4) return true;
 		
 		return false;
+		
+	}
+	
+	/**
+	 * 
+	 * This method returns the largest and smallest possible
+	 * x and y values that a domino can be within in order
+	 * to be considered for a valid position.
+	 * 
+	 * @author Massimo Vadacchino
+	 * @param player
+	 * @return int[]
+	 */
+
+	private static int[] getAvailableSpaceInGrid(Player player) {
+		
+		List<KingdomTerritory> territories = player.getKingdom().getTerritories(); 
+	
+		int largestXCoord = territories.get(0).getX();
+		int largestYCoord = territories.get(0).getY();
+
+		int smallestXCoord = territories.get(0).getX();
+		int smallestYCoord = territories.get(0).getY();
+
+		for (KingdomTerritory territory : territories) {
+			
+			if(territories.get(0).equals(territory)) continue;
+
+			DominoInKingdom dInKingdom = (DominoInKingdom) territory;
+
+			if(dInKingdom.getDirection().equals(DirectionKind.Up)) {
+				
+				if(territory.getY() + 1 > largestYCoord) largestYCoord = territory.getY() + 1;
+
+				if(territory.getY() < smallestYCoord) smallestYCoord = territory.getY();
+
+				if(territory.getX() > largestXCoord) largestXCoord = territory.getX();
+
+				if(territory.getX() < smallestXCoord) smallestXCoord = territory.getX();
+
+			}
+
+			if(dInKingdom.getDirection().equals(DirectionKind.Down)) {
+
+				if(territory.getY() - 1 < smallestYCoord) smallestYCoord = territory.getY() - 1;
+
+				if(territory.getY() > largestYCoord) largestYCoord = territory.getY();
+
+				if(territory.getX() > largestXCoord) largestXCoord = territory.getX();
+
+				if(territory.getX() < smallestXCoord) smallestXCoord = territory.getX();
+
+
+			}
+
+			if(dInKingdom.getDirection().equals(DirectionKind.Right)) {
+
+				if(territory.getX() + 1 > largestXCoord) largestXCoord = territory.getX() + 1;
+
+				if(territory.getX() < smallestXCoord) smallestXCoord = territory.getX();
+
+				if(territory.getY() > largestYCoord) largestYCoord = territory.getY();
+
+				if(territory.getY() < smallestYCoord) smallestYCoord = territory.getY();
+
+			}
+
+			if(dInKingdom.getDirection().equals(DirectionKind.Left)) {
+
+				if(territory.getX() - 1 < smallestXCoord) smallestXCoord = territory.getX() - 1;
+
+				if(territory.getX() > largestXCoord) largestXCoord = territory.getX();
+
+				if(territory.getY() > largestYCoord) largestYCoord = territory.getY();
+
+				if(territory.getY() < smallestYCoord) smallestYCoord = territory.getY();
+				
+			}
+
+		}
+		
+		int[] availableSpaceInGrid = new int[4];
+	
+		availableSpaceInGrid[0] = smallestXCoord - 2;
+		availableSpaceInGrid[1] = smallestYCoord - 2;
+		availableSpaceInGrid[2] = largestXCoord + 2;
+		availableSpaceInGrid[3] = largestYCoord + 2;
+
+		return availableSpaceInGrid;
 		
 	}
 
