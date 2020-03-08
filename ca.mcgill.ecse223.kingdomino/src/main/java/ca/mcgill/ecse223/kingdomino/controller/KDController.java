@@ -609,15 +609,28 @@ public class KDController {
 	 * @return propertySize 
 	 */
 	
-	public static int propertySize(Player player, int index) {
+	public static void propertySize(Player player, Property property) {
 		
 		if(player == null) {
 			
 			throw new java.lang.IllegalArgumentException("This player does not exist");
 		}
 		
-		int propertySize = player.getKingdom().getProperty(index).getSize();
-		return propertySize;
+		int propertySize = 0;
+		TerrainType type = property.getPropertyType();
+		List<Domino> allDominos = property.getIncludedDominos();
+		
+		for (Domino domino: allDominos) {
+			
+			if (domino.getLeftTile().equals(type)) {
+				propertySize++;
+			}
+			
+			if (domino.getRightTile().equals(type)) {
+				propertySize++;
+				}
+		}
+		property.setSize(propertySize);
 	}
 	
 	/**
@@ -630,15 +643,28 @@ public class KDController {
 	 * @return propertyCrown 
 	 */
 	
-	public static int getPropertyCrown(Player player, int index) {
+	public static void getPropertyCrown(Player player, Property property) {
 		
 		if(player == null) {
 			
 			throw new java.lang.IllegalArgumentException("This player does not exist");
 		}
 		
-		int propertyCrown = player.getKingdom().getProperty(index).getCrowns();
-		return propertyCrown;
+		int propertyCrown = 0;
+		TerrainType type = property.getPropertyType();
+		List<Domino> allDominos = property.getIncludedDominos();
+		
+		for (Domino domino: allDominos) {
+			
+			if (domino.getLeftTile().equals(type)) {
+				propertyCrown += domino.getLeftCrown();
+			}
+			
+			if (domino.getRightTile().equals(type)) {
+				propertyCrown += domino.getRightCrown();
+			}
+		}
+		property.setCrowns(propertyCrown);
 	}
 	
 	public static int getNumberOfProperties(Player player) {
@@ -650,13 +676,9 @@ public class KDController {
 			throw new java.lang.IllegalArgumentException("This player does not exist");
 		}
 
-		List<Property> properties = getAllProperty(player);
+		List<Property> properties = player.getKingdom().getProperties();
 		System.out.println(properties.size());
-		
-		for(int index = 0; index < properties.size(); index++) {
-			
-			numberOfProperties++;
-		}
+		numberOfProperties = properties.size();
 		
 		return numberOfProperties;
 	}
@@ -668,9 +690,8 @@ public class KDController {
 		
 		for (int i = 0; i < numberOfProp; i++) {
 			
-			Property property = properties.get(i);
-			property.setCrowns(getPropertyCrown(player, i));
-			property.setSize(propertySize(player, i));
+			properties.get(i).setCrowns(player.getKingdom().getProperty(i).getCrowns());
+			properties.get(i).setSize(player.getKingdom().getProperty(i).getSize());
 		}
 		
 		return properties;
@@ -698,8 +719,8 @@ public class KDController {
 		int totalPropertyScore = 0;
 		
 		for(int index = 0; index < properties.size(); index++) {
-			
-			totalPropertyScore += propertySize(player, index)*getPropertyCrown(player, index);
+			Property property = properties.get(index);
+			totalPropertyScore += property.getCrowns()*property.getSize();
 		}
 		player.setPropertyScore(totalPropertyScore);
 	}

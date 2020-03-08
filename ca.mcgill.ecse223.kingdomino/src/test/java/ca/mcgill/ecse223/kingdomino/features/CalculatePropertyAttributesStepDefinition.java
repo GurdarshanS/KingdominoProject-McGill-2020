@@ -26,11 +26,13 @@ public class CalculatePropertyAttributesStepDefinition {
 	public void calculate_property_attributes_is_initiated() {
 		
 	    Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+	    KDController.getAllProperty(player);
 	    
 	    for(int index = 0; index < player.getKingdom().getProperties().size(); index++) {
 	    	
-	    	KDController.propertySize(player, index);
-	    	KDController.getPropertyCrown(player, index);
+	    	Property property = KDController.getAllProperty(player).get(index);
+	    	KDController.propertySize(player, property);
+	    	KDController.getPropertyCrown(player, property);
 	    	
 	    }
 	    
