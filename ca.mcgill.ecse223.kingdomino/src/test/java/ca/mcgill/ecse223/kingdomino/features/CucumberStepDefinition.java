@@ -18,6 +18,7 @@ import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom;
+import ca.mcgill.ecse223.kingdomino.model.DominoSelection;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
 import ca.mcgill.ecse223.kingdomino.model.Draft;
 import ca.mcgill.ecse223.kingdomino.model.Draft.DraftStatus;
@@ -63,12 +64,8 @@ public class CucumberStepDefinition {
 			game.addAllDraft(aDraft);
 	
 			
-		}
-		
-		System.out.println("AAAAAAAAAAAAAAAABBBBBBBBB"+game.getAllDrafts().size());
-		
-
-		
+		}		
+		game.setNextDraft(game.getAllDraft(game.getAllDrafts().size()-1));
 	}
 	
 	@Given("there is a current draft")
@@ -82,12 +79,9 @@ public class CucumberStepDefinition {
 	public static void there_is_nextDraft() {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		
 		game.setNextDraft(game.getAllDraft(1));
 		
-		
-	}
-	
+		}
 	
 	@Given("the top 5 dominoes in my pile have the IDs {string}")
 	public static void the_top_5_dominoes_in_pile(String aString) {
@@ -97,21 +91,15 @@ public class CucumberStepDefinition {
 		String[] strArray = aString.split(",");
 		int[] intArray = new int[strArray.length];
 		
-		
-		
 		for(int i = 0; i < strArray.length; i++) {
 		    intArray[i] = Integer.parseInt(strArray[i]);
-		}
+			}
 		
 		for(int i = 0; i < intArray.length; i++) {
 		   Domino aDomino = getdominoByID(intArray[i]);
 		   
 		  game.addOrMoveAllDominoAt(aDomino, i);
-		  
-		
-		}
-		
-		
+			}
 		
 		for(int i = 1; i < intArray.length-1; i++) {
 			
@@ -119,7 +107,8 @@ public class CucumberStepDefinition {
 			   
 			aDomino.setNextDomino(getdominoByID(intArray[i+1]));
 			aDomino.setPrevDomino(getdominoByID(intArray[i-1]));
-		}
+			
+			}
 		
 		game.setTopDominoInPile(getdominoByID(intArray[0]));
 		
@@ -127,30 +116,22 @@ public class CucumberStepDefinition {
 		getdominoByID(intArray[intArray.length-1]).setPrevDomino(getdominoByID(intArray[intArray.length-2]));
 		
 		//./gradlew test --info
-
-		
 	} //the_top_5_dominoes_in_pile
 	
 	@When("create next draft is initiated")
 	public static void create_next_draft_initiatied() {
-		
-		//Game game = KingdominoApplication.getKingdomino().getCurrentGame(); ????
-		
+			
 		KDController.createNextDraft();
 		
-		//
 	}
 	
 	@Then("a new draft is created from dominoes {string}")
 	public static void then_new_draft_is_created_from_dominoes(String aString) {
 		
-		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		
 		String[] strArray = aString.split(",");
 		int[] intArray = new int[strArray.length];
-		
-		
+		DominoStatus expectedStatus = DominoStatus.InNextDraft;
 		
 		for(int i = 0; i < strArray.length; i++) {
 		   
@@ -158,29 +139,20 @@ public class CucumberStepDefinition {
 				
 		}
 		
-		
-		
-		DominoStatus expectedStatus = DominoStatus.InNextDraft;
-		
 		for(int i = 0; i < intArray.length; i++) {
 			   
 			DominoStatus actualStatus = getdominoByID(intArray[i]).getStatus();
-
 			assertEquals(expectedStatus, actualStatus);
 		}
-		
 		
 	}
 	
 	@Then("the next draft now has the dominoes {string}")
 	public static void then_new_draft_now_has_dominoes(String aString) {
 		
-		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		
 		String[] strArray = aString.split(",");
 		int[] intArray = new int[strArray.length];
-		
 		Draft nextDraft = game.getNextDraft();
 		
 		for(int i = 0; i < strArray.length; i++) {
@@ -192,13 +164,9 @@ public class CucumberStepDefinition {
 		for(int i = 0; i < intArray.length; i++) {
 			   
 			Domino expectedDomino = getdominoByID(intArray[i]);
-
 			Domino actualDomino = nextDraft.getIdSortedDomino(i);
-			
 			assertEquals(expectedDomino, actualDomino);
 		}
-		
-		
 	}
 	
 	@Then("the dominoes in the next draft are face down")
@@ -206,7 +174,6 @@ public class CucumberStepDefinition {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		Draft nextDraft = game.getNextDraft();
-		
 		DraftStatus expectedStatus = DraftStatus.FaceDown;
 		DraftStatus actualStatus = nextDraft.getDraftStatus();
 		
@@ -217,14 +184,11 @@ public class CucumberStepDefinition {
 	public static void the_top_domino_of_pile_is(int anInt) {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		
 		Domino actualDomino = game.getTopDominoInPile();
-		
 		Domino expectedDomino = getdominoByID(anInt);
 		
 		assertEquals(expectedDomino, actualDomino);
 		
-	
 	}
 	   
 	
@@ -232,14 +196,21 @@ public class CucumberStepDefinition {
 	public static void the_former_nextdraft_is_currentdraft() {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-	
+		Draft nextDraft = game.getNextDraft();
+		
+		if(nextDraft == null) {
+			Draft expectedDraft = game.getAllDraft(game.getAllDrafts().size()-1);
+			Draft actualDraft = game.getCurrentDraft();
+			assertEquals(expectedDraft, actualDraft);	
+			
+		}
+		
+		else {
 		
 		Draft expectedDraft = game.getAllDraft(game.getAllDrafts().size()-2);
-		
 		Draft actualDraft = game.getCurrentDraft();
-		
 		assertEquals(expectedDraft, actualDraft);
-		
+		}
 		
 	}
 	
@@ -249,7 +220,6 @@ public class CucumberStepDefinition {
 	public static void this_is_a_numPlayer_game(int aInt) {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		
 		game.setNumberOfPlayers(aInt);
 	}
 	
@@ -260,7 +230,6 @@ public class CucumberStepDefinition {
 	public static void the_pile_is_empty(){
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		
 		Domino expectedDomino = null;
 		Domino actualDomino = game.getTopDominoInPile();
 		
@@ -273,12 +242,10 @@ public class CucumberStepDefinition {
 	public static void there_is_no_nextDraft(){
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		
 		Draft expectedDraft = null;
 		Draft actualDraft = game.getNextDraft();
 		
 		assertEquals(expectedDraft, actualDraft);
-		
 		
 	}
 	
@@ -303,25 +270,21 @@ public class CucumberStepDefinition {
 	 @Given("the next draft is {string}")
 	 public void the_next_draft(String aString) {
 		 
-		 Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		String[] strArray = aString.split(",");
+		int[] intArray = new int[strArray.length];
+		Draft nextDraft = new Draft(DraftStatus.FaceDown, game);
 			
-			String[] strArray = aString.split(",");
-			int[] intArray = new int[strArray.length];
-	
-			Draft nextDraft = new Draft(DraftStatus.FaceDown, game);
-			
-			for(int i = 0; i < strArray.length; i++) {
-			    intArray[i] = Integer.parseInt(strArray[i]);
-			}
-			
-			for(int i = 0; i < intArray.length; i++) {
+		for(int i = 0; i < strArray.length; i++) {
+		
+			intArray[i] = Integer.parseInt(strArray[i]);
+		}
+		
+		for(int i = 0; i < intArray.length; i++) {
 			   
-				
-				
-				nextDraft.addIdSortedDomino(getdominoByID(intArray[i]));
+			nextDraft.addIdSortedDomino(getdominoByID(intArray[i]));
 			   
-			 
-			  }
+		}
 			
 			
 		game.setNextDraft(nextDraft);
@@ -332,10 +295,7 @@ public class CucumberStepDefinition {
 	 public void the_dominoes_in_next_draft_are_facing_down() {
 		 
 		 Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		 
-		 game.getNextDraft().setDraftStatus(DraftStatus.FaceDown);
-		 
-		 
+		 game.getNextDraft().setDraftStatus(DraftStatus.FaceDown); 
 	 }
 	 
 	 @When("the ordering of the dominoes in the next draft is initiated")
@@ -348,9 +308,7 @@ public class CucumberStepDefinition {
 	 public void the_status_of_next_draft_sorted() {
 		 
 		 Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		 
 		 DraftStatus expectedStatus = DraftStatus.Sorted;
-		 
 		 DraftStatus actualStatus = game.getNextDraft().getDraftStatus();
 		 
 		 assertEquals(expectedStatus, actualStatus);
@@ -360,31 +318,23 @@ public class CucumberStepDefinition {
 	 @Then("the order of dominoes in the draft will be {string}")
 	 public void then_the_order_of_dominoes_in_draft(String aString) {
 		 
-		 Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-			
-			String[] strArray = aString.split(",");
-			int[] intArray = new int[strArray.length];
-			
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		String[] strArray = aString.split(",");
+		int[] intArray = new int[strArray.length];
 		Draft nextDraft = game.getNextDraft();
 			
-			
-			for(int i = 0; i < strArray.length; i++) {
+		for(int i = 0; i < strArray.length; i++) {
 			    intArray[i] = Integer.parseInt(strArray[i]);
 			}
 			
-			for(int i = 0; i < intArray.length; i++) {
+		for(int i = 0; i < intArray.length; i++) {
 			   
 				int expectedID = intArray[i];
-				
 				int actualID = nextDraft.getIdSortedDomino(i).getId();
 				
 				assertEquals(expectedID, actualID);
 			   
-			 
-			  
-			
 			}
-		 
 		 
 	 }
 	 
@@ -404,8 +354,8 @@ public class CucumberStepDefinition {
 			createAllDominoes(game);
 			game.setNextPlayer(game.getPlayer(0));
 			KingdominoApplication.setKingdomino(kingdomino);
-		 
-		  }
+			
+	 }
 	 
 	 
 	 @Given("the dominoes in next draft are sorted")
@@ -430,13 +380,189 @@ public class CucumberStepDefinition {
 		 
 		 Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		 Draft nextDraft = game.getNextDraft();
-		 
 		 DraftStatus expectedStatus = DraftStatus.FaceUp;
 		 DraftStatus actualStatus = nextDraft.getDraftStatus();
 		 
 		 assertEquals(expectedStatus, actualStatus);
 		 
 	 }
+	 
+	 //ChooseNextDomino
+	 
+	 @Given("the game is initialized for choose next domino")
+	 public void the_game_is_initialized_for_choose_next_domino() {
+		 
+		 	Kingdomino kingdomino = new Kingdomino();
+			Game game = new Game(48, kingdomino);
+			game.setNumberOfPlayers(4);
+			kingdomino.setCurrentGame(game);
+			// Populate game
+			addDefaultUsersAndPlayers(game);
+			createAllDominoes(game);
+			game.setNextPlayer(game.getPlayer(0));
+			KingdominoApplication.setKingdomino(kingdomino);
+		}
+	 
+	 @Given("the next draft is sorted with dominoes {string}")
+	 public void the_next_draft_is_sorted_with_dominoes(String aString) {
+		 
+		 Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		 String[] strArray = aString.split(",");
+		 int[] intArray = new int[strArray.length];
+		 Draft nextDraft = new Draft(DraftStatus.FaceDown, game);
+			
+		for(int i = 0; i < strArray.length; i++) {
+			    intArray[i] = Integer.parseInt(strArray[i]);
+				
+				}
+			
+		for(int i = 0; i < intArray.length; i++) {
+			   
+				nextDraft.addIdSortedDomino(getdominoByID(intArray[i]));
+			   
+				}
+		
+		game.setNextDraft(nextDraft);
+		nextDraft.setDraftStatus(DraftStatus.Sorted);
+		 
+	 }
+	 
+	 
+	 @Given("player's domino selection {string}")
+	 public void players_domino_selection(String aString) {
+		
+		 Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		 String[] strArray = aString.split(",");
+		 Draft nextDraft = game.getNextDraft();
+			
+			
+			for(int i = 0; i < strArray.length; i++) {
+				
+				if(!strArray[i].equalsIgnoreCase("none")) {
+					
+					nextDraft.addSelection(getPlayerByColor(strArray[i]), nextDraft.getIdSortedDomino(i));
+					
+					}
+			    }
+		 
+	 }
+	 
+	 
+	 @Given("the current player is {string}")
+	 public void the_current_player_is(String aColor) {
+		
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		Player currentPlayer = getPlayerByColor(aColor);
+		game.setNextPlayer(currentPlayer);
+		 
+	 }
+	 
+	  @When("current player chooses to place king on {int}")
+	  public void current_player_chooses_to_place_king_on(int anInt) {
+		  
+		  KDController.ChoosNextDomino(getdominoByID(anInt));
+		 
+	  }
+	  
+	  @Then("current player king now is on {string}")
+	  public void current_player_is_on(String idString) {
+		  
+		  Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		  
+		  int expectedID = Integer.parseInt(idString);
+		  int actualID = game.getNextPlayer().getDominoSelection().getDomino().getId();
+				  
+		  assertEquals(expectedID, actualID); 
+		  
+	  }
+	  
+	  
+	  @Then("the selection for next draft is now equal to {string}")
+	  public void the_selection_for_next_draft_is_now(String aString) {
+		  
+		  Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		  Draft nextDraft = game.getNextDraft();
+		  String[] strArray = aString.split(",");
+		  String expectedColor;
+		  String actualColor;
+		  ArrayList<String> colorArray = new  ArrayList<String>();
+		  List<DominoSelection> selectionList = nextDraft.getSelections();
+	
+		   for(int i = 0; i < strArray.length; i++) {
+			  
+			  if(!strArray[i].equals("none")) {
+				  
+				  colorArray.add(strArray[i]);
+				
+			  }  
+		  }
+		  
+		  for(int i = 0; i < selectionList.size(); i++) {
+			  
+			  expectedColor = colorArray.get(i).toLowerCase();
+			  actualColor = selectionList.get(i).getPlayer().getColor().toString().toLowerCase();
+			  
+			  assertEquals(expectedColor, actualColor);
+		  }
+		  
+	}
+	  
+	  
+	  
+	  
+	    @Then("the selection for the next draft selection is still {string}")
+	    public void the_selection_for_the_next_draft_is_still(String aString) {
+	    	
+	  	  Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		  Draft nextDraft = game.getNextDraft();
+		  String[] strArray = aString.split(",");
+		  String expectedColor;
+		  String actualColor;
+		  ArrayList<String> colorArray = new  ArrayList<String>();
+		  List<DominoSelection> selectionList = nextDraft.getSelections();
+	
+		   for(int i = 0; i < strArray.length; i++) {
+			  
+			  if(!strArray[i].equals("none")) {
+				  
+				  colorArray.add(strArray[i]);
+				
+			  }  
+		  }
+		  
+		  for(int i = 0; i < selectionList.size(); i++) {
+			  
+			  expectedColor = colorArray.get(i).toLowerCase();
+			  actualColor = selectionList.get(i).getPlayer().getColor().toString().toLowerCase();
+			  
+			  assertEquals(expectedColor, actualColor);
+		  }
+	    	
+	    }
+	  		
+	  
+	
+	  
+	 
+///////////////////////////////////////
+/// -----Keon's Helper Method  ---- ///
+///////////////////////////////////////
+	 
+	public Player getPlayerByColor(String aColor) { 
+		 
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		 List<Player> playerList = game.getPlayers();
+		 for(int i = 0; i < playerList.size(); i++) {
+			 
+			 if(playerList.get(i).getColor().toString().equalsIgnoreCase(aColor)) {
+				 
+				 return playerList.get(i);
+			 }
+		 
+		 }
+		 
+		 return null;
+	}
 	 
 	 
 	/*

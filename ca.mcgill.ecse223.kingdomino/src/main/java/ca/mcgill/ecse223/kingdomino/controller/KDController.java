@@ -93,7 +93,9 @@ public class KDController {
 			game.getNextDraft().setDraftStatus(Draft.DraftStatus.FaceDown);
 		}
 		else {
-//			changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
+			
+			System.out.println(game.getNextDraft());
+			changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
 			game.setCurrentDraft(game.getNextDraft());
 			game.getCurrentDraft().setDraftStatus(Draft.DraftStatus.FaceUp);
 			
@@ -242,32 +244,30 @@ public class KDController {
 //		
 //	}//RevealNextDraft
 	
-	public static void ChoosNextDomino(Player aPlayer, Domino aDomino)throws IllegalArgumentException {
+	public static void ChoosNextDomino(Domino aDomino){
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
 		
-		Draft currentDraft = game.getCurrentDraft();
+		Draft currentDraft = game.getNextDraft();
+		Player currentPlayer = game.getNextPlayer();
 		
 		
-		if(!currentDraft.getIdSortedDominos().contains(aDomino)) {
+		 if( aDomino.hasDominoSelection()) {
 			
-			throw new IllegalArgumentException("Domino Not In Draft");
-
-		}
-		
-		else if( aDomino.hasDominoSelection()) {
-			
-			throw new IllegalArgumentException("Domino Already Chosen");
+			return;
 			
 			}
 		else {
 			
-			currentDraft.addSelection(aPlayer, aDomino);
+			System.out.println("UUUUUUUUUUU"+currentPlayer);
 			
-			DominoSelection selection = currentDraft.addSelection(aPlayer, aDomino);
-			aDomino.setDominoSelection(selection);
-			aPlayer.setDominoSelection(selection);
+			//DominoSelection currentSelection = new DominoSelection(currentPlayer, aDomino, currentDraft);
+			
+			DominoSelection currentSelection = currentDraft.addSelection(currentPlayer, aDomino);
+			aDomino.setDominoSelection(currentSelection);
+	        currentPlayer.setDominoSelection(currentSelection);
+	
 		}
 		
 		

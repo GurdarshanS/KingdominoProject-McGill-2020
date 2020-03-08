@@ -160,11 +160,11 @@ public class Draft
     return wasRemoved;
   }
   /* Code from template association_SetUnidirectionalOptionalN */
-  public boolean setIdSortedDominos(Domino... newIdSortedDominos)
+  public boolean setIdSortedDominos(List<Domino> draftList)
   {
     boolean wasSet = false;
     ArrayList<Domino> verifiedIdSortedDominos = new ArrayList<Domino>();
-    for (Domino aIdSortedDomino : newIdSortedDominos)
+    for (Domino aIdSortedDomino : draftList)
     {
       if (verifiedIdSortedDominos.contains(aIdSortedDomino))
       {
@@ -173,7 +173,7 @@ public class Draft
       verifiedIdSortedDominos.add(aIdSortedDomino);
     }
 
-    if (verifiedIdSortedDominos.size() != newIdSortedDominos.length || verifiedIdSortedDominos.size() > maximumNumberOfIdSortedDominos())
+    if (verifiedIdSortedDominos.size() != draftList.size() || verifiedIdSortedDominos.size() > maximumNumberOfIdSortedDominos())
     {
       return wasSet;
     }
