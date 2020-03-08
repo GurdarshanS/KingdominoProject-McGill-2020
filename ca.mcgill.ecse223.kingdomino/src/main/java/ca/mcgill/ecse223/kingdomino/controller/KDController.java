@@ -130,8 +130,7 @@ public class KDController {
 	public static boolean loadGame(File file) throws InvalidInputException {
 		
 		boolean gameLoaded = false;
-		String directory = "./src/test/resources/savedGames/"+file;	
-	
+		String directory = "./src/test/resources/"+file.getName();	
 		File fileSearch = new File(directory);
 		if (fileSearch.isFile()) {
 			if(fileSearch.canRead()) {

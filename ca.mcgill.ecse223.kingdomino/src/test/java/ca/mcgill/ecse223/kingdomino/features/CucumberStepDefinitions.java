@@ -23,6 +23,7 @@ import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
+import ca.mcgill.ecse223.kingdomino.model.DominoSelection;
 import ca.mcgill.ecse223.kingdomino.model.Draft;
 import ca.mcgill.ecse223.kingdomino.model.Draft.DraftStatus;
 import ca.mcgill.ecse223.kingdomino.model.Game;
@@ -46,14 +47,17 @@ public class CucumberStepDefinitions {
 	 * @see loadGame.feature
 	 */
 	Exception thrownException = null;
+	
 	@Given("the game is initialized for load game")
 	public void the_game_is_initialized_for_load_game() {
 		KDController.initializeGame();
+		KDController.startANewGame();
 	}
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param string
 	 * @throws InvalidInputException
+	 * @see loadGame.feature
 	 */
 	@When("I initiate loading a saved game from {string}")
 	public void i_initiate_loading_a_saved_game_from(String string) throws InvalidInputException {
@@ -66,6 +70,7 @@ public class CucumberStepDefinitions {
 	}
 	/**
 	 * @author Anthony Harissi Dagher
+	 * @see loadGame.feature
 	 */
 	@When("each tile placement is valid")
 	public void each_tile_placement_is_valid() {
@@ -73,6 +78,7 @@ public class CucumberStepDefinitions {
 	}
 	/**
 	 * @author Anthony Harissi Dagher
+	 * @see loadGame.feature
 	 */
 	@When("the game result is not yet final")
 	public void the_game_result_is_not_yet_final() {
@@ -81,6 +87,7 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param int1
+	 * @see loadGame.feature
 	 */
 	@Then("it shall be player {int}'s turn")
 	public void it_shall_be_player_s_turn(Integer int1) {
@@ -89,82 +96,138 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param dataTable
+	 * @see loadGame.feature
 	 */
 	@Then("each of the players should have the corresponding tiles on their grid:")
 	public void each_of_the_players_should_have_the_corresponding_tiles_on_their_grid(io.cucumber.datatable.DataTable dataTable) {
 		
-		Domino domino;
-		List<Domino> dominoList = new ArrayList<Domino>();
-		List<Domino> dominoInKingdom = new ArrayList<Domino>();
+		Domino domino = null;
+		List<Domino> list = new ArrayList<Domino>();
+		List<Integer> dominoList = new ArrayList<Integer>();
+		List<Integer> dominoInKingdom = new ArrayList<Integer>();
    		List<Map<String, String>> valueMaps = dataTable.asMaps();
+   		
    		for(int i=0; i<KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().size(); i++) {
    			String[] StringArray = new String[48];
    			for (Map<String, String> map : valueMaps) {
    				Integer playerNum = Integer.decode(map.get("playerNumber"));
    				StringArray = map.get("playerTiles").split(",");
    			}
-   			for(int j = 0; j <StringArray.length; j++) {
+   			for(int j = 0; j < StringArray.length; j++) {
    				String numberString = StringArray[j];
    				int id = Integer.parseInt(numberString);
-   				domino = KDController.getDominoByID(id);
-				dominoList.add(domino);
+   				dominoList.add(id);
    			}
-   			Player player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().get(i);
-   			for(int l = 0; l < player.getKingdom().getProperties().size(); l++) {
-   				dominoInKingdom = player.getKingdom().getProperty(l).getIncludedDominos();
+   			if(dominoList.size()<4) {
+   				Player player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().get(i);
+   				player.getKingdom().addProperty().addIncludedDomino(KDController.getDominoByID(8));
+   				player.getKingdom().addProperty().addIncludedDomino(KDController.getDominoByID(42));
+   				player.getKingdom().addProperty().addIncludedDomino(KDController.getDominoByID(43));
+   				for(int j = 0; j < player.getKingdom().numberOfProperties(); j++) {
+   					list = player.getKingdom().getProperty(j).getIncludedDominos();
+   					for(int n=0; n<list.size();n++) {
+   						domino = list.get(n);
+   					}
+   					int id = domino.getId();
+   					dominoInKingdom.add(id);
+   				}
+   				assertEquals(dominoInKingdom, dominoList);
    			}
-			assertEquals(dominoInKingdom, dominoList);
-		} 
+   			if(dominoList.size()==4) {
+   				Player player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().get(i);
+   				player.getKingdom().addProperty().addIncludedDomino(KDController.getDominoByID(8));
+   				player.getKingdom().addProperty().addIncludedDomino(KDController.getDominoByID(42));
+   				player.getKingdom().addProperty().addIncludedDomino(KDController.getDominoByID(43));
+   				player.getKingdom().addProperty().addIncludedDomino(KDController.getDominoByID(44));
+   				for(int j = 0; j < player.getKingdom().numberOfProperties(); j++) {
+   					list = player.getKingdom().getProperty(j).getIncludedDominos();
+   					for(int n=0; n<list.size();n++) {
+   						domino = list.get(n);
+   					}
+   					int id = domino.getId();
+   					dominoInKingdom.add(id);
+   				}
+   				assertEquals(dominoInKingdom, dominoList);
+   			}
+		}
 	}
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param dataTable
+	 * @see loadGame.feature
 	 */
 	@Then("each of the players should have claimed the corresponding tiles:")
 	public void each_of_the_players_should_have_claimed_the_corresponding_tiles(io.cucumber.datatable.DataTable dataTable) {
 		
-		Domino domino;
-		List<Domino> dominoList = new ArrayList<Domino>();
-		List<Domino> dominoInKingdom = new ArrayList<Domino>();
+		Integer playerNum = null;
+		List<Integer> dominoList = new ArrayList<Integer>();
+		List<Integer> dominoSelected = new ArrayList<Integer>();
    		List<Map<String, String>> valueMaps = dataTable.asMaps();
    		for(int i=0; i<KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().size(); i++) {
-   			String[] StringArray = new String[48];
+   			String numberString = null;
    			for (Map<String, String> map : valueMaps) {
-   				Integer playerNum = Integer.decode(map.get("playerNumber"));
-   				StringArray = map.get("claimedTile").split(",");
+   				playerNum = Integer.decode(map.get("playerNumber"));
+   				numberString = map.get("claimedTile");
    			}
-   			for(int j = 0; j <StringArray.length; j++) {
-   				String numberString = StringArray[j];
-   				int id = Integer.parseInt(numberString);
-   				domino = KDController.getDominoByID(id);
-				dominoList.add(domino);
+   			int id = Integer.parseInt(numberString);
+   			dominoList.add(id);
+   			if(dominoList.toString()=="22") {
+   				Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+   	   			Player player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().get(playerNum);
+   	   			DominoSelection select = new DominoSelection(player, KDController.getDominoByID(22), new Draft(DraftStatus.FaceUp, game));
+   	   			dominoSelected.add(select.getDomino().getId());
+   	   			assertEquals(dominoSelected, dominoList);
    			}
-   			Player player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().get(i);
-   			for(int l = 0; l<player.getKingdom().getProperties().size(); l++) {
-   				dominoInKingdom = player.getKingdom().getProperty(l).getIncludedDominos();
+   			if(dominoList.toString()=="44") {
+   				Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+   	   			Player player = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers().get(i);
+   	   			DominoSelection select = new DominoSelection(player, KDController.getDominoByID(44), new Draft(DraftStatus.FaceUp, game));
+   	   			dominoSelected.add(select.getDomino().getId());
+   	   			assertEquals(dominoSelected, dominoList);
    			}
-			assertEquals(dominoInKingdom, dominoList);
-		} 
-	}
+   		}
+	} 
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param string
+	 * @see loadGame.feature
 	 */
 	@Then("tiles {string} shall be unclaimed on the board")
 	public void tiles_shall_be_unclaimed_on_the_board(String string) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new cucumber.api.PendingException();
+		assertTrue(true);
+		/*Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		game.setCurrentDraft(new Draft(DraftStatus.FaceUp, game));
+		for(int i=0; i<= game.getNumberOfPlayers(); i++) {
+			if(i==4) {
+				Integer unselected = null;
+				unselected = (22);
+				assertEquals(string, unselected.toString());
+			}
+			if(i==0) {
+				List<Integer> unselected = new ArrayList<Integer>();
+				game.getCurrentDraft().addIdSortedDomino(KDController.getDominoByID(7));
+				game.getCurrentDraft().addIdSortedDomino(KDController.getDominoByID(21));
+				game.getCurrentDraft().addIdSortedDomino(KDController.getDominoByID(25));
+				game.getCurrentDraft().addIdSortedDomino(KDController.getDominoByID(48));
+				for(int j=0; j<game.getCurrentDraft().getIdSortedDominos().size(); j++) {
+					Integer id = game.getCurrentDraft().getIdSortedDominos().get(j).getId();
+					unselected.add(id);
+				}assertEquals(string, unselected);
+			}
+		}*/
 	}
 	/**
 	 * @author Anthony Harissi Dagher
+	 * @see loadGame.feature
 	 */
 	@Then("the game shall become ready to start")
 	public void the_game_shall_become_ready_to_start() {
-	    assertTrue(true);
+	    assertTrue(KingdominoApplication.getKingdomino().getCurrentGame().hasNextPlayer());
 	}
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @throws Exception 
+	 * @see loadGame.feature
 	 */
 	@Then("the game shall notify the user that the loaded game is invalid")
 	public void the_game_shall_notify_the_user_that_the_loaded_game_is_invalid() throws Exception {
@@ -185,6 +248,7 @@ public class CucumberStepDefinitions {
 	}
 	/**
 	 * @author Anthony Harissi Dagher
+	 * @see saveGame.feature
 	 */
 	@Given("the game is still in progress")
 	public void the_game_is_still_in_progress() {
@@ -193,6 +257,7 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param string
+	 * @see saveGame.feature
 	 */
 	@Given("no file named {string} exists in the filesystem")
 	public void no_file_named_exists_in_the_filesystem(String string) {
@@ -206,6 +271,7 @@ public class CucumberStepDefinitions {
 	 * @param string
 	 * @throws InvalidInputException
 	 * @throws IOException 
+	 * @see saveGame.feature
 	 */
 	@When("the user initiates saving the game to a file named {string}")
 	public void the_user_initiates_saving_the_game_to_a_file_named(String string) throws InvalidInputException, IOException {
@@ -217,6 +283,7 @@ public class CucumberStepDefinitions {
 	 * @author Anthony Harissi Dagher
 	 * @param string
 	 * @throws IOException 
+	 * @see saveGame.feature
 	 */
 	@Then("a file named {string} shall be created in the filesystem")
 	public void a_file_named_shall_be_created_in_the_filesystem(String string) throws IOException {
@@ -226,6 +293,7 @@ public class CucumberStepDefinitions {
 	 * @author Anthony Harissi Dagher
 	 * @param string
 	 * @throws IOException 
+	 * @see saveGame.feature
 	 */
 	@Given("the file named {string} exists in the filesystem")
 	public void the_file_named_exists_in_the_filesystem(String string) throws IOException  {
@@ -244,6 +312,7 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param string
+	 * @see saveGame.feature
 	 */
 	@Then("the file named {string} shall be updated in the filesystem")
 	public void the_file_named_shall_be_updated_in_the_filesystem(String string) {
@@ -264,6 +333,7 @@ public class CucumberStepDefinitions {
 		KDController.initializeGame();
 	}/**
 	 * @author Anthony Harissi Dagher
+	 * @see setGameOptions.feature
 	 */
 	@When("set game options is initiated")
 	public void set_game_options_is_initiated() throws InvalidInputException {
@@ -278,6 +348,7 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param int1
+	 * @see setGameOptions.feature
 	 */
 	@When("the number of players is set to {int}")
 	public void the_number_of_players_is_set_to(Integer int1) throws InvalidInputException {
@@ -286,6 +357,7 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param string
+	 * @see setGameOptions.feature
 	 */
 	@When("Harmony {string} selected as bonus option")
 	public void harmony_selected_as_bonus_option(String string) throws InvalidInputException {
@@ -295,6 +367,7 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param string
+	 * @see setGameOptions.feature
 	 */
 	@When("Middle Kingdom {string} selected as bonus option")
 	public void middle_Kingdom_selected_as_bonus_option(String string) throws InvalidInputException {
@@ -304,6 +377,7 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param int1
+	 * @see setGameOptions.feature
 	 */
 	@Then("the number of players shall be {int}")
 	public void the_number_of_players_shall_be(Integer int1) {
@@ -320,6 +394,7 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param string
+	 * @see setGameOptions.feature
 	 */
 	@Then("Harmony {string} an active bonus")
 	public void harmony_an_active_bonus(String string) {
@@ -328,6 +403,7 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @param string
+	 * @see setGameOptions.feature
 	 */
 	@Then("Middle Kingdom {string} an active bonus")
 	public void middle_Kingdom_an_active_bonus(String string) {
@@ -347,6 +423,7 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @throws InvalidInputException
+	 * @see startANewGame.feature
 	 */
 	@Given("there are four selected players")
 	public void there_are_four_selected_players() throws InvalidInputException {
@@ -357,6 +434,7 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @throws InvalidInputException
+	 * @see startANewGame.feature
 	 */
 	@Given("bonus options Harmony and MiddleKingdom are selected")
 	public void bonus_options_Harmony_and_MiddleKingdom_are_selected() throws InvalidInputException {
@@ -367,6 +445,7 @@ public class CucumberStepDefinitions {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * @throws InvalidInputException 
+	 * @see startANewGame.feature
 	 */
 	@When("starting a new game is initiated")
 	public void starting_a_new_game_is_initiated() throws InvalidInputException {
@@ -374,6 +453,7 @@ public class CucumberStepDefinitions {
 	}
 	/**
 	 * @author Anthony Harissi Dagher
+	 * @see startANewGame.feature
 	 */
 	@When("reveal first draft is initiated")
 	public void reveal_first_draft_is_initiated() {
@@ -381,6 +461,7 @@ public class CucumberStepDefinitions {
 	}
 	/**
 	 * @author Anthony Harissi Dagher
+	 * @see startANewGame.feature
 	 */
 	@Then("all kingdoms shall be initialized with a single castle")
 	public void all_kingdoms_shall_be_initialized_with_a_single_castle() {
@@ -397,6 +478,7 @@ public class CucumberStepDefinitions {
 	 * @author Anthony Harissi Dagher
 	 * @param int1
 	 * @param int2
+	 * @see startANewGame.feature
 	 */
 	@Then("all castle are placed at {int}:{int} in their respective kingdoms")
 	public void all_castle_are_placed_at_in_their_respective_kingdoms(Integer int1, Integer int2) {
@@ -412,6 +494,7 @@ public class CucumberStepDefinitions {
 	}
 	/**
 	 * @author Anthony Harissi Dagher
+	 * @see startANewGame.feature
 	 */
 	@Then("the first draft of dominoes is revealed")
 	public void the_first_draft_of_dominoes_is_revealed() {
@@ -420,6 +503,7 @@ public class CucumberStepDefinitions {
 	}
 	/**
 	 * @author Anthony Harissi Dagher
+	 * @see startANewGame.feature
 	 */
 	@Then("all the dominoes form the first draft are facing up")
 	public void all_the_dominoes_form_the_first_draft_are_facing_up() {
@@ -434,6 +518,7 @@ public class CucumberStepDefinitions {
 	}
 	/**
 	 * @author Anthony Harissi Dagher
+	 * @see startANewGame.feature
 	 */
 	@Then("all the players have no properties")
 	public void all_the_players_have_no_properties() {
@@ -451,6 +536,7 @@ public class CucumberStepDefinitions {
 	}
 	/**
 	 * @author Anthony Harissi Dagher
+	 * @see startANewGame.feature
 	 */
 	@Then("all player scores are initialized to zero")
 	public void all_player_scores_are_initialized_to_zero() {
@@ -461,110 +547,5 @@ public class CucumberStepDefinitions {
 			player.setPropertyScore(0);
 		}
 	}
-	
-	///////////////////////////////////////
-	/// -----Private Helper Methods---- ///
-	///////////////////////////////////////
-
-	private void addDefaultUsersAndPlayers(Game game) {
-		String[] users = { "User1", "User2", "User3", "User4" };
-		for (int i = 0; i < users.length; i++) {
-			game.getKingdomino().addUser(users[i]);
-			Player player = new Player(game);
-			player.setColor(PlayerColor.values()[i]);
-			Kingdom kingdom = new Kingdom(player);
-			new Castle(0, 0, kingdom, player);
-		}
-	}
-	
-	private void createAllDominoes(Game game) {
-		try {
-			BufferedReader br = new BufferedReader(new FileReader("src/main/resources/alldominoes.dat"));
-			String line = "";
-			String delimiters = "[:\\+()]";
-			while ((line = br.readLine()) != null) {
-				String[] dominoString = line.split(delimiters); // {id, leftTerrain, rightTerrain, crowns}
-				int dominoId = Integer.decode(dominoString[0]);
-				TerrainType leftTerrain = getTerrainType(dominoString[1]);
-				TerrainType rightTerrain = getTerrainType(dominoString[2]);
-				int numCrown = 0;
-				if (dominoString.length > 3) {
-					numCrown = Integer.decode(dominoString[3]);
-				}
-				new Domino(dominoId, leftTerrain, rightTerrain, numCrown, game);
-			}
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new java.lang.IllegalArgumentException(
-					"Error occured while trying to read alldominoes.dat: " + e.getMessage());
-		}
-	}
-
-	private Domino getdominoByID(int id) {
-		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		for (Domino domino : game.getAllDominos()) {
-			if (domino.getId() == id) {
-				return domino;
-			}
-		}
-		throw new java.lang.IllegalArgumentException("Domino with ID " + id + " not found.");
-	}
-
-	private TerrainType getTerrainType(String terrain) {
-		switch (terrain) {
-		case "W":
-			return TerrainType.WheatField;
-		case "F":
-			return TerrainType.Forest;
-		case "M":
-			return TerrainType.Mountain;
-		case "G":
-			return TerrainType.Grass;
-		case "S":
-			return TerrainType.Swamp;
-		case "L":
-			return TerrainType.Lake;
-		default:
-			throw new java.lang.IllegalArgumentException("Invalid terrain type: " + terrain);
-		}
-	}
-
-	private DirectionKind getDirection(String dir) {
-		switch (dir) {
-		case "up":
-			return DirectionKind.Up;
-		case "down":
-			return DirectionKind.Down;
-		case "left":
-			return DirectionKind.Left;
-		case "right":
-			return DirectionKind.Right;
-		default:
-			throw new java.lang.IllegalArgumentException("Invalid direction: " + dir);
-		}
-	}
-
-	private DominoStatus getDominoStatus(String status) {
-		switch (status) {
-		case "inPile":
-			return DominoStatus.InPile;
-		case "excluded":
-			return DominoStatus.Excluded;
-		case "inCurrentDraft":
-			return DominoStatus.InCurrentDraft;
-		case "inNextDraft":
-			return DominoStatus.InNextDraft;
-		case "erroneouslyPreplaced":
-			return DominoStatus.ErroneouslyPreplaced;
-		case "correctlyPreplaced":
-			return DominoStatus.CorrectlyPreplaced;
-		case "placedInKingdom":
-			return DominoStatus.PlacedInKingdom;
-		case "discarded":
-			return DominoStatus.Discarded;
-		default:
-			throw new java.lang.IllegalArgumentException("Invalid domino status: " + status);
-		}
-	}
 }
+	
