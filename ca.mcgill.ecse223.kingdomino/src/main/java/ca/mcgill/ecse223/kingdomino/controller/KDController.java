@@ -310,6 +310,33 @@ public class KDController {
 	}
 	
 	/**
+	 * @author Anthony Harissi Dagher
+	 * Feature 7: This method saves the current game for the player.
+	 * @param file: Name of the file saved by the user.
+	 * @return Method returns true if file is saved, false if it cannot be.
+	 * @throws InvalidInputException: Thrown if file cannot be saved
+	 */
+	public static boolean saveGame(File file, boolean overwrite) throws InvalidInputException {
+		
+		boolean gameSaved;
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		String directory = "./src/test/resources/"+file.getName();
+		File fileSearch = new File(directory);
+		if(fileSearch.exists() && overwrite == false) {
+			gameSaved = false;
+		}
+		else {
+			try {
+				KDPersistence.save(kingdomino); 
+				gameSaved = true;
+			}catch(RuntimeException r) {
+				throw new InvalidInputException(r.getMessage());
+			}
+		}
+		return gameSaved;
+	}
+	
+	/**
 	
 	/**
 	 * @author Anthony Harissi Dagher
