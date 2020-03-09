@@ -27,6 +27,14 @@ import io.cucumber.java.en.When;
 
 public class ChooseNextDominoStep {
 	
+	 /**
+		 * These methods checks if the Choose Next Domino feature
+		 * Appropriately adds the new selection to the draft 
+		 * 
+		 * @see OrderAndRevealNextDraft.feature
+		 * @author Keon Olszewski 260927813
+		 */
+	
 	 @Given("the game is initialized for choose next domino")
 	 public void the_game_is_initialized_for_choose_next_domino() {
 		 

@@ -31,7 +31,7 @@ public class CalculateBonusScoresStep {
 	 * These methods calculates Player BonusScore
 	 * based on the Kingdom layout and bonus options
 	 * @see CalculateBonusScores.feature
-	 * @author Jing Han 260528152
+	 * @author Eric Guan 260930210, refactored by Jing Han 260528152
 	 */
 	
 	@Given("the game is initialized for calculate bonus scores")

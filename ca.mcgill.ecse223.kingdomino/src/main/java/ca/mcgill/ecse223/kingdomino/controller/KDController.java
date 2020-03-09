@@ -24,7 +24,7 @@ public class KDController {
 	
 	/**
 	 * 
-	 * This method checks initiates an empty game.
+	 * This method initiates an empty game.
 	 * Useful for bring games up to a testable state
 	 * 
 	 * @see - no features associated
@@ -52,7 +52,7 @@ public class KDController {
 	 * 
 	 * @see  - ProvideUserProfile.feature
 	 * @author Keon Olszewski 260927813
-	 * @param username
+	 * @param void
 	 * @return listToBrowse
 	 */
 	
@@ -110,6 +110,7 @@ public class KDController {
 	 * @author Keon Olszewski 260927813
 	 * @param username
 	 * @return void
+	 * @throws java.lang.IllegalArgumentException
 	 */
 
 	public static void ProvidetUserProfile(String username) throws IllegalArgumentException {
@@ -243,10 +244,10 @@ public class KDController {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 1: This method sets the desired game options for the player.
-	 * @param numPlayers : Number of players for the game.
-	 * @param selectedBonusOptions: List of chosen bonus options.
-	 * @throws IllegalArgumentException: Thrown when numPlayers is invalid.
-	 */
+	 * @param numPlayers 
+	 * @param selectedBonusOptions
+	 * @throws java.lang.IllegalArgumentException	 
+	 * */
 	public static void setGameOptions(int numPlayers, List<BonusOption> selectedBonusOptions)throws InvalidInputException{
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
@@ -286,10 +287,10 @@ public class KDController {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 6: This method loads a saved game for the player.
-	 * @param file: The file inputed from the user.
-	 * @return Method returns true if the game is loaded, false it cannot be.
-	 * @throws InvalidInputException: Thrown if file cannot be loaded
-	 */
+	 * @param file
+	 * @return boolean
+	 * @throws java.lang.IllegalArgumentException	
+	 *  */
 	public static boolean loadGame(File file) throws InvalidInputException {
 		
 		boolean gameLoaded = false;
@@ -312,9 +313,9 @@ public class KDController {
 	/**
 	 * @author Anthony Harissi Dagher
 	 * Feature 7: This method saves the current game for the player.
-	 * @param file: Name of the file saved by the user.
-	 * @return Method returns true if file is saved, false if it cannot be.
-	 * @throws InvalidInputException: Thrown if file cannot be saved
+	 * @param file
+	 * @return boolean
+	 * @throws java.lang.IllegalArgumentException
 	 */
 	public static boolean saveGame(File file, boolean overwrite) throws InvalidInputException {
 		
@@ -410,7 +411,7 @@ public class KDController {
 	 * @see BrowseDominoPile.feature
 	 * @author Gurdarshan Singh 260927466
 	 * @param null
-	 * @return Domino[]
+	 * @return myDominos
 	 */
 	
 	public static Domino[] listDominos() {
@@ -430,8 +431,8 @@ public class KDController {
 	 * 
 	 * @see BrowseDominoPile.feature
 	 * @author Gurdarshan Singh 260927466
-	 * @param String
-	 * @return ArrayList<Integer>
+	 * @param s1
+	 * @return myDominos
 	 */
 	public static ArrayList<Integer> filterbyTerrain (String s1) {
 		
@@ -456,7 +457,7 @@ public class KDController {
 	 * 
 	 * @see ShuffleDominos.feature
 	 * @author Gurdarshan Singh 260927466
-	 * @param int
+	 * @param number
 	 * @return void
 	 */
 	
@@ -489,7 +490,7 @@ public class KDController {
 	 * @see ShuffleDominos.feature
 	 * @author Gurdarshan Singh 260927466
 	 * @param null
-	 * @return Domino[]
+	 * @return dominoArray
 	 */
 	
 	public static Domino[] shuffleDominos() {
@@ -521,8 +522,8 @@ public class KDController {
 	 * 
 	 * @see ShuffleDomino.feature
 	 * @author Gurdarshan Singh 260927466
-	 * @param String
-	 * @return Integer[]
+	 * @param s1
+	 * @return DominoArray
 	 */
 	
 	public static Integer[] arrangeDominos(String s1) {
@@ -544,8 +545,8 @@ public class KDController {
 	 * 
 	 * @see ShuffleDomino.feature
 	 * @author Gurdarshan Singh 260927466
-	 * @param String
-	 * @return Domino[]
+	 * @param s1
+	 * @return DominoArray
 	 */
 	
 	public static Domino[] arrangeTheDominos(String s1) {
@@ -566,8 +567,9 @@ public class KDController {
 	 * 
 	 * @see ShuffleDomino.feature
 	 * @author Gurdarshan Singh 260927466
-	 * @param String, Int
-	 * @return Domino[]
+	 * @param s1
+	 * @param int1
+	 * @return DominoArray
 	 */
 	
 	public static Domino[] removeDraftDominos(String s1, int int1) {
@@ -716,7 +718,7 @@ public class KDController {
 	 * @see VerifyNoOverlapping.feature
 	 * @author Jing Han 260528152
 	 * @param player
-	 * @return void
+	 * @return noOverlap
 	 */
 	
 	public static boolean verifyNoOverlapAllTerritories(Player player) {
@@ -776,7 +778,7 @@ public class KDController {
 	 * @see VerifyNoOverlapping.feature
 	 * @author Jing Han 260528152
 	 * @param player
-	 * @return void
+	 * @return noOverlap
 	 */
 	
 	public static boolean verifyNoOverlapLastTerritory(Player player) {
@@ -828,7 +830,7 @@ public class KDController {
 	 * @see VerifyCastleAdjacency.fature
 	 * @author Jing Han 260528152
 	 * @param player
-	 * @return void
+	 * @return castleAdj
 	 */
 	
 	public static boolean verifyCastleAdjacency(Player player) {
@@ -885,7 +887,7 @@ public class KDController {
 	 * @see VerifyNeighborAdjacency.fature
 	 * @author Jing Han 260528152
 	 * @param player
-	 * @return void
+	 * @return neighborAdj
 	 */
 	
 	public static boolean verifyNeighborAdjacencyLastTerritory(Player player) {
@@ -957,22 +959,53 @@ public class KDController {
 		
 	}
 	
-	
 	/**
 	 * 
-	 * This method checks if a player is allowed to
-	 * discard the domino they have selected and
-	 * prePlaced in their kingdom. If they are allowed
-	 * to do so, the domino is discarded and their
-	 * dominoSelected is deleted. If not, the dominos
-	 * status is changed to ErroneouslyPrePlaced.
+	 * This helper method calculates the coordinate of a Domino's rightTile
+	 * based on the Domin's leftTile and orientation
 	 * 
-	 * @see DiscardDomino.feature
-	 * @author Massimo Vadacchino 260928064
-	 * @param aPlayer
-	 * @return void
-	 * @throws java.lang.IllegalArgumentException
+	 * @see all verification methods
+	 * @author Jing Han 260528152
+	 * @param d
+	 * @return coord2
 	 */
+	
+
+	public static int[] calculateOtherPos(KingdomTerritory d) {
+		
+		int [] coord2 = new int[2];
+		if (d instanceof Castle) {
+			coord2[0]=0;
+			coord2[1]=0;
+		}
+		
+		else {
+			int x2;
+			int y2;
+			
+			if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Right)) {
+				x2=d.getX()+1;
+				y2=d.getY();
+			}
+			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Up)) {
+				x2=d.getX();
+				y2=d.getY()+1;
+			}
+			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Left)) {
+				x2=d.getX()-1;
+				y2=d.getY();
+			}
+			else {
+				x2=d.getX();
+				y2=d.getY()-1;
+			}
+			
+			coord2[0]=x2;
+			coord2[1]=y2;
+		}
+		return coord2;
+	}
+	
 	
 	/**
 	 * 
@@ -1646,7 +1679,7 @@ public class KDController {
 	
 	/**
 	 * 
-	 * This method the score of a Player's kingdom
+	 * This method calculates the score of a Player's kingdom
 	 * @see  - CalculatePlayerScore.feature
 	 * @author Jing Han 260528152
 	 * @param player
@@ -1742,11 +1775,7 @@ public class KDController {
 		Collections.sort(x2);
 		Collections.sort(y2);
 		
-//		System.out.println(x1);
-//		System.out.println(y1);
-//		System.out.println(x2);		
-//		System.out.println(y2);
-		
+
 		
 		int minX=Math.min(x1.get(0), x2.get(0));
 		int maxX=Math.max(x1.get(x1.size()-1), x2.get(x2.size()-1));
@@ -1820,9 +1849,9 @@ public class KDController {
 	 * and it is set to null
 	 * 
 	 * @see  - CreateNextDraft.feature
-	 * @author Keon Olsz, refactored by Jing Han
+	 * @author Keon Olszewski 260927813
 	 * @param player
-	 * @return boolean
+	 * @return void
 	 */
 	
 	public static void createNextDraft() {
@@ -1870,9 +1899,9 @@ public class KDController {
 	 * This method changes the status of dominos in a game
 	 * 
 	 * @see  - CreateNextDraft.feature
-	 * @author Keon Olsz, refactored by Jing Han
+	 * @author Keon Olszewski 260927813
 	 * @param player
-	 * @return boolean
+	 * @return void
 	 */
 	
 	public static void changeDraftDominoStatus(Draft draft, Domino.DominoStatus status) {
@@ -1893,9 +1922,9 @@ public class KDController {
 	 * of players in the game
 	 * 
 	 * @see  - CreateNextDraft.feature
-	 * @author Keon Olsz, refactored by Jing Han
+	 * @author Keon Olszewski 260927813
 	 * @param player
-	 * @return boolean
+	 * @return void
 	 */
 	
 	public static Draft createOneDraft() {
@@ -1920,6 +1949,16 @@ public class KDController {
 		return draft;
 	}
 	
+	/**
+	 * 
+	 * This method gets Dominos with status InPile
+	 * 
+	 * @see  - CreateNextDraft.feature
+	 * @author Keon Olszewski 260927813
+	 * @param player
+	 * @return availableDominos
+	 */
+	
 	public static List<Domino> getAvailableDominoPile(){
 		Kingdomino kd = KingdominoApplication.getKingdomino();
 		Game game = kd.getCurrentGame();
@@ -1936,13 +1975,139 @@ public class KDController {
 		
 	}
 	
+	/**
+	 * 
+	 * This method calculates the square of the L2 dist btwn two coordinates
+	 * 
+	 * @see all verification methods
+	 * @author Jing Han 260528152
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2 
+	 * @return norm
+	 */
 	
+	public static int L2NormSquared(int x1, int y1, int x2, int y2) {
+		int deltaX=x2-x1;
+		int deltaY=y2-y1;
+		
+		int norm = deltaX*deltaX+deltaY*deltaY;
+		
+		return norm;
+	}
+	
+	/**
+	 * 
+	 * This helper method performs the equivalent
+	 * of argsort in Python
+	 * 
+	 * @author Jing Han 260528152
+	 * @param x
+	 * @return sortedIndices
+	 */
+	
+	public static int[][] argsort(List<Integer> x) {
+		List<Integer> sortOrder = new ArrayList<Integer>();
+		List<Integer> xCopy = new ArrayList<Integer>();
+		int [] dupe = new int[x.size()];
+		
+		for (Integer val:x) {
+			xCopy.add(val);
+		}
+		
+		Collections.sort(xCopy);
+		Collections.reverse(xCopy);
+		
+		for (int val:xCopy) {
+			for (int index=0;index<x.size();index++) {
+				if (!(sortOrder.contains(index))) {
+					int ref=x.get(index);
+					if (ref==val) {
+						sortOrder.add(index);
+						break;
+					}
+				}
+			}
+		}
+		
+		
+		for (int i=0;i<sortOrder.size()-1;i++) {
+			int val1=x.get(sortOrder.get(i));
+			int val2=x.get(sortOrder.get(i+1));
+			if (val1==val2) {
+				dupe[i]=0;
+			}
+			else {
+				dupe[i]=1;
+			}
+		}
+		
+		int [] finalOrder=new int[sortOrder.size()];
+		
+		for(int j=0;j<sortOrder.size();j++) {
+			finalOrder[j]=sortOrder.get(j);
+		}
+		
+		int[][] orderAndDuplicity= {finalOrder,dupe};
+			
+		
+		
+		return orderAndDuplicity;
+	}
 
+	/**
+	 * 
+	 * This class the Exception class
+	 * @author Anthony Harissi Dagher
+	 * @param errorMessage
+	 */
+	
+	public static class InvalidInputException extends Exception {
+		
+		private static final long serialVersionUID = -5633915762703837868L;
+		
+		public InvalidInputException(String errorMessage) {
+			super(errorMessage);
+		}
+	}
+	
+	/**
+	 * 
+	 * This method returns the color of the player depending on the input string.
+	 * 
+	 * @see CalculateRanking.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return PlayerColor
+	 */
+	
+	public static PlayerColor retrieveColor(String s1) {
+		PlayerColor p = null;
+		if(s1.equals("blue")) {
+			p = PlayerColor.Blue;
+		} else if(s1.equals("green")) {
+			p = PlayerColor.Green;
+		} else if(s1.equals("pink")) {
+			p = PlayerColor.Pink;
+		} else if(s1.equals("yellow") || s1.equals("yelow")) {
+			p = PlayerColor.Yellow;
+		}
+		return p;
+	}
 	
 	
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
+	
+	/**
+	 * 
+	 * This method gets gets a user by Name
+	 * 
+	 * @param userName
+	 * @return userList
+	 */
 	
 	public static User getUserByName(String username) {
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
@@ -1955,17 +2120,17 @@ public class KDController {
 		
 		return null;
 	}
+	
 
 	
-	public static class InvalidInputException extends Exception {
-		
-		private static final long serialVersionUID = -5633915762703837868L;
-		
-		public InvalidInputException(String errorMessage) {
-			super(errorMessage);
-		}
-	}
-	
+	/**
+	 * 
+	 * This method picks a random method
+	 * @author Anthony Harissi Dagher
+	 * @param lst
+	 * @param n
+	 * @return List<Domino>
+	 */
 	
 	public static List<Domino> pickRandDomino(List<Domino> lst, int n) {
 	    List<Domino> copy = new LinkedList<Domino>(lst);
@@ -1973,6 +2138,14 @@ public class KDController {
 	    return copy.subList(0, n);
 	}
 	
+	/**
+	 * 
+	 * This method initializes a game, specifically for 
+	 * the StartNewGame.feature
+	 * @author Anthony Harissi Dagher
+	 * @param void
+	 * @return void
+	 */
 	
 	public static void initializeGame() {
 		// Initialize empty game
@@ -2076,60 +2249,7 @@ public class KDController {
 		return availableSpaceInGrid;
 		
 	}
-
 	
-	/**
-	 * 
-	 * This method checks which player has the largest property.
-	 * 
-	 * @see ResolveTiebreaker.feature
-	 * @author Gurdarshan Singh 260927466
-	 * @param List<Property>
-	 * @return Property
-	 */
-	
-	private static Property getBiggestProperty(List<Property> properties) {
-		
-		int biggest = properties.get(0).getSize();
-		Property biggestProperty = properties.get(0);
-		
-		for(int i=1; i<properties.size(); i++) {
-			
-			if(properties.get(i).getSize() > biggest) {
-				
-				biggestProperty = properties.get(i);
-				biggest = properties.get(i).getSize();
-			}
-		}
-		
-		return biggestProperty;
-	}
-	
-	
-	
-	/**
-	 * 
-	 * This method returns the color of the player depending on the input string.
-	 * 
-	 * @see CalculateRanking.feature
-	 * @author Gurdarshan Singh 260927466
-	 * @param String
-	 * @return PlayerColor
-	 */
-	
-	public static PlayerColor retrieveColor(String s1) {
-		PlayerColor p = null;
-		if(s1.equals("blue")) {
-			p = PlayerColor.Blue;
-		} else if(s1.equals("green")) {
-			p = PlayerColor.Green;
-		} else if(s1.equals("pink")) {
-			p = PlayerColor.Pink;
-		} else if(s1.equals("yellow") || s1.equals("yelow")) {
-			p = PlayerColor.Yellow;
-		}
-		return p;
-	}
 	
 	/**
 	 * 
@@ -2179,7 +2299,7 @@ public class KDController {
 	 * @return n
 	 */
 	
-	public static Neighborhood getDominoLeftNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
+	private static Neighborhood getDominoLeftNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
 		
 		List <KingdomTerritory> neighborTerritory=new ArrayList<KingdomTerritory>();
 		List <String> neighborTileType=new ArrayList<String>();
@@ -2244,7 +2364,7 @@ public class KDController {
 	 * @return n
 	 */
 
-	public static Neighborhood getDominoRightNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
+	private static Neighborhood getDominoRightNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
 			
 			List <KingdomTerritory> neighborTerritory=new ArrayList<KingdomTerritory>();
 			List <String> neighborTileType=new ArrayList<String>();
@@ -2347,134 +2467,12 @@ public class KDController {
 		}
 	}
 	
-	/**
-	 * 
-	 * This helper method performs the equivalent
-	 * of argsort in Python
-	 * 
-	 * @author Jing Han 260528152
-	 * @param x
-	 * @return sortedIndices
-	 */
-	
-	public static int[][] argsort(List<Integer> x) {
-		List<Integer> sortOrder = new ArrayList<Integer>();
-		List<Integer> xCopy = new ArrayList<Integer>();
-		int [] dupe = new int[x.size()];
-		
-		for (Integer val:x) {
-			xCopy.add(val);
-		}
-		
-		Collections.sort(xCopy);
-		Collections.reverse(xCopy);
-		
-		for (int val:xCopy) {
-			for (int index=0;index<x.size();index++) {
-				if (!(sortOrder.contains(index))) {
-					int ref=x.get(index);
-					if (ref==val) {
-						sortOrder.add(index);
-						break;
-					}
-				}
-			}
-		}
-		
-		
-		for (int i=0;i<sortOrder.size()-1;i++) {
-			int val1=x.get(sortOrder.get(i));
-			int val2=x.get(sortOrder.get(i+1));
-			if (val1==val2) {
-				dupe[i]=0;
-			}
-			else {
-				dupe[i]=1;
-			}
-		}
-		
-		int [] finalOrder=new int[sortOrder.size()];
-		
-		for(int j=0;j<sortOrder.size();j++) {
-			finalOrder[j]=sortOrder.get(j);
-		}
-		
-		int[][] orderAndDuplicity= {finalOrder,dupe};
-			
-		
-		
-		return orderAndDuplicity;
-	}
 	
 	
-	/**
-	 * 
-	 * This helper method calculates the square of the L2 dist btwn two coordinates
-	 * 
-	 * @see all verification methods
-	 * @author Jing Han 260528152
-	 * @param x1
-	 * @param y1
-	 * @param x2
-	 * @param y2 
-	 * @return norm
-	 */
-	
-	public static int L2NormSquared(int x1, int y1, int x2, int y2) {
-		int deltaX=x2-x1;
-		int deltaY=y2-y1;
-		
-		int norm = deltaX*deltaX+deltaY*deltaY;
-		
-		return norm;
-	}
-	
-	/**
-	 * 
-	 * This helper method calculates the coordinate of a Domino's rightTile
-	 * based on the Domin's leftTile and orientation
-	 * 
-	 * @see all verification methods
-	 * @author Jing Han 260528152
-	 * @param d
-	 * @return coord2
-	 */
 	
 
-	public static int[] calculateOtherPos(KingdomTerritory d) {
-		
-		int [] coord2 = new int[2];
-		if (d instanceof Castle) {
-			coord2[0]=0;
-			coord2[1]=0;
-		}
-		
-		else {
-			int x2;
-			int y2;
-			
-			if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Right)) {
-				x2=d.getX()+1;
-				y2=d.getY();
-			}
-			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Up)) {
-				x2=d.getX();
-				y2=d.getY()+1;
-			}
-			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Left)) {
-				x2=d.getX()-1;
-				y2=d.getY();
-			}
-			else {
-				x2=d.getX();
-				y2=d.getY()-1;
-			}
-			
-			coord2[0]=x2;
-			coord2[1]=y2;
-		}
-		return coord2;
-	}
+	
+	
 	
 	/**
 	 * 
@@ -2803,6 +2801,35 @@ public class KDController {
 		
 	}
 	
+	/**
+	 * 
+	 * This method returns a terrain type depending on the input string.
+	 * 
+	 * @see BrowseDominoPile.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return TerrainType
+	 */
+	
+	public static TerrainType retrieveTerrainType(String terrain) {
+		switch (terrain) {
+		case "wheat":
+			return TerrainType.WheatField;
+		case "forest":
+			return TerrainType.Forest;
+		case "mountain":
+			return TerrainType.Mountain;
+		case "grass":
+			return TerrainType.Grass;
+		case "swamp":
+			return TerrainType.Swamp;
+		case "lake":
+			return TerrainType.Lake;
+		default:
+			throw new java.lang.IllegalArgumentException("Invalid terrain type: " + terrain);
+		}
+	}
+	
 	
 	///////////////////////////////////////
 	/// ----Given TA Helper Methods---- ///
@@ -2853,34 +2880,7 @@ public class KDController {
 		throw new java.lang.IllegalArgumentException("Domino with ID " + id + " not found.");
 	}
 	
-	/**
-	 * 
-	 * This method returns a terrain type depending on the input string.
-	 * 
-	 * @see BrowseDominoPile.feature
-	 * @author Gurdarshan Singh 260927466
-	 * @param String
-	 * @return TerrainType
-	 */
 	
-	public static TerrainType retrieveTerrainType(String terrain) {
-		switch (terrain) {
-		case "wheat":
-			return TerrainType.WheatField;
-		case "forest":
-			return TerrainType.Forest;
-		case "mountain":
-			return TerrainType.Mountain;
-		case "grass":
-			return TerrainType.Grass;
-		case "swamp":
-			return TerrainType.Swamp;
-		case "lake":
-			return TerrainType.Lake;
-		default:
-			throw new java.lang.IllegalArgumentException("Invalid terrain type: " + terrain);
-		}
-	}
 
 	private static TerrainType getTerrainType(String terrain) {
 		switch (terrain) {
@@ -2913,29 +2913,6 @@ public class KDController {
 			return DirectionKind.Right;
 		default:
 			throw new java.lang.IllegalArgumentException("Invalid direction: " + dir);
-		}
-	}
-
-	private static DominoStatus getDominoStatus(String status) {
-		switch (status) {
-		case "inPile":
-			return DominoStatus.InPile;
-		case "excluded":
-			return DominoStatus.Excluded;
-		case "inCurrentDraft":
-			return DominoStatus.InCurrentDraft;
-		case "inNextDraft":
-			return DominoStatus.InNextDraft;
-		case "erroneouslyPreplaced":
-			return DominoStatus.ErroneouslyPreplaced;
-		case "correctlyPreplaced":
-			return DominoStatus.CorrectlyPreplaced;
-		case "placedInKingdom":
-			return DominoStatus.PlacedInKingdom;
-		case "discarded":
-			return DominoStatus.Discarded;
-		default:
-			throw new java.lang.IllegalArgumentException("Invalid domino status: " + status);
 		}
 	}
 

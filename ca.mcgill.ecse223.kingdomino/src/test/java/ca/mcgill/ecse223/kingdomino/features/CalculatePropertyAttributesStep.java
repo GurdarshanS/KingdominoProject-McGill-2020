@@ -30,8 +30,9 @@ public class CalculatePropertyAttributesStep {
 	/**
 	 * These methods calculates Propety Attributes
 	 * @see CalculatePropertyAttributes.feature
-	 * @author Jing Han 260528152
+	 * @author Eric Guan 260930210, refactored by Jing Han 260528152
 	 */
+	
 	@Given("the game is initialized for calculate property attributes")
 	public static void game_initialized_for_calculate_property_attributes() {
 		KDController.initiateEmptyGame();

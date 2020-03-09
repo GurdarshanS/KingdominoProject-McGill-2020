@@ -31,7 +31,7 @@ public class IdentifyPropertiesStep {
 	 * These methods check the Property 
 	 * identifications of a player's kingdom
 	 * @see IdentifyProperties.feature
-	 * @author Jing Han 260528152
+	 * @author Eric Guan 260930210, refactored by Jing Han 260528152
 	 */
 	
 	@Given("the game is initialized for identify properties")
