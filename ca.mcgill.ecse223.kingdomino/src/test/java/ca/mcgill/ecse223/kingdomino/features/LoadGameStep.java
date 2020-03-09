@@ -195,8 +195,8 @@ public class LoadGameStep{
 			
 //			tried many times, but didn't work
 			
-			
 			assertTrue(true);
+//			assertTrue(true);
 			/*Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 			game.setCurrentDraft(new Draft(DraftStatus.FaceUp, game));
 			for(int i=0; i<= game.getNumberOfPlayers(); i++) {
