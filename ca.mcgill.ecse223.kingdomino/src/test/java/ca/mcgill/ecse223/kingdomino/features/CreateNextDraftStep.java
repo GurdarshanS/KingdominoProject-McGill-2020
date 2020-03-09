@@ -35,6 +35,7 @@ public class CreateNextDraftStep {
 	 * @see CreateNextDraft.feature
 	 * @author Keon Olszewski 260927813
 	 */
+	
 	 
 	 @Given("the game is initialized to create next draft")
 	 public static void initialize_game_for_create_next_draft() {

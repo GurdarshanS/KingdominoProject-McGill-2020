@@ -45,6 +45,98 @@ public class KDController {
 		game.setNextPlayer(game.getPlayer(0));
 	}
 	
+	/**
+	 * 
+	 * This method returns the list of users
+	 * in alphabetical order
+	 * 
+	 * @see  - ProvideUserProfile.feature
+	 * @author Keon Olszewski 260927813
+	 * @param username
+	 * @return listToBrowse
+	 */
+	
+	public static List<User> BrowseUserList() {
+		
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		
+		List<User> userList = kingdomino.getUsers();
+		List<User> listToBrowse = new ArrayList<User>();
+		String userNames[] = new String[userList.size()];
+		
+		for(int i = 0; i < userNames.length; i ++) {
+			
+			String name = userList.get(i).getName();
+			userNames[i] = name;
+			
+			}
+		
+		Arrays.sort(userNames);
+		
+		for(int i = 0; i < userNames.length; i ++) {
+		listToBrowse.add(i, getUserByName(userNames[i]));
+			}
+		
+		return listToBrowse;
+		
+	}
+	
+	
+	/**
+	 * 
+	 * this method returns a given user
+	 * for checking their statistics
+	 * 
+	 * @see  - ProvideUserProfile.feature
+	 * @author Keon Olszewski 260927813
+	 * @param username
+	 * @return currentUser
+	 */
+	
+	
+	public static User queryUser(String username) {
+		
+		User currentUser = getUserByName(username);
+		return currentUser;
+	}
+	
+	
+	/**
+	 * 
+	 * This method checks if inputed user name
+	 * is valid and then adds it to kingdomino
+	 * 
+	 * @see  - ProvideUserProfile.feature
+	 * @author Keon Olszewski 260927813
+	 * @param username
+	 * @return void
+	 */
+
+	public static void ProvidetUserProfile(String username) throws IllegalArgumentException {
+
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		List<User> userList = kingdomino.getUsers();
+		
+		for(int i = 0; i < userList.size(); i++) {
+		
+		if (userList.get(i).getName().equalsIgnoreCase(username)) {
+			
+			throw new IllegalArgumentException("User already exists");
+			
+			} 
+		}
+		
+		if(!username.matches("[a-zA-Z0-9]+")){
+			
+			throw new IllegalArgumentException("must Contain only letters or Numbers");
+		}
+		
+	
+			
+		kingdomino.addUser(username);
+		
+	}//ProvidetUserProfile
+	
 	
 	/**
 	 * 
@@ -1824,6 +1916,19 @@ public class KDController {
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
+	
+	public static User getUserByName(String username) {
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		List<User> userList = kingdomino.getUsers();
+		
+		for(int i = 0; i< userList.size(); i++) {
+			
+			if(userList.get(i).getName().equals(username)) return userList.get(i);
+		}
+		
+		return null;
+	}
+
 	
 	public static class InvalidInputException extends Exception {
 		
