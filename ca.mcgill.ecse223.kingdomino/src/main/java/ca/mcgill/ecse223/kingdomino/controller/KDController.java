@@ -6,6 +6,12 @@ import ca.mcgill.ecse223.kingdomino.model.*;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
 import ca.mcgill.ecse223.kingdomino.model.Player.PlayerColor;
+import ca.mcgill.ecse223.kingdomino.persistence.KDPersistence;
+
+
+import java.util.concurrent.ThreadLocalRandom;
+import java.io.File;
+
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -37,6 +43,244 @@ public class KDController {
 		addDefaultUsersAndPlayers(game);
 		createAllDominoes(game);
 		game.setNextPlayer(game.getPlayer(0));
+	}
+	
+	
+	/**
+	 * 
+	 * This method Adds a domino selection to the 
+	 * next draft
+	 * 
+	 * @see  - ChooseNextDomino.feature
+	 * @author Keon Olszewski 260927813
+	 * @param aDomino
+	 * @return void
+	 */
+	
+
+	public static void ChoosNextDomino(Domino aDomino){
+		
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
+		Draft nextDraft = game.getNextDraft();
+		Player currentPlayer = game.getNextPlayer();
+		
+		if( aDomino.hasDominoSelection()) {
+			
+			return;
+			
+			}
+		else {
+			
+			DominoSelection currentSelection = nextDraft.addSelection(currentPlayer, aDomino);
+			aDomino.setDominoSelection(currentSelection);
+	        currentPlayer.setDominoSelection(currentSelection);
+	
+		}
+	}//ChoosNextDomino
+	
+	/**
+	 * 
+	 * This method Reveals next Draft by Setting
+	 * Next Draft status to FaceUp 
+	 * 
+	 * @see  - OrderAndRevealNextDraft.feature
+	 * @author Keon Olszewski 260927813
+	 * @param void
+	 * @return void
+	 */
+	public static void RevealNextDraft() {
+		
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
+		
+		if(game.getNextDraft() == null) {
+			
+			Draft currentDraft =	game.getCurrentDraft();
+			currentDraft.setDraftStatus(Draft.DraftStatus.FaceUp);
+		}
+		
+		else{
+			
+		Draft nextDraft =	game.getNextDraft();
+		nextDraft.setDraftStatus(Draft.DraftStatus.FaceUp);
+		
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * This method orders the dominoes in the next draft
+	 * by ID number
+	 * 
+	 * @see  - OrderAndRevealNextDraft.feature
+	 * @author Keon Olszewski 260927813
+	 * @param void
+	 * @return void
+	 */
+	
+	public static void OrderNextDraft() {
+		
+	Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+	Game game = kingdomino.getCurrentGame();
+	Draft nextDraft =	game.getNextDraft();
+	List<Domino> nextDraftList = nextDraft.getIdSortedDominos();
+	int domIDs[] = new int[nextDraftList.size()];
+	
+	for(int i = 0; i < nextDraftList.size(); i ++) {
+		
+		int domID = nextDraftList.get(i).getId();
+		domIDs[i] = domID;
+		
+		}
+	
+	Arrays.sort(domIDs);
+	
+	for(int i = 0; i < domIDs.length; i ++) {
+	nextDraft.addOrMoveIdSortedDominoAt(getdominoByID(domIDs[i]), i);
+		}
+
+	 
+
+		nextDraft.setDraftStatus(Draft.DraftStatus.Sorted);
+
+	}// OrderNextDraft
+	
+	
+	/**
+	 * @author Anthony Harissi Dagher
+	 * Feature 1: This method sets the desired game options for the player.
+	 * @param numPlayers : Number of players for the game.
+	 * @param selectedBonusOptions: List of chosen bonus options.
+	 * @throws IllegalArgumentException: Thrown when numPlayers is invalid.
+	 */
+	public static void setGameOptions(int numPlayers, List<BonusOption> selectedBonusOptions)throws InvalidInputException{
+		
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		if(numPlayers < 1 || numPlayers > 4) {
+			throw new InvalidInputException("Must between 2 and 4 players for a game.");
+		}
+		if(numPlayers == 2) {
+			Game game = new Game(24, kingdomino);
+			game.setNumberOfPlayers(2);
+			for(int i=0; i<= selectedBonusOptions.size()-1; i++) {
+				BonusOption bonusOption = selectedBonusOptions.get(i);
+				game.addSelectedBonusOption(bonusOption);
+			}
+			kingdomino.setCurrentGame(game);
+		}
+		if(numPlayers == 3) {
+			Game game = new Game(36, kingdomino);
+			game.setNumberOfPlayers(3);
+			for(int i=0; i<= selectedBonusOptions.size()-1; i++) {
+				BonusOption bonusOption = selectedBonusOptions.get(i);
+				game.addSelectedBonusOption(bonusOption);
+			}
+			kingdomino.setCurrentGame(game);
+		}
+		if(numPlayers == 4) {
+			Game game = new Game(48, kingdomino);
+			game.setNumberOfPlayers(4);
+			for(int i=0; i<= selectedBonusOptions.size()-1; i++) {
+				BonusOption bonusOption = selectedBonusOptions.get(i);
+				game.addSelectedBonusOption(bonusOption);
+			}
+			kingdomino.setCurrentGame(game);
+		}
+	} 
+	
+	
+	/**
+	 * @author Anthony Harissi Dagher
+	 * Feature 6: This method loads a saved game for the player.
+	 * @param file: The file inputed from the user.
+	 * @return Method returns true if the game is loaded, false it cannot be.
+	 * @throws InvalidInputException: Thrown if file cannot be loaded
+	 */
+	public static boolean loadGame(File file) throws InvalidInputException {
+		
+		boolean gameLoaded = false;
+		String directory = "./src/test/resources/"+file.getName();	
+		File fileSearch = new File(directory);
+		if (fileSearch.isFile()) {
+			if(fileSearch.canRead()) {
+				try{
+					KDPersistence.load();
+					gameLoaded = true;
+				}
+				catch(RuntimeException r) {
+					throw new InvalidInputException("Invalid file name.");
+				}
+			}
+		}
+		return gameLoaded;
+	}
+	
+	/**
+	
+	/**
+	 * @author Anthony Harissi Dagher
+	 * Feature 3: This method starts a new game for the player.
+	 */
+	public static void startANewGame() {
+		
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
+		int randomNum = ThreadLocalRandom.current().nextInt(0, game.numberOfPlayers());
+		List<Domino> dominoesInGame;
+		for (int i = 0; i < game.numberOfPlayers(); i++) {
+			if(i==0) {
+				game.getPlayer(i).setColor(Player.PlayerColor.Blue);
+			}
+			if(i==1) {
+				game.getPlayer(i).setColor(Player.PlayerColor.Green);
+			}
+			if(i==2) {
+				game.getPlayer(i).setColor(Player.PlayerColor.Pink);
+			}
+			if(i==3) {
+				game.getPlayer(i).setColor(Player.PlayerColor.Yellow);
+			}
+		}
+		game.setNextPlayer(game.getPlayer(randomNum));
+		createAllDominoes(game);
+		
+		if(game.getNumberOfPlayers()==2) {
+			
+			int randDomino = ThreadLocalRandom.current().nextInt(0, 24);
+			dominoesInGame = pickRandDomino(game.getAllDominos(), 24+1);
+			for(int i=0; i<= 24; i++) {
+				game.removeAllDomino(dominoesInGame.get(i));
+			}
+//			game.setTopDominoInPile(dominoesInGame.get(randDomino));
+		}
+		if(game.getNumberOfPlayers()==3) {
+			
+			int randDomino = ThreadLocalRandom.current().nextInt(0, 36);
+			dominoesInGame = pickRandDomino(game.getAllDominos(), 12+1);
+			for(int i=0; i<= 12; i++) {
+				game.removeAllDomino(dominoesInGame.get(i));
+			}
+//			game.setTopDominoInPile(dominoesInGame.get(randDomino));
+		}
+		if(game.getNumberOfPlayers()==4) {
+			
+			int randDomino = ThreadLocalRandom.current().nextInt(0, 36);
+			dominoesInGame = pickRandDomino(game.getAllDominos(), 48+1);
+//			game.setTopDominoInPile(dominoesInGame.get(randDomino));
+		}
+		
+		List<Domino> dominosInGame = game.getAllDominos();
+		
+		for (int i=0;i<dominosInGame.size()-1;i++) {
+			dominosInGame.get(i).setNextDomino(dominosInGame.get(i+1));
+		}
+		
+		Domino firstDomino=dominosInGame.get(0);
+		game.setTopDominoInPile(firstDomino);
+		
+		createOneDraft();
 	}
 	
 	/**
@@ -1580,6 +1824,37 @@ public class KDController {
 	///////////////////////////////////////
 	/// -----Private Helper Methods---- ///
 	///////////////////////////////////////
+	
+	public static class InvalidInputException extends Exception {
+		
+		private static final long serialVersionUID = -5633915762703837868L;
+		
+		public InvalidInputException(String errorMessage) {
+			super(errorMessage);
+		}
+	}
+	
+	
+	public static List<Domino> pickRandDomino(List<Domino> lst, int n) {
+	    List<Domino> copy = new LinkedList<Domino>(lst);
+	    Collections.shuffle(copy);
+	    return copy.subList(0, n);
+	}
+	
+	
+	public static void initializeGame() {
+		// Initialize empty game
+		Kingdomino kingdomino = new Kingdomino();
+		Game game = new Game(48, kingdomino);
+		game.setNumberOfPlayers(4);
+		kingdomino.setCurrentGame(game);
+		// Populate game
+		addDefaultUsersAndPlayers(game);
+		createAllDominoes(game);
+		game.setNextPlayer(game.getPlayer(0));
+		KingdominoApplication.setKingdomino(kingdomino);
+	}
+	
 	
 	/**
 	 * 

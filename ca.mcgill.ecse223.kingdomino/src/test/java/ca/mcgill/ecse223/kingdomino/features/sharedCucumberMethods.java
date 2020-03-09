@@ -188,6 +188,7 @@ public class sharedCucumberMethods {
 		// across multiple steps   //
 		////////////////////////////
 	
+	
 	public static DominoStatus getDominoStatus(String status) {
 		switch (status) {
 		case "inPile":
