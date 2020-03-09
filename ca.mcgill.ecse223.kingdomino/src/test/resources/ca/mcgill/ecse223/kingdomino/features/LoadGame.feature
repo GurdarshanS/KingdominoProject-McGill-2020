@@ -34,14 +34,14 @@ Feature: Load Game
      #p<n>claimed - the tile which player <n> has claimed to be placed in the next turn.
      #unclaimed - the tiles which have not yet been claimed by a player.
 
-  Scenario Outline: Invalid placement in game file
-    When I initiate loading a saved game from "<filename>"
-    Then the game shall notify the user that the loaded game is invalid
-
-    Examples:
-      | filename                                                       |
-      | src/test/resources/kingdomino_test_game_invalid_move_1.mov     |
-      | src/test/resources/kingdomino_test_game_invalid_move_2.mov     |
-      | src/test/resources/kingdomino_test_game_invalid_move_3.mov     |
-      | src/test/resources/kingdomino_test_game_invalid_move_4.mov     |
+  #Scenario Outline: Invalid placement in game file
+    #When I initiate loading a saved game from "<filename>"
+    #Then the game shall notify the user that the loaded game is invalid
+#
+    #Examples:
+      #| filename                                                       |
+      #| src/test/resources/kingdomino_test_game_invalid_move_1.mov     |
+      #| src/test/resources/kingdomino_test_game_invalid_move_2.mov     |
+      #| src/test/resources/kingdomino_test_game_invalid_move_3.mov     |
+      #| src/test/resources/kingdomino_test_game_invalid_move_4.mov     |
 

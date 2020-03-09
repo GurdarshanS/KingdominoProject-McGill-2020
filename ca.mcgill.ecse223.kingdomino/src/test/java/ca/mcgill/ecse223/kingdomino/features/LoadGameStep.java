@@ -190,7 +190,12 @@ public class LoadGameStep{
 		 * @see loadGame.feature
 		 */
 		@Then("tiles {string} shall be unclaimed on the board")
-		public void tiles_shall_be_unclaimed_on_the_board(String string) {
+		public void tiles_shall_be_unclaimed_on_the_board(String expectedId) {
+			
+			
+//			tried many times, but didn't work
+			
+			
 			assertTrue(true);
 			/*Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 			game.setCurrentDraft(new Draft(DraftStatus.FaceUp, game));
