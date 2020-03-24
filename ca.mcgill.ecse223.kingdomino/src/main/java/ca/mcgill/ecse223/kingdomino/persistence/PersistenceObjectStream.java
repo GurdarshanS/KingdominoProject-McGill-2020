@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 
 public class PersistenceObjectStream {
 	
-	private static String fileName = "kingdomino.txt";
+	private static String fileName = "default_saved_game.data";
 
 	public static void serialize(Object object) {
 		 FileOutputStream fileOutput;
@@ -20,42 +20,40 @@ public class PersistenceObjectStream {
 	            output.writeObject(object);
 	            output.close();
 	            fileOutput.close();
+	            System.out.println("something got saved");
 	        } catch (Exception e) {
 	            throw new RuntimeException("Couldn't save '" + fileName + "'.");
 	        }
 	    }
 
 	public static Object deserialize() {
-      File file = new File(fileName);
-      if(file.exists()){
-      } else {
-         try {
-           file.createNewFile();
-         } catch (IOException e) {
-         }
-      }  
-		Object o = null;
-		try (
+      File file = new File(fileName); 
+      Object o = null;
+      
+      
+      try (
             FileInputStream fileIn = new FileInputStream(file);
             ObjectInputStream in = new ObjectInputStream(fileIn);
 		) {
 		 	try {
-        o = in.readObject();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-		  
-		} catch (EOFException e1) {
-		} catch (ClassNotFoundException e2) {
-		  throw new RuntimeException("Could not load data from file '" + fileName + "'.");
-        } catch (IOException e3) {
-      e3.printStackTrace();
-    } 
-		
-		if (o == null) {
-		}
-		return o;
+		 		o = in.readObject();
+		 	} 
+		 	catch (IOException e) {
+		 		e.printStackTrace();
+		 	}
+		 	fileIn.close();
+		 	in.close();
+      } 
+      catch (EOFException e1) {e1.printStackTrace();} 
+      catch (ClassNotFoundException e2) {e2.printStackTrace();}
+      catch (IOException e3) {
+    	  System.out.println("saved game file not found, make sure such file exists");
+    	  e3.printStackTrace();
+      	} 
+      
+      return o;
 	}
+	
 	public static void setFilename(String newFilename) {
 		fileName = newFilename;
 	}

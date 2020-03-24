@@ -2,9 +2,11 @@
 /*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse223.kingdomino.model;
+import java.io.Serializable;
 
-// line 71 "../../../../../Kingdomino.ump"
-public class DominoInKingdom extends KingdomTerritory
+// line 31 "../../../../../KingdominoPersistence.ump"
+// line 72 "../../../../../Kingdomino.ump"
+public class DominoInKingdom extends KingdomTerritory implements Serializable
 {
 
   //------------------------
@@ -85,5 +87,13 @@ public class DominoInKingdom extends KingdomTerritory
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "direction" + "=" + (getDirection() != null ? !getDirection().equals(this)  ? getDirection().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "domino = "+(getDomino()!=null?Integer.toHexString(System.identityHashCode(getDomino())):"null");
-  }
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 34 "../../../../../KingdominoPersistence.ump"
+  private static final long serialVersionUID = 5L ;
+
+  
 }

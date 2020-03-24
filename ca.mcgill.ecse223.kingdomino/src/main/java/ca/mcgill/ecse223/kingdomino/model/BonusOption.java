@@ -2,9 +2,11 @@
 /*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse223.kingdomino.model;
+import java.io.Serializable;
 
-// line 109 "../../../../../Kingdomino.ump"
-public class BonusOption
+// line 13 "../../../../../KingdominoPersistence.ump"
+// line 110 "../../../../../Kingdomino.ump"
+public class BonusOption implements Serializable
 {
 
   //------------------------
@@ -83,5 +85,13 @@ public class BonusOption
     return super.toString() + "["+
             "optionName" + ":" + getOptionName()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "kingdomino = "+(getKingdomino()!=null?Integer.toHexString(System.identityHashCode(getKingdomino())):"null");
-  }
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 16 "../../../../../KingdominoPersistence.ump"
+  private static final long serialVersionUID = 2L ;
+
+  
 }

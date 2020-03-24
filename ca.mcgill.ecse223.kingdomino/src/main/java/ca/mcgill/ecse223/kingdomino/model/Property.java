@@ -2,13 +2,15 @@
 /*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse223.kingdomino.model;
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Scoring
  */
-// line 101 "../../../../../Kingdomino.ump"
-public class Property
+// line 73 "../../../../../KingdominoPersistence.ump"
+// line 102 "../../../../../Kingdomino.ump"
+public class Property implements Serializable
 {
 
   //------------------------
@@ -45,7 +47,7 @@ public class Property
       throw new RuntimeException("Unable to create property due to kingdom");
     }
   }
- 
+
   //------------------------
   // INTERFACE
   //------------------------
@@ -235,5 +237,13 @@ public class Property
             "crowns" + ":" + getCrowns()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "propertyType" + "=" + (getPropertyType() != null ? !getPropertyType().equals(this)  ? getPropertyType().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "kingdom = "+(getKingdom()!=null?Integer.toHexString(System.identityHashCode(getKingdom())):"null");
-  }
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 76 "../../../../../KingdominoPersistence.ump"
+  private static final long serialVersionUID = 12L ;
+
+  
 }

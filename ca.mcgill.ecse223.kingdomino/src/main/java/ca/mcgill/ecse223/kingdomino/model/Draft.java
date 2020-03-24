@@ -2,13 +2,15 @@
 /*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse223.kingdomino.model;
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Draft = Next group of dominos available for selection
  */
-// line 86 "../../../../../Kingdomino.ump"
-public class Draft
+// line 43 "../../../../../KingdominoPersistence.ump"
+// line 87 "../../../../../Kingdomino.ump"
+public class Draft implements Serializable
 {
 
   //------------------------
@@ -348,5 +350,13 @@ public class Draft
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "draftStatus" + "=" + (getDraftStatus() != null ? !getDraftStatus().equals(this)  ? getDraftStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "game = "+(getGame()!=null?Integer.toHexString(System.identityHashCode(getGame())):"null");
-  }
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 46 "../../../../../KingdominoPersistence.ump"
+  private static final long serialVersionUID = 7L ;
+
+  
 }

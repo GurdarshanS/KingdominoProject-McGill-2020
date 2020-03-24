@@ -2,9 +2,11 @@
 /*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse223.kingdomino.model;
+import java.io.Serializable;
 
-// line 50 "../../../../../Kingdomino.ump"
-public class Domino
+// line 25 "../../../../../KingdominoPersistence.ump"
+// line 51 "../../../../../Kingdomino.ump"
+public class Domino implements Serializable
 {
 
   //------------------------
@@ -282,5 +284,13 @@ public class Domino
             "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "game = "+(getGame()!=null?Integer.toHexString(System.identityHashCode(getGame())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "dominoSelection = "+(getDominoSelection()!=null?Integer.toHexString(System.identityHashCode(getDominoSelection())):"null");
-  }
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 28 "../../../../../KingdominoPersistence.ump"
+  private static final long serialVersionUID = 4L ;
+
+  
 }

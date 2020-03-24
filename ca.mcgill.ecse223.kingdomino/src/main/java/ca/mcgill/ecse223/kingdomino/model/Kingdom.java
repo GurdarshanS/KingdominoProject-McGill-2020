@@ -2,13 +2,15 @@
 /*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse223.kingdomino.model;
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Dominos, pile, draft
  */
-// line 45 "../../../../../Kingdomino.ump"
-public class Kingdom
+// line 55 "../../../../../KingdominoPersistence.ump"
+// line 46 "../../../../../Kingdomino.ump"
+public class Kingdom implements Serializable
 {
 
   //------------------------
@@ -297,6 +299,12 @@ public class Kingdom
     }
   }
   
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
   
+  // line 58 "../../../../../KingdominoPersistence.ump"
+  private static final long serialVersionUID = 9L ;
 
+  
 }

@@ -12,7 +12,6 @@ import ca.mcgill.ecse223.kingdomino.persistence.KDPersistence;
 import java.util.concurrent.ThreadLocalRandom;
 import java.io.File;
 
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -251,31 +250,31 @@ public class KDController {
 	public static void setGameOptions(int numPlayers, List<BonusOption> selectedBonusOptions)throws InvalidInputException{
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		if(numPlayers < 1 || numPlayers > 4) {
+		if(numPlayers <= 1 || numPlayers > 4) {
 			throw new InvalidInputException("Must between 2 and 4 players for a game.");
 		}
 		if(numPlayers == 2) {
 			Game game = new Game(24, kingdomino);
 			game.setNumberOfPlayers(2);
-			for(int i=0; i<= selectedBonusOptions.size()-1; i++) {
+			for(int i=0; i< selectedBonusOptions.size(); i++) {
 				BonusOption bonusOption = selectedBonusOptions.get(i);
 				game.addSelectedBonusOption(bonusOption);
 			}
 			kingdomino.setCurrentGame(game);
 		}
-		if(numPlayers == 3) {
+		else if(numPlayers == 3) {
 			Game game = new Game(36, kingdomino);
 			game.setNumberOfPlayers(3);
-			for(int i=0; i<= selectedBonusOptions.size()-1; i++) {
+			for(int i=0; i<selectedBonusOptions.size(); i++) {
 				BonusOption bonusOption = selectedBonusOptions.get(i);
 				game.addSelectedBonusOption(bonusOption);
 			}
 			kingdomino.setCurrentGame(game);
 		}
-		if(numPlayers == 4) {
+		else{
 			Game game = new Game(48, kingdomino);
 			game.setNumberOfPlayers(4);
-			for(int i=0; i<= selectedBonusOptions.size()-1; i++) {
+			for(int i=0; i<selectedBonusOptions.size(); i++) {
 				BonusOption bonusOption = selectedBonusOptions.get(i);
 				game.addSelectedBonusOption(bonusOption);
 			}
@@ -291,24 +290,31 @@ public class KDController {
 	 * @return boolean
 	 * @throws java.lang.IllegalArgumentException	
 	 *  */
-	public static boolean loadGame(File file) throws InvalidInputException {
+	public static Kingdomino loadGame(String fileName) {
+		KDPersistence.setFilename(fileName);
+		Kingdomino kd = KDPersistence.load();
+		return kd;
 		
-		boolean gameLoaded = false;
-		String directory = "./src/test/resources/"+file.getName();	
-		File fileSearch = new File(directory);
-		if (fileSearch.isFile()) {
-			if(fileSearch.canRead()) {
-				try{
-					KDPersistence.load();
-					gameLoaded = true;
-				}
-				catch(RuntimeException r) {
-					throw new InvalidInputException("Invalid file name.");
-				}
-			}
-		}
-		return gameLoaded;
 	}
+	
+//	public static boolean loadGame(File file) throws InvalidInputException {
+//		
+//		boolean gameLoaded = false;
+//		String directory = "./src/test/resources/"+file.getName();	
+//		File fileSearch = new File(directory);
+//		if (fileSearch.isFile()) {
+//			if(fileSearch.canRead()) {
+//				try{
+//					KDPersistence.load();
+//					gameLoaded = true;
+//				}
+//				catch(RuntimeException r) {
+//					throw new InvalidInputException("Invalid file name.");
+//				}
+//			}
+//		}
+//		return gameLoaded;
+//	}
 	
 	/**
 	 * @author Anthony Harissi Dagher
@@ -317,25 +323,77 @@ public class KDController {
 	 * @return boolean
 	 * @throws java.lang.IllegalArgumentException
 	 */
-	public static boolean saveGame(File file, boolean overwrite) throws InvalidInputException {
+	
+	public static boolean saveGame(boolean overwrite) {
+	
+		boolean fileExist=false;
+
+		String fileName=KDPersistence.getFilename();
+		File file = new File(fileName);
+		fileExist=file.exists();
 		
-		boolean gameSaved;
-		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		String directory = "./src/test/resources/"+file.getName();
-		File fileSearch = new File(directory);
-		if(fileSearch.exists() && overwrite == false) {
-			gameSaved = false;
-		}
-		else {
-			try {
-				KDPersistence.save(kingdomino); 
-				gameSaved = true;
-			}catch(RuntimeException r) {
-				throw new InvalidInputException(r.getMessage());
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+				
+		if (fileExist) {
+			if (overwrite) {
+				KDPersistence.save(kd);
+				return true;
+			}
+			else {
+				return false;
 			}
 		}
-		return gameSaved;
+		else {
+			KDPersistence.save(kd);
+			return true;
+		}
 	}
+	
+	public static boolean saveGame(String fileName, boolean overwrite) {
+		
+		boolean fileExist=false;
+		
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+	
+		File file = new File(fileName);
+		fileExist=file.exists();
+		
+		KDPersistence.setFilename(fileName);
+		
+		if (fileExist) {
+			if (overwrite) {
+				KDPersistence.save(kd);
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			KDPersistence.save(kd);
+			return true;
+		}
+	}
+	
+//	public static boolean saveGame(File file, boolean overwrite) throws InvalidInputException {
+//		
+//		boolean gameSaved;
+//		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+//		String directory = "./src/test/resources/"+file.getName();
+//		File fileSearch = new File(directory);
+//		if(fileSearch.exists() && overwrite == false) {
+//			gameSaved = false;
+//		}
+//		else {
+//			try {
+//				KDPersistence.save(kingdomino); 
+//				gameSaved = true;
+//			}catch(RuntimeException r) {
+//				throw new InvalidInputException(r.getMessage());
+//			}
+//		}
+//		return gameSaved;
+//	}
 	
 	/**
 	
@@ -343,65 +401,107 @@ public class KDController {
 	 * @author Anthony Harissi Dagher
 	 * Feature 3: This method starts a new game for the player.
 	 */
+	
+
+	
 	public static void startANewGame() {
 		
-		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		Game game = kingdomino.getCurrentGame();
-		int randomNum = ThreadLocalRandom.current().nextInt(0, game.numberOfPlayers());
-		List<Domino> dominoesInGame;
-		for (int i = 0; i < game.numberOfPlayers(); i++) {
-			if(i==0) {
-				game.getPlayer(i).setColor(Player.PlayerColor.Blue);
-			}
-			if(i==1) {
-				game.getPlayer(i).setColor(Player.PlayerColor.Green);
-			}
-			if(i==2) {
-				game.getPlayer(i).setColor(Player.PlayerColor.Pink);
-			}
-			if(i==3) {
-				game.getPlayer(i).setColor(Player.PlayerColor.Yellow);
-			}
-		}
-		game.setNextPlayer(game.getPlayer(randomNum));
-		createAllDominoes(game);
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
 		
-		if(game.getNumberOfPlayers()==2) {
-			
-			int randDomino = ThreadLocalRandom.current().nextInt(0, 24);
-			dominoesInGame = pickRandDomino(game.getAllDominos(), 24+1);
-			for(int i=0; i<= 24; i++) {
-				game.removeAllDomino(dominoesInGame.get(i));
-			}
-//			game.setTopDominoInPile(dominoesInGame.get(randDomino));
-		}
-		if(game.getNumberOfPlayers()==3) {
-			
-			int randDomino = ThreadLocalRandom.current().nextInt(0, 36);
-			dominoesInGame = pickRandDomino(game.getAllDominos(), 12+1);
-			for(int i=0; i<= 12; i++) {
-				game.removeAllDomino(dominoesInGame.get(i));
-			}
-//			game.setTopDominoInPile(dominoesInGame.get(randDomino));
-		}
-		if(game.getNumberOfPlayers()==4) {
-			
-			int randDomino = ThreadLocalRandom.current().nextInt(0, 36);
-			dominoesInGame = pickRandDomino(game.getAllDominos(), 48+1);
-//			game.setTopDominoInPile(dominoesInGame.get(randDomino));
+		int dominoNums=game.getMaxPileSize();
+		createSomeDominoes(game,dominoNums);
+
+		
+		int playerNums=game.getNumberOfPlayers();
+		List<Integer> playerOrder = uniqueRandomSequence(playerNums,0,playerNums-1);
+		PlayerColor[] availableColors= {PlayerColor.Blue,PlayerColor.Green,PlayerColor.Pink,PlayerColor.Yellow};
+		
+		for (Integer order:playerOrder) {
+			Player p = new Player(game);
+			p.setColor(availableColors[order]);
+			Kingdom kingdom = new Kingdom(p);
+			new Castle(0, 0, kingdom, p);
 		}
 		
-		List<Domino> dominosInGame = game.getAllDominos();
-		
-		for (int i=0;i<dominosInGame.size()-1;i++) {
-			dominosInGame.get(i).setNextDomino(dominosInGame.get(i+1));
+	
+
+		List<Domino> allDominos = game.getAllDominos();
+		for (Domino d:allDominos) {
+			System.out.println(d.getId()+"-"+d.getLeftTile()+"-"+d.getRightTile());
 		}
+		System.out.println("----------------------------------");
+		System.out.println(allDominos.size()+" total dominos");
+
+		List<Player> allPlayers = game.getPlayers();
+		for (Player player:allPlayers) {
+//			System.out.println(player.getColor()+"-"+player.getCurrentRanking()+);
+//			System.out.println(player.getColor());
+			System.out.println(player);
+		}
+		System.out.println("----------------------------------");
+		System.out.println(allDominos.size()+" total dominos");
 		
-		Domino firstDomino=dominosInGame.get(0);
-		game.setTopDominoInPile(firstDomino);
-		
-		createOneDraft();
 	}
+//	public static void startANewGame() {
+//		
+//		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+//		Game game = kingdomino.getCurrentGame();
+//		int randomNum = ThreadLocalRandom.current().nextInt(0, game.numberOfPlayers());
+//		List<Domino> dominoesInGame;
+//		for (int i = 0; i < game.numberOfPlayers(); i++) {
+//			if(i==0) {
+//				game.getPlayer(i).setColor(Player.PlayerColor.Blue);
+//			}
+//			if(i==1) {
+//				game.getPlayer(i).setColor(Player.PlayerColor.Green);
+//			}
+//			if(i==2) {
+//				game.getPlayer(i).setColor(Player.PlayerColor.Pink);
+//			}
+//			if(i==3) {
+//				game.getPlayer(i).setColor(Player.PlayerColor.Yellow);
+//			}
+//		}
+//		game.setNextPlayer(game.getPlayer(randomNum));
+//		createAllDominoes(game);
+//		
+//		if(game.getNumberOfPlayers()==2) {
+//			
+//			int randDomino = ThreadLocalRandom.current().nextInt(0, 24);
+//			dominoesInGame = pickRandDomino(game.getAllDominos(), 24+1);
+//			for(int i=0; i<= 24; i++) {
+//				game.removeAllDomino(dominoesInGame.get(i));
+//			}
+////			game.setTopDominoInPile(dominoesInGame.get(randDomino));
+//		}
+//		if(game.getNumberOfPlayers()==3) {
+//			
+//			int randDomino = ThreadLocalRandom.current().nextInt(0, 36);
+//			dominoesInGame = pickRandDomino(game.getAllDominos(), 12+1);
+//			for(int i=0; i<= 12; i++) {
+//				game.removeAllDomino(dominoesInGame.get(i));
+//			}
+////			game.setTopDominoInPile(dominoesInGame.get(randDomino));
+//		}
+//		if(game.getNumberOfPlayers()==4) {
+//			
+//			int randDomino = ThreadLocalRandom.current().nextInt(0, 36);
+//			dominoesInGame = pickRandDomino(game.getAllDominos(), 48+1);
+////			game.setTopDominoInPile(dominoesInGame.get(randDomino));
+//		}
+//		
+//		List<Domino> dominosInGame = game.getAllDominos();
+//		
+//		for (int i=0;i<dominosInGame.size()-1;i++) {
+//			dominosInGame.get(i).setNextDomino(dominosInGame.get(i+1));
+//		}
+//		
+//		Domino firstDomino=dominosInGame.get(0);
+//		game.setTopDominoInPile(firstDomino);
+//		
+//		createOneDraft();
+//	}
 	
 	/**
 	 * 
@@ -2161,6 +2261,19 @@ public class KDController {
 	}
 	
 	
+	private static List<Integer> uniqueRandomSequence(int size,int min,int max){
+		List<Integer> sequence = new ArrayList<Integer>();
+		Random rand = new Random();
+		
+		while (sequence.size()<size){
+			int num=rand.nextInt((max - min) + 1) + min;
+			if (!sequence.contains(num)) {
+				sequence.add(num);
+			}
+		}
+		return sequence;
+	}
+	
 	/**
 	 * 
 	 * This method returns the largest and smallest possible
@@ -2843,6 +2956,36 @@ public class KDController {
 			player.setColor(PlayerColor.values()[i]);
 			Kingdom kingdom = new Kingdom(player);
 			new Castle(0, 0, kingdom, player);
+		}
+	}
+	
+	private static void createSomeDominoes(Game game, int pileSize) {
+		
+		List<Integer> randomIds = uniqueRandomSequence(pileSize,1,48);
+				
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("src/main/resources/alldominoes.dat"));
+			String line = "";
+			String delimiters = "[:\\+()]";
+			while ((line = br.readLine()) != null) {
+				String[] dominoString = line.split(delimiters); // {id, leftTerrain, rightTerrain, crowns}
+				int dominoId = Integer.decode(dominoString[0]);
+				TerrainType leftTerrain = getTerrainType(dominoString[1]);
+				TerrainType rightTerrain = getTerrainType(dominoString[2]);
+				int numCrown = 0;
+				if (dominoString.length > 3) {
+					numCrown = Integer.decode(dominoString[3]);
+				}
+				
+				if (randomIds.contains(dominoId)) {
+					new Domino(dominoId, leftTerrain, rightTerrain, numCrown, game);
+				}
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new java.lang.IllegalArgumentException(
+					"Error occured while trying to read alldominoes.dat: " + e.getMessage());
 		}
 	}
 

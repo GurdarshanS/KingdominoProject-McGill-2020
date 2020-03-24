@@ -1,6 +1,7 @@
 namespace ca.mcgill.ecse223.kingdomino.model;
 
 use ca.mcgill.ecse223.kingdomino.model.TerrainType;
+use KingdominoPersistence.ump;
 
 class Kingdomino {
 	1 <@>- * User users;	

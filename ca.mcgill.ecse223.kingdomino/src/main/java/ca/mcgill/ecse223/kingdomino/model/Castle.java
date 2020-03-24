@@ -2,9 +2,11 @@
 /*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse223.kingdomino.model;
+import java.io.Serializable;
 
-// line 79 "../../../../../Kingdomino.ump"
-public class Castle extends KingdomTerritory
+// line 19 "../../../../../KingdominoPersistence.ump"
+// line 80 "../../../../../Kingdomino.ump"
+public class Castle extends KingdomTerritory implements Serializable
 {
 
   //------------------------
@@ -52,5 +54,13 @@ public class Castle extends KingdomTerritory
     player = null;
     super.delete();
   }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 22 "../../../../../KingdominoPersistence.ump"
+  private static final long serialVersionUID = 3L ;
 
+  
 }

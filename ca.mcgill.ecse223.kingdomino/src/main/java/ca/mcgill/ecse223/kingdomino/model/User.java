@@ -2,13 +2,15 @@
 /*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse223.kingdomino.model;
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Players, users
  */
-// line 27 "../../../../../Kingdomino.ump"
-public class User
+// line 79 "../../../../../KingdominoPersistence.ump"
+// line 28 "../../../../../Kingdomino.ump"
+public class User implements Serializable
 {
 
   //------------------------
@@ -251,6 +253,14 @@ public class User
     }
   }
 
+  // line 85 "../../../../../KingdominoPersistence.ump"
+   public static  void reinitializeUsers(List<User> allUsers){
+    usersByName = new HashMap<String, User>();
+    for (User user : allUsers) {
+      usersByName.put(user.getName(), user);
+    }
+  }
+
 
   public String toString()
   {
@@ -259,5 +269,13 @@ public class User
             "playedGames" + ":" + getPlayedGames()+ "," +
             "wonGames" + ":" + getWonGames()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "kingdomino = "+(getKingdomino()!=null?Integer.toHexString(System.identityHashCode(getKingdomino())):"null");
-  }
+  }  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 82 "../../../../../KingdominoPersistence.ump"
+  private static final long serialVersionUID = 14L ;
+
+  
 }

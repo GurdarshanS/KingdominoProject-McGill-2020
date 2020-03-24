@@ -2,10 +2,12 @@
 /*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse223.kingdomino.model;
+import java.io.Serializable;
 import java.util.*;
 
-// line 5 "../../../../../Kingdomino.ump"
-public class Kingdomino
+// line 4 "../../../../../KingdominoPersistence.ump"
+// line 6 "../../../../../Kingdomino.ump"
+public class Kingdomino implements Serializable
 {
 
   //------------------------
@@ -384,4 +386,17 @@ public class Kingdomino
     currentGame = null;
   }
 
+  // line 9 "../../../../../KingdominoPersistence.ump"
+   public void reinitialize(){
+    User.reinitializeUsers(this.getUsers());
+  }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 7 "../../../../../KingdominoPersistence.ump"
+  private static final long serialVersionUID = 1L ;
+
+  
 }

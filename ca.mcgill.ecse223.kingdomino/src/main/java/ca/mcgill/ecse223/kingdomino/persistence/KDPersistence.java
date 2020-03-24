@@ -5,9 +5,10 @@ import ca.mcgill.ecse223.kingdomino.model.*;
 
 public class KDPersistence {
 	
-	private static String fileName = "kingdomino.data";
+	private static String fileName = "default_saved_game.data";
 
 	public static void save(Kingdomino kingdomino) {
+		PersistenceObjectStream.setFilename(fileName);
 		PersistenceObjectStream.serialize(kingdomino);
 	}
 	
@@ -15,8 +16,9 @@ public class KDPersistence {
 		PersistenceObjectStream.setFilename(fileName);
 		Kingdomino kingdomino= (Kingdomino) PersistenceObjectStream.deserialize();
 		
-		if (kingdomino == null) {
-			kingdomino = new Kingdomino();
+		if (kingdomino == null) {}
+		else {
+			kingdomino.reinitialize();
 		}
 		return kingdomino;
 	}

@@ -2,12 +2,14 @@
 /*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse223.kingdomino.model;
+import java.io.Serializable;
 
 /**
  * This can also be an association class
  */
-// line 94 "../../../../../Kingdomino.ump"
-public class DominoSelection
+// line 37 "../../../../../KingdominoPersistence.ump"
+// line 95 "../../../../../Kingdomino.ump"
+public class DominoSelection implements Serializable
 {
 
   //------------------------
@@ -169,5 +171,13 @@ public class DominoSelection
       placeholderDraft.removeSelection(this);
     }
   }
+  
+  //------------------------
+  // DEVELOPER CODE - PROVIDED AS-IS
+  //------------------------
+  
+  // line 40 "../../../../../KingdominoPersistence.ump"
+  private static final long serialVersionUID = 6L ;
 
+  
 }
