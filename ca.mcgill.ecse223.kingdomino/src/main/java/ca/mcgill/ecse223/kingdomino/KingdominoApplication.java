@@ -1,6 +1,7 @@
 package ca.mcgill.ecse223.kingdomino;
 
 import ca.mcgill.ecse223.kingdomino.model.Kingdomino;
+import ca.mcgill.ecse223.kingdomino.controller.*;
 import ca.mcgill.ecse223.kingdomino.persistence.*;
 
 public class KingdominoApplication {
@@ -15,6 +16,8 @@ public class KingdominoApplication {
 		if (kingdomino == null) {
 			kingdomino = new Kingdomino();
 		}
+		else {
+		}		
 		return kingdomino;
 	}
 	

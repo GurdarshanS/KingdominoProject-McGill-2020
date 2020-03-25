@@ -5,7 +5,7 @@ import ca.mcgill.ecse223.kingdomino.model.*;
 
 public class KDPersistence {
 	
-	private static String fileName = "default_saved_game.data";
+	private static String fileName = "saved_game_data.txt";
 
 	public static void save(Kingdomino kingdomino) {
 		PersistenceObjectStream.setFilename(fileName);

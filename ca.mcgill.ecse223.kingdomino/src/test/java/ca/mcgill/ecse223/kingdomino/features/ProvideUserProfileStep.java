@@ -60,7 +60,7 @@ public class ProvideUserProfileStep {
     	
     	ProvideUserStatus = "succeed";
     	try {
-    	 KDController.ProvidetUserProfile(aString);
+    	 KDController.provideUserProfile(aString);
     	 
     	 
     	}

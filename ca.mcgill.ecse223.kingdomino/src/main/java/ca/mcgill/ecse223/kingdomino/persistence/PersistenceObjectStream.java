@@ -10,7 +10,7 @@ import java.io.ObjectOutputStream;
 
 public class PersistenceObjectStream {
 	
-	private static String fileName = "default_saved_game.data";
+	private static String fileName = "saved_game_data.txt";
 
 	public static void serialize(Object object) {
 		 FileOutputStream fileOutput;
@@ -20,7 +20,7 @@ public class PersistenceObjectStream {
 	            output.writeObject(object);
 	            output.close();
 	            fileOutput.close();
-	            System.out.println("something got saved");
+//	            System.out.println("something got saved");
 	        } catch (Exception e) {
 	            throw new RuntimeException("Couldn't save '" + fileName + "'.");
 	        }
@@ -44,12 +44,9 @@ public class PersistenceObjectStream {
 		 	fileIn.close();
 		 	in.close();
       } 
-      catch (EOFException e1) {e1.printStackTrace();} 
-      catch (ClassNotFoundException e2) {e2.printStackTrace();}
-      catch (IOException e3) {
-    	  System.out.println("saved game file not found, make sure such file exists");
-    	  e3.printStackTrace();
-      	} 
+      catch (EOFException e1) {} 
+      catch (ClassNotFoundException e2) {}
+      catch (IOException e3) {}
       
       return o;
 	}
