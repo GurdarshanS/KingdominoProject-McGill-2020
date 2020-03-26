@@ -141,7 +141,8 @@ public class viewKingdominoState {
 		KDController.calculatePlayerRanking();
 		
 		printDraft(kd);
-		printPlayers(kd);
+		printDominos(kd);
+//		printPlayers(kd);
 
 
 //	

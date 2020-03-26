@@ -1,6 +1,7 @@
 package ca.mcgill.ecse223.kingdomino.controller;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
+import ca.mcgill.ecse223.kingdomino.development.Box;
 //import ca.mcgill.ecse223.kingdomino.model.Kingdomino;
 import ca.mcgill.ecse223.kingdomino.model.*;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -1840,55 +1841,136 @@ public class KDController {
 	 * @param void
 	 * @return void
 	 */
+	
+	private static int[] playerMaxPropSizeAndNumCrown(Player player) {
+		int size=-1;
+		int crown=0;
+		
+		for (Property prop:player.getKingdom().getProperties()) {
+			if (prop.getSize()>size) size=prop.getSize();
+			crown+=prop.getCrowns();
+		}
+		
+		int[] sizeAndCrown= {size,crown};
+		return sizeAndCrown;
+	}
 
+	private static void comparePlayers(List<Player> players) {
+		Collections.sort(players, new Comparator<Player>() {
+			public int compare(Player p1,Player p2) {
+				
+				int score1=p1.getTotalScore();
+				int score2=p2.getTotalScore();
+				
+				int[] sizeCrown1=playerMaxPropSizeAndNumCrown(p1);
+				int[] sizeCrown2=playerMaxPropSizeAndNumCrown(p2);
+				
+				int size1=sizeCrown1[0];
+				int crown1=sizeCrown1[1];
+				
+				int size2=sizeCrown2[0];
+				int crown2=sizeCrown2[1];
+				
+				if (score1>score2) return 1;
+				else if (score1<score2) return -1;
+				else {
+					if (size1>size2) return 1;
+					else if (size1<size2) return -1;
+					else {
+						if (crown1>crown2) return 1;
+						else if (crown1<crown2) return -1;
+						else return 0;
+					}
+				}
+			}
+		});
+	}
+	
+	private static boolean comparePlayers(Player p1,Player p2) {				
+		int score1=p1.getTotalScore();
+		int score2=p2.getTotalScore();
+		
+		int[] sizeCrown1=playerMaxPropSizeAndNumCrown(p1);
+		int[] sizeCrown2=playerMaxPropSizeAndNumCrown(p2);
+		
+		int size1=sizeCrown1[0];
+		int crown1=sizeCrown1[1];
+		
+		int size2=sizeCrown2[0];
+		int crown2=sizeCrown2[1];
+		
+		if ((score1==score2)&&(crown1==crown2)&&(size1==size2)) return true;
+		else return false;
+				
+	}
+	
+//	private class playerInfo{
+//		private 
+//	}
+	
 	public static void calculatePlayerRanking() {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
 		
 		List<Player> allPlayers = game.getPlayers();
-		List<Integer> playerScores = new ArrayList<Integer>();
-
-		
+		List<Player> playerCopy = new ArrayList<Player>();
 		for (Player p:allPlayers) {
-			playerScores.add(p.getTotalScore());
+			playerCopy.add(p);
 		}
 		
-		int[] order = argsort(playerScores)[0];
+		
+		
+		comparePlayers(playerCopy);
+		Collections.reverse(playerCopy);
 		
 		int rank=1;
-		for (int i=0;i<order.length-1;i++) {
+		
+		for (int i=0;i<playerCopy.size()-1;i++) {
+			Player nowPlayer=playerCopy.get(i);
+			Player nextPlayer=playerCopy.get(i+1);
 			
-			int nowIndex=order[i];
-			int nextIndex=order[i+1];
+			int[] sizeCrown1=playerMaxPropSizeAndNumCrown(nowPlayer);
+			int[] sizeCrown2=playerMaxPropSizeAndNumCrown(nextPlayer);
 			
-			Player nowPlayer=allPlayers.get(nowIndex);
-			Player nextPlayer=allPlayers.get(nextIndex);
+			int size1=sizeCrown1[0];
+			int crown1=sizeCrown1[1];
+			
+			int size2=sizeCrown2[0];
+			int crown2=sizeCrown2[1];
 			
 			nowPlayer.setCurrentRanking(rank);
-			if (nowPlayer.getTotalScore()!=nextPlayer.getTotalScore()) {
+			if ((nowPlayer.getTotalScore()==nextPlayer.getTotalScore())
+				&&(size1==size2)&&(crown1==crown2)) {}
+			else {
 				rank++;
 			}
 		}
-		allPlayers.get(order[order.length-1]).setCurrentRanking(rank);
+		playerCopy.get(playerCopy.size()-1).setCurrentRanking(rank);
 		
-		for (Player p:allPlayers) {
-			int size=0;
-			int crownNum=0;
-			for (Property prop: p.getKingdom().getProperties()) {
-				if (prop.getSize()>size) {
-					size=prop.getSize();
+
+		
+		List<Integer> ignoreIndex = new ArrayList<Integer>();
+		
+		for (int i=0;i<playerCopy.size();i++) {
+			for (int j=0;j<playerCopy.size();j++) {
+				if (!ignoreIndex.contains(j)) {
+					if (comparePlayers(playerCopy.get(i),allPlayers.get(j))) {
+						allPlayers.get(j).setCurrentRanking(playerCopy.get(i).getCurrentRanking());
+					}
 				}
-				crownNum+=prop.getCrowns();
 			}
-			
-			System.out.println("score: "+p.getTotalScore()+"    rank: "+p.getCurrentRanking()
-			+"    size: "+size+"     crowns: "+crownNum+"        "+p.getColor());
 		}
 		
-//		if (existScoreTieBreak()) {
-//			rankBySize(allPlayers)
-//		}
-			
+		for (Player p:game.getPlayers()) {
+			int[] sizeCrown=playerMaxPropSizeAndNumCrown(p);
+			int size=sizeCrown[0];
+			int crown=sizeCrown[1];
+			String info=String.format("%1$-10s  score: %2$-5d max size: %3$-5d total crown: %4$-5d rank: %5$-5d",
+					p.getColor(),p.getTotalScore(),size,crown,p.getCurrentRanking());
+			System.out.println(info);
+		}
+		
+		
 	}
 	
 //	private static rankBySize(List<Player> allPlayers) {
@@ -2249,7 +2331,6 @@ public class KDController {
 		}
 		
 		calculateBonusScore(player);
-		score=score+player.getBonusScore();
 		player.setPropertyScore(score);
 		
 	}
