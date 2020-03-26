@@ -354,7 +354,7 @@ public class KDController {
 		}
 		else if (game.getAllDrafts().size()<draftNumLimit) {
 			
-			changeDraftDominoStatus(game.getCurrentDraft(),DominoStatus.Excluded);
+//			changeDraftDominoStatus(game.getCurrentDraft(),DominoStatus.Excluded);
 			
 			changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
 			game.setCurrentDraft(game.getNextDraft());
@@ -370,7 +370,7 @@ public class KDController {
 		}
 		else if (kd.getCurrentGame().getAllDrafts().size()==draftNumLimit) {
 			if (game.getNextDraft()!=null) {
-				changeDraftDominoStatus(game.getCurrentDraft(),DominoStatus.Excluded);
+//				changeDraftDominoStatus(game.getCurrentDraft(),DominoStatus.Excluded);
 				game.setCurrentDraft(game.getNextDraft());
 				game.setNextDraft(null);
 			}
@@ -1841,7 +1841,6 @@ public class KDController {
 	 * @return void
 	 */
 
-	
 	public static void calculatePlayerRanking() {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
@@ -1850,25 +1849,79 @@ public class KDController {
 		List<Integer> playerScores = new ArrayList<Integer>();
 
 		
-		System.out.println(" =========== unranked ============");
 		for (Player p:allPlayers) {
 			playerScores.add(p.getTotalScore());
-			System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
 		}
 		
-		rankByValue(allPlayers,playerScores);
+		int[] order = argsort(playerScores)[0];
 		
-		if (!existScoreTieBreak()) {
-			System.out.println(" ============ no tiebreak ranked =============");
-			Player[] p2 = getRankedPlayers();
-			for (Player p:p2) {
-				System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
+		int rank=1;
+		for (int i=0;i<order.length-1;i++) {
+			
+			int nowIndex=order[i];
+			int nextIndex=order[i+1];
+			
+			Player nowPlayer=allPlayers.get(nowIndex);
+			Player nextPlayer=allPlayers.get(nextIndex);
+			
+			nowPlayer.setCurrentRanking(rank);
+			if (nowPlayer.getTotalScore()!=nextPlayer.getTotalScore()) {
+				rank++;
 			}
 		}
-		else {
-			tieBreakByLargestProperty();
+		allPlayers.get(order[order.length-1]).setCurrentRanking(rank);
+		
+		for (Player p:allPlayers) {
+			int size=0;
+			int crownNum=0;
+			for (Property prop: p.getKingdom().getProperties()) {
+				if (prop.getSize()>size) {
+					size=prop.getSize();
+				}
+				crownNum+=prop.getCrowns();
+			}
+			
+			System.out.println("score: "+p.getTotalScore()+"    rank: "+p.getCurrentRanking()
+			+"    size: "+size+"     crowns: "+crownNum+"        "+p.getColor());
 		}
+		
+//		if (existScoreTieBreak()) {
+//			rankBySize(allPlayers)
+//		}
+			
 	}
+	
+//	private static rankBySize(List<Player> allPlayers) {
+//		
+//	}
+	
+//	public static void calculatePlayerRanking() {
+//		
+//		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+//		
+//		List<Player> allPlayers = game.getPlayers();
+//		List<Integer> playerScores = new ArrayList<Integer>();
+//
+//		
+////		System.out.println(" =========== unranked ============");
+//		for (Player p:allPlayers) {
+//			playerScores.add(p.getTotalScore());
+////			System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
+//		}
+//		
+//		rankByValue(allPlayers,playerScores);
+//		
+//		if (!existScoreTieBreak()) {
+////			System.out.println(" ============ no tiebreak ranked =============");
+//			Player[] p2 = getRankedPlayers();
+//			for (Player p:p2) {
+////				System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
+//			}
+//		}
+//		else {
+//			tieBreakByLargestProperty();
+//		}
+//	}
 	
 	/**
 	 * 
@@ -1958,11 +2011,11 @@ public class KDController {
 			
 			rankByValue(sameRankPlayers,sameRankPropSize);
 			
-			System.out.println("\n\n================= tie broken by size ====================");
-			Player[] tieBrokenPlayers=getRankedPlayers();
-			for (Player p:tieBrokenPlayers) {
-				System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
-			}
+//			System.out.println("\n\n================= tie broken by size ====================");
+//			Player[] tieBrokenPlayers=getRankedPlayers();
+//			for (Player p:tieBrokenPlayers) {
+//				System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
+//			}
 		}
 		
 		
@@ -2015,11 +2068,11 @@ public class KDController {
 		Set<Integer> set = new HashSet<Integer>(sameRankCrownSize);
 		
 		if (set.size()!=sameRankCrownSize.size()) {
-			System.out.println("================= shared victory=====================");
-			Player[] tieBrokenPlayers=getRankedPlayers();
-			for (Player p:tieBrokenPlayers) {
-				System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
-			}
+//			System.out.println("================= shared victory=====================");
+//			Player[] tieBrokenPlayers=getRankedPlayers();
+//			for (Player p:tieBrokenPlayers) {
+//				System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
+//			}
 		}
 
 		else {
@@ -2032,11 +2085,11 @@ public class KDController {
 			
 			rankByValue(sameRankPlayers,sameRankCrownSize);
 			
-			System.out.println("\n\n================= tie broken by crown ====================");
-			Player[] tieBrokenPlayers=getRankedPlayers();
-			for (Player p:tieBrokenPlayers) {
-				System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
-			}
+//			System.out.println("\n\n================= tie broken by crown ====================");
+//			Player[] tieBrokenPlayers=getRankedPlayers();
+//			for (Player p:tieBrokenPlayers) {
+//				System.out.println(p.getColor()+" ---- score: "+p.getTotalScore()+" ---- rank: "+p.getCurrentRanking());
+//			}
 		}
 	}
 	
@@ -2187,17 +2240,18 @@ public class KDController {
 	 */
 	
 	public static void calculatePlayerScore(Player player) {
-		identifyAllProperty(player);
+		
 		List<Property> p = player.getKingdom().getProperties();
-//		System.out.println(p);
+		identifyAllProperty(player);
 		int score=0;
 		for (Property each:p) {
-//			System.out.println(each.getScore());
 			score+=each.getScore();
 		}
+		
+		calculateBonusScore(player);
 		score=score+player.getBonusScore();
 		player.setPropertyScore(score);
-		calculateBonusScore(player);
+		
 	}
 	
 	/**
@@ -2972,10 +3026,6 @@ public class KDController {
 			propertySize.add(size);
 			propertyCrowns.add(numCrown);
 		}
-		
-//		System.out.println(propertyCrowns);
-//		System.out.println(propertySize);
-//		System.out.println(propertyIds);
 		
 		for (int i=0;i<propertyCrowns.size();i++) {
 			Property newProp = new Property(player.getKingdom());

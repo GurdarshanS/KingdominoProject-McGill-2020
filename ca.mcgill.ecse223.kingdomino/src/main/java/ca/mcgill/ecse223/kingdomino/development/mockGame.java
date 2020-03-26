@@ -33,11 +33,11 @@ public class mockGame {
 
 		int numPlayers=4;
 		
-		BonusOption mk = new BonusOption("Middle Kingdom",kd);
-		BonusOption hm = new BonusOption("Harmony",kd);
+//		BonusOption mk = new BonusOption("Middle Kingdom",kd);
+//		BonusOption hm = new BonusOption("Harmony",kd);
 		
-		selectedBonusOptions.add(mk);
-		selectedBonusOptions.add(hm);
+//		selectedBonusOptions.add(mk);
+//		selectedBonusOptions.add(hm);
 		
 		try{
 			KDController.setGameOptions(numPlayers, selectedBonusOptions);
