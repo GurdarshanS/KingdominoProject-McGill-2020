@@ -10,45 +10,111 @@ public class viewKingdominoState {
 	public static void main (String [] args) {
 		
 		Kingdomino kd = KDController.loadGame();
-
+		
 		printUsers(kd);
-		printExistCurrentGame(kd);
-		
-		printDraft(kd);
-				
-		KDController.createNextDraft(); 		//3 drafts
-		printDraft(kd);
-		
-		KDController.createNextDraft(); 		//4 drafts
-		printDraft(kd);
-		
-		KDController.createNextDraft(); 		//5 drafts
-		printDraft(kd);
-		
-		KDController.createNextDraft(); 		//6 drafts
-		printDraft(kd);
-		
-		KDController.createNextDraft(); 		//7 drafts
-		printDraft(kd);
-		
-		printTotalDraftNum(kd);
-		printDominos(kd);
-		printSortedDominos(kd);
 		printPlayers(kd);
+		
+		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));		
+		printDraft(kd);
+		printPlayers(kd);
+		
+		Player player=kd.getCurrentGame().getPlayer(0);
+		KDController.prePlaceDominoDominoSelection(player, 1, 0, "right");
+//		printPlayerKingdom(player);
+		
+		System.out.println(KDController.placeLatestDomino(player));
+		printPlayerKingdom(player);
+		
+		KDController.identifyAllProperty(player);
+		
+		printProperties(player);
+		
+
+		
+//		System.out.println(KDController.placeLatestDomino(player));
+//		printPlayerKingdom(player);		
+//
+//		KDController.moveLatestDomino(player, "right");
+//		printPlayerKingdom(player);
+//
+//		KDController.moveLatestDomino(player, "right");
+//		printPlayerKingdom(player);
+//		
+//		KDController.rotateLatestDomino(player, "clockwise");
+//		printPlayerKingdom(player);
+//		
+//		KDController.rotateLatestDomino(player, "clockwise");
+//		printPlayerKingdom(player);
+//		
+
+		
+	}
+	
+	public static void printProperties(Player player) {
+		System.out.println("\n================================= "+player.getColor()+" player properties ===================================\n");
+		List<Property> playerProperties=player.getKingdom().getProperties();
+		for (Property p:playerProperties) {
+			String row=String.format("%1$-20s size: %2$-5d crowns: %3$-5d score: %4$-5d",
+					p.getPropertyType(),p.getSize(),p.getCrowns(),p.getScore());
+			System.out.println(row);
+		}
+	}
+	
+	public static void printPlayerKingdom(Player p) {
+		System.out.println("================================== "+p.getColor()+" player kingdom =====================================");
+			System.out.println(KDController.getKingdomVerificationResult(p)+" kingdom\n");
+			for (KingdomTerritory territory:p.getKingdom().getTerritories()) {
+				String row="none";
+				if (territory instanceof Castle) {
+					row=String.format("   NoID   %1$-20s  left x: %2$-5d left y: %3$-5d right x: %4$-5d right y: %5$-5d %6$-10s status: %7$-2s",
+							"Castle",territory.getX(),territory.getY(),0,0,"none","none");
+				}
+				else if (territory instanceof DominoInKingdom){
+					int[] otherPos=KDController.calculateOtherPos(territory);
+					row=String.format("   %1$-5d  %2$-20s  left x: %3$-5d left y: %4$-5d right x: %5$-5d right y: %6$-5d %7$-10s status: %8$-2s\"",
+							((DominoInKingdom) territory).getDomino().getId(),"DominoInKingdom",territory.getX(),territory.getY(),otherPos[0],otherPos[1],((DominoInKingdom) territory).getDirection(),
+							((DominoInKingdom) territory).getDomino().getStatus());
+				}
+				System.out.println(row);
+			}
+	}
+	
+	public static void printAllKingdoms(Kingdomino kd) {
+		System.out.println("====================================== player kingdoms ====================================");
+		for (Player p:kd.getCurrentGame().getPlayers()) {
+			System.out.println("\n"+p.getColor());
+			System.out.println(KDController.getKingdomVerificationResult(p)+" kingdom\n");
+			for (KingdomTerritory territory:p.getKingdom().getTerritories()) {
+				String row="none";
+				if (territory instanceof Castle) {
+					row=String.format("   NoID   %1$-20s  left x: %2$-5d left y: %3$-5d right x: %4$-5d right y: %5$-5d %6$-10s status: %7$-2s",
+							"Castle",territory.getX(),territory.getY(),0,0,"none","none");
+				}
+				else if (territory instanceof DominoInKingdom){
+					int[] otherPos=KDController.calculateOtherPos(territory);
+					row=String.format("   %1$-5d  %2$-20s  left x: %3$-5d left y: %4$-5d right x: %5$-5d right y: %6$-5d %7$-10s status: %8$-2s\"",
+							((DominoInKingdom) territory).getDomino().getId(),"DominoInKingdom",territory.getX(),territory.getY(),otherPos[0],otherPos[1],((DominoInKingdom) territory).getDirection(),
+							((DominoInKingdom) territory).getDomino().getStatus());
+				}
+				System.out.println(row);
+			}
+		}
 	}
 	
 	public static void printUsers(Kingdomino kd) {
 		//		view all users of kingdomino (NOT players)
-		System.out.println("================= users in kingdomino =============");
+		System.out.println("==================================== users in kingdomino ==================================");
 		for (User user:kd.getUsers()) {
 			System.out.println(user.getName());
 		}
+		System.out.println();
 	}
 	
 	public static void printExistCurrentGame(Kingdomino kd) {
 		//		check existence of a current game
 		System.out.println("=============== is there a current game ===========");
 		System.out.println(kd.hasCurrentGame());
+		System.out.println();
 	}
 	
 	public static void printTotalDraftNum(Kingdomino kd) {
@@ -60,14 +126,20 @@ public class viewKingdominoState {
 	
 	public static void printPlayers(Kingdomino kd) {
 		//		view all players of the current game
-		System.out.println("=============== players in current game ===========");
+		System.out.println("================================ player order and selections ==============================");
 		for (Player p:kd.getCurrentGame().getPlayers()) {
-			
-			String row = String.format("%1$-7s ranking: %2$-2s score: %3$-3s username:  %4$-10s",
-					p.getColor(),p.getCurrentRanking(),p.getTotalScore(),p.getUser().getName());
-			
+			String row;
+			if (p.hasDominoSelection()) {
+				row = String.format("%1$-7s ranking: %2$-2s score: %3$-3s username:  %4$-10s selected domino: %5$-10s",
+						p.getColor(),p.getCurrentRanking(),p.getTotalScore(),p.getUser().getName(),p.getDominoSelection().getDomino().getId());
+			}
+			else {
+				row = String.format("%1$-7s ranking: %2$-2s score: %3$-3s username:  %4$-10s",
+						p.getColor(),p.getCurrentRanking(),p.getTotalScore(),p.getUser().getName());	
+			}
 			System.out.println(row);
 		}
+		System.out.println();
 	}
 	
 	public static void printDominos(Kingdomino kd) {
@@ -98,15 +170,25 @@ public class viewKingdominoState {
 	
 	public static void printDraft(Kingdomino kd) {
 		//		view dominos in current game
-		System.out.println("============= round #"+(kd.getCurrentGame().getAllDrafts().size()-1)+" in current game ============");
+		System.out.println("================================== round #"+(kd.getCurrentGame().getAllDrafts().size()-1)+
+				" results =======================================\n");
 		
 		System.out.println("current draft"+" - status: "+kd.getCurrentGame().getCurrentDraft().getDraftStatus());
 		System.out.println("---------------------------------------------------");
 		
 		List<Domino> allDominos=kd.getCurrentGame().getCurrentDraft().getIdSortedDominos();
+		
+		String row;
 		for (Domino d:allDominos) {
-			String row = String.format("%1$-3s %2$-15s %3$-15s  %4$-10s",
-					d.getId(),d.getLeftTile(),d.getRightTile(),d.getStatus());
+			if (d.getDominoSelection()!=null)
+			{
+				row = String.format("%1$-3s %2$-15s %3$-15s  %4$-15s  selected: %5$-2s  player: %6$-2s" ,
+						d.getId(),d.getLeftTile(),d.getRightTile(),d.getStatus(),d.hasDominoSelection(),d.getDominoSelection().getPlayer().getColor());
+			}
+			else {
+				row = String.format("%1$-3s %2$-15s %3$-15s  %4$-15s  selected: %5$-2s" ,
+						d.getId(),d.getLeftTile(),d.getRightTile(),d.getStatus(),d.hasDominoSelection());
+			}
 			System.out.println(row);
 		}
 		
@@ -116,8 +198,15 @@ public class viewKingdominoState {
 			
 			List<Domino> allDominos2=kd.getCurrentGame().getNextDraft().getIdSortedDominos();
 			for (Domino d:allDominos2) {
-				String row = String.format("%1$-3s %2$-15s %3$-15s  %4$-10s",
-						d.getId(),d.getLeftTile(),d.getRightTile(),d.getStatus());
+				if (d.getDominoSelection()!=null)
+				{
+					row = String.format("%1$-3s %2$-15s %3$-15s  %4$-15s  selected: %5$-2s  player: %6$-2s" ,
+							d.getId(),d.getLeftTile(),d.getRightTile(),d.getStatus(),d.hasDominoSelection(),d.getDominoSelection().getPlayer().getColor());
+				}
+				else {
+					row = String.format("%1$-3s %2$-15s %3$-15s  %4$-15s  selected: %5$-2s" ,
+							d.getId(),d.getLeftTile(),d.getRightTile(),d.getStatus(),d.hasDominoSelection());
+				}
 				System.out.println(row);
 			}
 			System.out.println("---------------------------------------------------");

@@ -46,6 +46,342 @@ public class KDController {
 	}
 	
 	/**
+	 * @author Anthony Harissi Dagher
+	 * Feature 6: This method loads a saved game for the player.
+	 * @param file
+	 * @return boolean
+	 * @throws java.lang.IllegalArgumentException	
+	 *  */
+	
+	public static Kingdomino loadGame() {
+		Kingdomino kd = KDPersistence.load();
+		if (kd==null) {
+			kd = new Kingdomino();
+//			System.out.println("no kingdomino serialization found");
+//			System.out.println("created new kingdomino instance");
+//			System.out.println("serialized new kingdomino instance");
+		}
+		else {
+//			System.out.println("loaded kingdomino serialization");	
+		}
+		
+		KingdominoApplication.setKingdomino(kd);
+		KDPersistence.save(kd);
+		
+		return kd;
+	}
+	
+//	public static boolean loadGame(File file) throws InvalidInputException {
+//		
+//		boolean gameLoaded = false;
+//		String directory = "./src/test/resources/"+file.getName();	
+//		File fileSearch = new File(directory);
+//		if (fileSearch.isFile()) {
+//			if(fileSearch.canRead()) {
+//				try{
+//					KDPersistence.load();
+//					gameLoaded = true;
+//				}
+//				catch(RuntimeException r) {
+//					throw new InvalidInputException("Invalid file name.");
+//				}
+//			}
+//		}
+//		return gameLoaded;
+//	}
+	
+	/**
+	 * @author Anthony Harissi Dagher
+	 * Feature 7: This method saves the current game for the player.
+	 * @param file
+	 * @return boolean
+	 * @throws java.lang.IllegalArgumentException
+	 */
+	
+	public static boolean saveGame() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		try{
+			KDPersistence.save(kd);
+			return true;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+//	public static boolean saveGame(File file, boolean overwrite) throws InvalidInputException {
+//		
+//		boolean gameSaved;
+//		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+//		String directory = "./src/test/resources/"+file.getName();
+//		File fileSearch = new File(directory);
+//		if(fileSearch.exists() && overwrite == false) {
+//			gameSaved = false;
+//		}
+//		else {
+//			try {
+//				KDPersistence.save(kingdomino); 
+//				gameSaved = true;
+//			}catch(RuntimeException r) {
+//				throw new InvalidInputException(r.getMessage());
+//			}
+//		}
+//		return gameSaved;
+//	}
+	
+	
+	/**
+	 * @author Anthony Harissi Dagher
+	 * Feature 1: This method sets the desired game options for the player.
+	 * @param numPlayers 
+	 * @param selectedBonusOptions
+	 * @throws java.lang.IllegalArgumentException	 
+	 * */
+	public static void setGameOptions(int numPlayers, List<BonusOption> selectedBonusOptions)throws InvalidInputException{
+		
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		if(numPlayers <= 1 || numPlayers > 4) {
+			throw new InvalidInputException("Must between 2 and 4 players for a game.");
+		}
+		if(numPlayers == 2) {
+			Game game = new Game(24, kingdomino);
+			game.setNumberOfPlayers(2);
+			for(int i=0; i< selectedBonusOptions.size(); i++) {
+				BonusOption bonusOption = selectedBonusOptions.get(i);
+				game.addSelectedBonusOption(bonusOption);
+			}
+			kingdomino.setCurrentGame(game);
+		}
+		else if(numPlayers == 3) {
+			Game game = new Game(36, kingdomino);
+			game.setNumberOfPlayers(3);
+			for(int i=0; i<selectedBonusOptions.size(); i++) {
+				BonusOption bonusOption = selectedBonusOptions.get(i);
+				game.addSelectedBonusOption(bonusOption);
+			}
+			kingdomino.setCurrentGame(game);
+
+		}
+		else{
+			Game game = new Game(48, kingdomino);
+			game.setNumberOfPlayers(4);
+			for(int i=0; i<selectedBonusOptions.size(); i++) {
+				BonusOption bonusOption = selectedBonusOptions.get(i);
+				game.addSelectedBonusOption(bonusOption);
+			}
+			kingdomino.setCurrentGame(game);
+		}
+		
+//		KDPersistence.save(kingdomino);
+	} 
+	
+	/**
+	 * 
+	 * This method checks if inputed user name
+	 * is valid and then adds it to kingdomino
+	 * 
+	 * @see  - ProvideUserProfile.feature
+	 * @author Keon Olszewski 260927813
+	 * @param username
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 */
+
+	public static void provideUserProfile(String username) throws IllegalArgumentException {
+
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		List<User> userList = kingdomino.getUsers();
+		
+		for(int i = 0; i < userList.size(); i++) {
+		
+		if (userList.get(i).getName().equalsIgnoreCase(username)) {
+			
+			throw new IllegalArgumentException("User already exists");
+			
+			} 
+		}
+		
+		if(!username.matches("[a-zA-Z0-9]+")){
+			
+			throw new IllegalArgumentException("must Contain only letters or Numbers");
+		}
+		
+	
+		
+			
+		kingdomino.addUser(username);
+		
+	}//ProvidetUserProfile
+	
+	/**
+	
+	/**
+	 * @author Anthony Harissi Dagher
+	 * Feature 3: This method starts a new game for the player.
+	 */
+	
+
+	
+	public static void startANewGame() {
+		
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
+		
+		int dominoNums=game.getMaxPileSize();
+		createShuffledDominoPile(game,dominoNums);
+		
+		
+		int playerNums=game.getNumberOfPlayers();
+		
+		List<Integer> playerOrder = uniqueRandomSequence(playerNums,0,playerNums-1);
+		PlayerColor[] availableColors= {PlayerColor.Blue,PlayerColor.Green,PlayerColor.Pink,PlayerColor.Yellow};
+		
+		int i=0;
+		for (Integer order:playerOrder) {
+			Player p = new Player(game);
+			p.setColor(availableColors[order]);
+			Kingdom kingdom = new Kingdom(p);
+			new Castle(0, 0, kingdom, p);
+			if (i==0) game.setNextPlayer(p);
+			i++;
+		}
+		
+		createNextDraft();
+	}
+	
+	/**
+	 * 
+	 * This method lets a user browse domino pile before game starts
+	 * displays previously shuffled dominos in ascending ranking,
+	 * does not change underlying list
+	 * 
+	 * @see  - ProvideUserProfile.feature
+	 * @author Jing Han	260528152
+	 * @param username
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 */
+	
+	public static List<Domino> browseDominos(){
+		
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
+		List<Domino> allDominos = game.getAllDominos();
+		List<Domino> sortedDominos = new ArrayList<Domino>();
+		
+		List<Integer> ignoreVal = new ArrayList<Integer>();
+		
+		for (int i=0;i<allDominos.size();i++) {
+			int min=100;
+			int minIndex=-1;
+			for (int j=0;j<allDominos.size();j++) {
+				Domino d = allDominos.get(j);
+				if (!ignoreVal.contains(d.getId())) {
+					if (d.getId()<min) {
+						min=d.getId();
+						minIndex=j;
+					}
+				}
+			}
+			sortedDominos.add(allDominos.get(minIndex));
+			ignoreVal.add(min);
+		}
+		
+		return sortedDominos;
+		
+	}
+	
+	/**
+	 * 
+	 * This method assigns a Player in the Current game to a User in kingdomino
+	 * 
+	 * @see  - ProvideUserProfile.feature
+	 * @author Jing Han	260528152
+	 * @param username
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 */
+	
+	public static boolean assignPlayerToUser(Player player, User user) {
+		if (!player.hasUser()) {
+			player.setUser(user);
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * This method creates the current and next
+	 * draft of the game. takes care of the beginning case
+	 * when there is no current or next drafts, takes care
+	 * of regular play by swapping current with next and 
+	 * then generate a new next, and takes care of the
+	 * end game when there is no more domino for  next 
+	 * and it is set to null
+	 * 
+	 * @see  - CreateNextDraft.feature
+	 * @author Keon Olszewski 260927813
+	 * @param player
+	 * @return void
+	 */
+	
+	public static void createNextDraft() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
+		int draftNumLimit=0;
+		
+		if ((game.getNumberOfPlayers()==4)||(game.getNumberOfPlayers()==3)) draftNumLimit=12;
+		if (game.getNumberOfPlayers()==2) draftNumLimit=6;
+		
+		
+		if (game.getAllDrafts().size()==0) {
+			Draft currentDraft=createOneDraft();
+			game.setCurrentDraft(currentDraft);
+			changeDraftDominoStatus(currentDraft,Domino.DominoStatus.InCurrentDraft);
+
+			Draft nextDraft = createOneDraft();
+			nextDraft.setDraftStatus(Draft.DraftStatus.FaceDown);
+			game.setNextDraft(nextDraft);
+			changeDraftDominoStatus(nextDraft,Domino.DominoStatus.InNextDraft);	
+			
+			sortCurrentDraft();
+			currentDraft.setDraftStatus(Draft.DraftStatus.Sorted);
+
+		}
+		else if (game.getAllDrafts().size()<draftNumLimit) {
+			
+			changeDraftDominoStatus(game.getCurrentDraft(),DominoStatus.Excluded);
+			
+			changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
+			game.setCurrentDraft(game.getNextDraft());
+			
+			Draft nextDraft=createOneDraft();
+			changeDraftDominoStatus(nextDraft,DominoStatus.InNextDraft);
+			game.setNextDraft(nextDraft);
+			game.getNextDraft().setDraftStatus(Draft.DraftStatus.FaceDown);
+			
+			sortCurrentDraft();
+			game.getCurrentDraft().setDraftStatus(Draft.DraftStatus.Sorted);
+
+		}
+		else if (kd.getCurrentGame().getAllDrafts().size()==draftNumLimit) {
+			if (game.getNextDraft()!=null) {
+				changeDraftDominoStatus(game.getCurrentDraft(),DominoStatus.Excluded);
+				game.setCurrentDraft(game.getNextDraft());
+				game.setNextDraft(null);
+			}
+			
+			game.getCurrentDraft().setDraftStatus(Draft.DraftStatus.Sorted);
+			sortCurrentDraft();
+		}
+		
+	}
+	
+	/**
 	 * 
 	 * This method returns the list of users
 	 * in alphabetical order
@@ -101,64 +437,9 @@ public class KDController {
 	}
 	
 	
-	/**
-	 * 
-	 * This method checks if inputed user name
-	 * is valid and then adds it to kingdomino
-	 * 
-	 * @see  - ProvideUserProfile.feature
-	 * @author Keon Olszewski 260927813
-	 * @param username
-	 * @return void
-	 * @throws java.lang.IllegalArgumentException
-	 */
-
-	public static void provideUserProfile(String username) throws IllegalArgumentException {
-
-		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		List<User> userList = kingdomino.getUsers();
-		
-		for(int i = 0; i < userList.size(); i++) {
-		
-		if (userList.get(i).getName().equalsIgnoreCase(username)) {
-			
-			throw new IllegalArgumentException("User already exists");
-			
-			} 
-		}
-		
-		if(!username.matches("[a-zA-Z0-9]+")){
-			
-			throw new IllegalArgumentException("must Contain only letters or Numbers");
-		}
-		
 	
-		
-			
-		kingdomino.addUser(username);
-		
-	}//ProvidetUserProfile
 	
-	/**
-	 * 
-	 * This method assigns a Player in the Current game to a User in kingdomino
-	 * 
-	 * @see  - ProvideUserProfile.feature
-	 * @author Jing Han	260528152
-	 * @param username
-	 * @return void
-	 * @throws java.lang.IllegalArgumentException
-	 */
 	
-	public static boolean assignPlayerToUser(Player player, User user) {
-		if (!player.hasUser()) {
-			player.setUser(user);
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
 	
 	
 	/**
@@ -172,27 +453,937 @@ public class KDController {
 	 * @return void
 	 */
 	
-
 	public static void ChoosNextDomino(Domino aDomino){
-		
+				
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
-		Draft nextDraft = game.getNextDraft();
+		Draft currentDraft = game.getCurrentDraft();
 		Player currentPlayer = game.getNextPlayer();
 		
-		if( aDomino.hasDominoSelection()) {
-			
+		if (!currentDraft.getIdSortedDominos().contains(aDomino) || aDomino.hasDominoSelection()) {
 			return;
-			
+		}
+		
+		List<Player> allPlayers = game.getPlayers();
+		int currentPlayerIndex=-1;
+		
+		for (int i=0;i<allPlayers.size();i++) {
+			Player testPlayer=allPlayers.get(i);
+			if (testPlayer.getColor().equals(currentPlayer.getColor())) {
+				currentPlayerIndex=i;
+				break;
+			}
+		}
+		
+		DominoSelection currentSelection;
+		if (!currentPlayer.hasDominoSelection()) {
+			currentSelection = currentDraft.addSelection(currentPlayer, aDomino);
 			}
 		else {
-			
-			DominoSelection currentSelection = nextDraft.addSelection(currentPlayer, aDomino);
-			aDomino.setDominoSelection(currentSelection);
-	        currentPlayer.setDominoSelection(currentSelection);
-	
+			currentSelection=currentPlayer.getDominoSelection();
 		}
+		
+		aDomino.setDominoSelection(currentSelection);      
+        
+        if (!(currentPlayerIndex==allPlayers.size()-1)) {
+        	game.setNextPlayer(allPlayers.get(currentPlayerIndex+1));
+        }
+        
+		boolean allChosen=true;
+		for (Domino d:currentDraft.getIdSortedDominos()) {
+			if (!d.hasDominoSelection()){
+				allChosen=false;
+				break;
+			}
+		}
+		
+		if (allChosen) {
+			rearrangePlayerOrder();
+		}
+        
+        
+		
 	}//ChoosNextDomino
+	
+	private static void rearrangePlayerOrder() {
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
+		Draft currentDraft = game.getCurrentDraft();
+		
+		List<Domino> draftDominos = currentDraft.getIdSortedDominos();
+		List<Player> newOrderPlayers = new ArrayList<Player>();
+		
+		for (Domino d:draftDominos) {
+			newOrderPlayers.add(d.getDominoSelection().getPlayer());
+		}
+		
+		for (int i=0;i<newOrderPlayers.size();i++) {
+			game.addOrMovePlayerAt(newOrderPlayers.get(i), i);
+		}
+		
+		game.setNextPlayer(game.getPlayer(0));
+	}
+	
+
+//	public static void ChoosNextDomino(Domino aDomino){
+//		
+//		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+//		Game game = kingdomino.getCurrentGame();
+//		Draft nextDraft = game.getNextDraft();
+//		Player currentPlayer = game.getNextPlayer();
+//		
+//		
+//		if( aDomino.hasDominoSelection()) {
+//			
+//			return;
+//			
+//			}
+//		else {
+//			
+//			DominoSelection currentSelection = nextDraft.addSelection(currentPlayer, aDomino);
+//			aDomino.setDominoSelection(currentSelection);
+//	        currentPlayer.setDominoSelection(currentSelection);
+//	        
+//		}
+//	}//ChoosNextDomino
+	
+	
+	/**
+	 * 
+	 * This method preplaces a DominoSelection into a playe's kingdom
+	 * Useful for bring games up to a testable state in cucumber files
+	 * 
+	 * @see - no features associated
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @param dominoToPlace
+	 * @param posx
+	 * @param posy
+	 * @param dir
+	 * @return dInK
+	 */
+	
+	public static boolean verifyDominoInKingdom(Player player, DominoInKingdom dominoToPlace) {
+		
+		if (verifyGridSizeAllKingdom(player)) {
+			if(verifyNoOverlapLastTerritory(player)) {
+				if (verifyCastleAdjacency(player)||verifyNeighborAdjacencyLastTerritory(player)) {
+					return true;
+				}
+				else {
+					System.out.println("\ninvalid: neither neighbor or castle adjacent");
+					return false;
+				}
+			}
+			else {
+				System.out.println("\ninvalid: overlap\n");
+				return false;
+			}
+		}
+		else {
+			System.out.println("\ninvalid: grid size exceeded\n");
+			return false;
+		}
+	}
+
+	public static DominoInKingdom prePlaceDominoDominoSelection(Player player, int posx, int posy, String dir) {
+		Domino dominoToPlace=player.getDominoSelection().getDomino();
+		Kingdom kingdom=player.getKingdom();
+		
+		DominoInKingdom dInK = new DominoInKingdom(posx,posy,kingdom,dominoToPlace);
+		dInK.setDirection(getDirection(dir));
+		
+		boolean valid=verifyDominoInKingdom(player,dInK);
+		if (valid) {
+			dominoToPlace.setStatus(DominoStatus.CorrectlyPreplaced);
+		}
+		else {
+			dominoToPlace.setStatus(DominoStatus.ErroneouslyPreplaced);
+		}
+		
+		return dInK;
+	}
+	
+	
+	/**
+	 * 
+	 * This method allows a player to move 
+	 * the domino they have selected and 
+	 * prePlaced in their kingdom in 4 directions,
+	 * up, down, left, and right. This may only
+	 * be possible if the movement does stay within
+	 * the 9x9 grid size. The dominoes status and position
+	 * is updated accordingly.
+	 * 
+	 * 
+	 * @see MoveCurrentDomino.feature
+	 * @author Massimo Vadacchino 260928064
+	 * @param aPlayer
+	 * @param dInKingdom
+	 * @param movement
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 * 
+	 */
+	
+	public static void moveLatestDomino(Player aPlayer, String movement){
+		
+		List<KingdomTerritory> territories = aPlayer.getKingdom().getTerritories();
+		if (territories.size()==1) {
+			return;
+		}
+		
+		DominoInKingdom dInKingdom = (DominoInKingdom) territories.get(territories.size()-1);
+		
+		int xPosPrevious = dInKingdom.getX();
+		int yPosPrevious = dInKingdom.getY();
+
+		if(movement.equalsIgnoreCase("Right")) dInKingdom.setX(xPosPrevious + 1);
+		else if(movement.equalsIgnoreCase("Left")) dInKingdom.setX(xPosPrevious - 1);
+		else if(movement.equalsIgnoreCase("Up")) dInKingdom.setY(yPosPrevious + 1);
+		else if(movement.equalsIgnoreCase("Down")) dInKingdom.setY(yPosPrevious - 1);
+		
+		if(!verifyGridLimit(dInKingdom)) {
+	
+			dInKingdom.setX(xPosPrevious);
+			dInKingdom.setY(yPosPrevious);
+			dInKingdom.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+			System.out.println("invalid: grid size exceeded");
+
+			return;
+			
+		}
+		else {
+			
+			boolean valid=verifyDominoInKingdom(aPlayer,dInKingdom);
+			
+			if (valid) {
+				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+			}
+			else {
+				dInKingdom.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+			}
+			
+		}
+		
+	}
+	
+//	public static void moveCurrentDomino(Player aPlayer, DominoInKingdom dInKingdom, String movement){
+//	
+//		int xPosPrevious = dInKingdom.getX();
+//		int yPosPrevious = dInKingdom.getY();
+//
+//		if(movement.equalsIgnoreCase("Right")) dInKingdom.setX(xPosPrevious + 1);
+//		else if(movement.equalsIgnoreCase("Left")) dInKingdom.setX(xPosPrevious - 1);
+//		else if(movement.equalsIgnoreCase("Up")) dInKingdom.setY(yPosPrevious + 1);
+//		else if(movement.equalsIgnoreCase("Down")) dInKingdom.setY(yPosPrevious - 1);
+//		
+//		if(!verifyGridLimit(dInKingdom)) {
+//	
+//			dInKingdom.setX(xPosPrevious);
+//			dInKingdom.setY(yPosPrevious);
+//			
+//			return;
+//			
+//		}
+//		
+//		else {
+//			
+//			if(verifyNeighborAdjacencyLastTerritory(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
+//				
+//				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+//				return;
+//				
+//			}
+//				
+//			else if(verifyCastleAdjacency(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
+//					
+//				
+//				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+//				return;
+//				
+//			}
+//		
+//			dInKingdom.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+//			
+//		}
+//		
+//	}
+	
+	/**
+	 * 
+	 * This method allows a player to rotate 
+	 * the domino they have selected and 
+	 * prePlaced in their kingdom in 2 directions,
+	 * ClockWise or Counter-ClockWise. This may only
+	 * be possible if the rotation does stay within
+	 * the 9x9 grid size. The dominoes status and direction
+	 * is updated accordingly.
+	 * 
+	 * 
+	 * @see RotateCurrentDomino.feature
+	 * @author Massimo Vadacchino 260928064
+	 * @param aPlayer
+	 * @param dInKingdom
+	 * @param rotation
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 * 
+	 */
+	
+	public static void rotateLatestDomino(Player aPlayer, String rotation) { 
+
+		List<KingdomTerritory> territories = aPlayer.getKingdom().getTerritories();
+		if (territories.size()==1) {
+			return;
+		}
+		
+		DominoInKingdom dInKingdom = (DominoInKingdom) territories.get(territories.size()-1);
+
+		DirectionKind dominoDir = dInKingdom.getDirection();
+		
+		if(dominoDir.equals(DirectionKind.Up) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Right);
+		else if(dominoDir.equals(DirectionKind.Right) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Down);
+		else if(dominoDir.equals(DirectionKind.Down) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Left);
+		else if(dominoDir.equals(DirectionKind.Left) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Up);
+			
+		if(dominoDir.equals(DirectionKind.Up) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Left);
+		else if(dominoDir.equals(DirectionKind.Left) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Down);
+		else if(dominoDir.equals(DirectionKind.Down) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Right);
+		else if(dominoDir.equals(DirectionKind.Right) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Up);
+		
+		if(!verifyGridLimit(dInKingdom)) {
+			dInKingdom.setDirection(dominoDir);
+			System.out.println("invalid: grid size exceeded\n");
+			return;
+			
+		}
+		
+		else {
+			
+			boolean valid=verifyDominoInKingdom(aPlayer,dInKingdom);
+			
+			if (valid) {
+				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+			}
+			else {
+				dInKingdom.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+			}
+			
+		}
+	
+	}
+	
+//	public static void rotateCurrentDomino(Player aPlayer, DominoInKingdom dInKingdom, String rotation) { 
+//
+//		if(aPlayer == null || dInKingdom == null) throw new java.lang.IllegalArgumentException("Invalid input");
+//		if(!(((DominoInKingdom)aPlayer.getKingdom().getTerritory(aPlayer.getKingdom().getTerritories().size() -1)).equals(dInKingdom))) throw new java.lang.IllegalArgumentException("This domino does not belong to this players kingdom");
+//		if(dInKingdom.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in the players kingdom");
+//		
+//		DirectionKind dominoDir = dInKingdom.getDirection();
+//		
+//		if(dominoDir.equals(DirectionKind.Up) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Right);
+//		else if(dominoDir.equals(DirectionKind.Right) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Down);
+//		else if(dominoDir.equals(DirectionKind.Down) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Left);
+//		else if(dominoDir.equals(DirectionKind.Left) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Up);
+//			
+//		if(dominoDir.equals(DirectionKind.Up) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Left);
+//		else if(dominoDir.equals(DirectionKind.Left) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Down);
+//		else if(dominoDir.equals(DirectionKind.Down) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Right);
+//		else if(dominoDir.equals(DirectionKind.Right) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Up);
+//		
+//		if(!verifyGridLimit(dInKingdom)) {
+//	
+//			dInKingdom.setDirection(dominoDir);
+//			return;
+//			
+//		}
+//		
+//		else {
+//			
+//			if(verifyNeighborAdjacencyLastTerritory(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
+//				
+//				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+//				return;
+//				
+//			}
+//				
+//			else if(verifyCastleAdjacency(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
+//					
+//				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+//				return;
+//				
+//			}
+//		
+//			dInKingdom.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+//			
+//		}
+//	
+//	}
+	
+	
+	/**
+	 * 
+	 * This method allows a player to place their
+	 * selected domino into their kingdom if and
+	 * only if their domino passes the verifications
+	 * (no overlapping, within kingdom size, has a neighbour,
+	 * and adjacent to the castle) and has a status
+	 * of "CorrectlyPrePlaced". If not, the domino will 
+	 * have the same attributes as before. 
+	 * 
+	 * @see PlaceDomino.feature
+	 * @author Massimo Vadacchino 260928064
+	 * @param aPlayer
+	 * @param dominoToPlace
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 * 
+	 */
+	
+	public static boolean placeLatestDomino(Player aPlayer) { 
+		
+		List<KingdomTerritory> territories = aPlayer.getKingdom().getTerritories();
+		if (territories.size()==1) {
+			return false;
+		}
+		
+		DominoInKingdom dInKingdom = (DominoInKingdom) territories.get(territories.size()-1);
+		
+		if (dInKingdom.getDomino().getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
+			dInKingdom.getDomino().setStatus(DominoStatus.PlacedInKingdom);
+			return true;
+		}
+		else {
+			return false;
+		}
+		
+	}
+//	public static void placeDomino(Player aPlayer, Domino dominoToPlace) throws java.lang.IllegalArgumentException { 
+//		
+//		if(aPlayer == null || dominoToPlace == null) throw new java.lang.IllegalArgumentException("Invalid input");
+//		if(!(dominoToPlace.getDominoSelection().getPlayer().equals(aPlayer))) throw new java.lang.IllegalArgumentException("This domino does not belong to this player");
+//		if(dominoToPlace.getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in this players kingdom");
+//		
+//		if(verifyGridSizeAllKingdom(aPlayer) &&  verifyNoOverlapLastTerritory(aPlayer) && verifyNeighborAdjacencyLastTerritory(aPlayer) && dominoToPlace.getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
+//			
+//			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);
+//			aPlayer.getDominoSelection().delete();
+//			
+//		}
+//		
+//		else if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyCastleAdjacency(aPlayer) && dominoToPlace.getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
+//			
+//			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);	
+//			aPlayer.getDominoSelection().delete();
+//			
+//		}
+//		
+//	}
+	
+	
+	/**
+	 * 
+	 * This method checks if a player is allowed to
+	 * discard the domino they have selected and
+	 * prePlaced in their kingdom. If they are allowed
+	 * to do so, the domino is discarded and their
+	 * dominoSelected is deleted. If not, the dominos
+	 * status is changed to ErroneouslyPrePlaced.
+	 * 
+	 * @see DiscardDomino.feature
+	 * @author Massimo Vadacchino 260928064
+	 * @param aPlayer
+	 * @return void
+	 * @throws java.lang.IllegalArgumentException
+	 */
+	
+	public static void discardLatestDomino(Player aPlayer){ 
+		
+		List<KingdomTerritory> territories = aPlayer.getKingdom().getTerritories();
+		if (territories.size()==1) {
+			return;
+		}	
+		DominoInKingdom dInKingdom = (DominoInKingdom) territories.get(territories.size()-1);
+		
+		
+		
+		int[] availableSpaceInKingdom = getAvailableSpaceInGrid(aPlayer);
+		System.out.println(Arrays.toString(availableSpaceInKingdom));
+	}
+	
+//	public static void discardDomino(Player aPlayer) throws java.lang.IllegalArgumentException{ 
+//				
+//		if(aPlayer == null) throw new java.lang.IllegalArgumentException("This player does not exist");
+//		
+//		DominoInKingdom newlyPrePlacedDomino = (DominoInKingdom) aPlayer.getKingdom().getTerritory(aPlayer.getKingdom().getTerritories().size()-1);
+//		if(newlyPrePlacedDomino.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in the players kingdom");
+//
+//		int[] availableSpaceInKingdom = getAvailableSpaceInGrid(aPlayer);
+//		
+//		for(int i = -4; i<5; i++) {
+//			
+//			for(int j = -4; j<5; j++) {
+//				
+//				for(int z = 0; z<4; z++) {
+//					
+//					if(i > availableSpaceInKingdom[0] && j > availableSpaceInKingdom[1] && i < availableSpaceInKingdom[2] && j < availableSpaceInKingdom[3]){
+//				
+//						newlyPrePlacedDomino.setX(i);
+//						newlyPrePlacedDomino.setY(j);
+//						
+//						if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyNeighborAdjacencyLastTerritory(aPlayer)) {
+//						
+//							newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+//							return;
+//							
+//						}
+//						
+//						else if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyCastleAdjacency(aPlayer)) {
+//						
+//							newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+//							return;
+//							
+//						}
+//					
+//					}
+//					
+//					rotateCurrentDomino(aPlayer, newlyPrePlacedDomino, "Clockwise");
+//				
+//				}
+//				
+//			}
+//		
+//		}
+//	
+//		newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.Discarded);
+//		newlyPrePlacedDomino.delete();
+//		aPlayer.getDominoSelection().delete();
+//		
+//	}
+	
+	/**
+	 * 
+	 * This method preplaces a domino into a playe's kingdom
+	 * Useful for bring games up to a testable state in cucumber files
+	 * 
+	 * @see - no features associated
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @param dominoToPlace
+	 * @param posx
+	 * @param posy
+	 * @param dir
+	 * @return dInK
+	 */
+
+	public static DominoInKingdom prePlaceDomino(Player player, Domino dominoToPlace, int posx, int posy, String dir) {
+		dominoToPlace.setStatus(DominoStatus.CorrectlyPreplaced);
+		Kingdom kingdom=player.getKingdom();
+		DominoInKingdom dInK = new DominoInKingdom(posx,posy,kingdom,dominoToPlace);
+		dInK.setDirection(getDirection(dir));
+		return dInK;
+	}
+	
+	/**
+	 * 
+	 * This method checks a player's kingdom for any territory that
+	 * violates one of more of the verification methods that checks
+	 * kingdom grid size, castle adjacency (when applicable), 
+	 * neighbor adjacency, and overlap. When violations occur, return
+	 * an "invalid" string, "valid" otherwise.
+	 * 
+	 * @see - no features associated, but used in many When calls of cucumber features
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return validity
+	 */
+	
+	public static String getKingdomVerificationResult(Player player) {
+		String validity="valid";
+		
+		List<DominoInKingdom> errorneouslyPlacedDominos=KDQuery.getErroneouslyPrePlacedDomino(player);
+		if (!errorneouslyPlacedDominos.isEmpty()) {
+			validity="invalid";
+		}
+		
+		return validity;
+	}
+	
+	/**
+	 * 
+	 * This method checks a player's kingdom to make sure that
+	 * all kingdom territories stay within a 5x5 grid (7x7 if 
+	 * Mighty Kingdom) mode is enabled
+	 * 
+	 * @see VerifyGridSize.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return respectGrid
+	 */
+	
+	public static boolean verifyGridSizeAllKingdom(Player player) {
+		
+		int badCount=0;
+		boolean respectGrid=true;
+				
+		List<KingdomTerritory> t = player.getKingdom().getTerritories();
+		List<Integer> xCoords = new ArrayList<Integer>();
+		List<Integer> yCoords = new ArrayList<Integer>();
+		
+		if (t.size()==1) {
+			respectGrid=true;
+//			System.out.println(respectGrid);
+			return true;
+		}
+
+		
+		for (KingdomTerritory each:t) {
+			
+			int x1=each.getX();
+			int y1=each.getY();
+			
+			xCoords.add(x1);
+			yCoords.add(y1);
+			
+			int x2;
+			int y2;
+			
+			int[] otherPos=calculateOtherPos(each);
+			x2=otherPos[0];
+			y2=otherPos[1];
+			
+			xCoords.add(x2);
+			yCoords.add(y2);
+			
+			Collections.sort(xCoords);
+			Collections.sort(yCoords);
+			
+			int xSize=xCoords.get(xCoords.size()-1)-xCoords.get(0)+1;
+			int ySize=yCoords.get(yCoords.size()-1)-yCoords.get(0)+1;
+			
+			if (each instanceof DominoInKingdom) {
+				if (xSize>5 || ySize>5) {
+//					((DominoInKingdom) each).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+					badCount++;
+				}
+				else {
+//					((DominoInKingdom) each).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+				}
+			}
+			
+		}
+		if (badCount>0) {
+			respectGrid=false;
+		}
+		else {
+			respectGrid=true;
+		}
+//		System.out.println(respectGrid);
+		return respectGrid;
+	}
+	
+	
+	
+	/**
+	 * 
+	 * This method checks a player's kingdom to make sure that
+	 * none of the kingdom territories overla each other
+	 * 
+	 * @see VerifyNoOverlapping.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return noOverlap
+	 */
+	
+	public static boolean verifyNoOverlapAllTerritories(Player player) {
+		
+//		verifies all territories in kingdom
+		int overlappedCount=0;
+		boolean noOverlap=true;
+		
+		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
+		
+		if (territories.size()==1) {
+			noOverlap=true;
+//			System.out.println(noOverlap);
+			return noOverlap;
+		}
+		
+		else {
+			
+			KingdomTerritory tA;
+			KingdomTerritory tB;
+			for (int i=territories.size()-1;i>0;i--) {
+				
+				tA=territories.get(i);
+				
+				for (int j=i-1;j>-1;j--) {
+					
+					tB=territories.get(j);
+
+					if (checkOverlap(tA,tB)){
+//						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+						overlappedCount++;
+					}
+					else {
+//						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+					}
+					
+				}
+			}
+			if (overlappedCount>0) {
+				noOverlap=false;
+			}
+			else {
+				noOverlap=true;
+			}
+//			System.out.println(noOverlap);
+			return noOverlap;
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * This method checks a player's kingdom to make sure that
+	 * the last placed kingdom territory does not overlap any
+	 * existing dominos
+	 *  
+	 * @see VerifyNoOverlapping.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return noOverlap
+	 */
+	
+	public static boolean verifyNoOverlapLastTerritory(Player player) {
+		
+//		only verifies the last preplaced domino
+		boolean noOverlap=true;
+		
+		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
+		
+		if (territories.size()==1) {
+			noOverlap=true;
+//			System.out.println(noOverlap);
+			return noOverlap;
+		}
+		
+		else {
+			
+			KingdomTerritory tA;
+			KingdomTerritory tB;
+	
+			tA=territories.get(territories.size()-1);
+				
+			for (int j=territories.size()-2;j>-1;j--) {
+					
+					tB=territories.get(j);
+
+					if (checkOverlap(tA,tB)){
+//						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+						noOverlap=false;
+						break;
+					}
+					else {
+//						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+						noOverlap=true;
+					}
+					
+				}
+//			System.out.println(noOverlap);
+			return noOverlap;
+			}
+			
+	}
+	
+	/**
+	 * 
+	 * This method checks a player's kingdom to determine whether
+	 * the last placed domino is adjacent to the kingdom castle
+	 * 
+	 * @see VerifyCastleAdjacency.fature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return castleAdj
+	 */
+	
+	public static boolean verifyCastleAdjacency(Player player) {
+		
+		boolean castleAdj=true;
+		
+		List <KingdomTerritory> t = player.getKingdom().getTerritories();
+		
+		if (t.size()==1) {
+			castleAdj=true;
+//			System.out.println(castleAdj);
+			return castleAdj;
+		}
+		
+		int castleX=t.get(0).getX();
+		int castleY=t.get(0).getY();
+
+		
+		KingdomTerritory testD = t.get(t.size()-1);
+		int [] testOtherPos=calculateOtherPos(testD);
+		
+		int testX1=testD.getX();
+		int testY1=testD.getY();
+		int testX2=testOtherPos[0];
+		int testY2=testOtherPos[1];
+		
+		
+		int norm1=L2NormSquared(testX1,testY1,castleX,castleY);
+		int norm2=L2NormSquared(testX2,testY2,castleX,castleY);
+
+		if ((norm1==1)&&(norm2>1)){
+//			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+			castleAdj=true;
+		}
+		else if ((norm1>1)&&(norm2==1)) {
+//			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+			castleAdj=true;
+		}
+		else {
+//			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+			castleAdj=false;
+		}
+		
+//		System.out.println(castleAdj);
+		return castleAdj;
+		
+	}
+	
+	/**
+	 * 
+	 * This method checks a player's kingdom to determine whether
+	 * the last placed domino is has at least 1 valid neighbor
+	 * 
+	 * @see VerifyNeighborAdjacency.fature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return neighborAdj
+	 */
+	
+	public static boolean verifyNeighborAdjacencyLastTerritory(Player player) {
+		
+		boolean neighborAdj=true;
+		
+		List<KingdomTerritory> t =player.getKingdom().getTerritories();
+		
+		if (t.size()==1) {
+			neighborAdj=true;
+//			System.out.println(neighborAdj);
+			return neighborAdj;
+		}
+		else {
+			
+			int validNeighborCount=0;
+			
+			DominoInKingdom prePlacedDomino = (DominoInKingdom) t.get(t.size()-1);
+			
+			Neighborhood leftNeighborhood = getDominoLeftNeighbors(t,prePlacedDomino);
+			Neighborhood rightNeighborhood =getDominoRightNeighbors(t,prePlacedDomino);
+			
+//			System.out.println(leftNeighborhood);	
+//			System.out.println("---------------------------------------------------------------------------------------------");
+//			System.out.println(rightNeighborhood);	
+
+			List<TerrainType> leftTileNeighborTerrains = leftNeighborhood.getNeighborTerrainType();
+//			System.out.println(leftTileNeighborTerrains.size());
+			
+			List<TerrainType> rightTileNeighborTerrains = rightNeighborhood.getNeighborTerrainType();
+//			System.out.println(rightTileNeighborTerrains.size());
+			
+			if (leftTileNeighborTerrains.isEmpty() && rightTileNeighborTerrains.isEmpty()) {
+//				System.out.println("no neighbors at all");
+			}
+			
+			if (!leftTileNeighborTerrains.isEmpty()) {
+				String leftTerrain=prePlacedDomino.getDomino().getLeftTile().name();
+				for (TerrainType testTerrain:leftTileNeighborTerrains) {
+					String testTerrainName=testTerrain.name();
+					if (testTerrainName.equalsIgnoreCase(leftTerrain)){
+//						System.out.println("found left match!");
+						validNeighborCount++;
+					}
+				}
+			}
+			
+			if (!rightTileNeighborTerrains.isEmpty()) {
+				for (TerrainType testTerrain:rightTileNeighborTerrains) {
+					if (testTerrain.name().equalsIgnoreCase(prePlacedDomino.getDomino().getRightTile().name())){
+//						System.out.println("found right match!");
+						validNeighborCount++;
+					}
+				}
+			}
+			
+			if (validNeighborCount==0) {
+//				prePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+				neighborAdj=false;
+			}
+			else {
+//				prePlacedDomino.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
+				neighborAdj=true;
+			}
+		
+//			System.out.println(neighborAdj);
+			return neighborAdj;
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * This helper method calculates the coordinate of a Domino's rightTile
+	 * based on the Domin's leftTile and orientation
+	 * 
+	 * @see all verification methods
+	 * @author Jing Han 260528152
+	 * @param d
+	 * @return coord2
+	 */
+	
+
+	public static int[] calculateOtherPos(KingdomTerritory d) {
+		
+		int [] coord2 = new int[2];
+		if (d instanceof Castle) {
+			coord2[0]=0;
+			coord2[1]=0;
+		}
+		
+		else {
+			int x2;
+			int y2;
+			
+			if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Right)) {
+				x2=d.getX()+1;
+				y2=d.getY();
+			}
+			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Up)) {
+				x2=d.getX();
+				y2=d.getY()+1;
+			}
+			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Left)) {
+				x2=d.getX()-1;
+				y2=d.getY();
+			}
+			else {
+				x2=d.getX();
+				y2=d.getY()-1;
+			}
+			
+			coord2[0]=x2;
+			coord2[1]=y2;
+		}
+		return coord2;
+	}
+	
+	
+	
+	
 	
 	/**
 	 * 
@@ -300,167 +1491,10 @@ public class KDController {
 	}// OrderNextDraft
 	
 	
-	/**
-	 * @author Anthony Harissi Dagher
-	 * Feature 1: This method sets the desired game options for the player.
-	 * @param numPlayers 
-	 * @param selectedBonusOptions
-	 * @throws java.lang.IllegalArgumentException	 
-	 * */
-	public static void setGameOptions(int numPlayers, List<BonusOption> selectedBonusOptions)throws InvalidInputException{
-		
-		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		if(numPlayers <= 1 || numPlayers > 4) {
-			throw new InvalidInputException("Must between 2 and 4 players for a game.");
-		}
-		if(numPlayers == 2) {
-			Game game = new Game(24, kingdomino);
-			game.setNumberOfPlayers(2);
-			for(int i=0; i< selectedBonusOptions.size(); i++) {
-				BonusOption bonusOption = selectedBonusOptions.get(i);
-				game.addSelectedBonusOption(bonusOption);
-			}
-			kingdomino.setCurrentGame(game);
-		}
-		else if(numPlayers == 3) {
-			Game game = new Game(36, kingdomino);
-			game.setNumberOfPlayers(3);
-			for(int i=0; i<selectedBonusOptions.size(); i++) {
-				BonusOption bonusOption = selectedBonusOptions.get(i);
-				game.addSelectedBonusOption(bonusOption);
-			}
-			kingdomino.setCurrentGame(game);
-
-		}
-		else{
-			Game game = new Game(48, kingdomino);
-			game.setNumberOfPlayers(4);
-			for(int i=0; i<selectedBonusOptions.size(); i++) {
-				BonusOption bonusOption = selectedBonusOptions.get(i);
-				game.addSelectedBonusOption(bonusOption);
-			}
-			kingdomino.setCurrentGame(game);
-		}
-		
-		KDPersistence.save(kingdomino);
-	} 
 	
 	
-	/**
-	 * @author Anthony Harissi Dagher
-	 * Feature 6: This method loads a saved game for the player.
-	 * @param file
-	 * @return boolean
-	 * @throws java.lang.IllegalArgumentException	
-	 *  */
 	
-	public static Kingdomino loadGame() {
-		Kingdomino kd = KDPersistence.load();
-		if (kd==null) {
-			kd = new Kingdomino();
-//			System.out.println("no kingdomino serialization found");
-//			System.out.println("created new kingdomino instance");
-//			System.out.println("serialized new kingdomino instance");
-		}
-		else {
-//			System.out.println("loaded kingdomino serialization");	
-		}
-		
-		KingdominoApplication.setKingdomino(kd);
-		KDPersistence.save(kd);
-		
-		return kd;
-	}
 	
-//	public static boolean loadGame(File file) throws InvalidInputException {
-//		
-//		boolean gameLoaded = false;
-//		String directory = "./src/test/resources/"+file.getName();	
-//		File fileSearch = new File(directory);
-//		if (fileSearch.isFile()) {
-//			if(fileSearch.canRead()) {
-//				try{
-//					KDPersistence.load();
-//					gameLoaded = true;
-//				}
-//				catch(RuntimeException r) {
-//					throw new InvalidInputException("Invalid file name.");
-//				}
-//			}
-//		}
-//		return gameLoaded;
-//	}
-	
-	/**
-	 * @author Anthony Harissi Dagher
-	 * Feature 7: This method saves the current game for the player.
-	 * @param file
-	 * @return boolean
-	 * @throws java.lang.IllegalArgumentException
-	 */
-	
-	public static boolean saveGame() {
-		Kingdomino kd = KingdominoApplication.getKingdomino();
-		try{
-			KDPersistence.save(kd);
-			return true;
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-//	public static boolean saveGame(File file, boolean overwrite) throws InvalidInputException {
-//		
-//		boolean gameSaved;
-//		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-//		String directory = "./src/test/resources/"+file.getName();
-//		File fileSearch = new File(directory);
-//		if(fileSearch.exists() && overwrite == false) {
-//			gameSaved = false;
-//		}
-//		else {
-//			try {
-//				KDPersistence.save(kingdomino); 
-//				gameSaved = true;
-//			}catch(RuntimeException r) {
-//				throw new InvalidInputException(r.getMessage());
-//			}
-//		}
-//		return gameSaved;
-//	}
-	
-	/**
-	
-	/**
-	 * @author Anthony Harissi Dagher
-	 * Feature 3: This method starts a new game for the player.
-	 */
-	
-
-	
-	public static void startANewGame() {
-		
-		Kingdomino kd = KingdominoApplication.getKingdomino();
-		Game game = kd.getCurrentGame();
-		
-		int dominoNums=game.getMaxPileSize();
-		createShuffledDominoPile(game,dominoNums);
-		
-		
-		int playerNums=game.getNumberOfPlayers();
-		
-		List<Integer> playerOrder = uniqueRandomSequence(playerNums,0,playerNums-1);
-		PlayerColor[] availableColors= {PlayerColor.Blue,PlayerColor.Green,PlayerColor.Pink,PlayerColor.Yellow};
-		for (Integer order:playerOrder) {
-			Player p = new Player(game);
-			p.setColor(availableColors[order]);
-			Kingdom kingdom = new Kingdom(p);
-			new Castle(0, 0, kingdom, p);
-		}
-		
-		createNextDraft();
-	}
 //	public static void startANewGame() {
 //		
 //		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
@@ -634,47 +1668,7 @@ public class KDController {
 			return DominoArray;
 	}
 	
-	/**
-	 * 
-	 * This method lets a user browse domino pile before game starts
-	 * displays previously shuffled dominos in ascending ranking,
-	 * does not change underlying list
-	 * 
-	 * @see  - ProvideUserProfile.feature
-	 * @author Jing Han	260528152
-	 * @param username
-	 * @return void
-	 * @throws java.lang.IllegalArgumentException
-	 */
 	
-	public static List<Domino> browseDominos(){
-		
-		Kingdomino kd = KingdominoApplication.getKingdomino();
-		Game game = kd.getCurrentGame();
-		List<Domino> allDominos = game.getAllDominos();
-		List<Domino> sortedDominos = new ArrayList<Domino>();
-		
-		List<Integer> ignoreVal = new ArrayList<Integer>();
-		
-		for (int i=0;i<allDominos.size();i++) {
-			int min=100;
-			int minIndex=-1;
-			for (int j=0;j<allDominos.size();j++) {
-				Domino d = allDominos.get(j);
-				if (!ignoreVal.contains(d.getId())) {
-					if (d.getId()<min) {
-						min=d.getId();
-						minIndex=j;
-					}
-				}
-			}
-			sortedDominos.add(allDominos.get(minIndex));
-			ignoreVal.add(min);
-		}
-		
-		return sortedDominos;
-		
-	}
 	
 	/**
 	 * 
@@ -747,668 +1741,14 @@ public class KDController {
 	}
 
 	
-	/**
-	 * 
-	 * This method preplaces a domino into a playe's kingdom
-	 * Useful for bring games up to a testable state in cucumber files
-	 * 
-	 * @see - no features associated
-	 * @author Jing Han 260528152
-	 * @param player
-	 * @param dominoToPlace
-	 * @param posx
-	 * @param posy
-	 * @param dir
-	 * @return dInK
-	 */
-
-	public static DominoInKingdom prePlaceDomino(Player player, Domino dominoToPlace, int posx, int posy, String dir) {
-		dominoToPlace.setStatus(DominoStatus.CorrectlyPreplaced);
-		Kingdom kingdom=player.getKingdom();
-		DominoInKingdom dInK = new DominoInKingdom(posx,posy,kingdom,dominoToPlace);
-		dInK.setDirection(getDirection(dir));
-		return dInK;
-	}
-	
-	/**
-	 * 
-	 * This method checks a player's kingdom for any territory that
-	 * violates one of more of the verification methods that checks
-	 * kingdom grid size, castle adjacency (when applicable), 
-	 * neighbor adjacency, and overlap. When violations occur, return
-	 * an "invalid" string, "valid" otherwise.
-	 * 
-	 * @see - no features associated, but used in many When calls of cucumber features
-	 * @author Jing Han 260528152
-	 * @param player
-	 * @return validity
-	 */
-	
-	public static String getKingdomVerificationResult(Player player) {
-		String validity="valid";
-		
-		List<DominoInKingdom> errorneouslyPlacedDominos=KDQuery.getErroneouslyPrePlacedDomino(player);
-		if (!errorneouslyPlacedDominos.isEmpty()) {
-			validity="invalid";
-		}
-		
-		return validity;
-	}
-	
-	/**
-	 * 
-	 * This method checks a player's kingdom to make sure that
-	 * all kingdom territories stay within a 5x5 grid (7x7 if 
-	 * Mighty Kingdom) mode is enabled
-	 * 
-	 * @see VerifyGridSize.feature
-	 * @author Jing Han 260528152
-	 * @param player
-	 * @return respectGrid
-	 */
-	
-	public static boolean verifyGridSizeAllKingdom(Player player) {
-		
-		int badCount=0;
-		boolean respectGrid=true;
-				
-		List<KingdomTerritory> t = player.getKingdom().getTerritories();
-		List<Integer> xCoords = new ArrayList<Integer>();
-		List<Integer> yCoords = new ArrayList<Integer>();
-		
-		if (t.size()==1) {
-			respectGrid=true;
-//			System.out.println(respectGrid);
-			return true;
-		}
-
-		
-		for (KingdomTerritory each:t) {
-			
-			int x1=each.getX();
-			int y1=each.getY();
-			
-			xCoords.add(x1);
-			yCoords.add(y1);
-			
-			int x2;
-			int y2;
-			
-			int[] otherPos=calculateOtherPos(each);
-			x2=otherPos[0];
-			y2=otherPos[1];
-			
-			xCoords.add(x2);
-			yCoords.add(y2);
-			
-			Collections.sort(xCoords);
-			Collections.sort(yCoords);
-			
-			int xSize=xCoords.get(xCoords.size()-1)-xCoords.get(0)+1;
-			int ySize=yCoords.get(yCoords.size()-1)-yCoords.get(0)+1;
-			
-			if (each instanceof DominoInKingdom) {
-				if (xSize>5 || ySize>5) {
-					((DominoInKingdom) each).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-					badCount++;
-				}
-				else {
-					((DominoInKingdom) each).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-				}
-			}
-			
-		}
-		if (badCount>0) {
-			respectGrid=false;
-		}
-		else {
-			respectGrid=true;
-		}
-//		System.out.println(respectGrid);
-		return respectGrid;
-	}
 	
 	
 	
-	/**
-	 * 
-	 * This method checks a player's kingdom to make sure that
-	 * none of the kingdom territories overla each other
-	 * 
-	 * @see VerifyNoOverlapping.feature
-	 * @author Jing Han 260528152
-	 * @param player
-	 * @return noOverlap
-	 */
 	
-	public static boolean verifyNoOverlapAllTerritories(Player player) {
-		
-//		verifies all territories in kingdom
-		int overlappedCount=0;
-		boolean noOverlap=true;
-		
-		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
-		
-		if (territories.size()==1) {
-			noOverlap=true;
-//			System.out.println(noOverlap);
-			return noOverlap;
-		}
-		
-		else {
-			
-			KingdomTerritory tA;
-			KingdomTerritory tB;
-			for (int i=territories.size()-1;i>0;i--) {
-				
-				tA=territories.get(i);
-				
-				for (int j=i-1;j>-1;j--) {
-					
-					tB=territories.get(j);
-
-					if (checkOverlap(tA,tB)){
-						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-						overlappedCount++;
-					}
-					else {
-						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-					}
-					
-				}
-			}
-			if (overlappedCount>0) {
-				noOverlap=false;
-			}
-			else {
-				noOverlap=true;
-			}
-//			System.out.println(noOverlap);
-			return noOverlap;
-		}
-		
-	}
-	
-	/**
-	 * 
-	 * This method checks a player's kingdom to make sure that
-	 * the last placed kingdom territory does not overlap any
-	 * existing dominos
-	 *  
-	 * @see VerifyNoOverlapping.feature
-	 * @author Jing Han 260528152
-	 * @param player
-	 * @return noOverlap
-	 */
-	
-	public static boolean verifyNoOverlapLastTerritory(Player player) {
-		
-//		only verifies the last preplaced domino
-		boolean noOverlap=true;
-		
-		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
-		
-		if (territories.size()==1) {
-			noOverlap=true;
-//			System.out.println(noOverlap);
-			return noOverlap;
-		}
-		
-		else {
-			
-			KingdomTerritory tA;
-			KingdomTerritory tB;
-	
-			tA=territories.get(territories.size()-1);
-				
-			for (int j=territories.size()-2;j>-1;j--) {
-					
-					tB=territories.get(j);
-
-					if (checkOverlap(tA,tB)){
-						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-						noOverlap=false;
-						break;
-					}
-					else {
-						((DominoInKingdom) tA).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-						noOverlap=true;
-					}
-					
-				}
-//			System.out.println(noOverlap);
-			return noOverlap;
-			}
-			
-	}
-	
-	/**
-	 * 
-	 * This method checks a player's kingdom to determine whether
-	 * the last placed domino is adjacent to the kingdom castle
-	 * 
-	 * @see VerifyCastleAdjacency.fature
-	 * @author Jing Han 260528152
-	 * @param player
-	 * @return castleAdj
-	 */
-	
-	public static boolean verifyCastleAdjacency(Player player) {
-		
-		boolean castleAdj=true;
-		
-		List <KingdomTerritory> t = player.getKingdom().getTerritories();
-		
-		if (t.size()==1) {
-			castleAdj=true;
-//			System.out.println(castleAdj);
-			return castleAdj;
-		}
-		
-		int castleX=t.get(0).getX();
-		int castleY=t.get(0).getY();
-
-		
-		KingdomTerritory testD = t.get(t.size()-1);
-		int [] testOtherPos=calculateOtherPos(testD);
-		
-		int testX1=testD.getX();
-		int testY1=testD.getY();
-		int testX2=testOtherPos[0];
-		int testY2=testOtherPos[1];
-		
-		
-		int norm1=L2NormSquared(testX1,testY1,castleX,castleY);
-		int norm2=L2NormSquared(testX2,testY2,castleX,castleY);
-
-		if ((norm1==1)&&(norm2>1)){
-			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-			castleAdj=true;
-		}
-		else if ((norm1>1)&&(norm2==1)) {
-			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-			castleAdj=true;
-		}
-		else {
-			((DominoInKingdom) testD).getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-			castleAdj=false;
-		}
-		
-//		System.out.println(castleAdj);
-		return castleAdj;
-		
-	}
-	
-	/**
-	 * 
-	 * This method checks a player's kingdom to determine whether
-	 * the last placed domino is has at least 1 valid neighbor
-	 * 
-	 * @see VerifyNeighborAdjacency.fature
-	 * @author Jing Han 260528152
-	 * @param player
-	 * @return neighborAdj
-	 */
-	
-	public static boolean verifyNeighborAdjacencyLastTerritory(Player player) {
-		
-		boolean neighborAdj=true;
-		
-		List<KingdomTerritory> t =player.getKingdom().getTerritories();
-		
-		if (t.size()==1) {
-			neighborAdj=true;
-//			System.out.println(neighborAdj);
-			return neighborAdj;
-		}
-		else {
-			
-			int validNeighborCount=0;
-			
-			DominoInKingdom prePlacedDomino = (DominoInKingdom) t.get(t.size()-1);
-			
-			Neighborhood leftNeighborhood = getDominoLeftNeighbors(t,prePlacedDomino);
-			Neighborhood rightNeighborhood =getDominoRightNeighbors(t,prePlacedDomino);
-			
-//			System.out.println(leftNeighborhood);	
-//			System.out.println("---------------------------------------------------------------------------------------------");
-//			System.out.println(rightNeighborhood);	
-
-			List<TerrainType> leftTileNeighborTerrains = leftNeighborhood.getNeighborTerrainType();
-//			System.out.println(leftTileNeighborTerrains.size());
-			
-			List<TerrainType> rightTileNeighborTerrains = rightNeighborhood.getNeighborTerrainType();
-//			System.out.println(rightTileNeighborTerrains.size());
-			
-			if (leftTileNeighborTerrains.isEmpty() && rightTileNeighborTerrains.isEmpty()) {
-//				System.out.println("no neighbors at all");
-			}
-			
-			if (!leftTileNeighborTerrains.isEmpty()) {
-				String leftTerrain=prePlacedDomino.getDomino().getLeftTile().name();
-				for (TerrainType testTerrain:leftTileNeighborTerrains) {
-					String testTerrainName=testTerrain.name();
-					if (testTerrainName.equalsIgnoreCase(leftTerrain)){
-//						System.out.println("found left match!");
-						validNeighborCount++;
-					}
-				}
-			}
-			
-			if (!rightTileNeighborTerrains.isEmpty()) {
-				for (TerrainType testTerrain:rightTileNeighborTerrains) {
-					if (testTerrain.name().equalsIgnoreCase(prePlacedDomino.getDomino().getRightTile().name())){
-//						System.out.println("found right match!");
-						validNeighborCount++;
-					}
-				}
-			}
-			
-			if (validNeighborCount==0) {
-				prePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-				neighborAdj=false;
-			}
-			else {
-				prePlacedDomino.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-				neighborAdj=true;
-			}
-		
-//			System.out.println(neighborAdj);
-			return neighborAdj;
-		}
-		
-	}
-	
-	/**
-	 * 
-	 * This helper method calculates the coordinate of a Domino's rightTile
-	 * based on the Domin's leftTile and orientation
-	 * 
-	 * @see all verification methods
-	 * @author Jing Han 260528152
-	 * @param d
-	 * @return coord2
-	 */
 	
 
-	public static int[] calculateOtherPos(KingdomTerritory d) {
-		
-		int [] coord2 = new int[2];
-		if (d instanceof Castle) {
-			coord2[0]=0;
-			coord2[1]=0;
-		}
-		
-		else {
-			int x2;
-			int y2;
-			
-			if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Right)) {
-				x2=d.getX()+1;
-				y2=d.getY();
-			}
-			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Up)) {
-				x2=d.getX();
-				y2=d.getY()+1;
-			}
-			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Left)) {
-				x2=d.getX()-1;
-				y2=d.getY();
-			}
-			else {
-				x2=d.getX();
-				y2=d.getY()-1;
-			}
-			
-			coord2[0]=x2;
-			coord2[1]=y2;
-		}
-		return coord2;
-	}
 	
 	
-	/**
-	 * 
-	 * This method checks if a player is allowed to
-	 * discard the domino they have selected and
-	 * prePlaced in their kingdom. If they are allowed
-	 * to do so, the domino is discarded and their
-	 * dominoSelected is deleted. If not, the dominos
-	 * status is changed to ErroneouslyPrePlaced.
-	 * 
-	 * @see DiscardDomino.feature
-	 * @author Massimo Vadacchino 260928064
-	 * @param aPlayer
-	 * @return void
-	 * @throws java.lang.IllegalArgumentException
-	 */
-	
-	public static void discardDomino(Player aPlayer) throws java.lang.IllegalArgumentException{ 
-				
-		if(aPlayer == null) throw new java.lang.IllegalArgumentException("This player does not exist");
-		
-		DominoInKingdom newlyPrePlacedDomino = (DominoInKingdom) aPlayer.getKingdom().getTerritory(aPlayer.getKingdom().getTerritories().size()-1);
-		if(newlyPrePlacedDomino.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in the players kingdom");
-
-		int[] availableSpaceInKingdom = getAvailableSpaceInGrid(aPlayer);
-		
-		for(int i = -4; i<5; i++) {
-			
-			for(int j = -4; j<5; j++) {
-				
-				for(int z = 0; z<4; z++) {
-					
-					if(i > availableSpaceInKingdom[0] && j > availableSpaceInKingdom[1] && i < availableSpaceInKingdom[2] && j < availableSpaceInKingdom[3]){
-				
-						newlyPrePlacedDomino.setX(i);
-						newlyPrePlacedDomino.setY(j);
-						
-						if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyNeighborAdjacencyLastTerritory(aPlayer)) {
-						
-							newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-							return;
-							
-						}
-						
-						else if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyCastleAdjacency(aPlayer)) {
-						
-							newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-							return;
-							
-						}
-					
-					}
-					
-					rotateCurrentDomino(aPlayer, newlyPrePlacedDomino, "Clockwise");
-				
-				}
-				
-			}
-		
-		}
-	
-		newlyPrePlacedDomino.getDomino().setStatus(DominoStatus.Discarded);
-		newlyPrePlacedDomino.delete();
-		aPlayer.getDominoSelection().delete();
-		
-	}
-	
-	
-	/**
-	 * 
-	 * This method allows a player to rotate 
-	 * the domino they have selected and 
-	 * prePlaced in their kingdom in 2 directions,
-	 * ClockWise or Counter-ClockWise. This may only
-	 * be possible if the rotation does stay within
-	 * the 9x9 grid size. The dominoes status and direction
-	 * is updated accordingly.
-	 * 
-	 * 
-	 * @see RotateCurrentDomino.feature
-	 * @author Massimo Vadacchino 260928064
-	 * @param aPlayer
-	 * @param dInKingdom
-	 * @param rotation
-	 * @return void
-	 * @throws java.lang.IllegalArgumentException
-	 * 
-	 */
-	
-	public static void rotateCurrentDomino(Player aPlayer, DominoInKingdom dInKingdom, String rotation) throws java.lang.IllegalArgumentException { 
-
-		if(aPlayer == null || dInKingdom == null) throw new java.lang.IllegalArgumentException("Invalid input");
-		if(!(((DominoInKingdom)aPlayer.getKingdom().getTerritory(aPlayer.getKingdom().getTerritories().size() -1)).equals(dInKingdom))) throw new java.lang.IllegalArgumentException("This domino does not belong to this players kingdom");
-		if(dInKingdom.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in the players kingdom");
-		
-		DirectionKind dominoDir = dInKingdom.getDirection();
-		
-		if(dominoDir.equals(DirectionKind.Up) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Right);
-		else if(dominoDir.equals(DirectionKind.Right) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Down);
-		else if(dominoDir.equals(DirectionKind.Down) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Left);
-		else if(dominoDir.equals(DirectionKind.Left) && rotation.equalsIgnoreCase("Clockwise")) dInKingdom.setDirection(DirectionKind.Up);
-			
-		if(dominoDir.equals(DirectionKind.Up) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Left);
-		else if(dominoDir.equals(DirectionKind.Left) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Down);
-		else if(dominoDir.equals(DirectionKind.Down) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Right);
-		else if(dominoDir.equals(DirectionKind.Right) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Up);
-		
-		if(!verifyGridLimit(dInKingdom)) {
-	
-			dInKingdom.setDirection(dominoDir);
-			return;
-			
-		}
-		
-		else {
-			
-			if(verifyNeighborAdjacencyLastTerritory(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
-				
-				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-				return;
-				
-			}
-				
-			else if(verifyCastleAdjacency(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
-					
-				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-				return;
-				
-			}
-		
-			dInKingdom.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-			
-		}
-	
-	}
-	
-	/**
-	 * 
-	 * This method allows a player to place their
-	 * selected domino into their kingdom if and
-	 * only if their domino passes the verifications
-	 * (no overlapping, within kingdom size, has a neighbour,
-	 * and adjacent to the castle) and has a status
-	 * of "CorrectlyPrePlaced". If not, the domino will 
-	 * have the same attributes as before. 
-	 * 
-	 * @see PlaceDomino.feature
-	 * @author Massimo Vadacchino 260928064
-	 * @param aPlayer
-	 * @param dominoToPlace
-	 * @return void
-	 * @throws java.lang.IllegalArgumentException
-	 * 
-	 */
-	
-	public static void placeDomino(Player aPlayer, Domino dominoToPlace) throws java.lang.IllegalArgumentException { 
-		
-		if(aPlayer == null || dominoToPlace == null) throw new java.lang.IllegalArgumentException("Invalid input");
-		if(!(dominoToPlace.getDominoSelection().getPlayer().equals(aPlayer))) throw new java.lang.IllegalArgumentException("This domino does not belong to this player");
-		if(dominoToPlace.getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in this players kingdom");
-		
-		if(verifyGridSizeAllKingdom(aPlayer) &&  verifyNoOverlapLastTerritory(aPlayer) && verifyNeighborAdjacencyLastTerritory(aPlayer) && dominoToPlace.getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
-			
-			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);
-			aPlayer.getDominoSelection().delete();
-			
-		}
-		
-		else if(verifyGridSizeAllKingdom(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyCastleAdjacency(aPlayer) && dominoToPlace.getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
-			
-			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);	
-			aPlayer.getDominoSelection().delete();
-			
-		}
-		
-	}
-	
-	/**
-	 * 
-	 * This method allows a player to move 
-	 * the domino they have selected and 
-	 * prePlaced in their kingdom in 4 directions,
-	 * up, down, left, and right. This may only
-	 * be possible if the movement does stay within
-	 * the 9x9 grid size. The dominoes status and position
-	 * is updated accordingly.
-	 * 
-	 * 
-	 * @see MoveCurrentDomino.feature
-	 * @author Massimo Vadacchino 260928064
-	 * @param aPlayer
-	 * @param dInKingdom
-	 * @param movement
-	 * @return void
-	 * @throws java.lang.IllegalArgumentException
-	 * 
-	 */
-	
-	public static void moveCurrentDomino(Player aPlayer, DominoInKingdom dInKingdom, String movement) throws java.lang.IllegalArgumentException{
-	
-		if(aPlayer == null || dInKingdom == null) throw new java.lang.IllegalArgumentException("Invalid input");
-		if(!(((DominoInKingdom)aPlayer.getKingdom().getTerritory(aPlayer.getKingdom().getTerritories().size() -1)).equals(dInKingdom))) throw new java.lang.IllegalArgumentException("This domino does not belong to this players kingdom");
-		if(dInKingdom.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) throw new java.lang.IllegalArgumentException("This domino is already placed in the players kingdom");
-		
-		int xPosPrevious = dInKingdom.getX();
-		int yPosPrevious = dInKingdom.getY();
-
-		if(movement.equalsIgnoreCase("Right")) dInKingdom.setX(xPosPrevious + 1);
-		else if(movement.equalsIgnoreCase("Left")) dInKingdom.setX(xPosPrevious - 1);
-		else if(movement.equalsIgnoreCase("Up")) dInKingdom.setY(yPosPrevious + 1);
-		else if(movement.equalsIgnoreCase("Down")) dInKingdom.setY(yPosPrevious - 1);
-		
-		if(!verifyGridLimit(dInKingdom)) {
-	
-			dInKingdom.setX(xPosPrevious);
-			dInKingdom.setY(yPosPrevious);
-			
-			return;
-			
-		}
-		
-		else {
-			
-			if(verifyNeighborAdjacencyLastTerritory(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
-				
-				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-				return;
-				
-			}
-				
-			else if(verifyCastleAdjacency(aPlayer) && verifyNoOverlapLastTerritory(aPlayer) && verifyGridSizeAllKingdom(aPlayer)) {
-					
-				
-				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
-				return;
-				
-			}
-		
-			dInKingdom.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
-			
-		}
-		
-	}
 	
 	/**
 	 * 
@@ -1998,89 +2338,7 @@ public class KDController {
 
 	}
 	
-	/**
-	 * 
-	 * This method creates the current and next
-	 * draft of the game. takes care of the beginning case
-	 * when there is no current or next drafts, takes care
-	 * of regular play by swapping current with next and 
-	 * then generate a new next, and takes care of the
-	 * end game when there is no more domino for  next 
-	 * and it is set to null
-	 * 
-	 * @see  - CreateNextDraft.feature
-	 * @author Keon Olszewski 260927813
-	 * @param player
-	 * @return void
-	 */
 	
-	public static void createNextDraft() {
-		Kingdomino kd = KingdominoApplication.getKingdomino();
-		Game game = kd.getCurrentGame();
-		int draftNumLimit=0;
-		
-		if ((game.getNumberOfPlayers()==4)||(game.getNumberOfPlayers()==3)) draftNumLimit=12;
-		if (game.getNumberOfPlayers()==2) draftNumLimit=6;
-		
-		int numAvailable=0;
-		for (Domino d:game.getAllDominos()) {
-			if (d.getStatus().equals(DominoStatus.InPile)||d.getStatus().equals(DominoStatus.InCurrentDraft)) {
-				numAvailable++;
-				break;
-			}
-			
-		}
-		
-		if (game.getAllDrafts().size()==0) {
-			Draft currentDraft=createOneDraft();
-			game.setCurrentDraft(currentDraft);
-			changeDraftDominoStatus(currentDraft,Domino.DominoStatus.InCurrentDraft);
-
-			Draft nextDraft = createOneDraft();
-			nextDraft.setDraftStatus(Draft.DraftStatus.FaceDown);
-			game.setNextDraft(nextDraft);
-			changeDraftDominoStatus(nextDraft,Domino.DominoStatus.InNextDraft);	
-			
-			sortCurrentDraft();
-			currentDraft.setDraftStatus(Draft.DraftStatus.Sorted);
-
-		}
-		else if (game.getAllDrafts().size()<draftNumLimit) {
-			
-			changeDraftDominoStatus(game.getCurrentDraft(),DominoStatus.Excluded);
-			
-			changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
-			game.setCurrentDraft(game.getNextDraft());
-			
-			Draft nextDraft=createOneDraft();
-			changeDraftDominoStatus(nextDraft,DominoStatus.InNextDraft);
-			game.setNextDraft(nextDraft);
-			game.getNextDraft().setDraftStatus(Draft.DraftStatus.FaceDown);
-			
-			sortCurrentDraft();
-			game.getCurrentDraft().setDraftStatus(Draft.DraftStatus.Sorted);
-
-		}
-		else if (kd.getCurrentGame().getAllDrafts().size()==draftNumLimit) {
-			if (game.getNextDraft()!=null) {
-				changeDraftDominoStatus(game.getCurrentDraft(),DominoStatus.Excluded);
-				game.setCurrentDraft(game.getNextDraft());
-				game.setNextDraft(null);
-			}
-			game.getCurrentDraft().setDraftStatus(Draft.DraftStatus.Sorted);
-			sortCurrentDraft();
-			
-//			game.setCurrentDraft(game.getNextDraft());
-//			game.setNextDraft(null);
-//			changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
-//
-//			game.setCurrentDraft(game.getNextDraft());
-//			game.getCurrentDraft().setDraftStatus(Draft.DraftStatus.FaceUp);
-//			
-//			game.setNextDraft(null);
-		}
-		
-	}
 	
 	/**
 	 * 
@@ -2934,27 +3192,28 @@ public class KDController {
 		
 		for (KingdomTerritory each:t) {
 			if (each instanceof DominoInKingdom) {
-				
-				int[][] tileValues = extractTileValues((DominoInKingdom)each);
-				int [] leftValues = tileValues[0];
-				int [] rightValues=tileValues[1];
-				
-				TerrainType leftTerrain = ((DominoInKingdom) each).getDomino().getLeftTile();
-				TerrainType rightTerrain = ((DominoInKingdom) each).getDomino().getRightTile();		
-				
-				if (leftTerrain.equals(TerrainType.WheatField)) wheatGroup.add(leftValues);
-				if (leftTerrain.equals(TerrainType.Swamp)) swampGroup.add(leftValues);
-				if (leftTerrain.equals(TerrainType.Grass)) grassGroup.add(leftValues);
-				if (leftTerrain.equals(TerrainType.Mountain)) mountainGroup.add(leftValues);
-				if (leftTerrain.equals(TerrainType.Lake)) lakeGroup.add(leftValues);
-				if (leftTerrain.equals(TerrainType.Forest)) forestGroup.add(leftValues);
-				
-				if (rightTerrain.equals(TerrainType.WheatField)) wheatGroup.add(rightValues);
-				if (rightTerrain.equals(TerrainType.Swamp)) swampGroup.add(rightValues);
-				if (rightTerrain.equals(TerrainType.Grass)) grassGroup.add(rightValues);
-				if (rightTerrain.equals(TerrainType.Mountain)) mountainGroup.add(rightValues);
-				if (rightTerrain.equals(TerrainType.Lake)) lakeGroup.add(rightValues);
-				if (rightTerrain.equals(TerrainType.Forest)) forestGroup.add(rightValues);
+				if (((DominoInKingdom) each).getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) {
+					int[][] tileValues = extractTileValues((DominoInKingdom)each);
+					int [] leftValues = tileValues[0];
+					int [] rightValues=tileValues[1];
+					
+					TerrainType leftTerrain = ((DominoInKingdom) each).getDomino().getLeftTile();
+					TerrainType rightTerrain = ((DominoInKingdom) each).getDomino().getRightTile();		
+					
+					if (leftTerrain.equals(TerrainType.WheatField)) wheatGroup.add(leftValues);
+					if (leftTerrain.equals(TerrainType.Swamp)) swampGroup.add(leftValues);
+					if (leftTerrain.equals(TerrainType.Grass)) grassGroup.add(leftValues);
+					if (leftTerrain.equals(TerrainType.Mountain)) mountainGroup.add(leftValues);
+					if (leftTerrain.equals(TerrainType.Lake)) lakeGroup.add(leftValues);
+					if (leftTerrain.equals(TerrainType.Forest)) forestGroup.add(leftValues);
+					
+					if (rightTerrain.equals(TerrainType.WheatField)) wheatGroup.add(rightValues);
+					if (rightTerrain.equals(TerrainType.Swamp)) swampGroup.add(rightValues);
+					if (rightTerrain.equals(TerrainType.Grass)) grassGroup.add(rightValues);
+					if (rightTerrain.equals(TerrainType.Mountain)) mountainGroup.add(rightValues);
+					if (rightTerrain.equals(TerrainType.Lake)) lakeGroup.add(rightValues);
+					if (rightTerrain.equals(TerrainType.Forest)) forestGroup.add(rightValues);
+				}
 			}
 		}
 		

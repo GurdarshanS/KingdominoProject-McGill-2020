@@ -31,7 +31,7 @@ public class mockGame {
 //		starts a new game
 		List<BonusOption> selectedBonusOptions = new ArrayList<BonusOption>();
 
-		int numPlayers=2;
+		int numPlayers=4;
 		
 		BonusOption mk = new BonusOption("Middle Kingdom",kd);
 		BonusOption hm = new BonusOption("Harmony",kd);
@@ -54,8 +54,8 @@ public class mockGame {
 //		optionally assigns the players in new game to existing users in kd
 		KDController.assignPlayerToUser(kd.getCurrentGame().getPlayer(0), kd.getUser(0));
 		KDController.assignPlayerToUser(kd.getCurrentGame().getPlayer(1), kd.getUser(1));
-//		KDController.assignPlayerToUser(kd.getCurrentGame().getPlayer(2), kd.getUser(2));
-//		KDController.assignPlayerToUser(kd.getCurrentGame().getPlayer(3), kd.getUser(3));
+		KDController.assignPlayerToUser(kd.getCurrentGame().getPlayer(2), kd.getUser(2));
+		KDController.assignPlayerToUser(kd.getCurrentGame().getPlayer(3), kd.getUser(3));
 	
 		
 		
