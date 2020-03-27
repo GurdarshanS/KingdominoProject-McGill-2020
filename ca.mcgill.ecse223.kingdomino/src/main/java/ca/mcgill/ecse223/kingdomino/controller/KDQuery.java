@@ -241,6 +241,58 @@ public class KDQuery {
 		return coord2;
 	}
 	
+	
+	public static List<List<Integer>> getValidFreeCoordinates(Player player) {
+		List<List<Integer>> allPossibleCoords = new ArrayList<List<Integer>>();
+		List<List<Integer>> combinedOccupiedCoords = new ArrayList<List<Integer>>();
+		
+		List<Integer> allX = new ArrayList<Integer>();
+		List<Integer> allY = new ArrayList<Integer>();
+		
+		int[][] occupiedCoords = KDQuery.getPlayerTerritoryCoordinates(player);
+				
+		for (int i=0;i<occupiedCoords[0].length;i++) {
+			int[] leftCoord= {occupiedCoords[0][i],occupiedCoords[1][i]};
+			int[] rightCoord= {occupiedCoords[2][i],occupiedCoords[3][i]};
+			
+			if ((leftCoord[0]==rightCoord[0])&&(leftCoord[1]==rightCoord[1])) {
+				List<Integer> tmp=new ArrayList<Integer>(Arrays.asList(occupiedCoords[0][i],occupiedCoords[1][i]));
+				combinedOccupiedCoords.add(tmp);
+			}
+			else {
+				List<Integer> tmp1=new ArrayList<Integer>(Arrays.asList(occupiedCoords[0][i],occupiedCoords[1][i]));
+				List<Integer> tmp2=new ArrayList<Integer>(Arrays.asList(occupiedCoords[2][i],occupiedCoords[3][i]));
+				combinedOccupiedCoords.add(tmp1);
+				combinedOccupiedCoords.add(tmp2);
+			}
+			allX.add(occupiedCoords[0][i]);
+			allY.add(occupiedCoords[1][i]);
+			allX.add(occupiedCoords[2][i]);
+			allY.add(occupiedCoords[3][i]);	
+		}
+		
+		int minX=Collections.min(allX);
+		int maxX=Collections.max(allX);
+		int minY=Collections.min(allY);
+		int maxY=Collections.max(allY);
+
+
+		for (int x=minX-1;x<=maxX+1;x++) {
+			for (int y=minY-1;y<=maxY+1;y++) {
+				List<Integer> tmp=new ArrayList<Integer>(Arrays.asList(x,y));
+				allPossibleCoords.add(tmp);
+			}
+		}
+
+		allPossibleCoords.removeAll(combinedOccupiedCoords);
+		
+		return allPossibleCoords;
+
+	}
+	
+	
+	
+	
 	/**
 	 * 
 	 * This helper method returns the min and max of an array

@@ -21,28 +21,28 @@ public class viewKingdominoState {
 		
 		Player player1=kd.getCurrentGame().getPlayer(0);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
-		KDController.prePlaceDominoDominoSelection(player1, 1, 0, "right");
+		KDController.preplaceLatestDomino(player1, 1, 0, "right");
 		KDController.placeLatestDomino(player1);
 		
 		//		second player actions
 		
 		Player player2=kd.getCurrentGame().getPlayer(1);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
-		KDController.prePlaceDominoDominoSelection(player2, 1, 0, "right");
+		KDController.preplaceLatestDomino(player2, 1, 0, "right");
 		KDController.placeLatestDomino(player2);
 				
 		//		third player actions
 		
 		Player player3=kd.getCurrentGame().getPlayer(2);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
-		KDController.prePlaceDominoDominoSelection(player3, 1, 0, "right");
+		KDController.preplaceLatestDomino(player3, 1, 0, "right");
 		KDController.placeLatestDomino(player3);
 		
 		//		fourth player actions
 		
 		Player player4=kd.getCurrentGame().getPlayer(3);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
-		KDController.prePlaceDominoDominoSelection(player4, 1, 0, "right");
+		KDController.preplaceLatestDomino(player4, 1, 0, "right");
 		KDController.placeLatestDomino(player4);
 
 		printDraft(kd);	
@@ -54,25 +54,25 @@ public class viewKingdominoState {
 		//		first player actions
 		player1=kd.getCurrentGame().getPlayer(0);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
-		KDController.prePlaceDominoDominoSelection(player1, -1, 0, "left");
+		KDController.preplaceLatestDomino(player1, -1, 0, "left");
 		KDController.placeLatestDomino(player1);
 		
 		//		second player actions
 		player2=kd.getCurrentGame().getPlayer(1);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
-		KDController.prePlaceDominoDominoSelection(player2, -1, 0, "left");
+		KDController.preplaceLatestDomino(player2, -1, 0, "left");
 		KDController.placeLatestDomino(player2);
 				
 		//		third player actions
 		player3=kd.getCurrentGame().getPlayer(2);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
-		KDController.prePlaceDominoDominoSelection(player3, -1, 0, "left");
+		KDController.preplaceLatestDomino(player3, -1, 0, "left");
 		KDController.placeLatestDomino(player3);
 		
 		//		fourth player actions
 		player4=kd.getCurrentGame().getPlayer(3);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
-		KDController.prePlaceDominoDominoSelection(player4, -1, 0, "left");
+		KDController.preplaceLatestDomino(player4, -1, 0, "left");
 		KDController.placeLatestDomino(player4);	
 		
 		printDraft(kd);		
@@ -83,25 +83,25 @@ public class viewKingdominoState {
 		//		first player actions
 		player1=kd.getCurrentGame().getPlayer(0);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
-		KDController.prePlaceDominoDominoSelection(player1, 0, 1, "left");
+		KDController.preplaceLatestDomino(player1, 0, 1, "left");
 		KDController.placeLatestDomino(player1);
 		
 		//		second player actions
 		player2=kd.getCurrentGame().getPlayer(1);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
-		KDController.prePlaceDominoDominoSelection(player2, 0, 1, "left");
+		KDController.preplaceLatestDomino(player2, 0, 1, "left");
 		KDController.placeLatestDomino(player2);
 				
 		//		third player actions
 		player3=kd.getCurrentGame().getPlayer(2);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
-		KDController.prePlaceDominoDominoSelection(player3, 0, 1, "left");
+		KDController.preplaceLatestDomino(player3, 0, 1, "left");
 		KDController.placeLatestDomino(player3);
 		
 		//		fourth player actions
 		player4=kd.getCurrentGame().getPlayer(3);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
-		KDController.prePlaceDominoDominoSelection(player4, 0, 1, "left");
+		KDController.preplaceLatestDomino(player4, 0, 1, "left");
 		KDController.placeLatestDomino(player4);
 		
 		printDraft(kd);		
@@ -113,25 +113,25 @@ public class viewKingdominoState {
 		//		first player actions
 		player1=kd.getCurrentGame().getPlayer(0);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
-		KDController.prePlaceDominoDominoSelection(player1, 0, -1, "left");
+		KDController.preplaceLatestDomino(player1, 0, -1, "left");
 		KDController.placeLatestDomino(player1);
 		
 		//		second player actions
 		player2=kd.getCurrentGame().getPlayer(1);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
-		KDController.prePlaceDominoDominoSelection(player2, 0, -1, "left");
+		KDController.preplaceLatestDomino(player2, 0, -1, "left");
 		KDController.placeLatestDomino(player2);
 				
 		//		third player actions
 		player3=kd.getCurrentGame().getPlayer(2);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
-		KDController.prePlaceDominoDominoSelection(player3, 0, -1, "left");
+		KDController.preplaceLatestDomino(player3, 0, -1, "left");
 		KDController.placeLatestDomino(player3);
 		
 		//		fourth player actions
 		player4=kd.getCurrentGame().getPlayer(3);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
-		KDController.prePlaceDominoDominoSelection(player4, 0, -1, "left");
+		KDController.preplaceLatestDomino(player4, 0, -1, "left");
 		KDController.placeLatestDomino(player4);		
 
 		printDraft(kd);		
@@ -143,14 +143,14 @@ public class viewKingdominoState {
 		
 		player1=kd.getCurrentGame().getPlayer(0);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
-		KDController.prePlaceDominoDominoSelection(player1, 1, -1, "right");
+		KDController.preplaceLatestDomino(player1, 1, -1, "right");
 		KDController.rotateLatestDomino(player1, "clockwise");
 		KDController.placeLatestDomino(player1);
 		
 		//		second player actions
 		player2=kd.getCurrentGame().getPlayer(1);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
-		KDController.prePlaceDominoDominoSelection(player2, 0,2, "right");
+		KDController.preplaceLatestDomino(player2, 0,2, "right");
 		KDController.moveLatestDomino(player2, "up");
 		KDController.rotateLatestDomino(player2, "clockwise");
 		KDController.placeLatestDomino(player2);
@@ -158,14 +158,14 @@ public class viewKingdominoState {
 		//		third player actions
 		player3=kd.getCurrentGame().getPlayer(2);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
-		KDController.prePlaceDominoDominoSelection(player3, 1, -1, "left");
+		KDController.preplaceLatestDomino(player3, 1, -1, "left");
 		KDController.rotateLatestDomino(player3, "counterclockwise");
 		KDController.placeLatestDomino(player3);
 		
 		//		fourth player actions
 		player4=kd.getCurrentGame().getPlayer(3);
 		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
-		KDController.prePlaceDominoDominoSelection(player4, 1, 1, "left");
+		KDController.preplaceLatestDomino(player4, 1, 1, "left");
 		KDController.rotateLatestDomino(player4, "clockwise");
 		KDController.placeLatestDomino(player4);		
 		
