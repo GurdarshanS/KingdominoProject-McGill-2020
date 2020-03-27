@@ -29,7 +29,7 @@ public class mockGame {
 		KDController.provideUserProfile(usernameF);
 		
 //		starts a new game
-		List<BonusOption> selectedBonusOptions = new ArrayList<BonusOption>();
+		List<String> selectedBonusOptions = new ArrayList<String>();
 
 		int numPlayers=4;
 		

@@ -12,11 +12,51 @@ import ca.mcgill.ecse223.kingdomino.model.Game;
 import ca.mcgill.ecse223.kingdomino.model.Kingdom;
 import ca.mcgill.ecse223.kingdomino.model.KingdomTerritory;
 import ca.mcgill.ecse223.kingdomino.model.Player;
+import ca.mcgill.ecse223.kingdomino.model.Property;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
 
 public class KDQuery {
 	
 	public KDQuery() {}
+	
+	
+	/**
+	 * 
+	 * This method checks a player's kingdom for any territory that
+	 * violates one of more of the verification methods that checks
+	 * kingdom grid size, castle adjacency (when applicable), 
+	 * neighbor adjacency, and overlap. When violations occur, return
+	 * an "invalid" string, "valid" otherwise.
+	 * 
+	 * @see - no features associated, but used in many When calls of cucumber features
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return validity
+	 */
+	
+	public static String getKingdomVerificationResult(Player player) {
+		String validity="valid";
+		
+		List<DominoInKingdom> errorneouslyPlacedDominos=KDQuery.getErroneouslyPrePlacedDomino(player);
+		if (!errorneouslyPlacedDominos.isEmpty()) {
+			validity="invalid";
+		}
+		
+		return validity;
+	}
+	
+	public static int[] playerMaxPropSizeAndNumCrown(Player player) {
+		int size=-1;
+		int crown=0;
+		
+		for (Property prop:player.getKingdom().getProperties()) {
+			if (prop.getSize()>size) size=prop.getSize();
+			crown+=prop.getCrowns();
+		}
+		
+		int[] sizeAndCrown= {size,crown};
+		return sizeAndCrown;
+	}
 	
 	/**
 	 * 
@@ -153,7 +193,7 @@ public class KDQuery {
 			else if (territories.get(i) instanceof DominoInKingdom)
 			{
 				DominoInKingdom t = (DominoInKingdom) territories.get(i);
-				int[] otherPos=KDController.calculateOtherPos(t);
+				int[] otherPos=calculateRightPos(t);
 				dominoPos[0][i]=t.getX();
 				dominoPos[1][i]=t.getY();
 				dominoPos[2][i]=otherPos[0];
@@ -165,6 +205,41 @@ public class KDQuery {
 	}
 	
 //	private helper methods
+	
+	public static int[] calculateRightPos(KingdomTerritory d) {
+		
+		int [] coord2 = new int[2];
+		if (d instanceof Castle) {
+			coord2[0]=0;
+			coord2[1]=0;
+		}
+		
+		else {
+			int x2;
+			int y2;
+			
+			if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Right)) {
+				x2=d.getX()+1;
+				y2=d.getY();
+			}
+			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Up)) {
+				x2=d.getX();
+				y2=d.getY()+1;
+			}
+			else if (((DominoInKingdom) d).getDirection().equals(DirectionKind.Left)) {
+				x2=d.getX()-1;
+				y2=d.getY();
+			}
+			else {
+				x2=d.getX();
+				y2=d.getY()-1;
+			}
+			
+			coord2[0]=x2;
+			coord2[1]=y2;
+		}
+		return coord2;
+	}
 	
 	/**
 	 * 

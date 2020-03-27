@@ -1,7 +1,7 @@
 package ca.mcgill.ecse223.kingdomino.development;
 
 import java.util.List;
-import ca.mcgill.ecse223.kingdomino.controller.KDController;
+import ca.mcgill.ecse223.kingdomino.controller.*;
 import ca.mcgill.ecse223.kingdomino.model.*;
 
 public class viewKingdominoState {
@@ -12,7 +12,8 @@ public class viewKingdominoState {
 		Kingdomino kd = KDController.loadGame();
 		
 		printUsers(kd);
-		printPlayers(kd);
+//		printPlayers(kd);
+		printNextRoundPlayerOrder(kd);
 		
 		//===================== round 1 ============================		
 		
@@ -44,9 +45,8 @@ public class viewKingdominoState {
 		KDController.prePlaceDominoDominoSelection(player4, 1, 0, "right");
 		KDController.placeLatestDomino(player4);
 
-		printDraft(kd);
-		printPlayers(kd);
-		
+		printDraft(kd);	
+		printNextRoundPlayerOrder(kd);
 		
 		//===================== round 2 ============================		
 		KDController.createNextDraft();
@@ -75,6 +75,8 @@ public class viewKingdominoState {
 		KDController.prePlaceDominoDominoSelection(player4, -1, 0, "left");
 		KDController.placeLatestDomino(player4);	
 		
+		printDraft(kd);		
+		printNextRoundPlayerOrder(kd);
 		//===================== round 3 ============================		
 		KDController.createNextDraft();
 		
@@ -102,7 +104,9 @@ public class viewKingdominoState {
 		KDController.prePlaceDominoDominoSelection(player4, 0, 1, "left");
 		KDController.placeLatestDomino(player4);
 		
-		
+		printDraft(kd);		
+		printNextRoundPlayerOrder(kd);
+
 		//===================== round 4 ============================		
 		KDController.createNextDraft();
 		
@@ -130,7 +134,40 @@ public class viewKingdominoState {
 		KDController.prePlaceDominoDominoSelection(player4, 0, -1, "left");
 		KDController.placeLatestDomino(player4);		
 
+		printDraft(kd);		
+		printNextRoundPlayerOrder(kd);
+
+		//===================== round 5 ============================		
+		KDController.createNextDraft();
+		printDraft(kd);
 		
+		player1=kd.getCurrentGame().getPlayer(0);
+		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+		KDController.prePlaceDominoDominoSelection(player1, 1, -1, "right");
+		KDController.rotateLatestDomino(player1, "clockwise");
+		KDController.placeLatestDomino(player1);
+		
+		//		second player actions
+		player2=kd.getCurrentGame().getPlayer(1);
+		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+		KDController.prePlaceDominoDominoSelection(player2, 0,2, "right");
+		KDController.moveLatestDomino(player2, "up");
+		KDController.rotateLatestDomino(player2, "clockwise");
+		KDController.placeLatestDomino(player2);
+		
+		//		third player actions
+		player3=kd.getCurrentGame().getPlayer(2);
+		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+		KDController.prePlaceDominoDominoSelection(player3, 1, -1, "left");
+		KDController.rotateLatestDomino(player3, "counterclockwise");
+		KDController.placeLatestDomino(player3);
+		
+		//		fourth player actions
+		player4=kd.getCurrentGame().getPlayer(3);
+		KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+		KDController.prePlaceDominoDominoSelection(player4, 1, 1, "left");
+		KDController.rotateLatestDomino(player4, "clockwise");
+		KDController.placeLatestDomino(player4);		
 		
 		//====================== end game =========================	
 		KDController.calculatePlayerScore(player1);
@@ -140,14 +177,34 @@ public class viewKingdominoState {
 		
 		KDController.calculatePlayerRanking();
 		
-		printDraft(kd);
-		printDominos(kd);
-//		printPlayers(kd);
+//		printDraft(kd);
+//		printDominos(kd);
+		printPlayers(kd);
+		printRankings(kd);
 
 
 //	
 
 		
+	}
+	
+	public static void printNextRoundPlayerOrder(Kingdomino kd) {
+		System.out.println("======== next round player ordering =========");
+		for (Player p:kd.getCurrentGame().getPlayers()) {
+			System.out.println(p.getColor());
+		}
+	}
+	
+	public static void printRankings(Kingdomino kd) {
+		System.out.println("================================================ current rankings ====================================================");
+			for (Player p:kd.getCurrentGame().getPlayers()) {
+				int[] sizeCrown=KDQuery.playerMaxPropSizeAndNumCrown(p);
+				String row=String.format("%1$-10s  rank: %2$-5d score: %3$-5d size: %4$-5d crown: %5$-5d",
+							p.getColor(),p.getCurrentRanking(),p.getTotalScore(),sizeCrown[0],sizeCrown[1]);
+				System.out.println(row);
+			}
+			
+			System.out.println("------------------------------------------------------------------------------------------------------------------");
 	}
 	
 	public static void printProperties(Player player) {
@@ -162,7 +219,7 @@ public class viewKingdominoState {
 	
 	public static void printPlayerKingdom(Player p) {
 //		System.out.println("================================== "+p.getColor()+" player kingdom =====================================");
-			System.out.println("\n"+KDController.getKingdomVerificationResult(p)+" kingdom\n");
+			System.out.println("\n"+KDQuery.getKingdomVerificationResult(p)+" kingdom\n");
 			for (KingdomTerritory territory:p.getKingdom().getTerritories()) {
 				String row="none";
 				if (territory instanceof Castle) {
@@ -170,7 +227,7 @@ public class viewKingdominoState {
 							"Castle",territory.getX(),territory.getY(),0,0,"none","none");
 				}
 				else if (territory instanceof DominoInKingdom){
-					int[] otherPos=KDController.calculateOtherPos(territory);
+					int[] otherPos=KDQuery.calculateRightPos(territory);
 					row=String.format("   %1$-5d  %2$-20s  left x: %3$-5d left y: %4$-5d right x: %5$-5d right y: %6$-5d %7$-10s status: %8$-2s",
 							((DominoInKingdom) territory).getDomino().getId(),"DominoInKingdom",territory.getX(),territory.getY(),otherPos[0],otherPos[1],((DominoInKingdom) territory).getDirection(),
 							((DominoInKingdom) territory).getDomino().getStatus());
@@ -185,7 +242,7 @@ public class viewKingdominoState {
 		System.out.println("====================================== player kingdoms ====================================");
 		for (Player p:kd.getCurrentGame().getPlayers()) {
 			System.out.println("\n"+p.getColor());
-			System.out.println(KDController.getKingdomVerificationResult(p)+" kingdom\n");
+			System.out.println(KDQuery.getKingdomVerificationResult(p)+" kingdom\n");
 			for (KingdomTerritory territory:p.getKingdom().getTerritories()) {
 				String row="none";
 				if (territory instanceof Castle) {
@@ -193,7 +250,7 @@ public class viewKingdominoState {
 							"Castle",territory.getX(),territory.getY(),0,0,"none","none");
 				}
 				else if (territory instanceof DominoInKingdom){
-					int[] otherPos=KDController.calculateOtherPos(territory);
+					int[] otherPos=KDQuery.calculateRightPos(territory);
 					row=String.format("   %1$-5d  %2$-20s  left x: %3$-5d left y: %4$-5d right x: %5$-5d right y: %6$-5d %7$-10s status: %8$-2s\"",
 							((DominoInKingdom) territory).getDomino().getId(),"DominoInKingdom",territory.getX(),territory.getY(),otherPos[0],otherPos[1],((DominoInKingdom) territory).getDirection(),
 							((DominoInKingdom) territory).getDomino().getStatus());

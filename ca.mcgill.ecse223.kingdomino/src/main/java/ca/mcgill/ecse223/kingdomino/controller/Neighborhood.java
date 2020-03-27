@@ -73,7 +73,7 @@ class Neighborhood {
 				leftCoord[0]=d.getX();
 				leftCoord[1]=d.getY();
 				leftTerrain=edgeTerrain;
-				rightCoord = KDController.calculateOtherPos(d);
+				rightCoord = KDQuery.calculateRightPos(d);
 				rightTerrain = edgeTerrain;
 				s = "id: "+id+" | orientation: "+orientation+" | left coord: "+Arrays.toString(leftCoord)+
 						" | left terrain: "+leftTerrain+" | right coord: "+Arrays.toString(rightCoord)+" | right terrain: "+
@@ -85,7 +85,7 @@ class Neighborhood {
 				leftCoord[0]=d.getX();
 				leftCoord[1]=d.getY();
 				leftTerrain=((DominoInKingdom) d).getDomino().getLeftTile().name();
-				rightCoord=KDController.calculateOtherPos(d);
+				rightCoord= KDQuery.calculateRightPos(d);
 				rightTerrain=((DominoInKingdom) d).getDomino().getRightTile().name();
 				s = "id: "+id+" | orientation: "+orientation+" | left coord: "+Arrays.toString(leftCoord)+
 						", left terrain: "+leftTerrain+" | right coord: "+Arrays.toString(rightCoord)+", right terrain: "+
