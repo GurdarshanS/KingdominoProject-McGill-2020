@@ -2,6 +2,7 @@ package ca.mcgill.ecse223.kingdomino.development;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.*;
 import ca.mcgill.ecse223.kingdomino.model.*;
 import ca.mcgill.ecse223.kingdomino.persistence.*;
@@ -29,23 +30,23 @@ public class mockGame {
 		KDController.provideUserProfile(usernameF);
 		
 //		starts a new game
-		List<String> selectedBonusOptions = new ArrayList<String>();
-
+		
 		int numPlayers=4;
-		
-//		BonusOption mk = new BonusOption("Middle Kingdom",kd);
-//		BonusOption hm = new BonusOption("Harmony",kd);
-		
-//		selectedBonusOptions.add(mk);
-//		selectedBonusOptions.add(hm);
+		List<String> selectedBonusOptions = new ArrayList<String>();
 		
 		try{
+			
 			KDController.setGameOptions(numPlayers, selectedBonusOptions);
-			KDController.startANewGame();
+			
+			//		all these below can be replaced with KDController.startANewGame();
+			Game game = kd.getCurrentGame();
+			int dominoNums=game.getMaxPileSize();
+			KDController.createDominoPile(game,dominoNums);
+			KDController.shuffleDominoPile();
+			KDController.generateInitialPlayerOrder();
+
 		}
-		catch(KDController.InvalidInputException e) {
-			e.printStackTrace();
-		}
+		catch(Exception e) {}
 		
 //		System.out.println(kd.getCurrentGame().getTopDominoInPile().getId());
 //		System.out.println("--------");

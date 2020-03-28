@@ -4,35 +4,14 @@ package ca.mcgill.ecse223.kingdomino.controller;
 import java.util.*;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
-import ca.mcgill.ecse223.kingdomino.model.Castle;
-import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
-import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom;
-import ca.mcgill.ecse223.kingdomino.model.Game;
-import ca.mcgill.ecse223.kingdomino.model.Kingdom;
-import ca.mcgill.ecse223.kingdomino.model.KingdomTerritory;
-import ca.mcgill.ecse223.kingdomino.model.Player;
-import ca.mcgill.ecse223.kingdomino.model.Property;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
+import ca.mcgill.ecse223.kingdomino.model.*;
 
 public class KDQuery {
 	
 	public KDQuery() {}
 	
-	
-	/**
-	 * 
-	 * This method checks a player's kingdom for any territory that
-	 * violates one of more of the verification methods that checks
-	 * kingdom grid size, castle adjacency (when applicable), 
-	 * neighbor adjacency, and overlap. When violations occur, return
-	 * an "invalid" string, "valid" otherwise.
-	 * 
-	 * @see - no features associated, but used in many When calls of cucumber features
-	 * @author Jing Han 260528152
-	 * @param player
-	 * @return validity
-	 */
 	
 	public static String getKingdomVerificationResult(Player player) {
 		String validity="valid";
@@ -58,72 +37,6 @@ public class KDQuery {
 		return sizeAndCrown;
 	}
 	
-	/**
-	 * 
-	 * This method checks to see if the coordinates around
-	 * the castle are available. This forms the premise for 
-	 * whether to initiate the VerifyCastleAdjacency checks
-	 * 
-	 * @see - no direct features, but associated with VerifyCastleAdjacency
-	 * @author Jing Han 260528152
-	 * @param player
-	 * @return boolean
-	 */
-	
-	public static boolean CastleNeighborhoodAvailable(Player player) {
-		List<KingdomTerritory> t =player.getKingdom().getTerritories();
-		int [][] existingCoords = KDQuery.getPlayerTerritoryCoordinates(player);
-		int [] existingX1=existingCoords[0];
-		int [] existingY1=existingCoords[1];
-		int [] existingX2=existingCoords[2];
-		int [] existingY2=existingCoords[3];
-		
-		boolean leftOccupied=false;
-		boolean rightOccupied=false;
-		boolean topOccupied=false;
-		boolean bottomOccupied=false;
-		
-		for (int k=0;k<existingX1.length;k++) {
-			int x1=existingX1[k];
-			int y1=existingY1[k];
-			int x2=existingX2[k];
-			int y2=existingY2[k];
-			
-			if ((x1==-1 && y1==0)||(x2==-1 && y2==0)) {
-				leftOccupied=true;
-			}
-			
-			if ((x1==1 && y1==0)||(x2==1 && y2==0)) {
-				rightOccupied=true;
-			}
-			
-			if ((x1==0 && y1==1)||(x2==0 && y2==1)) {
-				topOccupied=true;
-			}
-			if ((x1==0 && y1==-1)||(x2==0 && y2==-1)) {
-				bottomOccupied=true;
-			}
-		}
-		
-		if (leftOccupied && rightOccupied && topOccupied && bottomOccupied) {
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
-	
-	/**
-	 * 
-	 * This method checks the kingdom and collects all DominoInKingdom whose
-	 * status is ErroneouslyPrePlaced
-	 * 
-	 * @see - no direct features, but associated with all the verification methods
-	 * @author Jing Han 260528152
-	 * @param player
-	 * @return errorDominos
-	 */
-	
 	public static List<DominoInKingdom> getErroneouslyPrePlacedDomino(Player player) {
 		List<DominoInKingdom> errorDominos = new ArrayList<DominoInKingdom>();
 		List<KingdomTerritory> t = getPlayerTerritory(player);
@@ -136,15 +49,6 @@ public class KDQuery {
 		}
 		return errorDominos;
 	}
-	
-	/**
-	 * 
-	 * wrapper for returning player territories
-	 * 
-	 * @author Jing Han 260528152
-	 * @param player
-	 * @return List<KingdomTerritory>
-	 */
 	
 	public static List<KingdomTerritory> getPlayerTerritory(Player player){
 		return player.getKingdom().getTerritories();		
@@ -164,18 +68,6 @@ public class KDQuery {
 		}
 		return maxSize;
 	}
-	
-	
-	
-	/**
-	 * 
-	 * This method finds the coordinates of all the KingdomTerritory objects of player
-	 * 
-	 * @see - no direct features, but associated with all the verification methods
-	 * @author Jing Han 260528152
-	 * @param player
-	 * @return dominoPos
-	 */
 	
 	public static int[][] getPlayerTerritoryCoordinates(Player player) {
 		
@@ -203,8 +95,6 @@ public class KDQuery {
 		}
 		return dominoPos;
 	}
-	
-//	private helper methods
 	
 	public static int[] calculateRightPos(KingdomTerritory d) {
 		
@@ -240,8 +130,7 @@ public class KDQuery {
 		}
 		return coord2;
 	}
-	
-	
+		
 	public static List<List<Integer>> getValidFreeCoordinates(Player player) {
 		List<List<Integer>> allPossibleCoords = new ArrayList<List<Integer>>();
 		List<List<Integer>> combinedOccupiedCoords = new ArrayList<List<Integer>>();
@@ -290,30 +179,37 @@ public class KDQuery {
 
 	}
 	
+	public static int getNumDraftsInGame() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
+		return game.getAllDrafts().size();
+	}
 	
+	public static boolean isPlayerLastInDraft(Player p) {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
+		Player lastPlayer=game.getPlayer(game.getPlayers().size()-1);
+		return p.getColor().equals(lastPlayer.getColor());
+	}
 	
+	public static boolean isDraftLimitReached() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
+		int draftNumLimit=0;
+		
+		if ((game.getNumberOfPlayers()==4)||(game.getNumberOfPlayers()==3)) draftNumLimit=12;
+		if (game.getNumberOfPlayers()==2) draftNumLimit=6;
+		
+		return getNumDraftsInGame()==draftNumLimit;
+	}
 	
-	/**
-	 * 
-	 * This helper method returns the min and max of an array
-	 * @author Jing Han 260528152
-	 * @param x
-	 * @return minmax
-	 */
+
 	private static int[] minMaxArray(int[] x) {
 		int[] xTemp=x.clone();
 		Arrays.sort(xTemp);
 		int[] minmax= {xTemp[0],xTemp[xTemp.length-1]};
 		return minmax;
 	}
-	
-	/**
-	 * 
-	 * Duplicate of the TA's helper method to faciliate call here
-	 * 
-	 * @param dir
-	 * @return DirectionKind
-	 */
 	
 	private static DirectionKind getDirection(String dir) {
 		switch (dir) {

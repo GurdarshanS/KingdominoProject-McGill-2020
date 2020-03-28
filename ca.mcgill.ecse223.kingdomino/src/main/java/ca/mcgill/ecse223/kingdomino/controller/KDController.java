@@ -4,6 +4,7 @@ import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.model.*;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
+import ca.mcgill.ecse223.kingdomino.model.Draft.DraftStatus;
 import ca.mcgill.ecse223.kingdomino.model.Player.PlayerColor;
 import ca.mcgill.ecse223.kingdomino.persistence.KDPersistence;
 
@@ -15,30 +16,6 @@ import java.util.*;
 public class KDController {
 	
 	public KDController(){}
-	
-	/**
-	 * 
-	 * This method initiates an empty game.
-	 * Useful for bring games up to a testable state
-	 * should NOT be used in actual game
-	 * 
-	 * @see - no features associated
-	 * @author Jing Han 260528152
-	 * @param void
-	 * @return void 
-	 */
-
-	public static void initiateEmptyGame() {
-		//start empty game
-		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		Game game = new Game(48, kingdomino);
-		game.setNumberOfPlayers(4);
-		kingdomino.setCurrentGame(game);
-		// Populate game
-		addDefaultUsersAndPlayers(game);
-		createAllDominoes(game);
-		game.setNextPlayer(game.getPlayer(0));
-	}
 	
 	/**
 	 * 
@@ -93,53 +70,27 @@ public class KDController {
 	
 	/**
 	 * 
-	 * sets the game options for current game
+	 * This method initiates an empty game.
+	 * Useful for bring games up to a testable state
+	 * should NOT be used in actual game
 	 * 
-	 * refactored for deliverable 3 by Jing Han 260528152
-	 * 
-	 * @see  - SetGameOptions.feature
-	 * @author Anthony Harissi Dagher 260924250
-	 * @param none
-	 * @return boolean
-	 * @throws java.lang.InvalidInputException
-	 * 
+	 * @see - no features associated
+	 * @author Jing Han 260528152
+	 * @param void
+	 * @return void 
 	 */
-	public static void setGameOptions(int numPlayers, List<String> selectedBonusOptions)throws InvalidInputException{
-		
-		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		if(numPlayers <= 1 || numPlayers > 4) {
-			throw new InvalidInputException("Must between 2 and 4 players for a game.");
-		}
-		if(numPlayers == 2) {
-			Game game = new Game(24, kingdomino);
-			game.setNumberOfPlayers(2);
-			for(String option:selectedBonusOptions) {
-				@SuppressWarnings("unused")
-				BonusOption mk = new BonusOption(option,kingdomino);
-			}
-			kingdomino.setCurrentGame(game);
-		}
-		else if(numPlayers == 3) {
-			Game game = new Game(36, kingdomino);
-			game.setNumberOfPlayers(3);
-			for(String option:selectedBonusOptions) {
-				@SuppressWarnings("unused")
-				BonusOption mk = new BonusOption(option,kingdomino);
-			}
-			kingdomino.setCurrentGame(game);
 
-		}
-		else{
-			Game game = new Game(48, kingdomino);
-			game.setNumberOfPlayers(4);
-			for(String option:selectedBonusOptions) {
-				@SuppressWarnings("unused")
-				BonusOption mk = new BonusOption(option,kingdomino);
-			}
-			kingdomino.setCurrentGame(game);
-		}
-		
-	} 
+	public static void initiateEmptyGame() {
+		//start empty game
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = new Game(48, kingdomino);
+		game.setNumberOfPlayers(4);
+		kingdomino.setCurrentGame(game);
+		// Populate game
+		addDefaultUsersAndPlayers(game);
+		createAllDominoes(game);
+		game.setNextPlayer(game.getPlayer(0));
+	}
 	
 	/**
 	 * 
@@ -189,6 +140,153 @@ public class KDController {
 		}
 	}
 	
+	
+
+	
+	/**
+	 * 
+	 * sets the game options for current game
+	 * 
+	 * refactored for deliverable 3 by Jing Han 260528152
+	 * 
+	 * @see  - SetGameOptions.feature
+	 * @author Anthony Harissi Dagher 260924250
+	 * @param none
+	 * @return boolean
+	 * @throws java.lang.InvalidInputException
+	 * 
+	 */
+	public static void setGameOptions(int numPlayers, List<String> selectedBonusOptions)throws InvalidInputException{
+		
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		if(numPlayers <= 1 || numPlayers > 4) {
+			throw new InvalidInputException("Must between 2 and 4 players for a game.");
+		}
+		if(numPlayers == 2) {
+			Game game = new Game(24, kingdomino);
+			game.setNumberOfPlayers(2);
+			for(String option:selectedBonusOptions) {
+				@SuppressWarnings("unused")
+				BonusOption mk = new BonusOption(option,kingdomino);
+			}
+			kingdomino.setCurrentGame(game);
+		}
+		else if(numPlayers == 3) {
+			Game game = new Game(36, kingdomino);
+			game.setNumberOfPlayers(3);
+			for(String option:selectedBonusOptions) {
+				@SuppressWarnings("unused")
+				BonusOption mk = new BonusOption(option,kingdomino);
+			}
+			kingdomino.setCurrentGame(game);
+
+		}
+		else{
+			Game game = new Game(48, kingdomino);
+			game.setNumberOfPlayers(4);
+			for(String option:selectedBonusOptions) {
+				@SuppressWarnings("unused")
+				BonusOption mk = new BonusOption(option,kingdomino);
+			}
+			kingdomino.setCurrentGame(game);
+		}
+		
+	} 
+	
+	public static void createDominoPile(Game game, int pileSize) {
+		
+		List<Integer> randomIds = uniqueRandomSequence(pileSize,1,48);				
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("src/main/resources/alldominoes.dat"));
+			String line = "";
+			String delimiters = "[:\\+()]";
+			while ((line = br.readLine()) != null) {
+				String[] dominoString = line.split(delimiters); // {id, leftTerrain, rightTerrain, crowns}
+				int dominoId = Integer.decode(dominoString[0]);
+				TerrainType leftTerrain = getTerrainType(dominoString[1]);
+				TerrainType rightTerrain = getTerrainType(dominoString[2]);
+				int numCrown = 0;
+				if (dominoString.length > 3) {
+					numCrown = Integer.decode(dominoString[3]);
+				}
+				
+				if (randomIds.contains(dominoId)) {
+					new Domino (dominoId,leftTerrain,rightTerrain,numCrown,game);
+				}
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new java.lang.IllegalArgumentException(
+					"Error occured while trying to read alldominoes.dat: " + e.getMessage());
+		}
+		
+		for (int i=0;i<game.getAllDominos().size()-1;i++) {
+			game.getAllDomino(i).setNextDomino(game.getAllDomino(i+1));
+		}
+		
+		game.setTopDominoInPile(game.getAllDomino(0));
+		
+	}
+	
+	public static void shuffleDominoPile() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
+		int dominoNums=game.getMaxPileSize();
+		
+		List<Integer> shuffleIndex=KDController.uniqueRandomSequence(dominoNums, 0, dominoNums-1);
+		
+		for (int i=0;i<shuffleIndex.size();i++) {
+			game.addOrMoveAllDominoAt(game.getAllDomino(i), shuffleIndex.get(i));
+		}
+		
+		for (int i=0;i<game.getAllDominos().size()-1;i++) {
+			game.getAllDomino(i).setNextDomino(game.getAllDomino(i+1));
+		}
+		
+		game.setTopDominoInPile(game.getAllDomino(0));
+	}
+	
+	public static void generateInitialPlayerOrder() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
+		
+		int playerNums=game.getNumberOfPlayers();
+		List<Integer> playerOrder = uniqueRandomSequence(playerNums,0,playerNums-1);
+		PlayerColor[] availableColors= {PlayerColor.Blue,PlayerColor.Green,PlayerColor.Pink,PlayerColor.Yellow};
+		
+		int i=0;
+		for (Integer order:playerOrder) {
+			Player p = new Player(game);
+			p.setColor(availableColors[order]);
+			Kingdom kingdom = new Kingdom(p);
+			new Castle(0, 0, kingdom, p);
+			if (i==0) game.setNextPlayer(p);
+			i++;
+		}
+	}
+	
+	public static void updatePlayerOrder() {
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
+		Draft currentDraft = game.getCurrentDraft();
+		
+		List<Domino> draftDominos = currentDraft.getIdSortedDominos();
+		List<Player> newOrderPlayers = new ArrayList<Player>();
+		
+		for (Domino d:draftDominos) {
+			newOrderPlayers.add(d.getDominoSelection().getPlayer());
+		}
+		
+		for (int i=0;i<newOrderPlayers.size();i++) {
+			game.addOrMovePlayerAt(newOrderPlayers.get(i), i);
+		}
+		
+		game.setNextPlayer(game.getPlayer(0));
+	}
+	
+	
+	
 	/**
 	 * 
 	 * starts the current game by drawing the number of dominos required
@@ -211,23 +309,9 @@ public class KDController {
 			Game game = kd.getCurrentGame();
 			
 			int dominoNums=game.getMaxPileSize();
-			createShuffledDominoPile(game,dominoNums);
-			
-			
-			int playerNums=game.getNumberOfPlayers();
-			
-			List<Integer> playerOrder = uniqueRandomSequence(playerNums,0,playerNums-1);
-			PlayerColor[] availableColors= {PlayerColor.Blue,PlayerColor.Green,PlayerColor.Pink,PlayerColor.Yellow};
-			
-			int i=0;
-			for (Integer order:playerOrder) {
-				Player p = new Player(game);
-				p.setColor(availableColors[order]);
-				Kingdom kingdom = new Kingdom(p);
-				new Castle(0, 0, kingdom, p);
-				if (i==0) game.setNextPlayer(p);
-				i++;
-			}
+			createDominoPile(game,dominoNums);
+			shuffleDominoPile();
+			generateInitialPlayerOrder();
 			
 			createNextDraft();
 		}
@@ -294,15 +378,11 @@ public class KDController {
 	
 	public static void createNextDraft() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
-		Game game = kd.getCurrentGame();
-		int draftNumLimit=0;
-		
-		if ((game.getNumberOfPlayers()==4)||(game.getNumberOfPlayers()==3)) draftNumLimit=12;
-		if (game.getNumberOfPlayers()==2) draftNumLimit=6;
-		
+		Game game = kd.getCurrentGame();		
 		
 		if (game.getAllDrafts().size()==0) {
 			Draft currentDraft=createOneDraft();
+			currentDraft.setDraftStatus(DraftStatus.FaceDown);
 			game.setCurrentDraft(currentDraft);
 			changeDraftDominoStatus(currentDraft,Domino.DominoStatus.InCurrentDraft);
 
@@ -310,13 +390,10 @@ public class KDController {
 			nextDraft.setDraftStatus(Draft.DraftStatus.FaceDown);
 			game.setNextDraft(nextDraft);
 			changeDraftDominoStatus(nextDraft,Domino.DominoStatus.InNextDraft);	
-			
-			sortCurrentDraft();
-			currentDraft.setDraftStatus(Draft.DraftStatus.Sorted);
 
 		}
-		else if (game.getAllDrafts().size()<draftNumLimit) {
-				
+		else if (!KDQuery.isDraftLimitReached()) {
+			
 			changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
 			game.setCurrentDraft(game.getNextDraft());
 			
@@ -324,22 +401,55 @@ public class KDController {
 			changeDraftDominoStatus(nextDraft,DominoStatus.InNextDraft);
 			game.setNextDraft(nextDraft);
 			game.getNextDraft().setDraftStatus(Draft.DraftStatus.FaceDown);
-			
-			sortCurrentDraft();
-			game.getCurrentDraft().setDraftStatus(Draft.DraftStatus.Sorted);
 
 		}
-		else if (kd.getCurrentGame().getAllDrafts().size()==draftNumLimit) {
+		else if (KDQuery.isDraftLimitReached()) {
 			if (game.getNextDraft()!=null) {
+				changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
+
 				game.setCurrentDraft(game.getNextDraft());
 				game.setNextDraft(null);
 			}
-			
-			game.getCurrentDraft().setDraftStatus(Draft.DraftStatus.Sorted);
-			sortCurrentDraft();
 		}
 		
 	}
+	
+	public static void sortNextDraft() {
+		
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
+		Draft currentDraft =game.getCurrentDraft();
+		
+		List<Domino> originalDominos=currentDraft.getIdSortedDominos();
+		List<Integer> originalIds= new ArrayList<Integer>();
+		for (Domino d:originalDominos) originalIds.add(d.getId());
+				
+		while (currentDraft.getIdSortedDominos().size()>0) {
+			currentDraft.removeIdSortedDomino(currentDraft.getIdSortedDomino(0));
+		}
+		
+		Collections.sort(originalIds);
+		
+		for (int id:originalIds) {
+			for (Domino d:game.getAllDominos()) {
+				if (d.getId()==id) {
+					currentDraft.addIdSortedDomino(d);
+				}
+			}
+		}
+		
+		currentDraft.setDraftStatus(DraftStatus.Sorted);
+	}
+	
+	public static void revealNextDraft() {
+		
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		Game game = kingdomino.getCurrentGame();
+		Draft currentDraft =game.getCurrentDraft();
+		currentDraft.setDraftStatus(DraftStatus.FaceUp);
+	}
+	
+
 	
 	/**
 	 * 
@@ -355,7 +465,7 @@ public class KDController {
 	 */
 	
 	public static void ChoosNextDomino(Domino aDomino){
-				
+		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
 		Draft currentDraft = game.getCurrentDraft();
@@ -363,17 +473,6 @@ public class KDController {
 		
 		if (!currentDraft.getIdSortedDominos().contains(aDomino) || aDomino.hasDominoSelection()) {
 			return;
-		}
-		
-		List<Player> allPlayers = game.getPlayers();
-		int currentPlayerIndex=-1;
-		
-		for (int i=0;i<allPlayers.size();i++) {
-			Player testPlayer=allPlayers.get(i);
-			if (testPlayer.getColor().equals(currentPlayer.getColor())) {
-				currentPlayerIndex=i;
-				break;
-			}
 		}
 		
 		DominoSelection currentSelection;
@@ -384,27 +483,71 @@ public class KDController {
 			currentSelection=currentPlayer.getDominoSelection();
 		}
 		
-		aDomino.setDominoSelection(currentSelection);      
-        
-        if (!(currentPlayerIndex==allPlayers.size()-1)) {
-        	game.setNextPlayer(allPlayers.get(currentPlayerIndex+1));
-        }
-        
-		boolean allChosen=true;
-		for (Domino d:currentDraft.getIdSortedDominos()) {
-			if (!d.hasDominoSelection()){
-				allChosen=false;
-				break;
+		aDomino.setDominoSelection(currentSelection);
+		
+		if (!KDQuery.isPlayerLastInDraft(currentPlayer)) {
+		
+			List<Player.PlayerColor> currentColorOrder = new ArrayList<Player.PlayerColor>();			
+			for (Player p:game.getPlayers()) {
+				currentColorOrder.add(p.getColor());
 			}
+			int currentPlayerIndex=currentColorOrder.indexOf(currentPlayer.getColor());
+			game.setNextPlayer(game.getPlayers().get(currentPlayerIndex+1));
 		}
-		
-		if (allChosen) {
-			rearrangePlayerOrder();
-		}
-        
-        
-		
+     
 	}
+	
+//	public static void ChoosNextDomino(Domino aDomino){
+//				
+//		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+//		Game game = kingdomino.getCurrentGame();
+//		Draft currentDraft = game.getCurrentDraft();
+//		Player currentPlayer = game.getNextPlayer();
+//		
+//		if (!currentDraft.getIdSortedDominos().contains(aDomino) || aDomino.hasDominoSelection()) {
+//			return;
+//		}
+//		
+//		List<Player> allPlayers = game.getPlayers();
+//		int currentPlayerIndex=-1;
+//		
+//		for (int i=0;i<allPlayers.size();i++) {
+//			Player testPlayer=allPlayers.get(i);
+//			if (testPlayer.getColor().equals(currentPlayer.getColor())) {
+//				currentPlayerIndex=i;
+//				break;
+//			}
+//		}
+//		
+//		DominoSelection currentSelection;
+//		if (!currentPlayer.hasDominoSelection()) {
+//			currentSelection = currentDraft.addSelection(currentPlayer, aDomino);
+//			}
+//		else {
+//			currentSelection=currentPlayer.getDominoSelection();
+//		}
+//		
+//		aDomino.setDominoSelection(currentSelection);      
+//        
+//        if (!(currentPlayerIndex==allPlayers.size()-1)) {
+//        	game.setNextPlayer(allPlayers.get(currentPlayerIndex+1));
+//        }
+//        
+//		boolean allChosen=true;
+//		for (Domino d:currentDraft.getIdSortedDominos()) {
+//			if (!d.hasDominoSelection()){
+//				allChosen=false;
+//				break;
+//			}
+//		}
+//		
+//		if (allChosen) {
+//			rearrangePlayerOrder();
+//		}
+//        
+//        
+//		
+//	}
 	
 	/**
 	 * 
@@ -1612,145 +1755,7 @@ public class KDController {
 		return norm;
 	}
 	
-	private static Neighborhood getDominoRightNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
-		
-		List <KingdomTerritory> neighborTerritory=new ArrayList<KingdomTerritory>();
-		List <String> neighborTileType=new ArrayList<String>();
-		List <TerrainType> neighborTerrain = new ArrayList<TerrainType>();
-		List <int []> neighborCoord = new ArrayList<int[]>();
 	
-		int [] otherXY=calculateOtherPos(dInK);
-		int searchX=otherXY[0];
-		int searchY=otherXY[1];
-		
-		for (KingdomTerritory each:t) {
-			
-			int [] testRightCoord=calculateOtherPos(each);
-			
-			int testLeftX=each.getX();
-			int testLeftY=each.getY();
-			int testRightX=testRightCoord[0];
-			int testRightY=testRightCoord[1];
-			
-			int [] testLeftCoord = {testLeftX,testLeftY};
-			
-			int norm1=L2NormSquared(searchX,searchY,testLeftX,testLeftY);
-			int norm2=L2NormSquared(searchX,searchY,testRightX,testRightY);
-
-			if (norm1==1 || norm2==1) {
-				if (each instanceof Castle) {
-					neighborTerritory.add(each);
-					neighborTileType.add("castle");
-					neighborTerrain.add(dInK.getDomino().getRightTile());
-					neighborCoord.add(testLeftCoord);
-				}
-				else if (each instanceof DominoInKingdom) {
-					if (((DominoInKingdom) each).getDomino().getId()!=dInK.getDomino().getId()) {
-						neighborTerritory.add(each);
-						if (norm1==1) {
-							neighborTileType.add("left");
-							neighborTerrain.add(((DominoInKingdom) each).getDomino().getLeftTile());
-							neighborCoord.add(testLeftCoord);
-						}
-						else if (norm2==1) {
-							neighborTileType.add("right");
-							neighborTerrain.add(((DominoInKingdom) each).getDomino().getRightTile());
-							neighborCoord.add(testRightCoord);
-						}
-					}
-				}
-			}
-		}
-		
-		Neighborhood n = new Neighborhood(neighborTerritory,neighborTileType,neighborTerrain,neighborCoord);		
-		return n;
-	}	
-	
-	private static Neighborhood getDominoLeftNeighbors(List<KingdomTerritory> t, DominoInKingdom dInK) {
-		
-		List <KingdomTerritory> neighborTerritory=new ArrayList<KingdomTerritory>();
-		List <String> neighborTileType=new ArrayList<String>();
-		List <TerrainType> neighborTerrain = new ArrayList<TerrainType>();
-		List <int []> neighborCoord = new ArrayList<int[]>();
-	
-		int searchX=dInK.getX();
-		int searchY=dInK.getY();
-		
-		for (KingdomTerritory each:t) {
-			
-			int [] testRightCoord=calculateOtherPos(each);
-			
-			int testLeftX=each.getX();
-			int testLeftY=each.getY();
-			int testRightX=testRightCoord[0];
-			int testRightY=testRightCoord[1];
-			
-			int [] testLeftCoord = {testLeftX,testLeftY};
-			
-			int norm1=L2NormSquared(searchX,searchY,testLeftX,testLeftY);
-			int norm2=L2NormSquared(searchX,searchY,testRightX,testRightY);
-			
-			if (norm1==1 || norm2==1) {
-				if (each instanceof Castle) {
-					neighborTerritory.add(each);
-					neighborTileType.add("castle");
-					neighborTerrain.add(dInK.getDomino().getLeftTile());
-					neighborCoord.add(testLeftCoord);
-				}
-				else if (each instanceof DominoInKingdom) {
-					if (((DominoInKingdom) each).getDomino().getId()!=dInK.getDomino().getId()) {
-						neighborTerritory.add(each);
-						if (norm1==1) {
-							neighborTileType.add("left");
-							neighborTerrain.add(((DominoInKingdom) each).getDomino().getLeftTile());
-							neighborCoord.add(testLeftCoord);
-						}
-						else if (norm2==1) {
-							neighborTileType.add("right");
-							neighborTerrain.add(((DominoInKingdom) each).getDomino().getRightTile());
-							neighborCoord.add(testRightCoord);
-						}
-					}
-				}
-			}
-		}
-	
-		Neighborhood n = new Neighborhood(neighborTerritory,neighborTileType,neighborTerrain,neighborCoord);		
-		return n;
-	}	
-	
-	private static boolean checkOverlap(KingdomTerritory a, KingdomTerritory b) {
-		
-		int[] otherA=calculateOtherPos(a);
-		int[] otherB=calculateOtherPos(b);
-		
-		int ax1=a.getX();
-		int ay1=a.getY();
-		int ax2=otherA[0];
-		int ay2=otherA[1];
-		
-		int bx1=b.getX();
-		int by1=b.getY();
-		int bx2=otherB[0];
-		int by2=otherB[1];
-		
-		
-		if (ax1==bx1 && ay1==by1) {
-			return true;
-		}
-		else if (ax1==bx2 && ay1==by2) {
-			return true;
-		}
-		else if (ax2==bx1 && ay2==by1) {
-			return true;
-		}
-		else if (ax2==bx2 && ay2==by2) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
 	
 	private static boolean verifyGridLimit(DominoInKingdom dInKingdom) {
 		
@@ -1772,23 +1777,16 @@ public class KDController {
 		
 	}
 	
-	private static void rearrangePlayerOrder() {
-		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		Game game = kingdomino.getCurrentGame();
-		Draft currentDraft = game.getCurrentDraft();
+	private static void changeDraftDominoStatus(Draft draft, Domino.DominoStatus status) {
 		
-		List<Domino> draftDominos = currentDraft.getIdSortedDominos();
-		List<Player> newOrderPlayers = new ArrayList<Player>();
-		
-		for (Domino d:draftDominos) {
-			newOrderPlayers.add(d.getDominoSelection().getPlayer());
+		if(!((status.equals(Domino.DominoStatus.InCurrentDraft))||(status.equals(Domino.DominoStatus.InNextDraft))||(status.equals(Domino.DominoStatus.Excluded)))) {
+			throw new IllegalArgumentException("status must be either InCurrentDraft or InNextDraft or Excluded");
 		}
 		
-		for (int i=0;i<newOrderPlayers.size();i++) {
-			game.addOrMovePlayerAt(newOrderPlayers.get(i), i);
+		List<Domino> draftDominos = draft.getIdSortedDominos();
+		for (Domino each:draftDominos) {
+			each.setStatus(status);
 		}
-		
-		game.setNextPlayer(game.getPlayer(0));
 	}
 	
 	private static void sortCurrentDraft() {
@@ -1819,18 +1817,6 @@ public class KDController {
 
 	}
 	
-	private static void changeDraftDominoStatus(Draft draft, Domino.DominoStatus status) {
-		
-		if(!((status.equals(Domino.DominoStatus.InCurrentDraft))||(status.equals(Domino.DominoStatus.InNextDraft))||(status.equals(Domino.DominoStatus.Excluded)))) {
-			throw new IllegalArgumentException("status must be either InCurrentDraft or InNextDraft or Excluded");
-		}
-		
-		List<Domino> draftDominos = draft.getIdSortedDominos();
-		for (Domino each:draftDominos) {
-			each.setStatus(status);
-		}
-	}
-	
 	private static Draft createOneDraft() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
 		Game game = kd.getCurrentGame();
@@ -1854,7 +1840,7 @@ public class KDController {
 	
 	private static List<Integer> uniqueRandomSequence(int size,int min,int max){
 		List<Integer> sequence = new ArrayList<Integer>();
-		Random rand = new Random();
+		Random rand = new Random(2);
 		
 		while (sequence.size()<size){
 			int num=rand.nextInt((max - min) + 1) + min;
@@ -1865,68 +1851,8 @@ public class KDController {
 		return sequence;
 	}
 	
-	private static void createShuffledDominoPile(Game game, int pileSize) {
-		class almostDomino{
-			private Integer id;
-			private TerrainType leftTerrain;
-			private TerrainType rightTerrain;
-			private Integer numCrown;
-			
-			private almostDomino(Integer id,TerrainType leftTerrain,TerrainType rightTerrain,Integer numCrown) {
-				this.id=id;
-				this.leftTerrain=leftTerrain;
-				this.rightTerrain=rightTerrain;
-				this.numCrown=numCrown;
-			}
-			public Integer getId() {return this.id;}
-			public TerrainType getLeftTerrain() {return this.leftTerrain;}
-			public TerrainType getRightTerrain() {return this.rightTerrain;}
-			public Integer getNumCrown() {return this.numCrown;}
-		}
-		
-		List<Integer> randomIds = uniqueRandomSequence(pileSize,1,48);
-		List<almostDomino> potentialDominos = new ArrayList<almostDomino>();
-				
-		try {
-			BufferedReader br = new BufferedReader(new FileReader("src/main/resources/alldominoes.dat"));
-			String line = "";
-			String delimiters = "[:\\+()]";
-			while ((line = br.readLine()) != null) {
-				String[] dominoString = line.split(delimiters); // {id, leftTerrain, rightTerrain, crowns}
-				int dominoId = Integer.decode(dominoString[0]);
-				TerrainType leftTerrain = getTerrainType(dominoString[1]);
-				TerrainType rightTerrain = getTerrainType(dominoString[2]);
-				int numCrown = 0;
-				if (dominoString.length > 3) {
-					numCrown = Integer.decode(dominoString[3]);
-				}
-				
-				if (randomIds.contains(dominoId)) {
-					almostDomino aD = new almostDomino(dominoId,leftTerrain,rightTerrain,numCrown);
-					potentialDominos.add(aD);
-				}
-			}
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new java.lang.IllegalArgumentException(
-					"Error occured while trying to read alldominoes.dat: " + e.getMessage());
-		}
-		
-		Collections.shuffle(potentialDominos);
-		
-		for (almostDomino ad:potentialDominos) {
-			new Domino(ad.getId(), ad.getLeftTerrain(), ad.getRightTerrain(), ad.getNumCrown(), game);
-		}
-		
-		List<Domino> dominoInGame = game.getAllDominos();
-		for (int i=0;i<dominoInGame.size()-1;i++) {
-			dominoInGame.get(i).setNextDomino(dominoInGame.get(i+1));
-		}
-		
-		game.setTopDominoInPile(game.getAllDomino(0));
-
-	}
+	
+	
 	
 	private static void addDefaultUsersAndPlayers(Game game) {
 		String[] users = { "User1", "User2", "User3", "User4" };

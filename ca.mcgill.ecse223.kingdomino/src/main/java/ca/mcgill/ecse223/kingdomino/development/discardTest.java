@@ -48,7 +48,7 @@ public class discardTest {
 		printPlayerKingdom(player1);
 		
 		Draft draft = new Draft(DraftStatus.Sorted,kd.getCurrentGame());
-		draft.addIdSortedDomino(KDController.getdominoByID(47));
+		draft.addIdSortedDomino(KDController.getdominoByID(17));
 		kd.getCurrentGame().setCurrentDraft(draft);
 		
 		Domino testDomino=game.getCurrentDraft().getIdSortedDomino(0);
