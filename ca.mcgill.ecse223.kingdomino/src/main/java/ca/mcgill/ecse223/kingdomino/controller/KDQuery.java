@@ -190,10 +190,9 @@ public class KDQuery {
 	}
 	
 	public static boolean isPlayerLastInDraft(Player p) {
-		Kingdomino kd = KingdominoApplication.getKingdomino();
-		Game game = kd.getCurrentGame();
-		Player lastPlayer=game.getPlayer(game.getPlayers().size()-1);
-		return p.getColor().equals(lastPlayer.getColor());
+		List<Player> allPlayers=p.getGame().getPlayers();
+		Player lastPlayer=allPlayers.get(allPlayers.size()-1);
+		return p.equals(lastPlayer);
 	}
 	
 	public static boolean isDraftLimitReached() {

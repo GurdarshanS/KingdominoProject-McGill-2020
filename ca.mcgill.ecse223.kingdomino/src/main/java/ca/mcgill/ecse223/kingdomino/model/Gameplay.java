@@ -623,9 +623,8 @@ public class Gameplay
 
   // line 208 "../../../../../Gameplay.ump"
    public boolean isLastPlayerInTurn(Player player){
-    
-	return player.getGame().getPlayer(player.getGame().getPlayers().size()-1).equals(player);
-	   
+   
+	   return KDQuery.isPlayerLastInDraft(player);
   }
 
   // line 215 "../../../../../Gameplay.ump"

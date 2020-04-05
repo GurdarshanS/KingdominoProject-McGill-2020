@@ -51,173 +51,403 @@ public class viewKingdominoState {
 				KDController.preplaceLatestDomino(player4, 1, 0, "right");
 				KDController.placeLatestDomino(player4);
 				
-				System.out.println();
-				System.out.println(player1.equals(player1));
-//
-//		KDController.updatePlayerOrder();
-//		printDraft(kd);	
-//		System.out.println();
-//		printNextRoundPlayerOrder(kd);
-//		
-//		KDController.calculateAllPlayerScore(game);
-//		printPlayers(kd);
-//
-//	
-//		//===================== round 2 ============================		
-//		KDController.createNextDraft();
-//		KDController.sortNextDraft();
-//		KDController.revealNextDraft();	
-//		
-//			//		first player actions
-//			player1=kd.getCurrentGame().getPlayer(0);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
-//			KDController.preplaceLatestDomino(player1, -1, 0, "left");
-//			KDController.placeLatestDomino(player1);
-//			
-//			//		second player actions
-//			player2=kd.getCurrentGame().getPlayer(1);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
-//			KDController.preplaceLatestDomino(player2, -1, 0, "left");
-//			KDController.placeLatestDomino(player2);
-//					
-//			//		third player actions
-//			player3=kd.getCurrentGame().getPlayer(2);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
-//			KDController.preplaceLatestDomino(player3, -1, 0, "left");
-//			KDController.placeLatestDomino(player3);
-//			
-//			//		fourth player actions
-//			player4=kd.getCurrentGame().getPlayer(3);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
-//			KDController.preplaceLatestDomino(player4, -1, 0, "left");
-//			KDController.placeLatestDomino(player4);	
-//		
-//		KDController.updatePlayerOrder();
-//		printDraft(kd);	
-//		printNextRoundPlayerOrder(kd);
-//		
-//		KDController.calculateAllPlayerScore(game);
-//		printPlayers(kd);
-//		
-//	
-//		//===================== round 3 ============================		
-//		KDController.createNextDraft();
-//		KDController.sortNextDraft();
-//		KDController.revealNextDraft();	
-//		
-//			//		first player actions
-//			player1=kd.getCurrentGame().getPlayer(0);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
-//			KDController.preplaceLatestDomino(player1, 0, 1, "left");
-//			KDController.placeLatestDomino(player1);
-//			
-//			//		second player actions
-//			player2=kd.getCurrentGame().getPlayer(1);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
-//			KDController.preplaceLatestDomino(player2, 0, 1, "left");
-//			KDController.placeLatestDomino(player2);
-//					
-//			//		third player actions
-//			player3=kd.getCurrentGame().getPlayer(2);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
-//			KDController.preplaceLatestDomino(player3, 0, 1, "left");
-//			KDController.placeLatestDomino(player3);
-//			
-//			//		fourth player actions
-//			player4=kd.getCurrentGame().getPlayer(3);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
-//			KDController.preplaceLatestDomino(player4, 0, 1, "left");
-//			KDController.placeLatestDomino(player4);
-//		
-//		KDController.updatePlayerOrder();
-//		printDraft(kd);	
-//		printNextRoundPlayerOrder(kd);
-//		
-//		KDController.calculateAllPlayerScore(game);
-//		printPlayers(kd);		
-//		
-//		//===================== round 4 ============================		
-//		KDController.createNextDraft();
-//		KDController.sortNextDraft();
-//		KDController.revealNextDraft();	
-//		
-//			//		first player actions
-//			player1=kd.getCurrentGame().getPlayer(0);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
-//			KDController.preplaceLatestDomino(player1, 0, -1, "left");
-//			KDController.placeLatestDomino(player1);
-//			
-//			//		second player actions
-//			player2=kd.getCurrentGame().getPlayer(1);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
-//			KDController.preplaceLatestDomino(player2, 0, -1, "left");
-//			KDController.placeLatestDomino(player2);
-//					
-//			//		third player actions
-//			player3=kd.getCurrentGame().getPlayer(2);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
-//			KDController.preplaceLatestDomino(player3, 0, -1, "left");
-//			KDController.placeLatestDomino(player3);
-//			
-//			//		fourth player actions
-//			player4=kd.getCurrentGame().getPlayer(3);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
-//			KDController.preplaceLatestDomino(player4, 0, -1, "left");
-//			KDController.placeLatestDomino(player4);		
-//
-//		KDController.updatePlayerOrder();
-//		printDraft(kd);	
-//		printNextRoundPlayerOrder(kd);
-//		
-//		KDController.calculateAllPlayerScore(game);
-//		printPlayers(kd);
-//		
-//		//===================== round 5 ============================		
-//		KDController.createNextDraft();
-//		KDController.sortNextDraft();
-//		KDController.revealNextDraft();	
-//		
-//			player1=kd.getCurrentGame().getPlayer(0);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
-//			KDController.preplaceLatestDomino(player1, 1, -1, "right");
-//			KDController.rotateLatestDomino(player1, "clockwise");
-//			KDController.placeLatestDomino(player1);
-//			
-//			//		second player actions
-//			player2=kd.getCurrentGame().getPlayer(1);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
-//			KDController.preplaceLatestDomino(player2, 0,2, "right");
-//			KDController.moveLatestDomino(player2, "up");
-//			KDController.rotateLatestDomino(player2, "clockwise");
-//			KDController.placeLatestDomino(player2);
-//			
-//			//		third player actions
-//			player3=kd.getCurrentGame().getPlayer(2);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
-//			KDController.preplaceLatestDomino(player3, 1, -1, "left");
-//			KDController.rotateLatestDomino(player3, "counterclockwise");
-//			KDController.placeLatestDomino(player3);
-//			
-//			//		fourth player actions
-//			player4=kd.getCurrentGame().getPlayer(3);
-//			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
-//			KDController.preplaceLatestDomino(player4, 1, 1, "left");
-//			KDController.rotateLatestDomino(player4, "clockwise");
-//			KDController.moveLatestDomino(player4, "left");
-//			KDController.moveLatestDomino(player4, "left");
-//			KDController.moveLatestDomino(player4, "left");
-//			KDController.moveLatestDomino(player4, "left");
-//			KDController.moveLatestDomino(player4, "up");
-//			KDController.rotateLatestDomino(player4, "counterclockwise");
-//			KDController.rotateLatestDomino(player4, "counterclockwise");
-//			KDController.moveLatestDomino(player4, "right");
-//
-//
-//			KDController.placeLatestDomino(player4);	
-//		
-//		KDController.updatePlayerOrder();
-//		
-//		//====================== end game =========================	
+
+		KDController.updatePlayerOrder();
+		printDraft(kd);	
+		System.out.println();
+		printNextRoundPlayerOrder(kd);
+		
+		KDController.calculateAllPlayerScore(game);
+		printPlayers(kd);
+
+	
+		//===================== round 2 ============================		
+		KDController.createNextDraft();
+		KDController.sortNextDraft();
+		KDController.revealNextDraft();	
+		
+			//		first player actions
+			player1=kd.getCurrentGame().getPlayer(0);
+			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+			KDController.preplaceLatestDomino(player1, -1, 0, "left");
+			KDController.placeLatestDomino(player1);
+			
+			//		second player actions
+			player2=kd.getCurrentGame().getPlayer(1);
+			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+			KDController.preplaceLatestDomino(player2, -1, 0, "left");
+			KDController.placeLatestDomino(player2);
+					
+			//		third player actions
+			player3=kd.getCurrentGame().getPlayer(2);
+			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+			KDController.preplaceLatestDomino(player3, -1, 0, "left");
+			KDController.placeLatestDomino(player3);
+			
+			//		fourth player actions
+			player4=kd.getCurrentGame().getPlayer(3);
+			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+			KDController.preplaceLatestDomino(player4, -1, 0, "left");
+			KDController.placeLatestDomino(player4);	
+		
+		KDController.updatePlayerOrder();
+		printDraft(kd);	
+		printNextRoundPlayerOrder(kd);
+		
+		KDController.calculateAllPlayerScore(game);
+		printPlayers(kd);
+		
+	
+		//===================== round 3 ============================		
+		KDController.createNextDraft();
+		KDController.sortNextDraft();
+		KDController.revealNextDraft();	
+		
+			//		first player actions
+			player1=kd.getCurrentGame().getPlayer(0);
+			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+			KDController.preplaceLatestDomino(player1, 0, 1, "left");
+			KDController.placeLatestDomino(player1);
+			
+			//		second player actions
+			player2=kd.getCurrentGame().getPlayer(1);
+			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+			KDController.preplaceLatestDomino(player2, 0, 1, "left");
+			KDController.placeLatestDomino(player2);
+					
+			//		third player actions
+			player3=kd.getCurrentGame().getPlayer(2);
+			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+			KDController.preplaceLatestDomino(player3, 0, 1, "left");
+			KDController.placeLatestDomino(player3);
+			
+			//		fourth player actions
+			player4=kd.getCurrentGame().getPlayer(3);
+			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+			KDController.preplaceLatestDomino(player4, 0, 1, "left");
+			KDController.placeLatestDomino(player4);
+		
+		KDController.updatePlayerOrder();
+		printDraft(kd);	
+		printNextRoundPlayerOrder(kd);
+		
+		KDController.calculateAllPlayerScore(game);
+		printPlayers(kd);		
+		
+		//===================== round 4 ============================		
+		KDController.createNextDraft();
+		KDController.sortNextDraft();
+		KDController.revealNextDraft();	
+		
+			//		first player actions
+			player1=kd.getCurrentGame().getPlayer(0);
+			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+			KDController.preplaceLatestDomino(player1, 0, -1, "left");
+			KDController.placeLatestDomino(player1);
+			
+			//		second player actions
+			player2=kd.getCurrentGame().getPlayer(1);
+			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+			KDController.preplaceLatestDomino(player2, 0, -1, "left");
+			KDController.placeLatestDomino(player2);
+					
+			//		third player actions
+			player3=kd.getCurrentGame().getPlayer(2);
+			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+			KDController.preplaceLatestDomino(player3, 0, -1, "left");
+			KDController.placeLatestDomino(player3);
+			
+			//		fourth player actions
+			player4=kd.getCurrentGame().getPlayer(3);
+			KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+			KDController.preplaceLatestDomino(player4, 0, -1, "left");
+			KDController.placeLatestDomino(player4);		
+
+		KDController.updatePlayerOrder();
+		printDraft(kd);	
+		printNextRoundPlayerOrder(kd);
+		
+		KDController.calculateAllPlayerScore(game);
+		printPlayers(kd);
+		
+		//===================== round 5 ============================		
+				KDController.createNextDraft();
+				KDController.sortNextDraft();
+				KDController.revealNextDraft();	
+				
+					//		first player actions
+					player1=kd.getCurrentGame().getPlayer(0);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+					KDController.preplaceLatestDomino(player1, 0, -1, "left");
+					KDController.placeLatestDomino(player1);
+					
+					//		second player actions
+					player2=kd.getCurrentGame().getPlayer(1);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+					KDController.preplaceLatestDomino(player2, 0, -1, "left");
+					KDController.placeLatestDomino(player2);
+							
+					//		third player actions
+					player3=kd.getCurrentGame().getPlayer(2);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+					KDController.preplaceLatestDomino(player3, 0, -1, "left");
+					KDController.placeLatestDomino(player3);
+					
+					//		fourth player actions
+					player4=kd.getCurrentGame().getPlayer(3);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+					KDController.preplaceLatestDomino(player4, 0, -1, "left");
+					KDController.placeLatestDomino(player4);		
+
+				KDController.updatePlayerOrder();
+				printDraft(kd);	
+				printNextRoundPlayerOrder(kd);
+				
+				KDController.calculateAllPlayerScore(game);
+				printPlayers(kd);
+
+				//===================== round 6 ============================		
+				KDController.createNextDraft();
+				KDController.sortNextDraft();
+				KDController.revealNextDraft();	
+				
+					//		first player actions
+					player1=kd.getCurrentGame().getPlayer(0);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+					KDController.preplaceLatestDomino(player1, 0, -1, "left");
+					KDController.placeLatestDomino(player1);
+					
+					//		second player actions
+					player2=kd.getCurrentGame().getPlayer(1);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+					KDController.preplaceLatestDomino(player2, 0, -1, "left");
+					KDController.placeLatestDomino(player2);
+							
+					//		third player actions
+					player3=kd.getCurrentGame().getPlayer(2);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+					KDController.preplaceLatestDomino(player3, 0, -1, "left");
+					KDController.placeLatestDomino(player3);
+					
+					//		fourth player actions
+					player4=kd.getCurrentGame().getPlayer(3);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+					KDController.preplaceLatestDomino(player4, 0, -1, "left");
+					KDController.placeLatestDomino(player4);		
+
+				KDController.updatePlayerOrder();
+				printDraft(kd);	
+				printNextRoundPlayerOrder(kd);
+				
+				KDController.calculateAllPlayerScore(game);
+				printPlayers(kd);
+				//===================== round 7 ============================		
+				KDController.createNextDraft();
+				KDController.sortNextDraft();
+				KDController.revealNextDraft();	
+				
+					//		first player actions
+					player1=kd.getCurrentGame().getPlayer(0);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+					KDController.preplaceLatestDomino(player1, 0, -1, "left");
+					KDController.placeLatestDomino(player1);
+					
+					//		second player actions
+					player2=kd.getCurrentGame().getPlayer(1);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+					KDController.preplaceLatestDomino(player2, 0, -1, "left");
+					KDController.placeLatestDomino(player2);
+							
+					//		third player actions
+					player3=kd.getCurrentGame().getPlayer(2);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+					KDController.preplaceLatestDomino(player3, 0, -1, "left");
+					KDController.placeLatestDomino(player3);
+					
+					//		fourth player actions
+					player4=kd.getCurrentGame().getPlayer(3);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+					KDController.preplaceLatestDomino(player4, 0, -1, "left");
+					KDController.placeLatestDomino(player4);		
+
+				KDController.updatePlayerOrder();
+				printDraft(kd);	
+				printNextRoundPlayerOrder(kd);
+				
+				KDController.calculateAllPlayerScore(game);
+				printPlayers(kd);
+				//===================== round 8 ============================		
+				KDController.createNextDraft();
+				KDController.sortNextDraft();
+				KDController.revealNextDraft();	
+				
+					//		first player actions
+					player1=kd.getCurrentGame().getPlayer(0);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+					KDController.preplaceLatestDomino(player1, 0, -1, "left");
+					KDController.placeLatestDomino(player1);
+					
+					//		second player actions
+					player2=kd.getCurrentGame().getPlayer(1);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+					KDController.preplaceLatestDomino(player2, 0, -1, "left");
+					KDController.placeLatestDomino(player2);
+							
+					//		third player actions
+					player3=kd.getCurrentGame().getPlayer(2);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+					KDController.preplaceLatestDomino(player3, 0, -1, "left");
+					KDController.placeLatestDomino(player3);
+					
+					//		fourth player actions
+					player4=kd.getCurrentGame().getPlayer(3);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+					KDController.preplaceLatestDomino(player4, 0, -1, "left");
+					KDController.placeLatestDomino(player4);		
+
+				KDController.updatePlayerOrder();
+				printDraft(kd);	
+				printNextRoundPlayerOrder(kd);
+				
+				KDController.calculateAllPlayerScore(game);
+				printPlayers(kd);
+				//===================== round 9 ============================		
+				KDController.createNextDraft();
+				KDController.sortNextDraft();
+				KDController.revealNextDraft();	
+				
+					//		first player actions
+					player1=kd.getCurrentGame().getPlayer(0);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+					KDController.preplaceLatestDomino(player1, 0, -1, "left");
+					KDController.placeLatestDomino(player1);
+					
+					//		second player actions
+					player2=kd.getCurrentGame().getPlayer(1);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+					KDController.preplaceLatestDomino(player2, 0, -1, "left");
+					KDController.placeLatestDomino(player2);
+							
+					//		third player actions
+					player3=kd.getCurrentGame().getPlayer(2);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+					KDController.preplaceLatestDomino(player3, 0, -1, "left");
+					KDController.placeLatestDomino(player3);
+					
+					//		fourth player actions
+					player4=kd.getCurrentGame().getPlayer(3);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+					KDController.preplaceLatestDomino(player4, 0, -1, "left");
+					KDController.placeLatestDomino(player4);		
+
+				KDController.updatePlayerOrder();
+				printDraft(kd);	
+				printNextRoundPlayerOrder(kd);
+				
+				KDController.calculateAllPlayerScore(game);
+				printPlayers(kd);
+				//===================== round 10 ============================		
+				KDController.createNextDraft();
+				KDController.sortNextDraft();
+				KDController.revealNextDraft();	
+				
+					//		first player actions
+					player1=kd.getCurrentGame().getPlayer(0);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+					KDController.preplaceLatestDomino(player1, 0, -1, "left");
+					KDController.placeLatestDomino(player1);
+					
+					//		second player actions
+					player2=kd.getCurrentGame().getPlayer(1);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+					KDController.preplaceLatestDomino(player2, 0, -1, "left");
+					KDController.placeLatestDomino(player2);
+							
+					//		third player actions
+					player3=kd.getCurrentGame().getPlayer(2);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+					KDController.preplaceLatestDomino(player3, 0, -1, "left");
+					KDController.placeLatestDomino(player3);
+					
+					//		fourth player actions
+					player4=kd.getCurrentGame().getPlayer(3);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+					KDController.preplaceLatestDomino(player4, 0, -1, "left");
+					KDController.placeLatestDomino(player4);		
+
+				KDController.updatePlayerOrder();
+				printDraft(kd);	
+				printNextRoundPlayerOrder(kd);
+				
+				KDController.calculateAllPlayerScore(game);
+				printPlayers(kd);
+				//===================== round 11 ============================		
+				KDController.createNextDraft();
+				KDController.sortNextDraft();
+				KDController.revealNextDraft();	
+				
+					//		first player actions
+					player1=kd.getCurrentGame().getPlayer(0);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+					KDController.preplaceLatestDomino(player1, 0, -1, "left");
+					KDController.placeLatestDomino(player1);
+					
+					//		second player actions
+					player2=kd.getCurrentGame().getPlayer(1);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+					KDController.preplaceLatestDomino(player2, 0, -1, "left");
+					KDController.placeLatestDomino(player2);
+							
+					//		third player actions
+					player3=kd.getCurrentGame().getPlayer(2);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+					KDController.preplaceLatestDomino(player3, 0, -1, "left");
+					KDController.placeLatestDomino(player3);
+					
+					//		fourth player actions
+					player4=kd.getCurrentGame().getPlayer(3);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+					KDController.preplaceLatestDomino(player4, 0, -1, "left");
+					KDController.placeLatestDomino(player4);		
+
+				KDController.updatePlayerOrder();
+				printDraft(kd);	
+				printNextRoundPlayerOrder(kd);
+				
+				KDController.calculateAllPlayerScore(game);
+				printPlayers(kd);
+				//===================== round 12 ============================		
+				KDController.createNextDraft();
+				KDController.sortNextDraft();
+				KDController.revealNextDraft();	
+				
+					//		first player actions
+					player1=kd.getCurrentGame().getPlayer(0);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+					KDController.preplaceLatestDomino(player1, 0, -1, "left");
+					KDController.placeLatestDomino(player1);
+					
+					//		second player actions
+					player2=kd.getCurrentGame().getPlayer(1);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+					KDController.preplaceLatestDomino(player2, 0, -1, "left");
+					KDController.placeLatestDomino(player2);
+							
+					//		third player actions
+					player3=kd.getCurrentGame().getPlayer(2);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+					KDController.preplaceLatestDomino(player3, 0, -1, "left");
+					KDController.placeLatestDomino(player3);
+					
+					//		fourth player actions
+					player4=kd.getCurrentGame().getPlayer(3);
+					KDController.ChoosNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+					KDController.preplaceLatestDomino(player4, 0, -1, "left");
+					KDController.placeLatestDomino(player4);		
+
+				
+		
+		//====================== end game =========================	
 //		KDController.calculateAllPlayerScore(kd.getCurrentGame());
 //		
 //		KDController.calculatePlayerRanking();
