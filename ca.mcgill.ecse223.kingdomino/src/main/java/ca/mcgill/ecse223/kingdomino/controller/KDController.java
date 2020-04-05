@@ -1123,9 +1123,14 @@ public class KDController {
 	 * @return void
 	 */
 	
-	public static void calculatePlayerScore(Player player) {
+	public static void calculateIndividualPlayerScore(Player player) {
 		
 		List<Property> p = player.getKingdom().getProperties();
+		
+		while (p.size()>0) {
+			p.get(0).delete();
+		}
+		
 		identifyAllProperty(player);
 		int score=0;
 		for (Property each:p) {
@@ -1135,6 +1140,12 @@ public class KDController {
 		calculateBonusScore(player);
 		player.setPropertyScore(score);
 		
+	}
+	
+	public static void calculateAllPlayerScore(Game game) {
+		   for (Player player:game.getPlayers()) {
+			   calculateIndividualPlayerScore(player);
+		   }
 	}
 
 	public static void calculatePlayerRanking() {
@@ -1840,7 +1851,8 @@ public class KDController {
 	
 	private static List<Integer> uniqueRandomSequence(int size,int min,int max){
 		List<Integer> sequence = new ArrayList<Integer>();
-		Random rand = new Random(2);
+		Random rand = new Random(2);			//seeded to get consistent random numbers to help development
+												//remove seed before deployment
 		
 		while (sequence.size()<size){
 			int num=rand.nextInt((max - min) + 1) + min;

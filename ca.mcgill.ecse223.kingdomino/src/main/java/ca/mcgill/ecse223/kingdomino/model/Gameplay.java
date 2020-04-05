@@ -5,6 +5,7 @@ package ca.mcgill.ecse223.kingdomino.model;
 import java.util.List;
 
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
+import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
 
 // line 3 "../../../../../Gameplay.ump"
 public class Gameplay
@@ -616,7 +617,7 @@ public class Gameplay
   // line 200 "../../../../../Gameplay.ump"
    public boolean isDominoTaken(Domino domino){
    
-	   return domino.hasDominoSelection();
+	   return KDQuery.isDominoTaken(domino);
 	   
   }
 
@@ -739,18 +740,14 @@ public class Gameplay
   // line 302 "../../../../../Gameplay.ump"
    public void updatePlayerScore(Player player){
     
-	   
+	   KDController.calculateIndividualPlayerScore(player);
 	   
   }
 
   // line 308 "../../../../../Gameplay.ump"
    public void calculateAllPlayerScores(Game game){
 	   
-	   for(int i= 0; i<game.getPlayers().size(); i++) {
-		   
-		   KDController.calculatePlayerScore(game.getPlayer(i));
-		   
-	   }
+	   KDController.calculateAllPlayerScore(game);
 	   
   }
 

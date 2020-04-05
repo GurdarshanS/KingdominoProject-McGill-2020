@@ -185,6 +185,10 @@ public class KDQuery {
 		return game.getAllDrafts().size();
 	}
 	
+	public static boolean isDominoTaken(Domino domino) {
+		return domino.hasDominoSelection();
+	}
+	
 	public static boolean isPlayerLastInDraft(Player p) {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
 		Game game = kd.getCurrentGame();
