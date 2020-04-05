@@ -51,7 +51,7 @@ public class viewKingdominoState {
 		KDController.updatePlayerOrder();
 		printDraft(kd);	
 		printNextRoundPlayerOrder(kd);
-		
+	
 		//===================== round 2 ============================		
 		KDController.createNextDraft();
 		KDController.sortNextDraft();
@@ -84,6 +84,8 @@ public class viewKingdominoState {
 		KDController.updatePlayerOrder();
 		printDraft(kd);	
 		printNextRoundPlayerOrder(kd);
+		
+	
 		//===================== round 3 ============================		
 		KDController.createNextDraft();
 		KDController.sortNextDraft();
@@ -116,7 +118,8 @@ public class viewKingdominoState {
 		KDController.updatePlayerOrder();
 		printDraft(kd);	
 		printNextRoundPlayerOrder(kd);
-
+		
+		
 		//===================== round 4 ============================		
 		KDController.createNextDraft();
 		KDController.sortNextDraft();
@@ -149,7 +152,7 @@ public class viewKingdominoState {
 		KDController.updatePlayerOrder();
 		printDraft(kd);	
 		printNextRoundPlayerOrder(kd);
-
+		
 		//===================== round 5 ============================		
 		KDController.createNextDraft();
 		KDController.sortNextDraft();
@@ -205,7 +208,7 @@ public class viewKingdominoState {
 		
 		printDraft(kd);
 		printNextRoundPlayerOrder(kd);
-
+		
 //		printDominos(kd);
 		printPlayers(kd);
 		printRankings(kd);

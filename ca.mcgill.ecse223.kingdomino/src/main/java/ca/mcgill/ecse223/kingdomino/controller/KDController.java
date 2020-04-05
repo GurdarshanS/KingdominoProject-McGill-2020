@@ -1136,7 +1136,7 @@ public class KDController {
 		player.setPropertyScore(score);
 		
 	}
-	
+
 	public static void calculatePlayerRanking() {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
