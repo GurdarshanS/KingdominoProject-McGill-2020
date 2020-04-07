@@ -3,6 +3,11 @@
 
 package ca.mcgill.ecse223.kingdomino.model;
 
+import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
+import ca.mcgill.ecse223.kingdomino.controller.KDController;
+import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
+import java.util.*;
+
 // line 3 "../../../../../Gameplay2.ump"
 public class Gameplay2
 {
@@ -183,7 +188,7 @@ public class Gameplay2
     return wasEventProcessed;
   }
 
-  public boolean manipulateFirst(Player player,int posx,int posy,String dir)
+  public boolean manipulateFirst(int posx,int posy,String dir)
   {
     boolean wasEventProcessed = false;
     
@@ -193,7 +198,7 @@ public class Gameplay2
       case RevealingNextDraft:
         exitGamestatusPlaying();
         // line 29 "../../../../../Gameplay2.ump"
-        preplaceLatestDomino(player,posx,posy,dir);
+        preplaceLatestDomino(posx,posy,dir);
         setGamestatusPlaying(GamestatusPlaying.ManipulatingDomino);
         wasEventProcessed = true;
         break;
@@ -204,7 +209,7 @@ public class Gameplay2
     return wasEventProcessed;
   }
 
-  public boolean discard(Player player)
+  public boolean discard()
   {
     boolean wasEventProcessed = false;
     
@@ -213,11 +218,11 @@ public class Gameplay2
     switch (aGamestatusPlaying)
     {
       case ManipulatingDomino:
-        if (!(isThereAvailablePlacement(player)))
+        if (!(isThereAvailablePlacement()))
         {
           exitGamestatusPlaying();
         // line 34 "../../../../../Gameplay2.ump"
-          discardLatestDomino(player);
+          discardLatestDomino();
           setGamestatusPlaying(GamestatusPlaying.ConfirmingChoice);
           wasEventProcessed = true;
           break;
@@ -230,11 +235,11 @@ public class Gameplay2
     switch (aGamestatusFinishing)
     {
       case ManipulatingLastDomino:
-        if (!(isThereAvailablePlacement(player)))
+        if (!(isThereAvailablePlacement()))
         {
           exitGamestatusFinishing();
         // line 70 "../../../../../Gameplay2.ump"
-          discardLatestDomino(player);
+          discardLatestDomino();
           setGamestatusFinishing(GamestatusFinishing.ConfirmingLastChoice);
           wasEventProcessed = true;
           break;
@@ -247,7 +252,7 @@ public class Gameplay2
     return wasEventProcessed;
   }
 
-  public boolean place(Player player)
+  public boolean place()
   {
     boolean wasEventProcessed = false;
     
@@ -256,11 +261,11 @@ public class Gameplay2
     switch (aGamestatusPlaying)
     {
       case ManipulatingDomino:
-        if (verifyDomino(player))
+        if (verifyDomino())
         {
           exitGamestatusPlaying();
         // line 35 "../../../../../Gameplay2.ump"
-          placeLatestDomino(player);updatePlayerScore(player);
+          placeLatestDomino();updatePlayerScore();
           setGamestatusPlaying(GamestatusPlaying.ConfirmingChoice);
           wasEventProcessed = true;
           break;
@@ -273,11 +278,11 @@ public class Gameplay2
     switch (aGamestatusFinishing)
     {
       case ManipulatingLastDomino:
-        if (verifyDomino(player))
+        if (verifyDomino())
         {
           exitGamestatusFinishing();
         // line 71 "../../../../../Gameplay2.ump"
-          placeLatestDomino(player);updatePlayerScore(player);
+          placeLatestDomino();updatePlayerScore();
           setGamestatusFinishing(GamestatusFinishing.ConfirmingLastChoice);
           wasEventProcessed = true;
           break;
@@ -290,7 +295,7 @@ public class Gameplay2
     return wasEventProcessed;
   }
 
-  public boolean manipulateNext(Player player,int posx,int posy,String dir)
+  public boolean manipulateNext(int posx,int posy,String dir)
   {
     boolean wasEventProcessed = false;
     
@@ -302,7 +307,7 @@ public class Gameplay2
         {
           exitGamestatusPlaying();
         // line 59 "../../../../../Gameplay2.ump"
-          preplaceLatestDomino(player,posx,posy,dir);
+          preplaceLatestDomino(posx,posy,dir);
           setGamestatusPlaying(GamestatusPlaying.ManipulatingDomino);
           wasEventProcessed = true;
           break;
@@ -338,7 +343,7 @@ public class Gameplay2
     return wasEventProcessed;
   }
 
-  public boolean lastSelectionReady(Player player,int posx,int posy,String dir)
+  public boolean lastSelectionReady(int posx,int posy,String dir)
   {
     boolean wasEventProcessed = false;
     
@@ -350,7 +355,7 @@ public class Gameplay2
         {
           exitGamestatus();
         // line 61 "../../../../../Gameplay2.ump"
-          updatePlayerOrder();preplaceLatestDomino(player,posx,posy,dir);
+          updatePlayerOrder();preplaceLatestDomino(posx,posy,dir);
           setGamestatus(Gamestatus.Finishing);
           wasEventProcessed = true;
           break;
@@ -363,7 +368,7 @@ public class Gameplay2
     return wasEventProcessed;
   }
 
-  public boolean rotate(Player player,String dir)
+  public boolean rotate(String dir)
   {
     boolean wasEventProcessed = false;
     
@@ -374,21 +379,21 @@ public class Gameplay2
       case IdlingDomino:
         exitGamestatusPlayingManipulatingDomino();
         // line 38 "../../../../../Gameplay2.ump"
-        rotateLatestDomino(player,dir);
+        rotateLatestDomino(dir);
         setGamestatusPlayingManipulatingDomino(GamestatusPlayingManipulatingDomino.RotatingDomino);
         wasEventProcessed = true;
         break;
       case RotatingDomino:
         exitGamestatusPlayingManipulatingDomino();
         // line 43 "../../../../../Gameplay2.ump"
-        rotateLatestDomino(player,dir);
+        rotateLatestDomino(dir);
         setGamestatusPlayingManipulatingDomino(GamestatusPlayingManipulatingDomino.RotatingDomino);
         wasEventProcessed = true;
         break;
       case MovingDomino:
         exitGamestatusPlayingManipulatingDomino();
         // line 48 "../../../../../Gameplay2.ump"
-        rotateLatestDomino(player,dir);
+        rotateLatestDomino(dir);
         setGamestatusPlayingManipulatingDomino(GamestatusPlayingManipulatingDomino.RotatingDomino);
         wasEventProcessed = true;
         break;
@@ -401,21 +406,21 @@ public class Gameplay2
       case IdlingLastDomino:
         exitGamestatusFinishingManipulatingLastDomino();
         // line 74 "../../../../../Gameplay2.ump"
-        rotateLatestDomino(player,dir);
+        rotateLatestDomino(dir);
         setGamestatusFinishingManipulatingLastDomino(GamestatusFinishingManipulatingLastDomino.RotatingLastDomino);
         wasEventProcessed = true;
         break;
       case RotatingLastDomino:
         exitGamestatusFinishingManipulatingLastDomino();
         // line 79 "../../../../../Gameplay2.ump"
-        rotateLatestDomino(player,dir);
+        rotateLatestDomino(dir);
         setGamestatusFinishingManipulatingLastDomino(GamestatusFinishingManipulatingLastDomino.RotatingLastDomino);
         wasEventProcessed = true;
         break;
       case MovingLastDomino:
         exitGamestatusFinishingManipulatingLastDomino();
         // line 84 "../../../../../Gameplay2.ump"
-        rotateLatestDomino(player,dir);
+        rotateLatestDomino(dir);
         setGamestatusFinishingManipulatingLastDomino(GamestatusFinishingManipulatingLastDomino.RotatingLastDomino);
         wasEventProcessed = true;
         break;
@@ -426,7 +431,7 @@ public class Gameplay2
     return wasEventProcessed;
   }
 
-  public boolean move(Player player,String movement)
+  public boolean move(String movement)
   {
     boolean wasEventProcessed = false;
     
@@ -437,21 +442,21 @@ public class Gameplay2
       case IdlingDomino:
         exitGamestatusPlayingManipulatingDomino();
         // line 39 "../../../../../Gameplay2.ump"
-        moveLatestDomino(player,movement);
+        moveLatestDomino(movement);
         setGamestatusPlayingManipulatingDomino(GamestatusPlayingManipulatingDomino.MovingDomino);
         wasEventProcessed = true;
         break;
       case RotatingDomino:
         exitGamestatusPlayingManipulatingDomino();
         // line 44 "../../../../../Gameplay2.ump"
-        moveLatestDomino(player,movement);
+        moveLatestDomino(movement);
         setGamestatusPlayingManipulatingDomino(GamestatusPlayingManipulatingDomino.MovingDomino);
         wasEventProcessed = true;
         break;
       case MovingDomino:
         exitGamestatusPlayingManipulatingDomino();
         // line 49 "../../../../../Gameplay2.ump"
-        moveLatestDomino(player,movement);
+        moveLatestDomino(movement);
         setGamestatusPlayingManipulatingDomino(GamestatusPlayingManipulatingDomino.MovingDomino);
         wasEventProcessed = true;
         break;
@@ -464,21 +469,21 @@ public class Gameplay2
       case IdlingLastDomino:
         exitGamestatusFinishingManipulatingLastDomino();
         // line 75 "../../../../../Gameplay2.ump"
-        moveLatestDomino(player,movement);
+        moveLatestDomino(movement);
         setGamestatusFinishingManipulatingLastDomino(GamestatusFinishingManipulatingLastDomino.MovingLastDomino);
         wasEventProcessed = true;
         break;
       case RotatingLastDomino:
         exitGamestatusFinishingManipulatingLastDomino();
         // line 80 "../../../../../Gameplay2.ump"
-        moveLatestDomino(player,movement);
+        moveLatestDomino(movement);
         setGamestatusFinishingManipulatingLastDomino(GamestatusFinishingManipulatingLastDomino.MovingLastDomino);
         wasEventProcessed = true;
         break;
       case MovingLastDomino:
         exitGamestatusFinishingManipulatingLastDomino();
         // line 85 "../../../../../Gameplay2.ump"
-        moveLatestDomino(player,movement);
+        moveLatestDomino(movement);
         setGamestatusFinishingManipulatingLastDomino(GamestatusFinishingManipulatingLastDomino.MovingLastDomino);
         wasEventProcessed = true;
         break;
@@ -489,7 +494,7 @@ public class Gameplay2
     return wasEventProcessed;
   }
 
-  public boolean manipulateLast(Player player,int posx,int posy,String dir)
+  public boolean manipulateLast(int posx,int posy,String dir)
   {
     boolean wasEventProcessed = false;
     
@@ -501,7 +506,7 @@ public class Gameplay2
         {
           exitGamestatusFinishing();
         // line 90 "../../../../../Gameplay2.ump"
-          setNextPlayer();preplaceLatestDomino(player,posx,posy,dir);
+          setNextPlayer();preplaceLatestDomino(posx,posy,dir);
           setGamestatusFinishing(GamestatusFinishing.ManipulatingLastDomino);
           wasEventProcessed = true;
           break;
@@ -839,43 +844,60 @@ public class Gameplay2
    * Guards
    */
   // line 219 "../../../../../Gameplay2.ump"
-   public boolean isCurrentPlayerTheLastInTurn(Player player){
-    return true;
+   public boolean isCurrentPlayerTheLastInTurn(){
+	   Kingdomino kd = KingdominoApplication.getKingdomino();
+	   Game game=kd.getCurrentGame();
+	   Player player=game.getNextPlayer();
+	   return KDQuery.isCurrentPlayerTheLastInTurn(player);
   }
 
   // line 220 "../../../../../Gameplay2.ump"
    public boolean isCurrentTurnTheLastInGame(){
-    return true;
+	   return KDQuery.isCurrentTurnTheLastInGame();
   }
 
   // line 221 "../../../../../Gameplay2.ump"
    public boolean isDominoTaken(Domino domino){
-    return true;
+	   return KDQuery.isDominoTaken(domino);
   }
 
   // line 222 "../../../../../Gameplay2.ump"
    public boolean hasAllPlayersChosen(){
-    return true;
+	   return KDQuery.hasAllPlayersChosen();
   }
 
   // line 223 "../../../../../Gameplay2.ump"
-   public boolean isThereAvailablePlacement(Player player){
-    return true;
+   public boolean isThereAvailablePlacement(){
+	   
+	   Kingdomino kd = KingdominoApplication.getKingdomino();
+	   Game game=kd.getCurrentGame();
+	   Player player=game.getNextPlayer();
+	   List<KingdomTerritory> territories = player.getKingdom().getTerritories();
+	   DominoInKingdom dInK = (DominoInKingdom) territories.get(territories.size()-1);
+	   
+	   return KDQuery.isThereAvailablePlacement(player, dInK);
   }
 
   // line 224 "../../../../../Gameplay2.ump"
-   public boolean verifyDomino(Player player){
-    return true;
+   public boolean verifyDomino(){
+	   
+	   Kingdomino kd = KingdominoApplication.getKingdomino();
+	   Game game=kd.getCurrentGame();
+	   Player player=game.getNextPlayer();
+	   List<KingdomTerritory> territories = player.getKingdom().getTerritories();
+	   DominoInKingdom dInK = (DominoInKingdom) territories.get(territories.size()-1);
+	   
+	   return KDQuery.verifyDominoInKingdom(player, dInK);
   }
 
   // line 225 "../../../../../Gameplay2.ump"
    public boolean isDominoPileEmpty(){
-    return true;
+	   return KDQuery.isDominoPileEmpty();
   }
 
   // line 226 "../../../../../Gameplay2.ump"
    public boolean hasAllPlayersPlayed(){
-    return true;
+	   return KDQuery.hasAllPlayersPlayed();
   }
 
 
@@ -885,82 +907,109 @@ public class Gameplay2
    */
   // line 232 "../../../../../Gameplay2.ump"
    public void shuffleDominoPile(){
-    
+	   KDController.shuffleDominoPile();
   }
 
   // line 233 "../../../../../Gameplay2.ump"
    public void createNextDraft(){
-    
+	   KDController.createNextDraft();
   }
 
   // line 234 "../../../../../Gameplay2.ump"
    public void orderNextDraft(){
-    
+	   KDController.sortNextDraft();
   }
 
   // line 235 "../../../../../Gameplay2.ump"
    public void revealNextDraft(){
-    
+	   KDController.revealNextDraft();
   }
 
   // line 236 "../../../../../Gameplay2.ump"
    public void generateInitialPlayerOrder(){
-    
+	   KDController.revealNextDraft();
   }
 
   // line 237 "../../../../../Gameplay2.ump"
    public void chooseDomino(Domino domino){
-    
+	   KDController.chooseNextDomino(domino);
   }
 
   // line 238 "../../../../../Gameplay2.ump"
    public void updatePlayerOrder(){
-    
+	   KDController.updatePlayerOrder();
   }
 
   // line 239 "../../../../../Gameplay2.ump"
-   public void updatePlayerScore(Player player){
-    
+   public void updatePlayerScore(){
+	   
+	   Kingdomino kd = KingdominoApplication.getKingdomino();
+	   Game game=kd.getCurrentGame();
+	   Player player=game.getNextPlayer();
+
+	   KDController.calculateIndividualPlayerScore(player);
   }
 
   // line 240 "../../../../../Gameplay2.ump"
-   public void preplaceLatestDomino(Player player, int posx, int posy, String dir){
+   public void preplaceLatestDomino(int posx, int posy, String dir){
+	   
+	   Kingdomino kd = KingdominoApplication.getKingdomino();
+	   Game game=kd.getCurrentGame();
+	   Player player=game.getNextPlayer();   
+	   KDController.preplaceLatestDomino(player, posx, posy, dir);
     
   }
 
   // line 241 "../../../../../Gameplay2.ump"
-   public void rotateLatestDomino(Player player, String dir){
-    
+   public void rotateLatestDomino(String dir){
+	   Kingdomino kd = KingdominoApplication.getKingdomino();
+	   Game game=kd.getCurrentGame();
+	   Player player=game.getNextPlayer();   
+	   KDController.rotateLatestDomino(player, dir);
   }
 
   // line 242 "../../../../../Gameplay2.ump"
-   public void moveLatestDomino(Player player, String movement){
-    
+   public void moveLatestDomino(String movement){
+	   Kingdomino kd = KingdominoApplication.getKingdomino();
+	   Game game=kd.getCurrentGame();
+	   Player player=game.getNextPlayer();   
+	   KDController.moveLatestDomino(player, movement);
   }
 
   // line 243 "../../../../../Gameplay2.ump"
-   public void placeLatestDomino(Player player){
-    
+   public void placeLatestDomino(){
+	   Kingdomino kd = KingdominoApplication.getKingdomino();
+	   Game game=kd.getCurrentGame();
+	   Player player=game.getNextPlayer();   
+	   KDController.placeLatestDomino(player);
   }
 
   // line 244 "../../../../../Gameplay2.ump"
-   public void discardLatestDomino(Player player){
-    
+   public void discardLatestDomino(){
+	   Kingdomino kd = KingdominoApplication.getKingdomino();
+	   Game game=kd.getCurrentGame();
+	   Player player=game.getNextPlayer();   
+	   KDController.discardLatestDomino(player);
   }
 
   // line 245 "../../../../../Gameplay2.ump"
    public void setNextPlayer(){
-    
+	   Kingdomino kd = KingdominoApplication.getKingdomino();
+	   Game game=kd.getCurrentGame();
+	   Player player=game.getNextPlayer();
+	   KDController.updateNextPlayer(player);
   }
 
   // line 246 "../../../../../Gameplay2.ump"
    public void calculateAllPlayerScores(){
-    
+	   Kingdomino kd = KingdominoApplication.getKingdomino();
+	   Game game=kd.getCurrentGame();
+	   KDController.calculateAllPlayerScore(game);
   }
 
   // line 247 "../../../../../Gameplay2.ump"
    public void calculatePlayerRanking(){
-    
+	   KDController.calculatePlayerRanking();
   }
 
 }

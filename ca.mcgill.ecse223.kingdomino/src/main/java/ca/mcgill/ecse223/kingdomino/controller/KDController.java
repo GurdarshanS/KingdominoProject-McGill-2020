@@ -283,6 +283,10 @@ public class KDController {
 		}
 		
 		game.setNextPlayer(game.getPlayer(0));
+		
+		for (Player p:game.getPlayers()) {
+			p.getDominoSelection().delete();
+		}
 	}
 	
 	
@@ -475,18 +479,16 @@ public class KDController {
 			return;
 		}
 		
-		DominoSelection currentSelection;
-		if (!currentPlayer.hasDominoSelection()) {
-			currentSelection = currentDraft.addSelection(currentPlayer, aDomino);
-			}
-		else {
-			currentSelection=currentPlayer.getDominoSelection();
-		}
+		DominoSelection currentSelection = new DominoSelection(currentPlayer,aDomino,currentDraft);
 		
-		aDomino.setDominoSelection(currentSelection);
-		
-		if (!KDQuery.isPlayerLastInDraft(currentPlayer)) {
-		
+		updateNextPlayer(currentPlayer);
+     
+	}
+	
+	public static void updateNextPlayer(Player currentPlayer) {
+		Game game=currentPlayer.getGame();
+		if (!KDQuery.isCurrentPlayerTheLastInTurn(currentPlayer)) {
+			
 			List<Player.PlayerColor> currentColorOrder = new ArrayList<Player.PlayerColor>();			
 			for (Player p:game.getPlayers()) {
 				currentColorOrder.add(p.getColor());
@@ -497,7 +499,6 @@ public class KDController {
 		else {
 			game.setNextPlayer(game.getPlayer(0));
 		}
-     
 	}
 	
 //	public static void ChoosNextDomino(Domino aDomino){
@@ -578,7 +579,7 @@ public class KDController {
 		DominoInKingdom dInK = new DominoInKingdom(posx,posy,kingdom,dominoToPlace);
 		dInK.setDirection(getDirection(dir));
 		
-		boolean valid=verifyDominoInKingdom(player,dInK);
+		boolean valid=KDQuery.verifyDominoInKingdom(player,dInK);
 		if (valid) {
 			dominoToPlace.setStatus(DominoStatus.CorrectlyPreplaced);
 		}
@@ -615,7 +616,7 @@ public class KDController {
 		DominoInKingdom dInK = new DominoInKingdom(posx,posy,kingdom,dominoToPlace);
 		dInK.setDirection(getDirection(dir));
 		
-		boolean valid=verifyDominoInKingdom(player,dInK);
+		boolean valid=KDQuery.verifyDominoInKingdom(player,dInK);
 		if (valid) {
 			dominoToPlace.setStatus(DominoStatus.CorrectlyPreplaced);
 		}
@@ -677,7 +678,7 @@ public class KDController {
 		}
 		else {
 			
-			boolean valid=verifyDominoInKingdom(aPlayer,dInKingdom);
+			boolean valid=KDQuery.verifyDominoInKingdom(aPlayer,dInKingdom);
 			
 			if (valid) {
 				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
@@ -743,7 +744,7 @@ public class KDController {
 		
 		else {
 			
-			boolean valid=verifyDominoInKingdom(aPlayer,dInKingdom);
+			boolean valid=KDQuery.verifyDominoInKingdom(aPlayer,dInKingdom);
 			
 			if (valid) {
 				dInKingdom.getDomino().setStatus(DominoStatus.CorrectlyPreplaced);
@@ -805,7 +806,7 @@ public class KDController {
 		
 		DominoInKingdom dInKingdom = (DominoInKingdom) territories.get(territories.size()-1);
 		
-		if (isThereAvailablePlacement(aPlayer,dInKingdom)) {
+		if (KDQuery.isThereAvailablePlacement(aPlayer,dInKingdom)) {
 			return false;
 		}
 		else {
@@ -1202,57 +1203,7 @@ public class KDController {
 	/// ---- Private Helper Methods ---- ///
 	////////////////////////////////////////
 	
-	private static boolean isThereAvailablePlacement(Player player, DominoInKingdom dInK) {
-		List<List<Integer>> freeCoords=KDQuery.getValidFreeCoordinates(player);
-		if (freeCoords.size()==0) {
-//			System.out.println("no free space on board at all, return false");
-			return false;
-		}
-		
-		int prevX=dInK.getX();
-		int prevY=dInK.getY();
-		DominoInKingdom.DirectionKind prevD=dInK.getDirection();
-		Domino.DominoStatus prevStatus=dInK.getDomino().getStatus();
-		
-		
-		for (int j=0;j<freeCoords.size();j++) {
-			
-			List<Integer> coord=freeCoords.get(j);
-			dInK.setX(coord.get(0));
-			dInK.setY(coord.get(1));
-			
-			if (verifyDominoInKingdom(player,dInK)) {
-//				System.out.println("initial pre-placement valid, return true");
-				return true;
-			}
-			
-			else {
-				for (int i=0;i<4;i++) {
-					KDController.rotateLatestDomino(player, "clockwise");
-//					System.out.println("rotating clockwise...");
-					if (verifyDominoInKingdom(player,dInK)) {
-//						System.out.println("rotated placement valid, return true");
-//						System.out.println("valid placement found at: ["+dInK.getX()+","+dInK.getY()+","+dInK.getDirection()+"]");
-						dInK.setX(prevX);
-						dInK.setY(prevY);
-						dInK.setDirection(prevD);
-						dInK.getDomino().setStatus(prevStatus);
-						return true;
-					}
-//					System.out.println("invalid placement, rotate again");
-				}
-				
-//				System.out.println("all orientations at this position invalid, remove and try again");
-			}
-			
-		}
-		
-		dInK.setX(prevX);
-		dInK.setY(prevY);
-		dInK.setDirection(prevD);
-		dInK.getDomino().setStatus(prevStatus);
-		return false;
-	}
+
 	
 	private static List<List<Integer>> leftNeighborCoords (DominoInKingdom testDomino){
 		
@@ -1737,28 +1688,7 @@ public class KDController {
 		return coord2;
 	}
 	
-	private static boolean verifyDominoInKingdom(Player player, DominoInKingdom dominoToPlace) {
-		
-		if (verifyGridSizeAllKingdom(player,dominoToPlace)) {
-			if(verifyNoOverlapLastTerritory(player,dominoToPlace)) {
-				if (verifyCastleAdjacency(player,dominoToPlace)||verifyNeighborAdjacencyLastTerritory(player,dominoToPlace)) {
-					return true;
-				}
-				else {
-//					System.out.println("\ninvalid: neither neighbor or castle adjacent");
-					return false;
-				}
-			}
-			else {
-//				System.out.println("\ninvalid: overlap\n");
-				return false;
-			}
-		}
-		else {
-//			System.out.println("\ninvalid: grid size exceeded\n");
-			return false;
-		}
-	}
+	
 	
 	private static int L2NormSquared(int x1, int y1, int x2, int y2) {
 		int deltaX=x2-x1;

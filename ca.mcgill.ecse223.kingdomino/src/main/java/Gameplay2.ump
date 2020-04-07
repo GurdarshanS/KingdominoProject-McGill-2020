@@ -26,27 +26,27 @@ class Gameplay2 {
         
           RevealingNextDraft{
         		entry/{revealNextDraft();updatePlayerOrder();}
-            	manipulateFirst(Player player, int posx, int posy, String dir)/{preplaceLatestDomino(player,posx,posy,dir);} ->Playing.ManipulatingDomino;
+            	manipulateFirst(int posx, int posy, String dir)/{preplaceLatestDomino(posx,posy,dir);} ->Playing.ManipulatingDomino;
           }
           
           ManipulatingDomino{
           
-            discard(Player player)[!isThereAvailablePlacement(player)]/{discardLatestDomino(player);} -> Playing.ConfirmingChoice;
-            place(Player player)[verifyDomino(player)]/{placeLatestDomino(player);updatePlayerScore(player);}-> Playing.ConfirmingChoice;
+            discard()[!isThereAvailablePlacement()]/{discardLatestDomino();} -> Playing.ConfirmingChoice;
+            place()[verifyDomino()]/{placeLatestDomino();updatePlayerScore();}-> Playing.ConfirmingChoice;
             
             IdlingDomino{
-            	rotate(Player player, String dir)/{rotateLatestDomino(player,dir);}->Playing.ManipulatingDomino.RotatingDomino;
-            	move(Player player, String movement)/{moveLatestDomino(player,movement);}->Playing.ManipulatingDomino.MovingDomino;               
+            	rotate(String dir)/{rotateLatestDomino(dir);}->Playing.ManipulatingDomino.RotatingDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Playing.ManipulatingDomino.MovingDomino;               
             }  
             
             RotatingDomino{
-           		rotate(Player player, String dir)/{rotateLatestDomino(player,dir);}->Playing.ManipulatingDomino.RotatingDomino;
-           		move(Player player, String movement)/{moveLatestDomino(player,movement);}->Playing.ManipulatingDomino.MovingDomino;
+           		rotate(String dir)/{rotateLatestDomino(dir);}->Playing.ManipulatingDomino.RotatingDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Playing.ManipulatingDomino.MovingDomino; 
             }
             
             MovingDomino{
-              	rotate(Player player, String dir)/{rotateLatestDomino(player,dir);}->Playing.ManipulatingDomino.RotatingDomino;
-           		move(Player player, String movement)/{moveLatestDomino(player,movement);}->Playing.ManipulatingDomino.MovingDomino;
+              	rotate(String dir)/{rotateLatestDomino(dir);}->Playing.ManipulatingDomino.RotatingDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Playing.ManipulatingDomino.MovingDomino; 
             }
               
           }
@@ -56,9 +56,9 @@ class Gameplay2 {
           }
           
           SelectingStandardDomino{
-            manipulateNext(Player player, int posx, int posy, String dir)[!hasAllPlayersChosen()]/{preplaceLatestDomino(player,posx,posy,dir);} ->Playing.ManipulatingDomino;
+            manipulateNext(int posx, int posy, String dir)[!hasAllPlayersChosen()]/{preplaceLatestDomino(posx,posy,dir);} ->Playing.ManipulatingDomino;
 			nextSelectionReady[hasAllPlayersChosen()&&!isDominoPileEmpty()]->Playing;
-			lastSelectionReady(Player player, int posx, int posy, String dir)[hasAllPlayersChosen()&&isDominoPileEmpty()]/{updatePlayerOrder();preplaceLatestDomino(player,posx,posy,dir);}->Finishing;
+			lastSelectionReady(int posx, int posy, String dir)[hasAllPlayersChosen()&&isDominoPileEmpty()]/{updatePlayerOrder();preplaceLatestDomino(posx,posy,dir);}->Finishing;
           }  
         
       }
@@ -67,27 +67,27 @@ class Gameplay2 {
      Finishing{
      
      	ManipulatingLastDomino{
-     		discard(Player player)[!isThereAvailablePlacement(player)]/{discardLatestDomino(player);} -> Finishing.ConfirmingLastChoice;
-            place(Player player)[verifyDomino(player)]/{placeLatestDomino(player);updatePlayerScore(player);}-> Finishing.ConfirmingLastChoice;
+     		discard()[!isThereAvailablePlacement()]/{discardLatestDomino();} -> Finishing.ConfirmingLastChoice;
+            place()[verifyDomino()]/{placeLatestDomino();updatePlayerScore();}-> Finishing.ConfirmingLastChoice;
             
      		IdlingLastDomino{
-     			rotate(Player player, String dir)/{rotateLatestDomino(player,dir);}->Finishing.ManipulatingLastDomino.RotatingLastDomino;
-            	move(Player player, String movement)/{moveLatestDomino(player,movement);}->Finishing.ManipulatingLastDomino.MovingLastDomino; 
+     			rotate(String dir)/{rotateLatestDomino(dir);}->Finishing.ManipulatingLastDomino.RotatingLastDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Finishing.ManipulatingLastDomino.MovingLastDomino; 
      		}
      		
      		RotatingLastDomino{
-     			rotate(Player player, String dir)/{rotateLatestDomino(player,dir);}->Finishing.ManipulatingLastDomino.RotatingLastDomino;
-            	move(Player player, String movement)/{moveLatestDomino(player,movement);}->Finishing.ManipulatingLastDomino.MovingLastDomino; 
+     			rotate(String dir)/{rotateLatestDomino(dir);}->Finishing.ManipulatingLastDomino.RotatingLastDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Finishing.ManipulatingLastDomino.MovingLastDomino; 
      		}
      		
      		MovingLastDomino{
-     			rotate(Player player, String dir)/{rotateLatestDomino(player,dir);}->Finishing.ManipulatingLastDomino.RotatingLastDomino;
-            	move(Player player, String movement)/{moveLatestDomino(player,movement);}->Finishing.ManipulatingLastDomino.MovingLastDomino; 
+     			rotate(String dir)/{rotateLatestDomino(dir);}->Finishing.ManipulatingLastDomino.RotatingLastDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Finishing.ManipulatingLastDomino.MovingLastDomino; 
      		}
      	}
      	
      	ConfirmingLastChoice{
-     		manipulateLast(Player player, int posx, int posy, String dir)[!hasAllPlayersPlayed()]/{setNextPlayer();preplaceLatestDomino(player,posx,posy,dir);}->Finishing.ManipulatingLastDomino;
+     		manipulateLast(int posx, int posy, String dir)[!hasAllPlayersPlayed()]/{setNextPlayer();preplaceLatestDomino(posx,posy,dir);}->Finishing.ManipulatingLastDomino;
      		scoring[hasAllPlayersPlayed()]/{calculateAllPlayerScores();calculatePlayerRanking();}->EndingGame;
      	}
      
@@ -216,12 +216,12 @@ class Gameplay2 {
      */
     
     
-  public boolean isCurrentPlayerTheLastInTurn(Player player){return true;}
+  public boolean isCurrentPlayerTheLastInTurn(){return true;}
   public boolean isCurrentTurnTheLastInGame(){return true;}
   public boolean isDominoTaken(Domino domino){return true;}
   public boolean hasAllPlayersChosen(){return true;}
-  public boolean isThereAvailablePlacement(Player player){return true;}
-  public boolean verifyDomino(Player player){return true;}
+  public boolean isThereAvailablePlacement(){return true;}
+  public boolean verifyDomino(){return true;}
   public boolean isDominoPileEmpty(){return true;}
   public boolean hasAllPlayersPlayed(){return true;}
     // You may need to add more guards here
@@ -236,12 +236,12 @@ class Gameplay2 {
   public void generateInitialPlayerOrder(){}
   public void chooseDomino(Domino domino){}
   public void updatePlayerOrder(){}
-  public void updatePlayerScore(Player player){}
-  public void preplaceLatestDomino(Player player, int posx, int posy, String dir){}
-  public void rotateLatestDomino(Player player, String dir){}
-  public void moveLatestDomino(Player player, String movement){}
-  public void placeLatestDomino(Player player){}
-  public void discardLatestDomino(Player player){}
+  public void updatePlayerScore(){}
+  public void preplaceLatestDomino(int posx, int posy, String dir){}
+  public void rotateLatestDomino(String dir){}
+  public void moveLatestDomino(String movement){}
+  public void placeLatestDomino(){}
+  public void discardLatestDomino(){}
   public void setNextPlayer(){}
   public void calculateAllPlayerScores(){}
   public void calculatePlayerRanking(){}

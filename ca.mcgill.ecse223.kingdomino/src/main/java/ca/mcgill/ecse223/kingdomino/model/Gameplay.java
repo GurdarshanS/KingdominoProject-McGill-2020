@@ -624,7 +624,7 @@ public class Gameplay
   // line 208 "../../../../../Gameplay.ump"
    public boolean isLastPlayerInTurn(Player player){
    
-	   return KDQuery.isPlayerLastInDraft(player);
+	   return KDQuery.isCurrentPlayerTheLastInTurn(player);
   }
 
   // line 215 "../../../../../Gameplay.ump"

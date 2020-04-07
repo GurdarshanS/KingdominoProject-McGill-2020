@@ -189,11 +189,178 @@ public class KDQuery {
 		return domino.hasDominoSelection();
 	}
 	
-	public static boolean isPlayerLastInDraft(Player p) {
+	public static boolean isCurrentPlayerTheLastInTurn(Player p) {
 		List<Player> allPlayers=p.getGame().getPlayers();
 		Player lastPlayer=allPlayers.get(allPlayers.size()-1);
 		return p.equals(lastPlayer);
 	}
+	
+	public static boolean hasAllPlayersChosen() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game=kd.getCurrentGame();
+		
+		boolean allChosen=true;
+		
+		for (Player p:game.getPlayers()) {
+			if (p.hasDominoSelection()==false) {
+				allChosen=false;
+				break;
+			}
+		}
+		return allChosen;
+	}
+	
+	public static boolean isThereAvailablePlacement(Player player, DominoInKingdom dInK) {
+		List<List<Integer>> freeCoords=KDQuery.getValidFreeCoordinates(player);
+		if (freeCoords.size()==0) {
+//			System.out.println("no free space on board at all, return false");
+			return false;
+		}
+		
+		int prevX=dInK.getX();
+		int prevY=dInK.getY();
+		DominoInKingdom.DirectionKind prevD=dInK.getDirection();
+		Domino.DominoStatus prevStatus=dInK.getDomino().getStatus();
+		
+		
+		for (int j=0;j<freeCoords.size();j++) {
+			
+			List<Integer> coord=freeCoords.get(j);
+			dInK.setX(coord.get(0));
+			dInK.setY(coord.get(1));
+			
+			if (verifyDominoInKingdom(player,dInK)) {
+//				System.out.println("initial pre-placement valid, return true");
+				return true;
+			}
+			
+			else {
+				for (int i=0;i<4;i++) {
+					KDController.rotateLatestDomino(player, "clockwise");
+//					System.out.println("rotating clockwise...");
+					if (verifyDominoInKingdom(player,dInK)) {
+//						System.out.println("rotated placement valid, return true");
+//						System.out.println("valid placement found at: ["+dInK.getX()+","+dInK.getY()+","+dInK.getDirection()+"]");
+						dInK.setX(prevX);
+						dInK.setY(prevY);
+						dInK.setDirection(prevD);
+						dInK.getDomino().setStatus(prevStatus);
+						return true;
+					}
+//					System.out.println("invalid placement, rotate again");
+				}
+				
+//				System.out.println("all orientations at this position invalid, remove and try again");
+			}
+			
+		}
+		
+		dInK.setX(prevX);
+		dInK.setY(prevY);
+		dInK.setDirection(prevD);
+		dInK.getDomino().setStatus(prevStatus);
+		return false;
+	}
+	
+	public static boolean verifyDominoInKingdom(Player player, DominoInKingdom dominoToPlace) {
+		
+		if (KDController.verifyGridSizeAllKingdom(player,dominoToPlace)) {
+			if(KDController.verifyNoOverlapLastTerritory(player,dominoToPlace)) {
+				if (KDController.verifyCastleAdjacency(player,dominoToPlace)||KDController.verifyNeighborAdjacencyLastTerritory(player,dominoToPlace)) {
+					return true;
+				}
+				else {
+//					System.out.println("\ninvalid: neither neighbor or castle adjacent");
+					return false;
+				}
+			}
+			else {
+//				System.out.println("\ninvalid: overlap\n");
+				return false;
+			}
+		}
+		else {
+//			System.out.println("\ninvalid: grid size exceeded\n");
+			return false;
+		}
+	}
+	
+	public static boolean isDominoPileEmpty() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game=kd.getCurrentGame();
+		List<Domino> dominoPile=game.getAllDominos();
+		
+		int counter=0;
+		for (Domino d:dominoPile) {
+			if (d.getStatus().equals(DominoStatus.InPile)||d.getStatus().equals(DominoStatus.InCurrentDraft)) {
+				counter+=1;
+			}
+		}
+		
+		if (counter==0) return true;
+		else return false;
+	}
+	
+	public static boolean hasAllPlayersPlayed() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game=kd.getCurrentGame();
+		List<Player> players=game.getPlayers();
+		
+		boolean allPlayed=true;
+		
+		for (Player p:players) {
+			Domino lastDomino=p.getDominoSelection().getDomino();
+			if (!(lastDomino.getStatus().equals(DominoStatus.PlacedInKingdom)||lastDomino.getStatus().equals(DominoStatus.Discarded))) {
+				allPlayed=false;
+				break;
+			}
+		}
+		
+		return allPlayed;
+	}
+	
+	public static boolean isCurrentTurnTheLastInGame() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game=kd.getCurrentGame();
+		List<Domino> dominoPile=game.getAllDominos();
+		
+		int playerNum=game.getNumberOfPlayers();
+		int index=dominoPile.size()-1;
+		
+		boolean lastTurn=true;
+		
+		if (playerNum==2||playerNum==4) {
+			for (int i=0;i<4;i++) {
+				Domino d=dominoPile.get(index);
+				if (!d.getStatus().equals(DominoStatus.InCurrentDraft)) {
+					lastTurn=false;
+					break;
+				}
+				index--;
+			}
+		}
+		return lastTurn;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public static boolean isDraftLimitReached() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();

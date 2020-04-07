@@ -16,7 +16,10 @@ public class viewKingdominoState2 {
 //		printUsers(kd);
 		printNextRoundPlayerOrder(kd);
 		System.out.println("===================");
-		
+		printDominos(kd);
+		System.out.println("===================");
+		System.out.println("bottom pile ids: ");
+		System.out.println(KDQuery.isDominoPileEmpty());
 //		printPlayers(kd);
 		
 //		System.out.println(game.getNextPlayer().getColor());
@@ -24,53 +27,219 @@ public class viewKingdominoState2 {
 //		
 //		//===================== round 1 ============================	
 //		
-		KDController.createNextDraft();
-		KDController.sortNextDraft();
-		KDController.revealNextDraft();	
-		
-//				//		first player actions
+//		KDController.createNextDraft();
+//		KDController.sortNextDraft();
+//		KDController.revealNextDraft();	
+//		
+////				//		first player actions
+////				
+//				Player player1=game.getNextPlayer();
+//				System.out.println("player color: ");
+//				System.out.println(player1.getColor());
+//				System.out.println("before choose, has selection: ");
+//				System.out.println(player1.hasDominoSelection());
+//				KDController.chooseNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+//				System.out.println("after choose, has selection: ");
+//				System.out.println(player1.hasDominoSelection());
+//
+//				KDController.preplaceLatestDomino(player1, 1, 0, "right");
+//				KDController.placeLatestDomino(player1);
 //				
-				Player player1=game.getNextPlayer();
-				KDController.chooseNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
-				KDController.preplaceLatestDomino(player1, 1, 0, "right");
-				KDController.placeLatestDomino(player1);
-				
-				System.out.println(game.getNextPlayer().getColor());
+//				System.out.println("after place, has selection: ");
+//				System.out.println(player1.hasDominoSelection());
 //				
-//				//		second player actions
-				
-				Player player2=game.getNextPlayer();
-				KDController.chooseNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
-				KDController.preplaceLatestDomino(player2, 1, 0, "right");
-				KDController.placeLatestDomino(player2);
-				
-				System.out.println(game.getNextPlayer().getColor());
-
-						
-//				//		third player actions
-				
-				Player player3=game.getNextPlayer();
-				KDController.chooseNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
-				KDController.preplaceLatestDomino(player3, 1, 0, "right");
-				KDController.placeLatestDomino(player3);
-			
-				System.out.println(game.getNextPlayer().getColor());
-
-//				//		fourth player actions
-				
-				Player player4=game.getNextPlayer();
-				KDController.chooseNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
-				KDController.preplaceLatestDomino(player4, 1, 0, "right");
-				KDController.placeLatestDomino(player4);
-				
-				System.out.println(game.getNextPlayer().getColor());
-
+//				System.out.println("---------------");
+//				System.out.println("has all chosen: ");
+//				System.out.println(KDQuery.hasAllPlayersChosen());
+//
 //				
 //
+//			
+////				//		second player actions
+//				System.out.println();
+//				Player player2=game.getNextPlayer();
+//				
+//				System.out.println("player color: ");
+//				System.out.println(player2.getColor());
+//				System.out.println("before choose, has selection: ");
+//				System.out.println(player2.hasDominoSelection());
+//				
+//				KDController.chooseNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+//				System.out.println("after choose, has selection: ");
+//				System.out.println(player2.hasDominoSelection());
+//				
+//				KDController.preplaceLatestDomino(player2, 1, 0, "right");
+//				KDController.placeLatestDomino(player2);
+//				
+//				System.out.println("after place, has selection: ");
+//				System.out.println(player2.hasDominoSelection());
+//				
+//				System.out.println("---------------");
+//				System.out.println("has all chosen: ");
+//				System.out.println(KDQuery.hasAllPlayersChosen());
+//				
+//
+//////				//		third player actions
+//				System.out.println();
+//				Player player3=game.getNextPlayer();
+//				
+//				System.out.println("player color: ");
+//				System.out.println(player3.getColor());
+//				System.out.println("before choose, has selection: ");
+//				System.out.println(player3.hasDominoSelection());
+//				
+//				KDController.chooseNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+//				System.out.println("after choose, has selection: ");
+//				System.out.println(player3.hasDominoSelection());
+//				
+//				KDController.preplaceLatestDomino(player3, 1, 0, "right");
+//				KDController.placeLatestDomino(player3);
+//				System.out.println("after place, has selection: ");
+//				System.out.println(player3.hasDominoSelection());
+//				
+//				System.out.println("---------------");
+//				System.out.println("has all chosen: ");
+//				System.out.println(KDQuery.hasAllPlayersChosen());
+//			
+//
+//////				//		fourth player actions
+////				
+//				System.out.println();
+//				Player player4=game.getNextPlayer();
+//				
+//				System.out.println("player color: ");
+//				System.out.println(player4.getColor());
+//				System.out.println("before choose, has selection: ");
+//				System.out.println(player4.hasDominoSelection());
+//				
+//				KDController.chooseNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+//				System.out.println("before choose, has selection: ");
+//				System.out.println(player4.hasDominoSelection());
+//				
+//				KDController.preplaceLatestDomino(player4, 1, 0, "right");
+//				KDController.placeLatestDomino(player4);
+//				System.out.println("after choose, has selection: ");
+//				System.out.println(player4.hasDominoSelection());
+//				
+//				System.out.println("---------------");
+//				System.out.println("has all chosen: ");
+//				System.out.println(KDQuery.hasAllPlayersChosen());
+////				
+////				System.out.println(game.getNextPlayer().getColor());
+//
+////				
+////
 //		printDraft(kd);	
 //		KDController.updatePlayerOrder();
 //		System.out.println();
 //		printNextRoundPlayerOrder(kd);
+//		System.out.println();
+//		
+//		
+//		
+//		
+//		
+//		KDController.createNextDraft();
+//		KDController.sortNextDraft();
+//		KDController.revealNextDraft();	
+//		
+////				//		first player actions
+////				
+//				player1=game.getNextPlayer();
+//				System.out.println("player color: ");
+//				System.out.println(player1.getColor());
+//				System.out.println("before choose, has selection: ");
+//				System.out.println(player1.hasDominoSelection());
+//				KDController.chooseNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
+//				System.out.println("after choose, has selection: ");
+//				System.out.println(player1.hasDominoSelection());
+//
+//				KDController.preplaceLatestDomino(player1, 1, 0, "right");
+//				KDController.placeLatestDomino(player1);
+//				
+//				System.out.println("after place, has selection: ");
+//				System.out.println(player1.hasDominoSelection());
+//				
+//				System.out.println("---------------");
+//				System.out.println("has all chosen: ");
+//				System.out.println(KDQuery.hasAllPlayersChosen());
+//
+//				
+//
+//			
+////				//		second player actions
+//				System.out.println();
+//				player2=game.getNextPlayer();
+//				
+//				System.out.println("player color: ");
+//				System.out.println(player2.getColor());
+//				System.out.println("before choose, has selection: ");
+//				System.out.println(player2.hasDominoSelection());
+//				
+//				KDController.chooseNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+//				System.out.println("after choose, has selection: ");
+//				System.out.println(player2.hasDominoSelection());
+//				
+//				KDController.preplaceLatestDomino(player2, 1, 0, "right");
+//				KDController.placeLatestDomino(player2);
+//				
+//				System.out.println("after place, has selection: ");
+//				System.out.println(player2.hasDominoSelection());
+//				
+//				System.out.println("---------------");
+//				System.out.println("has all chosen: ");
+//				System.out.println(KDQuery.hasAllPlayersChosen());
+//				
+//
+//////				//		third player actions
+//				System.out.println();
+//				player3=game.getNextPlayer();
+//				
+//				System.out.println("player color: ");
+//				System.out.println(player3.getColor());
+//				System.out.println("before choose, has selection: ");
+//				System.out.println(player3.hasDominoSelection());
+//				
+//				KDController.chooseNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
+//				System.out.println("after choose, has selection: ");
+//				System.out.println(player3.hasDominoSelection());
+//				
+//				KDController.preplaceLatestDomino(player3, 1, 0, "right");
+//				KDController.placeLatestDomino(player3);
+//				System.out.println("after place, has selection: ");
+//				System.out.println(player3.hasDominoSelection());
+//				
+//				System.out.println("---------------");
+//				System.out.println("has all chosen: ");
+//				System.out.println(KDQuery.hasAllPlayersChosen());
+//			
+//
+//////				//		fourth player actions
+////				
+//				System.out.println();
+//				player4=game.getNextPlayer();
+//				
+//				System.out.println("player color: ");
+//				System.out.println(player4.getColor());
+//				System.out.println("before choose, has selection: ");
+//				System.out.println(player4.hasDominoSelection());
+//				
+//				KDController.chooseNextDomino(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+//				System.out.println("before choose, has selection: ");
+//				System.out.println(player4.hasDominoSelection());
+//				
+//				KDController.preplaceLatestDomino(player4, 1, 0, "right");
+//				KDController.placeLatestDomino(player4);
+//				System.out.println("after choose, has selection: ");
+//				System.out.println(player4.hasDominoSelection());
+//				
+//				System.out.println("---------------");
+//				System.out.println("has all chosen: ");
+//				System.out.println(KDQuery.hasAllPlayersChosen());
+		
+		
+		
+		
 //		
 //		KDController.calculateAllPlayerScore(game);
 //		printPlayers(kd);
