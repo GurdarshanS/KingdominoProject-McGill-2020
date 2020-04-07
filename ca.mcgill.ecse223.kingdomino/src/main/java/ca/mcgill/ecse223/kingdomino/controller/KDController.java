@@ -17,6 +17,28 @@ public class KDController {
 	
 	public KDController(){}
 	
+	public static void initializeSM() {
+		KingdominoApplication.setStatemachine();
+		Gameplay sm = KingdominoApplication.getStateMachine();
+		sm.setGamestatus("CreatingFirstDraft");
+	}
+	
+	public static boolean draftReadySM() {
+		Gameplay sm = KingdominoApplication.getStateMachine();
+		boolean complete=sm.draftReady();
+		return complete;
+	}
+	
+	public static boolean chooseSM(Domino domino) {
+		Gameplay sm = KingdominoApplication.getStateMachine();
+		return sm.choose(domino);
+	}
+	
+	public static boolean selectionReadySM() {
+		Gameplay sm = KingdominoApplication.getStateMachine();
+		return sm.selectionReady();
+	}
+	
 	/**
 	 * 
 	 * loads a saved Kingdomino object from memory if exists
@@ -247,23 +269,35 @@ public class KDController {
 		game.setTopDominoInPile(game.getAllDomino(0));
 	}
 	
+	public static void createPlayers() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();
+		
+		int playerNums=game.getNumberOfPlayers();
+		PlayerColor[] availableColors= {PlayerColor.Blue,PlayerColor.Green,PlayerColor.Pink,PlayerColor.Yellow};
+		
+		for (int i=0;i<playerNums;i++) {
+			Player p = new Player(game);
+			p.setColor(availableColors[i]);
+			Kingdom kingdom = new Kingdom(p);
+			new Castle(0, 0, kingdom, p);
+			if (i==0) game.setNextPlayer(p);
+		}
+	}
+	
 	public static void generateInitialPlayerOrder() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
 		Game game = kd.getCurrentGame();
 		
 		int playerNums=game.getNumberOfPlayers();
 		List<Integer> playerOrder = uniqueRandomSequence(playerNums,0,playerNums-1);
-		PlayerColor[] availableColors= {PlayerColor.Blue,PlayerColor.Green,PlayerColor.Pink,PlayerColor.Yellow};
 		
-		int i=0;
-		for (Integer order:playerOrder) {
-			Player p = new Player(game);
-			p.setColor(availableColors[order]);
-			Kingdom kingdom = new Kingdom(p);
-			new Castle(0, 0, kingdom, p);
-			if (i==0) game.setNextPlayer(p);
-			i++;
+		for (int i=0;i<game.getPlayers().size();i++) {
+			game.addOrMovePlayerAt(game.getPlayer(i), playerOrder.get(i));
 		}
+		
+		game.setNextPlayer(game.getPlayer(0));
+		
 	}
 	
 	public static void updatePlayerOrder() {
@@ -314,10 +348,7 @@ public class KDController {
 			
 			int dominoNums=game.getMaxPileSize();
 			createDominoPile(game,dominoNums);
-			shuffleDominoPile();
-			generateInitialPlayerOrder();
-			
-			createNextDraft();
+			createPlayers();
 		}
 	
 	/**
@@ -378,52 +409,67 @@ public class KDController {
 	 * @author Keon Olszewski 260927813
 	 * @param player
 	 * @return void
-	 */
-	
+//	 */
+//	
 	public static void createNextDraft() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
 		Game game = kd.getCurrentGame();		
 		
-		if (game.getAllDrafts().size()==0) {
-			Draft currentDraft=createOneDraft();
-			currentDraft.setDraftStatus(DraftStatus.FaceDown);
-			game.setCurrentDraft(currentDraft);
-			changeDraftDominoStatus(currentDraft,Domino.DominoStatus.InCurrentDraft);
-
-			Draft nextDraft = createOneDraft();
-			nextDraft.setDraftStatus(Draft.DraftStatus.FaceDown);
-			game.setNextDraft(nextDraft);
-			changeDraftDominoStatus(nextDraft,Domino.DominoStatus.InNextDraft);	
-
-		}
-		else if (!KDQuery.isDraftLimitReached()) {
-			
-			changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
-			game.setCurrentDraft(game.getNextDraft());
-			
-			Draft nextDraft=createOneDraft();
-			changeDraftDominoStatus(nextDraft,DominoStatus.InNextDraft);
-			game.setNextDraft(nextDraft);
-			game.getNextDraft().setDraftStatus(Draft.DraftStatus.FaceDown);
-
-		}
-		else if (KDQuery.isDraftLimitReached()) {
-			if (game.getNextDraft()!=null) {
-				changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
-
-				game.setCurrentDraft(game.getNextDraft());
-				game.setNextDraft(null);
-			}
-		}
 		
+		if(!KDQuery.isDraftLimitReached()) {
+			Draft newDraft=createOneDraft();
+			
+			newDraft.setDraftStatus(DraftStatus.FaceDown);
+			game.setCurrentDraft(newDraft);
+			changeDraftDominoStatus(newDraft,Domino.DominoStatus.InCurrentDraft);
+
+		}		
 	}
+	
+//	public static void createNextDraft() {
+//		Kingdomino kd = KingdominoApplication.getKingdomino();
+//		Game game = kd.getCurrentGame();		
+//		
+//		if (game.getAllDrafts().size()==0) {
+//			Draft currentDraft=createOneDraft();
+//			currentDraft.setDraftStatus(DraftStatus.FaceDown);
+//			game.setCurrentDraft(currentDraft);
+//			changeDraftDominoStatus(currentDraft,Domino.DominoStatus.InCurrentDraft);
+//
+//			Draft nextDraft = createOneDraft();
+//			nextDraft.setDraftStatus(Draft.DraftStatus.FaceDown);
+//			game.setNextDraft(nextDraft);
+//			changeDraftDominoStatus(nextDraft,Domino.DominoStatus.InNextDraft);	
+//
+//		}
+//		else if (!KDQuery.isDraftLimitReached()) {
+//			
+//			changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
+//			game.setCurrentDraft(game.getNextDraft());
+//			
+//			Draft nextDraft=createOneDraft();
+//			changeDraftDominoStatus(nextDraft,DominoStatus.InNextDraft);
+//			game.setNextDraft(nextDraft);
+//			game.getNextDraft().setDraftStatus(Draft.DraftStatus.FaceDown);
+//
+//		}
+//		else if (KDQuery.isDraftLimitReached()) {
+//			if (game.getNextDraft()!=null) {
+//				changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
+//
+//				game.setCurrentDraft(game.getNextDraft());
+//				game.setNextDraft(null);
+//			}
+//		}
+//		
+//	}
 	
 	public static void sortNextDraft() {
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
 		Draft currentDraft =game.getCurrentDraft();
-		
+
 		List<Domino> originalDominos=currentDraft.getIdSortedDominos();
 		List<Integer> originalIds= new ArrayList<Integer>();
 		for (Domino d:originalDominos) originalIds.add(d.getId());

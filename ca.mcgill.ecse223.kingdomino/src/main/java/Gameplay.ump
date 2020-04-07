@@ -1,6 +1,6 @@
 namespace ca.mcgill.ecse223.kingdomino.model;
 
-class Gameplay2 {
+class Gameplay {
 
     gamestatus {
 

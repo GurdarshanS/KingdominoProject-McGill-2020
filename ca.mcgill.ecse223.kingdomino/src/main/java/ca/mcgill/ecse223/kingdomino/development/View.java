@@ -17,8 +17,14 @@ public class View {
 	
 	public static void printNextRoundPlayerOrder(Kingdomino kd) {
 		System.out.println("======== next round player ordering =========");
-		for (Player p:kd.getCurrentGame().getPlayers()) {
-			System.out.println(p.getColor());
+		if (!kd.getCurrentGame().getPlayers().isEmpty())
+		{
+			for (Player p:kd.getCurrentGame().getPlayers()) {
+				System.out.println(p.getColor());
+			}
+		}
+		else {
+			System.out.println("player order not set");
 		}
 	}
 	
@@ -173,8 +179,8 @@ public class View {
 	
 	public static void printDraft(Kingdomino kd) {
 		//		view dominos in current game
-		System.out.println("================================== round #"+(kd.getCurrentGame().getAllDrafts().size()-1)+
-				" results =======================================\n");
+		System.out.println("\n================== round #"+(kd.getCurrentGame().getAllDrafts().size()-1)+
+				" results ================\n");
 		
 		System.out.println("current draft"+" - status: "+kd.getCurrentGame().getCurrentDraft().getDraftStatus());
 		System.out.println("---------------------------------------------------");
@@ -214,6 +220,7 @@ public class View {
 			}
 			System.out.println("---------------------------------------------------");
 		}
+		System.out.println("---------------------------------------------------");
 		System.out.println("total drafts in game: "+kd.getCurrentGame().getAllDrafts().size());
 		System.out.println();
 	}

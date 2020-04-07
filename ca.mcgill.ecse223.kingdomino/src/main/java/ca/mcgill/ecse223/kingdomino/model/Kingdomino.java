@@ -19,6 +19,7 @@ public class Kingdomino implements Serializable
   private List<BonusOption> bonusOptions;
   private List<Game> allGames;
   private Game currentGame;
+  private Gameplay sm;												//model extension -- added state machine												
 
   //------------------------
   // CONSTRUCTOR
@@ -30,11 +31,32 @@ public class Kingdomino implements Serializable
     bonusOptions = new ArrayList<BonusOption>();
     allGames = new ArrayList<Game>();
   }
+  
+  
+  //---------------------------
+  //	STATE MACHINE INTERFACE
+  //---------------------------
+  
+  public boolean hasStateMachine() {
+	  if (this.sm==null) return false;
+	  else return true;
+  }
+  
+  public Gameplay getStateMachine() {
+	  return this.sm;
+  }
+  
+  public void setStateMachine() {
+	  this.sm=new Gameplay();
+  }
+  
 
   //------------------------
   // INTERFACE
   //------------------------
   /* Code from template association_GetMany */
+  
+  
   public User getUser(int index)
   {
     User aUser = users.get(index);
