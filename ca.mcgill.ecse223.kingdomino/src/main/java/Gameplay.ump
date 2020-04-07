@@ -107,6 +107,7 @@ class Gameplay {
      */
 
     public void setGamestatus(String status){
+
       
         switch (status) {
           
@@ -185,14 +186,14 @@ class Gameplay {
        	default:
        	    throw new RuntimeException("Invalid gamestatus string was provided: " + status);
           
-       	}
+
     }
 
     /*
      * Guards
      */
     
-    
+
   public boolean isDominoTaken(Domino domino){
     
     
@@ -245,6 +246,7 @@ class Gameplay {
     return true;
             
   }
+
     
     // You may need to add more guards here
         
@@ -271,6 +273,7 @@ class Gameplay {
     public void revealNextDraft() {
         // TODO: implement this
     }
+
   
   public void chooseDomino(Domino domino){
    
@@ -334,3 +337,4 @@ class Gameplay {
  }
   
 }
+
