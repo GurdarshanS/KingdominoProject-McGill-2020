@@ -1,104 +1,104 @@
 namespace ca.mcgill.ecse223.kingdomino.model;
 
-class Gameplay {
+class Gameplay2 {
 
     gamestatus {
 
         Initializing {
           
             CreatingFirstDraft {
-              
-                entry/{shuffleDominoPile(); createNextDraft(); orderNextDraft();}
-              
-                draftReady -> /{revealNextDraft(); generateInitialPlayerOrder();} Initializing.SelectingFirstDomino;
-              
+            	entry/{shuffleDominoPile(); createNextDraft(); orderNextDraft();}
+                draftReady/{revealNextDraft(); generateInitialPlayerOrder();} -> Initializing.SelectingFirstDomino;
             }
           
             SelectingFirstDomino {
-           
-              choose(Domino domino)[!isDominoTaken(domino)]/{chooseDomino(domino);} -> SelectingFirstDomino;
-              
-              selectionReady(Player player)[isLastPlayerInTurn(player) && hasChosen(player)] -> Playing;
-              
+           		choose(Domino domino)[!isDominoPileEmpty() && !isDominoTaken(domino) && !hasAllPlayersChosen()]/{chooseDomino(domino);} -> Initializing.SelectingFirstDomino;
+              	selectionReady()[hasAllPlayersChosen()] -> Playing;
             }
         }
       
         Playing{
           
-          scoring(Game game)[isLastTurn(game) && allPlayersPlayed(game)]/{calculateAllPlayerScores(game); calculatePlayerRanking(game);} -> Scoring;
-        
           CreatingNextDraft{
-            
-            entry/{createNextDraft(); orderNextDraft();}
-            
-            draftReady -> RevealingNextDraft;
-            
-            
+          		entry/{createNextDraft();orderNextDraft();}
+            	draftReady->Playing.RevealingNextDraft;  
           }
         
           RevealingNextDraft{
-        
-            entry/{revealNextDraft(); updatePlayerOrder();}
-            
-            manipulate(Player player, int posx, int posy, String dir)/{prePlaceDomino(player, posx, posy, dir);} -> ManipulatingDomino;
-            
+        		entry/{revealNextDraft();updatePlayerOrder();}
+            	manipulateFirst(int posx, int posy, String dir)/{preplaceLatestDomino(posx,posy,dir);} ->Playing.ManipulatingDomino;
           }
           
           ManipulatingDomino{
+          
+            discard()[!isThereAvailablePlacement()]/{discardLatestDomino();} -> Playing.ConfirmingChoice;
+            place()[verifyDomino()]/{placeLatestDomino();updatePlayerScore();}-> Playing.ConfirmingChoice;
             
-            discard(Player player)[!isThereAvailablePlacement(player, dInK)]/{discardLatestDomino(player);} -> ConfirmingChoice;
-            
-            place(Player player)[verifyDomino(player)]/{placeLatestDomino(player); updatePlayerScore(player);} -> ConfirmingChoice;
-            
-            Idle{
-              
-              rotate(Player player, String direction)/{rotateLatestDomino(player, direction);} -> RotatingDomino;
-              
-              move(Player player, String movement)/{moveLatestDomino(player, movement);} -> MovingDomino;
-              
+            IdlingDomino{
+            	rotate(String dir)/{rotateLatestDomino(dir);}->Playing.ManipulatingDomino.RotatingDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Playing.ManipulatingDomino.MovingDomino;               
             }  
             
             RotatingDomino{
-              
-            rotate(Player player, String direction)/{rotateLatestDomino(player, direction);} -> RotatingDomino;
-              
-               move(Player player, String movement)/{moveLatestDomino(player, movement);} -> MovingDomino;
-             
+           		rotate(String dir)/{rotateLatestDomino(dir);}->Playing.ManipulatingDomino.RotatingDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Playing.ManipulatingDomino.MovingDomino; 
             }
             
             MovingDomino{
-              
-              rotate(Player player, String direction)/{rotateLatestDomino(player, direction);} -> RotatingDomino;
-              
-               move(Player player, String movement)/{moveLatestDomino(player, movement);} -> MovingDomino;
-            
+              	rotate(String dir)/{rotateLatestDomino(dir);}->Playing.ManipulatingDomino.RotatingDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Playing.ManipulatingDomino.MovingDomino; 
             }
               
           }
           
           ConfirmingChoice{
-            
-            lastManipulate(Game game, Player player, int posx, int posy, String dir)[isLastTurn(game)]/{prePlaceDomino(player, posx, posy, dir);} -> ManipulatingDomino;
-            
-            chooseStandardDomino(Domino domino, Game game)[!isDominoTaken(domino) && !isLastTurn(game)]/{chooseDomino(domino);} -> SelectingStandardDomino;
-              
+          	choose(Domino domino)[!isDominoPileEmpty() && !isDominoTaken(domino) && !hasAllPlayersChosen()]/{chooseDomino(domino);} -> SelectingStandardDomino;
           }
           
           SelectingStandardDomino{
-            
-            selectionReady(Player player)[isLastPlayerInTurn(player) && hasChosen(player)] -> Playing;
-            
-            manipulate(Player player, int posx, int posy, String dir)/{prePlaceDomino(player, posx, posy, dir);} -> ManipulatingDomino;
-            
+            manipulateNext(int posx, int posy, String dir)[!hasAllPlayersChosen()]/{preplaceLatestDomino(posx,posy,dir);} ->Playing.ManipulatingDomino;
+			nextSelectionReady[hasAllPlayersChosen()&&!isDominoPileEmpty()]->Playing;
+			lastSelectionReady(int posx, int posy, String dir)[hasAllPlayersChosen()&&isDominoPileEmpty()]/{updatePlayerOrder();preplaceLatestDomino(posx,posy,dir);}->Finishing;
           }  
         
       }
       
-     final Scoring{
+     
+     Finishing{
+     
+     	ManipulatingLastDomino{
+     		discard()[!isThereAvailablePlacement()]/{discardLatestDomino();} -> Finishing.ConfirmingLastChoice;
+            place()[verifyDomino()]/{placeLatestDomino();updatePlayerScore();}-> Finishing.ConfirmingLastChoice;
+            
+     		IdlingLastDomino{
+     			rotate(String dir)/{rotateLatestDomino(dir);}->Finishing.ManipulatingLastDomino.RotatingLastDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Finishing.ManipulatingLastDomino.MovingLastDomino; 
+     		}
+     		
+     		RotatingLastDomino{
+     			rotate(String dir)/{rotateLatestDomino(dir);}->Finishing.ManipulatingLastDomino.RotatingLastDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Finishing.ManipulatingLastDomino.MovingLastDomino; 
+     		}
+     		
+     		MovingLastDomino{
+     			rotate(String dir)/{rotateLatestDomino(dir);}->Finishing.ManipulatingLastDomino.RotatingLastDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Finishing.ManipulatingLastDomino.MovingLastDomino; 
+     		}
+     	}
+     	
+     	ConfirmingLastChoice{
+     		manipulateLast(int posx, int posy, String dir)[!hasAllPlayersPlayed()]/{setNextPlayer();preplaceLatestDomino(posx,posy,dir);}->Finishing.ManipulatingLastDomino;
+     		scoring[hasAllPlayersPlayed()]/{calculateAllPlayerScores();calculatePlayerRanking();}->EndingGame;
+     	}
+     
+     }
+      
+    final EndingGame{
        
         
         
-      } 
+     }
+       
       
     }
 
@@ -107,7 +107,6 @@ class Gameplay {
      */
 
     public void setGamestatus(String status){
-
       
         switch (status) {
           
@@ -139,11 +138,11 @@ class Gameplay {
           
                 break;
           
-          case "Idle":
+          case "IdlingDomino":
           
                 gamestatus = Gamestatus.Playing;
                 gamestatusPlaying = GamestatusPlaying.ManipulatingDomino;
-                gamestatusPlayingManipulatingDomino = GamestatusPlayingManipulatingDomino.Idle;
+                gamestatusPlayingManipulatingDomino = GamestatusPlayingManipulatingDomino.IdlingDomino;
           
                 break;
           
@@ -176,165 +175,76 @@ class Gameplay {
                  gamestatusPlaying = GamestatusPlaying.SelectingStandardDomino;
           
                 break;
+                
+          case "IdlingLastDomino":
+          		gamestatus=Gamestatus.Finishing;
+          		gamestatusFinishing=GamestatusFinishing.ManipulatingLastDomino;
+          		gamestatusFinishingManipulatingLastDomino=GamestatusFinishingManipulatingLastDomino.IdlingLastDomino;
+          		break;
           
-          case "Scoring":
+          case "MovingLastDomino":
+          		gamestatus=Gamestatus.Finishing;
+          		gamestatusFinishing=GamestatusFinishing.ManipulatingLastDomino;
+          		gamestatusFinishingManipulatingLastDomino=GamestatusFinishingManipulatingLastDomino.MovingLastDomino;
+          		break;
+          		
+          case "RotatingLastDomino":
+          		gamestatus=Gamestatus.Finishing;
+          		gamestatusFinishing=GamestatusFinishing.ManipulatingLastDomino;
+          		gamestatusFinishingManipulatingLastDomino=GamestatusFinishingManipulatingLastDomino.RotatingLastDomino;
+          		break;
+          		
+          case "ConfirmingLastChoice":
+          		gamestatus=Gamestatus.Finishing;
+          		gamestatusFinishing=GamestatusFinishing.ConfirmingLastChoice;
+          		break;
+          		
+          case "EndingGame":
           
-                gamestatus = Gamestatus.Scoring;
+                gamestatus = Gamestatus.EndingGame;
           
                 break;
           
        	default:
        	    throw new RuntimeException("Invalid gamestatus string was provided: " + status);
           
-
+       	}
     }
 
     /*
      * Guards
      */
     
-
-  public boolean isDominoTaken(Domino domino){
     
-    
-    
-   return true;
-    
-  }
-  
-  public boolean isLastPlayerInTurn(Player player){
-    
-    
-    
-    return true;
-    
-  }
-      
-  public boolean isLastTurn(Game game){
-        
-        
-    return true;
-    
-  }
- 
-  public boolean hasChosen(Player player){
-    
-    
-    
-    
-    return true;
-    
-  }
-  
-  public boolean isThereAvailablePlacement(Player player, DominoInKingdom dInK){
-    
-    
-    return true;
-    
-  }
-  
-  public boolean verifyDomino(Player player){
-    
-    
-    return true;
-    
-  }
-      
-  public boolean allPlayersPlayed(Game game){
-        
-        
-    return true;
-            
-  }
-
-    
+  public boolean isCurrentPlayerTheLastInTurn(){return true;}
+  public boolean isCurrentTurnTheLastInGame(){return true;}
+  public boolean isDominoTaken(Domino domino){return true;}
+  public boolean hasAllPlayersChosen(){return true;}
+  public boolean isThereAvailablePlacement(){return true;}
+  public boolean verifyDomino(){return true;}
+  public boolean isDominoPileEmpty(){return true;}
+  public boolean hasAllPlayersPlayed(){return true;}
     // You may need to add more guards here
         
     /*
      * Actions
      */
-    
-    public void shuffleDominoPile() {
-        // TODO: implement this
-    }
-    
-    public void generateInitialPlayerOrder() {
-        // TODO: implement this
-    }
-    
-    public void createNextDraft() {
-        // TODO: implement this
-    }
-    
-    public void orderNextDraft() {
-        // TODO: implement this
-    }
-    
-    public void revealNextDraft() {
-        // TODO: implement this
-    }
-
+  public void shuffleDominoPile(){}
+  public void createNextDraft(){}
+  public void orderNextDraft(){}
+  public void revealNextDraft(){}
+  public void generateInitialPlayerOrder(){}
+  public void chooseDomino(Domino domino){}
+  public void updatePlayerOrder(){}
+  public void updatePlayerScore(){}
+  public void preplaceLatestDomino(int posx, int posy, String dir){}
+  public void rotateLatestDomino(String dir){}
+  public void moveLatestDomino(String movement){}
+  public void placeLatestDomino(){}
+  public void discardLatestDomino(){}
+  public void setNextPlayer(){}
+  public void calculateAllPlayerScores(){}
+  public void calculatePlayerRanking(){}
   
-  public void chooseDomino(Domino domino){
-   
-    
-  }
-  
-  public void prePlaceDomino(Player player, int posx, int posy, String dir){
-    
-    
-  }
-  
-  public void placeLatestDomino(Player player){
-    
-    
-    
-  
-  }
-  
-  public void discardLatestDomino(Player player){
-    
-    
-    
-  }
-  
-  public void updatePlayerScore(Player player){
-    
-    
-    
-  }
-      
-  public void calculateAllPlayerScores(Game game){
-        
-        
-        
-  }
-      
-  public void calculatePlayerRanking(Game game){
-        
-        
-        
-        
-  }
-      
-   public void rotateLatestDomino(Player player, String direction){
-        
-        
-        
-  }
-      
-  public void moveLatestDomino(Player player, String movement){
-        
-        
-        
-   }
-   
-   public void updatePlayerOrder(){
-   
-   
-   }
-      
- }
   
 }
-
