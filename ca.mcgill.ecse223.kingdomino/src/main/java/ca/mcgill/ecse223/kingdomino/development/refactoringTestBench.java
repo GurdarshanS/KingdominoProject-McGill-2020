@@ -34,16 +34,16 @@ public class refactoringTestBench {
 		KDController.sortNextDraft();
 		KDController.revealNextDraft();		
 		
-		KDController.ChoosNextDomino(game.getCurrentDraft().getIdSortedDomino(3));
+		KDController.chooseNextDomino(game.getCurrentDraft().getIdSortedDomino(3));
 		KDController.preplaceLatestDomino(game.getPlayer(0), 0, 0, "left");
 		
-		KDController.ChoosNextDomino(game.getCurrentDraft().getIdSortedDomino(1));
+		KDController.chooseNextDomino(game.getCurrentDraft().getIdSortedDomino(1));
 		KDController.preplaceLatestDomino(game.getPlayer(1), 0, 0, "left");
 		
-		KDController.ChoosNextDomino(game.getCurrentDraft().getIdSortedDomino(2));
+		KDController.chooseNextDomino(game.getCurrentDraft().getIdSortedDomino(2));
 		KDController.preplaceLatestDomino(game.getPlayer(2), 0, 0, "left");
 		
-		KDController.ChoosNextDomino(game.getCurrentDraft().getIdSortedDomino(0));
+		KDController.chooseNextDomino(game.getCurrentDraft().getIdSortedDomino(0));
 		KDController.preplaceLatestDomino(game.getPlayer(3), 0, 0, "left");
 		
 		View.printDraft(kd);
@@ -56,16 +56,16 @@ public class refactoringTestBench {
 		KDController.sortNextDraft();
 		KDController.revealNextDraft();
 		
-		KDController.ChoosNextDomino(game.getCurrentDraft().getIdSortedDomino(1));
+		KDController.chooseNextDomino(game.getCurrentDraft().getIdSortedDomino(1));
 		KDController.preplaceLatestDomino(game.getPlayer(0), 0, 0, "left");
 		
-		KDController.ChoosNextDomino(game.getCurrentDraft().getIdSortedDomino(3));
+		KDController.chooseNextDomino(game.getCurrentDraft().getIdSortedDomino(3));
 		KDController.preplaceLatestDomino(game.getPlayer(1), 0, 0, "left");
 		
-		KDController.ChoosNextDomino(game.getCurrentDraft().getIdSortedDomino(2));
+		KDController.chooseNextDomino(game.getCurrentDraft().getIdSortedDomino(2));
 		KDController.preplaceLatestDomino(game.getPlayer(2), 0, 0, "left");
 		
-		KDController.ChoosNextDomino(game.getCurrentDraft().getIdSortedDomino(0));
+		KDController.chooseNextDomino(game.getCurrentDraft().getIdSortedDomino(0));
 		KDController.preplaceLatestDomino(game.getPlayer(3), 0, 0, "left");
 		KDController.updatePlayerOrder();
 		
@@ -78,16 +78,16 @@ public class refactoringTestBench {
 		KDController.sortNextDraft();
 		KDController.revealNextDraft();
 		
-		KDController.ChoosNextDomino(game.getCurrentDraft().getIdSortedDomino(0));
+		KDController.chooseNextDomino(game.getCurrentDraft().getIdSortedDomino(0));
 		KDController.preplaceLatestDomino(game.getPlayer(0), 0, 0, "left");
 		
-		KDController.ChoosNextDomino(game.getCurrentDraft().getIdSortedDomino(2));
+		KDController.chooseNextDomino(game.getCurrentDraft().getIdSortedDomino(2));
 		KDController.preplaceLatestDomino(game.getPlayer(1), 0, 0, "left");
 		
-		KDController.ChoosNextDomino(game.getCurrentDraft().getIdSortedDomino(3));
+		KDController.chooseNextDomino(game.getCurrentDraft().getIdSortedDomino(3));
 		KDController.preplaceLatestDomino(game.getPlayer(2), 0, 0, "left");
 		
-		KDController.ChoosNextDomino(game.getCurrentDraft().getIdSortedDomino(1));
+		KDController.chooseNextDomino(game.getCurrentDraft().getIdSortedDomino(1));
 		KDController.preplaceLatestDomino(game.getPlayer(3), 0, 0, "left");
 		KDController.updatePlayerOrder();
 		

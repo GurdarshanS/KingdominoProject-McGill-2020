@@ -464,7 +464,7 @@ public class KDController {
 	 * @return void
 	 */
 	
-	public static void ChoosNextDomino(Domino aDomino){
+	public static void chooseNextDomino(Domino aDomino){
 		
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = kingdomino.getCurrentGame();
@@ -493,6 +493,9 @@ public class KDController {
 			}
 			int currentPlayerIndex=currentColorOrder.indexOf(currentPlayer.getColor());
 			game.setNextPlayer(game.getPlayers().get(currentPlayerIndex+1));
+		}
+		else {
+			game.setNextPlayer(game.getPlayer(0));
 		}
      
 	}

@@ -711,7 +711,7 @@ public class Gameplay
   // line 278 "../../../../../Gameplay.ump"
    public void chooseDomino(Domino domino){
     
-	   KDController.ChoosNextDomino(domino);
+	   KDController.chooseNextDomino(domino);
 	   
   }
 
