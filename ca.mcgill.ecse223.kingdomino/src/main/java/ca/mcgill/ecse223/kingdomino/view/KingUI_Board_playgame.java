@@ -96,6 +96,8 @@ public static void main(String[] args) {
 				
 		);
 		
+		
+		
 		rotate.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				System.out.println("rotating");
