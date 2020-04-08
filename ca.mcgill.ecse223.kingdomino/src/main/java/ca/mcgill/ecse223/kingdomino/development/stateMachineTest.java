@@ -46,6 +46,8 @@ public class stateMachineTest {
 			
 			View.printDominos(kd);
 			View.printDraft(kd);
+			View.printNextRoundPlayerOrder(kd);
+
 			
 			System.out.println("\n===============================================================================================");
 			System.out.println("original state: "+sm.getGamestatusFullName());
@@ -118,7 +120,7 @@ public class stateMachineTest {
 			System.out.println("new state:      "+sm.getGamestatusFullName());
 			System.out.println("===============================================================================================");
 			
-			selected=KDController.chooseSM(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
+			selected=KDController.chooseSM(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
 			System.out.println("\nsuccessfully chosen:  "+selected);
 
 			View.printDraft(kd);
@@ -126,6 +128,8 @@ public class stateMachineTest {
 			
 			ready=KDController.selectionReadySM();	
 			System.out.println("\nall players selected: "+ready);
+			
+			System.out.println(sm.getGamestatusFullName());
 
 		}
 		

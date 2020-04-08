@@ -411,58 +411,58 @@ public class KDController {
 	 * @return void
 //	 */
 //	
-	public static void createNextDraft() {
-		Kingdomino kd = KingdominoApplication.getKingdomino();
-		Game game = kd.getCurrentGame();		
-		
-		
-		if(!KDQuery.isDraftLimitReached()) {
-			Draft newDraft=createOneDraft();
-			
-			newDraft.setDraftStatus(DraftStatus.FaceDown);
-			game.setCurrentDraft(newDraft);
-			changeDraftDominoStatus(newDraft,Domino.DominoStatus.InCurrentDraft);
-
-		}		
-	}
-	
 //	public static void createNextDraft() {
 //		Kingdomino kd = KingdominoApplication.getKingdomino();
 //		Game game = kd.getCurrentGame();		
 //		
-//		if (game.getAllDrafts().size()==0) {
-//			Draft currentDraft=createOneDraft();
-//			currentDraft.setDraftStatus(DraftStatus.FaceDown);
-//			game.setCurrentDraft(currentDraft);
-//			changeDraftDominoStatus(currentDraft,Domino.DominoStatus.InCurrentDraft);
-//
-//			Draft nextDraft = createOneDraft();
-//			nextDraft.setDraftStatus(Draft.DraftStatus.FaceDown);
-//			game.setNextDraft(nextDraft);
-//			changeDraftDominoStatus(nextDraft,Domino.DominoStatus.InNextDraft);	
-//
-//		}
-//		else if (!KDQuery.isDraftLimitReached()) {
-//			
-//			changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
-//			game.setCurrentDraft(game.getNextDraft());
-//			
-//			Draft nextDraft=createOneDraft();
-//			changeDraftDominoStatus(nextDraft,DominoStatus.InNextDraft);
-//			game.setNextDraft(nextDraft);
-//			game.getNextDraft().setDraftStatus(Draft.DraftStatus.FaceDown);
-//
-//		}
-//		else if (KDQuery.isDraftLimitReached()) {
-//			if (game.getNextDraft()!=null) {
-//				changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
-//
-//				game.setCurrentDraft(game.getNextDraft());
-//				game.setNextDraft(null);
-//			}
-//		}
 //		
+//		if(!KDQuery.isDraftLimitReached()) {
+//			Draft newDraft=createOneDraft();
+//			
+//			newDraft.setDraftStatus(DraftStatus.FaceDown);
+//			game.setCurrentDraft(newDraft);
+//			changeDraftDominoStatus(newDraft,Domino.DominoStatus.InCurrentDraft);
+//
+//		}		
 //	}
+	
+	public static void createNextDraft() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		Game game = kd.getCurrentGame();		
+		
+		if (game.getAllDrafts().size()==0) {
+			Draft currentDraft=createOneDraft();
+			currentDraft.setDraftStatus(DraftStatus.FaceDown);
+			game.setCurrentDraft(currentDraft);
+			changeDraftDominoStatus(currentDraft,Domino.DominoStatus.InCurrentDraft);
+
+			Draft nextDraft = createOneDraft();
+			nextDraft.setDraftStatus(Draft.DraftStatus.FaceDown);
+			game.setNextDraft(nextDraft);
+			changeDraftDominoStatus(nextDraft,Domino.DominoStatus.InNextDraft);	
+
+		}
+		else if (!KDQuery.isDraftLimitReached()) {
+			
+			changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
+			game.setCurrentDraft(game.getNextDraft());
+			
+			Draft nextDraft=createOneDraft();
+			changeDraftDominoStatus(nextDraft,DominoStatus.InNextDraft);
+			game.setNextDraft(nextDraft);
+			game.getNextDraft().setDraftStatus(Draft.DraftStatus.FaceDown);
+
+		}
+		else if (KDQuery.isDraftLimitReached()) {
+			if (game.getNextDraft()!=null) {
+				changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
+
+				game.setCurrentDraft(game.getNextDraft());
+				game.setNextDraft(null);
+			}
+		}
+		
+	}
 	
 	public static void sortNextDraft() {
 		
