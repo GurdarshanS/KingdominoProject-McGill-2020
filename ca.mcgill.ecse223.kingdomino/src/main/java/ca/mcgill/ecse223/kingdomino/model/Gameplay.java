@@ -2,10 +2,6 @@
 /*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse223.kingdomino.model;
-import java.util.List;
-
-import ca.mcgill.ecse223.kingdomino.controller.KDController;
-import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
 
 // line 3 "../../../../../Gameplay.ump"
 public class Gameplay
@@ -16,7 +12,6 @@ public class Gameplay
   //------------------------
 
   //Gameplay State Machines
-	
   public enum Gamestatus { Initializing, Playing, Scoring }
   public enum GamestatusInitializing { Null, CreatingFirstDraft, SelectingFirstDomino }
   public enum GamestatusPlaying { Null, CreatingNextDraft, RevealingNextDraft, ManipulatingDomino, ConfirmingChoice, SelectingStandardDomino }
@@ -229,9 +224,6 @@ public class Gameplay
     switch (aGamestatusPlaying)
     {
       case ManipulatingDomino:
-    	 
-    	DominoInKingdom dInK = (DominoInKingdom) player.getKingdom().getTerritory(player.getKingdom().getTerritories().size()-1);
-    	 
         if (!(isThereAvailablePlacement(player,dInK)))
         {
           exitGamestatusPlaying();
@@ -616,29 +608,22 @@ public class Gameplay
    */
   // line 200 "../../../../../Gameplay.ump"
    public boolean isDominoTaken(Domino domino){
-   
-	   return KDQuery.isDominoTaken(domino);
-	   
+    return true;
   }
 
   // line 208 "../../../../../Gameplay.ump"
    public boolean isLastPlayerInTurn(Player player){
-   
-	   return KDQuery.isPlayerLastInDraft(player);
+    return true;
   }
 
   // line 215 "../../../../../Gameplay.ump"
    public boolean isLastTurn(Game game){
-    
-	return game.getAllDrafts().get(game.getAllDrafts().size()-1).equals(game.getCurrentDraft());
-	   
+    return true;
   }
 
   // line 224 "../../../../../Gameplay.ump"
    public boolean hasChosen(Player player){
-	   
-    return player.hasDominoSelection();
-    
+    return true;
   }
 
   // line 231 "../../../../../Gameplay.ump"
@@ -653,19 +638,7 @@ public class Gameplay
 
   // line 245 "../../../../../Gameplay.ump"
    public boolean allPlayersPlayed(Game game){
-    
-	   List<Player> players = game.getPlayers();
-	   
-	   boolean allPlayed = true;
-	   
-	   for(int i = 0; i<players.size(); i++) {
-		   
-		   if(players.get(i).hasDominoSelection()) allPlayed = false;
-		   
-	   }
-	   
-	   return allPlayed;
-	   
+    return true;
   }
 
 
@@ -675,107 +648,77 @@ public class Gameplay
    */
   // line 256 "../../../../../Gameplay.ump"
    public void shuffleDominoPile(){
-  
-	   KDController.shuffleDominoPile();
-	   
+    // TODO: implement this
   }
 
   // line 260 "../../../../../Gameplay.ump"
    public void generateInitialPlayerOrder(){
-    
-	   KDController.generateInitialPlayerOrder();
-	   
+    // TODO: implement this
   }
 
   // line 264 "../../../../../Gameplay.ump"
    public void createNextDraft(){
-    
-	   KDController.createNextDraft();
-	   
+    // TODO: implement this
   }
 
   // line 268 "../../../../../Gameplay.ump"
    public void orderNextDraft(){
-   
-	   KDController.sortNextDraft();
-	   
+    // TODO: implement this
   }
 
   // line 272 "../../../../../Gameplay.ump"
    public void revealNextDraft(){
-   
-	   KDController.revealNextDraft();
-	   
+    // TODO: implement this
   }
 
   // line 278 "../../../../../Gameplay.ump"
    public void chooseDomino(Domino domino){
     
-	   KDController.ChoosNextDomino(domino);
-	   
   }
 
   // line 283 "../../../../../Gameplay.ump"
    public void prePlaceDomino(Player player, int posx, int posy, String dir){
     
-	   KDController.preplaceLatestDomino(player, posx, posy, dir);
-	   
   }
 
   // line 290 "../../../../../Gameplay.ump"
    public void placeLatestDomino(Player player){
     
-	   KDController.placeLatestDomino(player);
-	   
   }
 
   // line 296 "../../../../../Gameplay.ump"
    public void discardLatestDomino(Player player){
-   
-	   KDController.discardLatestDomino(player);
-	   
+    
   }
 
   // line 302 "../../../../../Gameplay.ump"
    public void updatePlayerScore(Player player){
     
-	   KDController.calculateIndividualPlayerScore(player);
-	   
   }
 
   // line 308 "../../../../../Gameplay.ump"
    public void calculateAllPlayerScores(Game game){
-	   
-	   KDController.calculateAllPlayerScore(game);
-	   
+    
   }
 
   // line 315 "../../../../../Gameplay.ump"
    public void calculatePlayerRanking(Game game){
     
-	   KDController.calculatePlayerRanking();
-	   
   }
 
   // line 321 "../../../../../Gameplay.ump"
    public void rotateLatestDomino(Player player, String direction){
-	   
-	   KDController.rotateLatestDomino(player, direction);
     
   }
 
   // line 327 "../../../../../Gameplay.ump"
    public void moveLatestDomino(Player player, String movement){
     
-	   KDController.moveLatestDomino(player, movement);
-	   
   }
 
   // line 332 "../../../../../Gameplay.ump"
    public void updatePlayerOrder(){
     
-	   KDController.updatePlayerOrder();
-	   
   }
 
 }
