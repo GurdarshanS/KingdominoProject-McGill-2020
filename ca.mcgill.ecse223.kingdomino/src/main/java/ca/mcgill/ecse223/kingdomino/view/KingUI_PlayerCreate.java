@@ -1,12 +1,14 @@
 package ca.mcgill.ecse223.kingdomino.view;
 
 import javax.swing.JLabel;
+
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
+import ca.mcgill.ecse223.kingdomino.controller.KDController;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -33,13 +35,18 @@ public class KingUI_PlayerCreate extends JFrame {
 	private int textH;
 	private JLabel name;
 	private JTextField insertName;
-
+	private JLabel label;
+	private JButton done;
+	private JButton back;
+	private Border border;
+	private String input;
 	
 	public KingUI_PlayerCreate(){
 		
-		userInterface();
+		initComponents();
+		
 	}
-	public void userInterface() {
+	public void initComponents() {
 		WIDTH = 950;
 		HEIGHT = 800;
 		textW = textH = 75;
@@ -54,8 +61,8 @@ public class KingUI_PlayerCreate extends JFrame {
 		this.getContentPane().setBackground(Color.LIGHT_GRAY);
 		
 		// back button
-		JButton back = new JButton("BACK");
-		back.setFont(new Font("Times", Font.BOLD, 15));
+		back = new JButton("BACK");
+		back.setFont(new Font("Times", Font.BOLD, 20));
 		back.setBounds(0, 0, textW*2, textH);
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -63,26 +70,27 @@ public class KingUI_PlayerCreate extends JFrame {
 			}
 		});
 		// create name
-		JButton done = new JButton("CREATE");
-		done.setFont(new Font("Times", Font.BOLD, 15));
+		done = new JButton("CREATE");
+		done.setFont(new Font("Times", Font.BOLD, 20));
 		done.setBounds(WIDTH/2-textW, HEIGHT-100, textW*2, textH);
 		done.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				input = insertName.getText();
+				KDController.provideUserProfile(input);
 			}
 		});
 		// box with info
-		Border border = BorderFactory.createLineBorder(Color.BLACK, 3);
+		border = BorderFactory.createLineBorder(Color.BLACK, 3);
 		name = new JLabel("Insert Username Below", SwingConstants.CENTER);
 		name.setText("Create User Profile");
 		name.setBorder(border);
-		name.setFont(new Font("Times", Font.BOLD, 20));
+		name.setFont(new Font("Times", Font.BOLD, 40));
 		name.setBounds(WIDTH/2-200, textH/2, 400, 400);
 		
-		JLabel label = new JLabel("label", SwingConstants.CENTER);
-		label.setText("Insert a username");
-		label.setFont(new Font("Times", Font.BOLD, 15));
-		label.setBounds(WIDTH/2, HEIGHT+textH/2, 400, 400);
+		label = new JLabel("label", SwingConstants.CENTER);
+		label.setText("Insert Username");
+		label.setFont(new Font("Times", Font.BOLD, 20));
+		label.setBounds(WIDTH/2-200, HEIGHT/4+textH-textH/5, 400, 400);
 		
 		// text box
 		insertName = new JTextField();
