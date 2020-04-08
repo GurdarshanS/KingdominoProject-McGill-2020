@@ -10,13 +10,14 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
+import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
+import ca.mcgill.ecse223.kingdomino.development.View;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -38,18 +39,12 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
+
 public class CreateNextDraftStep {
-	/**
-	 * These methods test the creation
-	 * of next draft using state machine
-	 * @see InitializingGame.feature
-	 * @author Jing Han 260528152
-	 */
 	
 	private static Kingdomino kd = KingdominoApplication.getKingdomino();
 	private static List<Integer> prevNextIds=new ArrayList<Integer>();
 	
-
 	@Given("the game is initialized to create next draft")
 	public static void game_initialized_to_create_next_draft() {
 		int numPlayers=4;
@@ -94,19 +89,21 @@ public class CreateNextDraftStep {
 		
 		for (int i=0;i<kd.getCurrentGame().getAllDominos().size()-1;i++) {
 			kd.getCurrentGame().getAllDomino(i).setNextDomino(kd.getCurrentGame().getAllDomino(i+1));
-		}
-		
-		KDController.createNextDraft();
-		
-		
-		for (Domino d:kd.getCurrentGame().getNextDraft().getIdSortedDominos()) prevNextIds.add(d.getId());
+		}		
 		
 	}
 	
 	@Given("there has been {int} drafts created")
 	public static void there_has_been_x_drafts(Integer x) {
-		int draftNum=kd.getCurrentGame().getAllDrafts().size();
-		assertEquals(x.intValue(),draftNum);
+		for (int i=0;i<x-1;i++) {
+			KDController.createNextDraft();	
+		}
+		
+		for (Domino d:kd.getCurrentGame().getNextDraft().getIdSortedDominos()) {
+			prevNextIds.add(d.getId());
+		}
+
+		System.out.println("number of drafts in game: "+kd.getCurrentGame().getAllDrafts().size());
 	}
 	
 	@Given("there is a current draft")
@@ -137,16 +134,40 @@ public class CreateNextDraftStep {
 	}
 	
 	@When("create next draft is initiated")
-	public static void create_next_draft_initiated() {
-		KDController.draftReadySM();
+	public static void create_next_draft() {
 		
-//		these lines below manually satisfies the guard hasAllPlayersChosen() is satisfied
-		KDController.chooseSM(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
-		KDController.chooseSM(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
-		KDController.chooseSM(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
-		KDController.chooseSM(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
+		List<Domino> currentDraftDominos=kd.getCurrentGame().getCurrentDraft().getIdSortedDominos();
+		Domino stopDomino=currentDraftDominos.get(currentDraftDominos.size()-1);
+		int stopIndex=kd.getCurrentGame().getAllDominos().indexOf(stopDomino);
 		
-		KDController.selectionReadySM();
+		
+		
+		
+		
+		for (int i=0;i<kd.getCurrentGame().getPlayers().size();i++) {
+			DominoSelection tmp=new DominoSelection(kd.getCurrentGame().getPlayer(i),kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(i),kd.getCurrentGame().getCurrentDraft());
+		}
+		
+		boolean created=false;
+		if (kd.getCurrentGame().getAllDrafts().size()==2) {
+			kd.getStateMachine().setGamestatus("SelectingFirstDomino");		
+			created=KDController.selectionReadySM();
+		}
+		else if (kd.getCurrentGame().getAllDrafts().size()>2) {
+			kd.getStateMachine().setGamestatus("SelectingStandardDomino");
+			created=KDController.nextSelectionReadySM();
+		}
+		
+		for (int i=0;i<=stopIndex;i++) {
+			kd.getCurrentGame().getAllDomino(i).setStatus(DominoStatus.Excluded);
+		}
+		
+		System.out.println("state machine: "+kd.getStateMachine().getGamestatusFullName());
+		System.out.println("all players chosen: "+KDQuery.hasAllPlayersChosen());
+		System.out.println("next draft created: "+created);
+		View.printDominos(kd);
+		
+
 	}
 	
 	@Then("a new draft is created from dominoes {string}")
@@ -211,11 +232,37 @@ public class CreateNextDraftStep {
 	
 	@Then("the former next draft is now the current draft")
 	public static void former_next_is_now_current() {
+		System.out.println("prevNextIds: ");
+		System.out.println(prevNextIds);
 		List<Integer> nowCurrentIds=new ArrayList<Integer>();
 		for (Domino d:kd.getCurrentGame().getCurrentDraft().getIdSortedDominos()) nowCurrentIds.add(d.getId());
 		assertEquals(prevNextIds,nowCurrentIds);
 	}
-
 	
-
+	@Given("this is a {int} player game")
+	public static void this_is_a_x_player_game(int playerNum) {
+		prevNextIds.clear();
+		List<String> selectedBonusOptions = new ArrayList<String>();
+		
+		try{
+			KDController.setGameOptions(playerNum, selectedBonusOptions);
+			int dominoNums=kd.getCurrentGame().getMaxPileSize();
+			KDController.createDominoPile(kd.getCurrentGame(),dominoNums);
+			KDController.createPlayers();
+			
+		}
+		catch(Exception e) {}
+	}
+	
+	@Then("the pile is empty")
+	public static void pile_is_empty() {
+		
+		
+		assertEquals(true,KDQuery.isDominoPileEmpty());
+	}
+	
+	@Then("there is no next draft")
+	public static void no_next_draft() {
+		assertEquals(false,kd.getCurrentGame().hasNextDraft());
+	}
 }

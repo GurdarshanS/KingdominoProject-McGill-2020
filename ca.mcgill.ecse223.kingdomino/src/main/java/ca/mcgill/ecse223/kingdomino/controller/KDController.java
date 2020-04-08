@@ -39,6 +39,11 @@ public class KDController {
 		return sm.selectionReady();
 	}
 	
+	public static boolean nextSelectionReadySM() {
+		Gameplay sm = KingdominoApplication.getStateMachine();
+		return sm.nextSelectionReady();
+	}
+	
 	/**
 	 * 
 	 * loads a saved Kingdomino object from memory if exists
@@ -454,6 +459,7 @@ public class KDController {
 
 		}
 		else if (KDQuery.isDraftLimitReached()) {
+			System.out.println("##################### limit reached#####################");
 			if (game.getNextDraft()!=null) {
 				changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
 

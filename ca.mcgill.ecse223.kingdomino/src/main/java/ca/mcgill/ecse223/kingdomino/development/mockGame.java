@@ -46,7 +46,7 @@ public class mockGame {
 			KDController.generateInitialPlayerOrder();
 
 		}
-		catch(Exception e) {}
+		catch(Exception e) {System.out.println("excepted");}
 		
 //		System.out.println(kd.getCurrentGame().getTopDominoInPile().getId());
 //		System.out.println("--------");

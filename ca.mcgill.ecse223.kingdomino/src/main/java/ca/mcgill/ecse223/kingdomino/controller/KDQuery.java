@@ -292,7 +292,7 @@ public class KDQuery {
 		
 		int counter=0;
 		for (Domino d:dominoPile) {
-			if (d.getStatus().equals(DominoStatus.InPile)||d.getStatus().equals(DominoStatus.InCurrentDraft)) {
+			if (d.getStatus().equals(DominoStatus.InPile)||d.getStatus().equals(DominoStatus.InNextDraft)) {
 				counter+=1;
 			}
 		}
