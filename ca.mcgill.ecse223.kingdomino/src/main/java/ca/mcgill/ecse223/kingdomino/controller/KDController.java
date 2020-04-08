@@ -525,6 +525,7 @@ public class KDController {
 			return;
 		}
 		
+		aDomino.setStatus(DominoStatus.Excluded);
 		DominoSelection currentSelection = new DominoSelection(currentPlayer,aDomino,currentDraft);
 		
 		updateNextPlayer(currentPlayer);

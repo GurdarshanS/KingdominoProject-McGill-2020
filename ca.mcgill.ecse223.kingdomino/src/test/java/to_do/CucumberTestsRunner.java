@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
 		plugin = "pretty", 
-//		features = "src/test/resources",
-		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features/InitializingGame.feature",
+//		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features",
+		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features/CreateNextDraft.feature",
 		glue = "ca.mcgill.ecse223.kingdomino.features")
 public class CucumberTestsRunner {
 }

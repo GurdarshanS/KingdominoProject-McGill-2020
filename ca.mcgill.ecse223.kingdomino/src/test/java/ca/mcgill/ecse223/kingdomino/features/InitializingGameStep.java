@@ -151,6 +151,8 @@ public class InitializingGameStep {
 		boolean hasNextDraft=kd.getCurrentGame().hasNextDraft();
 		boolean isFacedown=kd.getCurrentGame().getNextDraft().getDraftStatus().equals(DraftStatus.FaceDown);
 		assertEquals(true,(hasNextDraft&&isFacedown));
+		
+		kd.removeStateMachine();
 	}
 	
 	

@@ -51,7 +51,7 @@ public class Kingdomino implements Serializable
   }
   
   public void removeStateMachine() {
-	  this.sm=null;
+	  if (this.sm!=null)  this.sm=null;
   }
   
 
