@@ -1,3 +1,4 @@
+package to_do;
 //package ca.mcgill.ecse223.kingdomino.features;
 //
 //import static org.junit.Assert.assertEquals;
@@ -25,42 +26,37 @@
 //
 //import ca.mcgill.ecse223.kingdomino.features.CucumberCleanUp;
 //
-//public class CalculateBonusScoresStep {
+//public class CalculatePlayerScoreStep {
 //	
 //	 /**
-//	 * These methods calculates Player BonusScore
+//	 * These methods calculates Player totalScore
 //	 * based on the Kingdom layout and bonus options
-//	 * @see CalculateBonusScores.feature
+//	 * @see CalculatePlayerScore.feature
 //	 * @author Eric Guan 260930210, refactored by Jing Han 260528152
 //	 */
 //	
-//	@Given("the game is initialized for calculate bonus scores")
-//	public static void initiate_game_for_calculate_bonus_score() {
+//	@Given("the game is initialized for calculate player score")
+//	public static  void initialize_game_for_calculate_player_score() {
 //		 KDController.initiateEmptyGame();
 //	}
-//	@Given("Middle Kingdom is selected as bonus option")
-//	public static void middle_kingdom_is_selected() {
+//	
+//	@Given("the game has {string} bonus option")
+//	public static void game_has_x_bonus_option(String option) {
 //		 Kingdomino kd = KingdominoApplication.getKingdomino();
-//		 kd.addBonusOption("MiddleKingdom");
+//		 kd.addBonusOption(option);
 //	}
 //	
-//	@Given("Harmony is selected as bonus option")
-//	public static void harmony_is_selected() {
-//		 Kingdomino kd = KingdominoApplication.getKingdomino();
-//		 kd.addBonusOption("Harmony");
-//	}
-//	
-//	@When ("calculate bonus score is initiated")
-//	public static void initiate_bonus_score() {
+//	@When("calculate player score is initiated")
+//	public static void initiate_player_score_calculation() {
 //		 Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
-//		 KDController.calculateBonusScore(player);
+//		 KDController.calculatePlayerScore(player);
 //	}
 //	
-//	@Then("the bonus score should be {int}")
-//	public static void bonus_score_should_be(Integer expectedScore) {
+//	@Then("the total score should be {int}")
+//	public static void check_resulting_score(Integer expectedScore) {
 //		 Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
-//		 int actualScore=player.getBonusScore();
-//		 assertEquals(expectedScore.intValue(),actualScore);
+//		 int totalScore=player.getTotalScore();
+//		 assertEquals(expectedScore.intValue(),totalScore);
 //	}
 //
 //}

@@ -1,3 +1,4 @@
+package to_do;
 //package ca.mcgill.ecse223.kingdomino.features;
 //
 //import static org.junit.Assert.assertEquals;
@@ -25,28 +26,28 @@
 //
 //import ca.mcgill.ecse223.kingdomino.features.CucumberCleanUp;
 //
-//
-//public class VerifyNeighborAdjacencyStep {
+//public class VerifyCastleAdjacencyStep {
 //	
 //	/**
 //	 * These methods checks if current domino 
-//	 * has at least one adjacent tile with same terrain type
-//	 * @see VerifyNeighborAdjacency.feature
+//	 * placement is adjacent to the castle
+//	 * @see VerifyCastleAdjacency.feature
 //	 * @author Jing Han 260528152
 //	 */
-//		
-//	@When("the game is initialized for neighbor adjacency")
-//	public static void initialize_game_for_neighbor_adjacency() {
+//	
+//	@Given("the game is initialized for castle adjacency")
+//	public static void initialize_game_for_castle_adjacency() {
+////		KDController.initiateEmptyGame();
 //		KDController.initiateEmptyGame();
 //	}
 //	
-//	@When("check current preplaced domino adjacency is initiated")
-//	public static void initialize_neighbor_adjacency_verification() {
-//		KDController.verifyNeighborAdjacencyLastTerritory(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
+//	@When("check castle adjacency is initiated")
+//	public static void initiate_castle_adjacency_check() {
+//		KDController.verifyCastleAdjacency(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
 //	}
-//	
-//	@Then("the current-domino\\/existing-domino adjacency is {string}")
-//	public static void get_neighbor_adjacency_verification_result(String expectedValidity) {
+//
+//	@Then("the castle\\/domino adjacency is {string}")
+//	public void get_castle_adjacency_verification_result(String expectedValidity) {
 //		String validity=KDController.getKingdomVerificationResult(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
 //		assertEquals(expectedValidity,validity);
 //	}

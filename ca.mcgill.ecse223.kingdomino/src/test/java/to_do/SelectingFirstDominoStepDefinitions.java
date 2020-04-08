@@ -1,4 +1,4 @@
-package ca.mcgill.ecse223.kingdomino.features;
+package to_do;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

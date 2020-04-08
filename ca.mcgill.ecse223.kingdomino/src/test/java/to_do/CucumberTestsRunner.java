@@ -1,4 +1,4 @@
-package ca.mcgill.ecse223.kingdomino.features;
+package to_do;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;

@@ -1,3 +1,4 @@
+package to_do;
 //package ca.mcgill.ecse223.kingdomino.features;
 //
 //import static org.junit.Assert.assertEquals;

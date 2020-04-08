@@ -1,4 +1,6 @@
+package to_do;
 //package ca.mcgill.ecse223.kingdomino.features;
+//
 //import static org.junit.Assert.assertEquals;
 //
 //import java.io.BufferedReader;
@@ -24,38 +26,28 @@
 //
 //import ca.mcgill.ecse223.kingdomino.features.CucumberCleanUp;
 //
-//public class VerifyGridSizeStep {
+//public class VerifyNoOverlappingStep {
 //	
 //	/**
-//	 * These methods checks if a player's kingdom 
-//	 * respects the maximum grid size of 5x5 
-//	 * @see VerifyGridSize.feature
+//	 * These methods checks if dominos overlap
+//	 * @see VerifyNoOverlapping.feature
 //	 * @author Jing Han 260528152
-//	 */ 
+//	 */
 //	
-//	
-//	@Given("the game is initialized for verify grid size")
-//	public void the_game_is_initialized_for_verify_grid_size() {
-//		KDController.initiateEmptyGame(); 
+//	@Given("the game is initialized to check domino overlapping")
+//	public void the_game_is_initialized_to_check_domino_overlapping() {
+//		KDController.initiateEmptyGame();
 //	}
-//	
-//	@When("validation of the grid size is initiated")
-//	public void initiate_player_kingdom_grid_size_validation() {
-//		KDController.verifyGridSizeAllKingdom(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
+//
+//	@When("check current preplaced domino overlapping is initiated")
+//	public void initiate_domino_overlap_verification() {
+//		KDController.verifyNoOverlapLastTerritory(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
 //	}
-//	
-//	@Then("the grid size of the player's kingdom shall be {string}")
-//	public void get_kingdom_gridsize_validation_result(String expectedValidity) {
+//
+//	@Then("the current-domino\\/existing-domino overlapping is {string}")
+//	public void get_domino_overlap_verification_result(String expectedValidity) {
 //		String validity=KDController.getKingdomVerificationResult(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer());
 //		assertEquals(expectedValidity,validity);
 //	}
-//	
-//	@Given("the  player preplaces domino {int} to their kingdom at position {int}:{int} with direction {string}")
-//	public void the_player_preplaces_these_dominos_in_kingdom(Integer id, Integer posx, Integer posy, String dir) {
-//		Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
-//		Domino dominoToPlace = KDController.getdominoByID(id);
-//		KDController.prePlaceDomino(player, dominoToPlace, posx, posy, dir);
-//	}
-////
 //
 //}
