@@ -50,6 +50,10 @@ public class Kingdomino implements Serializable
 	  this.sm=new Gameplay();
   }
   
+  public void removeStateMachine() {
+	  this.sm=null;
+  }
+  
 
   //------------------------
   // INTERFACE
