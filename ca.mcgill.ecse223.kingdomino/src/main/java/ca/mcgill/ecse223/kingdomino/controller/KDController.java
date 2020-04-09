@@ -1033,6 +1033,9 @@ public class KDController {
 		List<Integer> testCoord1=new ArrayList<Integer>(Arrays.asList(testDomino.getX(),testDomino.getY()));
 		List<Integer> testCoord2=new ArrayList<Integer>(Arrays.asList(rightCoord[0],rightCoord[1]));
 		
+		if (testCoord1.get(0)==0 && testCoord1.get(1)==0) return false;
+		if (testCoord2.get(0)==0 && testCoord2.get(1)==0) return false;
+		
 		if (castleNeighborhood.contains(testCoord1)) {
 			return true;
 		}
