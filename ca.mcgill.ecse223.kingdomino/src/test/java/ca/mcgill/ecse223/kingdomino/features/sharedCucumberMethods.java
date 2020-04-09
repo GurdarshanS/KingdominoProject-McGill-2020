@@ -133,6 +133,7 @@ public class sharedCucumberMethods {
 		
 	}
 	
+
 	@Given("{string}'s kingdom has following dominoes:")
 	public void s_kingdom_has_following_dominoes(String string, io.cucumber.datatable.DataTable dataTable) {
 	

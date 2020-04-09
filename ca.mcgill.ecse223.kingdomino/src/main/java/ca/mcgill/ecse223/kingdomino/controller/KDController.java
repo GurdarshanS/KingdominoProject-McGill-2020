@@ -1482,6 +1482,80 @@ public class KDController {
 		
 	}
 	
+	/**
+	 * 
+	 * This method returns the list of users
+	 * in alphabetical order
+	 * 
+	 * @see  - ProvideUserProfile.feature
+	 * @author Keon Olszewski 260927813
+	 * @param void
+	 * @return listToBrowse
+	 */
+	
+	public static List<User> BrowseUserList() {
+		
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		
+		List<User> userList = kingdomino.getUsers();
+		List<User> listToBrowse = new ArrayList<User>();
+		String userNames[] = new String[userList.size()];
+		
+		for(int i = 0; i < userNames.length; i ++) {
+			
+			String name = userList.get(i).getName();
+			userNames[i] = name;
+			
+			}
+		
+		Arrays.sort(userNames);
+		
+		for(int i = 0; i < userNames.length; i ++) {
+		listToBrowse.add(i, getUserByName(userNames[i]));
+			}
+		
+		return listToBrowse;
+		
+	}
+	
+	/**
+	 * 
+	 * this method returns a given user
+	 * for checking their statistics
+	 * 
+	 * @see  - ProvideUserProfile.feature
+	 * @author Keon Olszewski 260927813
+	 * @param username
+	 * @return currentUser
+	 */
+	
+	
+	public static User queryUser(String username) {
+		
+		User currentUser = getUserByName(username);
+		return currentUser;
+	}
+	
+	/**
+	 * 
+	 * This method gets gets a user by Name
+	 * 
+	 * @param userName
+	 * @return userList
+	 */
+	
+	public static User getUserByName(String username) {
+		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+		List<User> userList = kingdomino.getUsers();
+		
+		for(int i = 0; i< userList.size(); i++) {
+			
+			if(userList.get(i).getName().equals(username)) return userList.get(i);
+		}
+		
+		return null;
+	}
+	
 	////////////////////////////////////////
 	/// ---- Private Helper Methods ---- ///
 	////////////////////////////////////////

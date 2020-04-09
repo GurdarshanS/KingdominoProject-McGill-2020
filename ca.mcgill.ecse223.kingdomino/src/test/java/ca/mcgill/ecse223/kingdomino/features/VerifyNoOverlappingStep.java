@@ -42,7 +42,6 @@ public class VerifyNoOverlappingStep {
 	@When("check current preplaced domino overlapping is initiated")
 	public void initiate_domino_overlap_verification() {
 		Player player=KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
-		View.printPlayerKingdom(player);
 
 		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
 		if (territories.size()==1) {
