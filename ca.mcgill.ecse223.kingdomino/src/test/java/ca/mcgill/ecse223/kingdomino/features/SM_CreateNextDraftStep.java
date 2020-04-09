@@ -40,7 +40,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 
-public class CreateNextDraftStep {
+public class SM_CreateNextDraftStep {
 	
 	private static Kingdomino kd = KingdominoApplication.getKingdomino();
 	private static List<Integer> prevNextIds=new ArrayList<Integer>();

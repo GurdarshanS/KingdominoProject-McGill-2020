@@ -42,7 +42,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
 
-public class SelectingAndSelectingFirstDominoStep {
+public class SM_SelectingAndSelectingFirstDominoStep {
 	
 	private static Kingdomino kd = KingdominoApplication.getKingdomino();
 	private static boolean chosen;

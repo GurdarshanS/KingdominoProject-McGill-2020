@@ -39,7 +39,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 
-public class InitializingGameStep {
+public class SM_InitializingGameStep {
 	
 	/**
 	 * These methods test the initialization

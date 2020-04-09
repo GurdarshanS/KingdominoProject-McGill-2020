@@ -42,7 +42,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 
-public class ResolveTieBreakStep {
+public class SM_ResolveTieBreakStep {
 
 		private static Kingdomino kd = KingdominoApplication.getKingdomino();
 		
