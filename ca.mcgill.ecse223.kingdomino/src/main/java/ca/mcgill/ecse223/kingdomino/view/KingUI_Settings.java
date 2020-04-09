@@ -213,12 +213,15 @@ public class KingUI_Settings extends JFrame{
 				}
 				
 				if(reg.isSelected()) {
+					KingUI_Main.c1.show(KingUI_Main.contPanel, "3");
 					System.out.println("regular selected");
 				} else if(dyn.isSelected()) {
 					System.out.println("dynasty selected");
 				} else if(mighty.isSelected()) {
 					System.out.println("mighty selected");
 				}
+				KingUI_PlayerCreate.initComponents();
+				KingUI_Main.c1.show(KingUI_Main.contPanel, "3");
 			}
 		});
 		

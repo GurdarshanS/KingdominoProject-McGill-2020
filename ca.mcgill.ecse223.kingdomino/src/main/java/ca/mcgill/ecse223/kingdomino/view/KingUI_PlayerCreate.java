@@ -30,50 +30,31 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class KingUI_PlayerCreate extends JFrame {
 	
-
-	private JLabel name;
-	private JTextField insertName;
-	private JLabel label;
-	private JButton done;
-	private JButton back;
-	private Border border;
-	private String input;
-	
-	public static JFrame frame = new JFrame("Kingdomino");
-	public static JPanel contPanel = new JPanel();
-	public static CardLayout c1 = new CardLayout();
-	
 	public KingUI_PlayerCreate(){
 		
 		initComponents();
 		
 	}
-	public void initComponents() {
+	public static void initComponents() {
 		
 		// Layout Manager
 		//Container c =  getContentPane();
 		//setLayout(new GroupLayout(c));
 		
 		// Swing components
-		frame.setSize(WIDTH, HEIGHT);
-		frame.setTitle("Create your account");
-		frame.getContentPane().setBackground(Color.LIGHT_GRAY);
+		JLabel name;
+		JTextField insertName;
+		JLabel label;
+		JButton done;
+		JButton back;
+		Border border;
 		
 		// back button
 		back = new JButton("Back");
 		back.setFont(new Font("Times", Font.BOLD, 16));
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// return to main page
-			}
-		});
-		// create name
-		done = new JButton("Create");
-		done.setFont(new Font("Times", Font.BOLD, 16));
-		done.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				input = insertName.getText();
-				KDController.provideUserProfile(input);
+				KingUI_Main.c1.show(KingUI_Main.contPanel, "2");
 			}
 		});
 		// title
@@ -91,6 +72,16 @@ public class KingUI_PlayerCreate extends JFrame {
 		// text box
 		insertName = new JTextField();
 		
+		// create name
+		done = new JButton("Create");
+		done.setFont(new Font("Times", Font.BOLD, 16));
+		done.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String input = insertName.getText();
+				KDController.provideUserProfile(input);
+			}
+		});
+		
 		// Add
 		//c.add(back);
 		//c.add(done);
@@ -98,15 +89,11 @@ public class KingUI_PlayerCreate extends JFrame {
 		//c.add(name);
 		//c.add(label);
 		
-		JPanel p = new JPanel();
-		GroupLayout layout = new GroupLayout(p);
-		p.setLayout(layout);
+		JPanel p2 = new JPanel();
+		GroupLayout layout = new GroupLayout(p2);
+		p2.setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-		contPanel.add(p);
-		contPanel.setLayout(c1);
-		c1.show(contPanel, "1");
-		frame.add(contPanel);
 		
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
@@ -139,16 +126,7 @@ public class KingUI_PlayerCreate extends JFrame {
 						)
 				)
 		);
-	}
-	public static void main(String[] args) {
-		
-		SwingUtilities.invokeLater(new Runnable() {
-		
-			public void run() {
-				new KingUI_PlayerCreate().frame.setVisible(true);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			}
-		});
+		KingUI_Main.contPanel.add(p2, "3");
 	}
 }
 
