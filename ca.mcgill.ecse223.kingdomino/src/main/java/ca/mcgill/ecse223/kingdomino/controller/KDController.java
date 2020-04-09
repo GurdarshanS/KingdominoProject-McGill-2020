@@ -23,6 +23,11 @@ public class KDController {
 		sm.setGamestatus("CreatingFirstDraft");
 	}
 	
+	public static boolean placeSM() {
+		Gameplay sm = KingdominoApplication.getStateMachine();
+		return sm.place();
+	}
+	
 	public static boolean draftReadySM() {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		boolean complete=sm.draftReady();
@@ -531,7 +536,7 @@ public class KDController {
 			return;
 		}
 		
-		aDomino.setStatus(DominoStatus.Excluded);
+//		aDomino.setStatus(DominoStatus.Excluded);
 		DominoSelection currentSelection = new DominoSelection(currentPlayer,aDomino,currentDraft);
 		
 		updateNextPlayer(currentPlayer);
@@ -554,57 +559,7 @@ public class KDController {
 		}
 	}
 	
-//	public static void ChoosNextDomino(Domino aDomino){
-//				
-//		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-//		Game game = kingdomino.getCurrentGame();
-//		Draft currentDraft = game.getCurrentDraft();
-//		Player currentPlayer = game.getNextPlayer();
-//		
-//		if (!currentDraft.getIdSortedDominos().contains(aDomino) || aDomino.hasDominoSelection()) {
-//			return;
-//		}
-//		
-//		List<Player> allPlayers = game.getPlayers();
-//		int currentPlayerIndex=-1;
-//		
-//		for (int i=0;i<allPlayers.size();i++) {
-//			Player testPlayer=allPlayers.get(i);
-//			if (testPlayer.getColor().equals(currentPlayer.getColor())) {
-//				currentPlayerIndex=i;
-//				break;
-//			}
-//		}
-//		
-//		DominoSelection currentSelection;
-//		if (!currentPlayer.hasDominoSelection()) {
-//			currentSelection = currentDraft.addSelection(currentPlayer, aDomino);
-//			}
-//		else {
-//			currentSelection=currentPlayer.getDominoSelection();
-//		}
-//		
-//		aDomino.setDominoSelection(currentSelection);      
-//        
-//        if (!(currentPlayerIndex==allPlayers.size()-1)) {
-//        	game.setNextPlayer(allPlayers.get(currentPlayerIndex+1));
-//        }
-//        
-//		boolean allChosen=true;
-//		for (Domino d:currentDraft.getIdSortedDominos()) {
-//			if (!d.hasDominoSelection()){
-//				allChosen=false;
-//				break;
-//			}
-//		}
-//		
-//		if (allChosen) {
-//			rearrangePlayerOrder();
-//		}
-//        
-//        
-//		
-//	}
+
 	
 	/**
 	 * 

@@ -16,6 +16,7 @@ import java.util.Map;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
+import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -158,3 +159,174 @@ public class InitializingGameStep {
 	
 
 }
+
+
+
+
+///**
+// * Guards
+// */
+//// line 219 "../../../../../Gameplay.ump"
+// public boolean isCurrentPlayerTheLastInTurn(){
+//	   Kingdomino kd = KingdominoApplication.getKingdomino();
+//	   Game game=kd.getCurrentGame();
+//	   Player player=game.getNextPlayer();
+//	   return KDQuery.isCurrentPlayerTheLastInTurn(player);
+//}
+//
+//// line 220 "../../../../../Gameplay.ump"
+// public boolean isCurrentTurnTheLastInGame(){
+//	   return KDQuery.isCurrentTurnTheLastInGame();
+//}
+//
+//// line 221 "../../../../../Gameplay.ump"
+// public boolean isDominoTaken(Domino domino){
+//	   return KDQuery.isDominoTaken(domino);
+//}
+//
+//// line 222 "../../../../../Gameplay.ump"
+// public boolean hasAllPlayersChosen(){
+//	   return KDQuery.hasAllPlayersChosen();
+//}
+//
+//// line 223 "../../../../../Gameplay.ump"
+// public boolean isThereAvailablePlacement(){
+//	   Kingdomino kd = KingdominoApplication.getKingdomino();
+//	   Game game=kd.getCurrentGame();
+//	   Player player=game.getNextPlayer();
+//	   List<KingdomTerritory> territories = player.getKingdom().getTerritories();
+//	   DominoInKingdom dInK = (DominoInKingdom) territories.get(territories.size()-1);
+//	   
+//	   return KDQuery.isThereAvailablePlacement(player, dInK);
+//}
+//
+//// line 224 "../../../../../Gameplay.ump"
+// public boolean verifyDomino(){
+//	   Kingdomino kd = KingdominoApplication.getKingdomino();
+//	   Game game=kd.getCurrentGame();
+//	   Player player=game.getNextPlayer();
+//	   List<KingdomTerritory> territories = player.getKingdom().getTerritories();
+//	   DominoInKingdom dInK = (DominoInKingdom) territories.get(territories.size()-1);
+//	   
+//	   return KDQuery.verifyDominoInKingdom(player, dInK);
+//}
+//
+//// line 225 "../../../../../Gameplay.ump"
+// public boolean isDominoPileEmpty(){
+//	   return KDQuery.isDominoPileEmpty();
+//}
+//
+//// line 226 "../../../../../Gameplay.ump"
+// public boolean hasAllPlayersPlayed(){
+//	   return KDQuery.hasAllPlayersPlayed();
+//}
+//
+//
+///**
+// * You may need to add more guards here
+// * Actions
+// */
+//// line 232 "../../../../../Gameplay.ump"
+// public void shuffleDominoPile(){
+//	   KDController.shuffleDominoPile();
+//}
+//
+//// line 233 "../../../../../Gameplay.ump"
+// public void createNextDraft(){
+//	   KDController.createNextDraft();
+//}
+//
+//// line 234 "../../../../../Gameplay.ump"
+// public void orderNextDraft(){
+//	   KDController.sortNextDraft();
+//}
+//
+//// line 235 "../../../../../Gameplay.ump"
+// public void revealNextDraft(){
+//	   KDController.revealNextDraft();
+//}
+//
+//// line 236 "../../../../../Gameplay.ump"
+// public void generateInitialPlayerOrder(){
+//	   KDController.generateInitialPlayerOrder();
+//}
+//
+//// line 237 "../../../../../Gameplay.ump"
+// public void chooseDomino(Domino domino){
+//	   KDController.chooseNextDomino(domino);
+//}
+//
+//// line 238 "../../../../../Gameplay.ump"
+// public void updatePlayerOrder(){
+//	   KDController.updatePlayerOrder();
+//}
+//
+//// line 239 "../../../../../Gameplay.ump"
+// public void updatePlayerScore(){
+//	   Kingdomino kd = KingdominoApplication.getKingdomino();
+//	   Game game=kd.getCurrentGame();
+//	   Player player=game.getNextPlayer();
+//
+//	   KDController.calculateIndividualPlayerScore(player);
+//}
+//
+//// line 240 "../../../../../Gameplay.ump"
+// public void preplaceLatestDomino(int posx, int posy, String dir){
+//  
+//	   Kingdomino kd = KingdominoApplication.getKingdomino();
+//	   Game game=kd.getCurrentGame();
+//	   Player player=game.getNextPlayer();   
+//	   KDController.preplaceLatestDomino(player, posx, posy, dir);
+//}
+//
+//// line 241 "../../../../../Gameplay.ump"
+// public void rotateLatestDomino(String dir){
+//	   Kingdomino kd = KingdominoApplication.getKingdomino();
+//	   Game game=kd.getCurrentGame();
+//	   Player player=game.getNextPlayer();   
+//	   KDController.rotateLatestDomino(player, dir);
+//}
+//
+//// line 242 "../../../../../Gameplay.ump"
+// public void moveLatestDomino(String movement){
+//	   Kingdomino kd = KingdominoApplication.getKingdomino();
+//	   Game game=kd.getCurrentGame();
+//	   Player player=game.getNextPlayer();   
+//	   KDController.moveLatestDomino(player, movement);
+//}
+//
+//// line 243 "../../../../../Gameplay.ump"
+// public void placeLatestDomino(){
+//	   Kingdomino kd = KingdominoApplication.getKingdomino();
+//	   Game game=kd.getCurrentGame();
+//	   Player player=game.getNextPlayer();   
+//	   KDController.placeLatestDomino(player);
+//}
+//
+//// line 244 "../../../../../Gameplay.ump"
+// public void discardLatestDomino(){
+//	   Kingdomino kd = KingdominoApplication.getKingdomino();
+//	   Game game=kd.getCurrentGame();
+//	   Player player=game.getNextPlayer();   
+//	   KDController.discardLatestDomino(player);
+//}
+//
+//// line 245 "../../../../../Gameplay.ump"
+// public void setNextPlayer(){
+//	   Kingdomino kd = KingdominoApplication.getKingdomino();
+//	   Game game=kd.getCurrentGame();
+//	   Player player=game.getNextPlayer();
+//	   KDController.updateNextPlayer(player);
+//}
+//
+//// line 246 "../../../../../Gameplay.ump"
+// public void calculateAllPlayerScores(){
+//	   Kingdomino kd = KingdominoApplication.getKingdomino();
+//	   Game game=kd.getCurrentGame();
+//	   KDController.calculateAllPlayerScore(game);
+//}
+//
+//// line 247 "../../../../../Gameplay.ump"
+// public void calculatePlayerRanking(){
+//	   KDController.calculatePlayerRanking();
+//}

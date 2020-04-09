@@ -138,6 +138,13 @@ class Gameplay {
           
                 break;
           
+          case "ManipulatingDomino":
+          
+          		gamestatus = Gamestatus.Playing;
+                gamestatusPlaying = GamestatusPlaying.ManipulatingDomino;
+                
+                break;
+          
           case "IdlingDomino":
           
                 gamestatus = Gamestatus.Playing;
@@ -175,7 +182,11 @@ class Gameplay {
                  gamestatusPlaying = GamestatusPlaying.SelectingStandardDomino;
           
                 break;
-                
+          
+          case "ManipulatingLastDomino":
+           		gamestatus=Gamestatus.Finishing;
+          		gamestatusFinishing=GamestatusFinishing.ManipulatingLastDomino;
+          		break;         
           case "IdlingLastDomino":
           		gamestatus=Gamestatus.Finishing;
           		gamestatusFinishing=GamestatusFinishing.ManipulatingLastDomino;
