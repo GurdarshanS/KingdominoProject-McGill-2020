@@ -1233,6 +1233,135 @@ public class KDController {
 		}
 	}
 	
+	
+	////////////////////////////////////////
+	/// ---- Gherkin Helper Methods ---- ///
+	////////////////////////////////////////
+	
+
+	/**
+	 * 
+	 * This method returns the color of the player depending on the input string.
+	 * 
+	 * @see CalculateRanking.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return PlayerColor
+	 */
+	
+	public static PlayerColor retrieveColor(String s1) {
+		PlayerColor p = null;
+		if(s1.equals("blue")) {
+			p = PlayerColor.Blue;
+		} else if(s1.equals("green")) {
+			p = PlayerColor.Green;
+		} else if(s1.equals("pink")) {
+			p = PlayerColor.Pink;
+		} else if(s1.equals("yellow") || s1.equals("yelow")) {
+			p = PlayerColor.Yellow;
+		}
+		return p;
+	}
+	
+	/**
+	 * 
+	 * This method returns a list of PropertyAttribute
+	 * objects that captures the TerrainType,size,crown
+	 * and score of each Property object of the Player's 
+	 * Kingdom
+	 * @see  - CalculatePropertyAttributes.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return allAttributes
+	 */
+	
+	public static List<PropertyAttribute> getAllPropertyAttributes(Player player) {
+		List<Property> allProp=getAllProperty(player);
+		List<PropertyAttribute> allAttributes=new ArrayList<PropertyAttribute>();
+		
+		for (Property p:allProp) {
+			int propertySize=p.getSize();
+			TerrainType t = p.getPropertyType();
+			int crown = p.getCrowns();
+			int score = p.getScore();
+			PropertyAttribute pa = new PropertyAttribute(t,propertySize,crown,score);
+			allAttributes.add(pa);
+		}
+		return allAttributes;
+	}
+	
+	/**
+	 * 
+	 * This method retrieves all the properties of a player's kingdom
+	 * 
+	 * @see  - no features explicitly
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return List<Property>
+	 */
+	
+	public static List<Property> getAllProperty(Player player){
+		return player.getKingdom().getProperties();
+	}
+	
+	
+	/**
+	 * 
+	 * This method returns a terrain type depending on the input string.
+	 * 
+	 * @see BrowseDominoPile.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param String
+	 * @return TerrainType
+	 */
+	
+	public static TerrainType retrieveTerrainType(String terrain) {
+		switch (terrain) {
+		case "wheat":
+			return TerrainType.WheatField;
+		case "forest":
+			return TerrainType.Forest;
+		case "mountain":
+			return TerrainType.Mountain;
+		case "grass":
+			return TerrainType.Grass;
+		case "swamp":
+			return TerrainType.Swamp;
+		case "lake":
+			return TerrainType.Lake;
+		default:
+			throw new java.lang.IllegalArgumentException("Invalid terrain type: " + terrain);
+		}
+	}
+	
+	/**
+	 * 
+	 * This method looks at all the dominos and separates them according to the
+	 * terrain type that is provided whether it's the right tile or the left tile that contains it.
+	 * 
+	 * @see BrowseDominoPile.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param s1
+	 * @return myDominos
+	 */
+	public static ArrayList<Integer> filterbyTerrain (String s1) {
+		
+		ArrayList<Integer> myDominos = new ArrayList<Integer>();
+		TerrainType t1 = retrieveTerrainType(s1);
+		for (int i = 1; i < 49 ; i++) {
+			Domino dom = getdominoByID(i);
+			
+			if ( dom.getLeftTile().toString().equalsIgnoreCase(t1.toString()) || dom.getRightTile().toString().equalsIgnoreCase(t1.toString()) ) {
+				
+				myDominos.add(dom.getId());
+			}			
+		}	
+		
+
+		return myDominos;
+	}
+	
+	
 	////////////////////////////////////////
 	/// ---- Private Helper Methods ---- ///
 	////////////////////////////////////////
@@ -1447,7 +1576,7 @@ public class KDController {
 
 	}
 	
-	private static void identifyAllProperty(Player player) {
+	public static void identifyAllProperty(Player player) {
 		List<List<int[]>> terrainGroups = sortTerrain(player);
 		List<int[]> wheatGroup=terrainGroups.get(0);
 		List<int[]> swampGroup=terrainGroups.get(1);
