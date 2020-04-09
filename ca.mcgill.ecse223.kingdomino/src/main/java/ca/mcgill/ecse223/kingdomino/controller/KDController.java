@@ -352,9 +352,10 @@ public class KDController {
 		
 		game.setNextPlayer(game.getPlayer(0));
 		
-		for (Player p:game.getPlayers()) {
-			p.getDominoSelection().delete();
-		}
+//		for (Player p:game.getPlayers()) {                 COMMENTED OUT!!!!!!!
+//			p.getDominoSelection().delete();            
+//		}
+		
 	}
 	
 	
@@ -828,7 +829,8 @@ public class KDController {
 		
 		if (dInKingdom.getDomino().getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
 			dInKingdom.getDomino().setStatus(DominoStatus.PlacedInKingdom);
-			return true;
+			aPlayer.getDominoSelection().delete();  ///// ADDED THIS LINE
+			return true; 
 		}
 		else {
 			return false;
@@ -850,6 +852,7 @@ public class KDController {
 		}
 		else {
 			dInKingdom.getDomino().setStatus(DominoStatus.Discarded);
+			aPlayer.getDominoSelection().delete(); //// ADDED THIS LINE
 			return true;
 		}
 	}
