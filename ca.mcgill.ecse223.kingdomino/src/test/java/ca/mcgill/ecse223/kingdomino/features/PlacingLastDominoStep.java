@@ -110,17 +110,17 @@ public class PlacingLastDominoStep {
 			System.out.println(p.getDominoSelection().getDomino().getStatus());
 		}
 		//check if we can enter the EndingGame state from the ConfirmingLastChoice state
-		System.out.println("state before scoring: "+kd.getStateMachine().getGamestatus());
+		System.out.println("state before scoring: "+kd.getStateMachine().getGamestatusFullName());
 		boolean scoring=KDController.scoringSM();
-		System.out.println("state after scoring: "+kd.getStateMachine().getGamestatus());
-		assertEquals(Gameplay.Gamestatus.EndingGame,kd.getStateMachine().getGamestatus());
+		System.out.println("state after scoring: "+kd.getStateMachine().getGamestatusFullName());
+		assertEquals(Gameplay.Gamestatus.EndingGame.toString(),kd.getStateMachine().getGamestatusFullName());
 	}
 	
 	@Then("the final results after successful placement shall be computed")
 	public static void results_computed() {
 		//kind of redundant, since by entering the EndingGame state we have already calculated player ranking and scores
 		//guess here we will assert again that we are in the EndingGame state
-		assertEquals(Gameplay.Gamestatus.EndingGame,kd.getStateMachine().getGamestatus());
+		assertEquals(Gameplay.Gamestatus.EndingGame.toString(),kd.getStateMachine().getGamestatusFullName());
 	}
 	
 

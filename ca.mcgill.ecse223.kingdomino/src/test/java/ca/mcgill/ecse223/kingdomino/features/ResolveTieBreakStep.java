@@ -129,10 +129,10 @@ public class ResolveTieBreakStep {
 	public static void calculate_ranking_initiated() {
 		//essentially meaning that we are triggering the scoring transition between Finishing and EndingGame
 		//so check that we are in the correct original state
-		System.out.println("superstate before transition:  "+kd.getStateMachine().getGamestatus());
+		System.out.println("superstate before transition:  "+kd.getStateMachine().getGamestatusFullName());
 		boolean scored=KDController.scoringSM();
 		System.out.println("was the transition successful: "+scored);
-		System.out.println("state after the transition:    "+kd.getStateMachine().getGamestatus());
+		System.out.println("state after the transition:    "+kd.getStateMachine().getGamestatusFullName());
 	}
 	
 	@Then("player standings should be the followings:")
