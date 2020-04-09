@@ -76,6 +76,7 @@ public class sharedCucumberMethods {
 			// Add the domino to a player's kingdom
 			Domino dominoToPlace = KDController.getdominoByID(id); 
 			KDController.preplaceArbitraryDomino(player, dominoToPlace, posx, posy, dir);
+			dominoToPlace.setStatus(DominoStatus.PlacedInKingdom);
 		}
 	}
 	

@@ -28,6 +28,11 @@ public class KDController {
 		return sm.place();
 	}
 	
+	public static boolean discardSM() {
+		Gameplay sm = KingdominoApplication.getStateMachine();
+		return sm.discard();
+	}
+	
 	public static boolean scoringSM() {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		return sm.scoring();
