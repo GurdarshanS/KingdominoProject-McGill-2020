@@ -46,7 +46,7 @@ public class PlacingLastDominoStep {
 	private static Domino dominoToPlace;
 	
 	
-	//this would be one of the superstate Playing.ManipulatingDomino
+	//this would be one of the superstate Playing.ManipulatingLastDomino
 	@Given("the game has been initialized for placing last domino")		
 	public static void  game_initialized_for_placing_last() {
 //		to bring the game up to speed
