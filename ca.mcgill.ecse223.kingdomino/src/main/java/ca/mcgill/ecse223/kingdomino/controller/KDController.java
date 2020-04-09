@@ -224,8 +224,7 @@ public class KDController {
 			Game game = new Game(24, kingdomino);
 			game.setNumberOfPlayers(2);
 			for(String option:selectedBonusOptions) {
-				@SuppressWarnings("unused")
-				BonusOption mk = new BonusOption(option,kingdomino);
+				kingdomino.addBonusOption(option);
 			}
 			kingdomino.setCurrentGame(game);
 		}
@@ -233,9 +232,8 @@ public class KDController {
 			Game game = new Game(36, kingdomino);
 			game.setNumberOfPlayers(3);
 			for(String option:selectedBonusOptions) {
-				@SuppressWarnings("unused")
-				BonusOption mk = new BonusOption(option,kingdomino);
-			}
+				kingdomino.addBonusOption(option);
+				}
 			kingdomino.setCurrentGame(game);
 
 		}
@@ -243,11 +241,11 @@ public class KDController {
 			Game game = new Game(48, kingdomino);
 			game.setNumberOfPlayers(4);
 			for(String option:selectedBonusOptions) {
-				@SuppressWarnings("unused")
-				BonusOption mk = new BonusOption(option,kingdomino);
-			}
+				kingdomino.addBonusOption(option);			
+				}
 			kingdomino.setCurrentGame(game);
 		}
+		
 		
 	} 
 	
@@ -1413,6 +1411,75 @@ public class KDController {
 			}
 		}
 		return match;
+	}
+	
+	/**
+	 * 
+	 * This method arranges the domino IDs in the order that is provided in the string accordingly.
+	 * 
+	 * @see ShuffleDomino.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param s1
+	 * @return DominoArray
+	 */
+	
+	public static Integer[] parseDominoIds(String s1) {
+		
+		Integer[] DominoArray = new Integer[48];
+		String[] StringArray = new String[48];
+		StringArray = s1.split(", ");
+		
+		for(int i = 0; i < DominoArray.length; i++) {
+			DominoArray[i] = (Integer.parseInt(StringArray[i]));			
+		}
+		return DominoArray;
+	}
+	
+	/**
+	 * 
+	 * This method arranges the domino in the order that is provided in the string accordingly.
+	 * 
+	 * @see ShuffleDomino.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param s1
+	 * @return DominoArray
+	 */
+	
+	public static Domino[] arrangeTheDominos(String s1) {
+		
+		Domino[] DominoArray = new Domino[48];
+		String[] StringArray = new String[48];
+		StringArray = s1.split(", ");
+		
+		for(int i = 0; i < DominoArray.length; i++) {
+			DominoArray[i] = getdominoByID(Integer.parseInt(StringArray[i]));
+		}
+		return DominoArray;
+	}
+	
+	/**
+	 * 
+	 * This method removes the amount of dominos specified from the list.
+	 * 
+	 * @see ShuffleDomino.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param s1
+	 * @param int1
+	 * @return DominoArray
+	 */
+	
+	public static Domino[] removeDraftDominos(String s1, int int1) {
+		Domino[] DominoArray = new Domino[48];
+		String[] StringArray = new String[48];
+		StringArray = s1.split(", ");
+		int count = 0;
+		for(int i = int1; i < DominoArray.length; i++) {
+			DominoArray[count] = getdominoByID(Integer.parseInt(StringArray[i]));
+			count++;
+		}
+		
+		return DominoArray;
+		
 	}
 	
 	////////////////////////////////////////
