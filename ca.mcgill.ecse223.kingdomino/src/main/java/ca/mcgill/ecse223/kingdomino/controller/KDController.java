@@ -694,6 +694,7 @@ public class KDController {
 		
 		int xPosPrevious = dInKingdom.getX();
 		int yPosPrevious = dInKingdom.getY();
+		DominoStatus prevStatus=dInKingdom.getDomino().getStatus();
 
 		if(movement.equalsIgnoreCase("Right")) dInKingdom.setX(xPosPrevious + 1);
 		else if(movement.equalsIgnoreCase("Left")) dInKingdom.setX(xPosPrevious - 1);
@@ -704,7 +705,7 @@ public class KDController {
 	
 			dInKingdom.setX(xPosPrevious);
 			dInKingdom.setY(yPosPrevious);
-			dInKingdom.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
+			dInKingdom.getDomino().setStatus(prevStatus);
 //			System.out.println("invalid: grid size exceeded");
 
 			return;
@@ -755,6 +756,10 @@ public class KDController {
 		}
 		
 		DominoInKingdom dInKingdom = (DominoInKingdom) territories.get(territories.size()-1);
+		
+		int xPosPrevious = dInKingdom.getX();
+		int yPosPrevious = dInKingdom.getY();
+		DominoStatus prevStatus=dInKingdom.getDomino().getStatus();
 
 		DirectionKind dominoDir = dInKingdom.getDirection();
 		
@@ -769,8 +774,10 @@ public class KDController {
 		else if(dominoDir.equals(DirectionKind.Right) && rotation.equalsIgnoreCase("CounterClockwise")) dInKingdom.setDirection(DirectionKind.Up);
 		
 		if(!verifyGridLimit(dInKingdom)) {
+			dInKingdom.setX(xPosPrevious);
+			dInKingdom.setY(yPosPrevious);
+			dInKingdom.getDomino().setStatus(prevStatus);
 			dInKingdom.setDirection(dominoDir);
-			dInKingdom.getDomino().setStatus(DominoStatus.ErroneouslyPreplaced);
 //			System.out.println("invalid: grid size exceeded\n");
 			return;
 			
@@ -1361,6 +1368,49 @@ public class KDController {
 		return myDominos;
 	}
 	
+	
+	/**
+	 * 
+	 * This method checks to see if a Property matchs a given 
+	 * TerrainType and a list of given Domino IDs
+	 * 
+	 * @see  - CalculatePropertyAttributes.feature
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @param testTerrain
+	 * @param testIds
+	 * @param property
+	 * @return match
+	 */
+	
+	public static boolean checkPropertyMatch(TerrainType testTerrain, int[] testIds, Property property) {
+		
+		boolean match=true;
+		
+		if (!(testTerrain.equals(property.getPropertyType()))) {
+			match=false;
+		}
+		else {
+			List<Domino> dInP=property.getIncludedDominos();
+			List<Integer> ids = new ArrayList<Integer>();
+			for (Domino d: dInP) {
+				ids.add(d.getId());
+			}
+			
+			if (ids.size()!=testIds.length) {
+				match=false;
+			}
+			else {
+				for (int i:testIds) {
+					if (!(ids.contains(i))) {
+						match=false;
+						break;
+					}
+				}
+			}
+		}
+		return match;
+	}
 	
 	////////////////////////////////////////
 	/// ---- Private Helper Methods ---- ///
