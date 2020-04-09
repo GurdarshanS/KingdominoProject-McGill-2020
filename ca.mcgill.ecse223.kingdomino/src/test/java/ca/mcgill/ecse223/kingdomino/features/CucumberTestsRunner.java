@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
 		plugin = "pretty", 
-		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features",
-//		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features/SelectingDomino.feature",
+//		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features",
+		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features/SelectingFirstDomino.feature",
 		glue = "ca.mcgill.ecse223.kingdomino.features")
 public class CucumberTestsRunner {
 }

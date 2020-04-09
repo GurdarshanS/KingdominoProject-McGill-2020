@@ -42,11 +42,11 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
 
-public class SelectingDominoStep {
+public class SelectingAndSelectingFirstDominoStep {
 	
 	private static Kingdomino kd = KingdominoApplication.getKingdomino();
-	private static int targetId;
 	private static boolean chosen;
+	private static boolean firstChosen;
 	
 	@Given("the game has been initialized for selecting domino")
 	public static void game_initialized_for_selecting_domino() {
@@ -138,6 +138,7 @@ public class SelectingDominoStep {
 		
 		//the choose transition always acts on the 'next' player of the game
 		kd.getCurrentGame().setNextPlayer(sharedCucumberMethods.getPlayerByColor(color));
+
 		
 		System.out.println("original state:    "+kd.getStateMachine().getGamestatusFullName());
 		chosen = KDController.chooseSM(KDController.getdominoByID(id));
@@ -148,10 +149,16 @@ public class SelectingDominoStep {
 	@And("the validation of domino selection returns {string}")
 	public static void validation_of_selection_returns(String status) {
 		if (status.equalsIgnoreCase("success")) {
-			assertEquals(true,chosen);
+			if (kd.getStateMachine().getGamestatusInitializing().equals(Gameplay.GamestatusInitializing.SelectingFirstDomino)) {
+				assertEquals(true,firstChosen);
+			}
+			else assertEquals(true,chosen);
 		}
 		else if (status.equalsIgnoreCase("error")) {
-			assertEquals(false,chosen);
+			if (kd.getStateMachine().getGamestatusInitializing().equals(Gameplay.GamestatusInitializing.SelectingFirstDomino)) {
+				assertEquals(false,firstChosen);
+			}
+			else assertEquals(false,chosen);
 		}
 	}
 	
@@ -229,8 +236,8 @@ public class SelectingDominoStep {
 		
 		//since it's a self transition, should be back in the SelectingFirstDomino state
 		System.out.println("original state:    "+kd.getStateMachine().getGamestatusFullName());
-		chosen = KDController.chooseSM(KDController.getdominoByID(id));
-		System.out.println("choose successful: "+chosen);
+		firstChosen = KDController.chooseSM(KDController.getdominoByID(id));
+		System.out.println("choose successful: "+firstChosen);
 		System.out.println("new state:         "+kd.getStateMachine().getGamestatusFullName());
 		
 		//also now all players hould have chosen, enabling the next firing of SelectionReady() to transition to the Playing state
@@ -265,4 +272,137 @@ public class SelectingDominoStep {
 		assertEquals(true,hasNext&&status);
 		
 	}
+	
+	
+	
+	
+	
+	
+	
+	////////////////////////// now for selecting first domino //////////////////////////////////////////
+	
+	@Given("the game has been initialized for selecting first domino")
+	public static void game_initialized_for_selecting_first_domino() {
+		//this would be the case after the draftReady transition into the SelectionFirstDomino state
+		
+		int numPlayers=4;
+		List<String> selectedBonusOptions = new ArrayList<String>();
+		
+		try{
+			KDController.setGameOptions(numPlayers, selectedBonusOptions);
+			int dominoNums=kd.getCurrentGame().getMaxPileSize();
+			KDController.createDominoPile(kd.getCurrentGame(),dominoNums);
+			KDController.createPlayers();
+			
+		}
+		catch(Exception e) {}
+		
+		
+		kd.setStateMachine();
+		kd.getStateMachine().setGamestatus("SelectingFirstDomino");
+		System.out.println(kd.getStateMachine().getGamestatusFullName());
+	}
+	
+	@Given("the initial order of players is {string}")
+	public static void initial_player_order_is(String playerOrder) {
+		String[] order=playerOrder.split(",");
+		
+		//manually rearrange the player order by the specified order
+		for (int i=0;i<order.length;i++) {
+			Player p = sharedCucumberMethods.getPlayerByColor(order[i]);
+			kd.getCurrentGame().addOrMovePlayerAt(p, i);
+		}
+		
+		//manually reset the 'next' player
+		kd.getCurrentGame().setNextPlayer(kd.getCurrentGame().getPlayer(0));
+		
+		System.out.println(" 'next' player: "+kd.getCurrentGame().getNextPlayer().getColor());
+		System.out.println();
+		int i=1;
+		for (Player p:kd.getCurrentGame().getPlayers()) {
+			System.out.println(i+": "+p.getColor());
+			i++;
+		}
+	}
+	
+	@Given("the current draft has the dominoes with ID {string}")
+	public static void current_draft_has_dominos(String dominoIds) {
+		
+		String[] splitIds=dominoIds.split(",");
+		
+		//domino ids [1,2,3,4] were in the previous turn's 'next' draft.
+		Draft firstCurrentDraft = new Draft(DraftStatus.FaceDown,kd.getCurrentGame());
+		Draft firstNextDraft = new Draft(DraftStatus.FaceDown,kd.getCurrentGame());
+		
+		int id2=10;
+		
+		for (String id:splitIds) {
+			Domino d = KDController.getdominoByID(Integer.decode(id));
+			d.setStatus(DominoStatus.InCurrentDraft);
+			Domino d2= KDController.getdominoByID(id2);
+			d2.setStatus(DominoStatus.InNextDraft);
+			
+			firstCurrentDraft.addIdSortedDomino(d);
+			firstNextDraft.addIdSortedDomino(d2);
+			id2+=1;
+		}
+		
+		//however, it becomes this turn's 'current' draft
+		
+		kd.getCurrentGame().setCurrentDraft(firstCurrentDraft);
+		kd.getCurrentGame().setNextDraft(firstNextDraft);
+		
+		View.printDraft(kd);
+	}
+	
+	
+	@Given("player's first domino selection of the game is {string}")
+	public static void first_dominos_have_selection(String dominoSelectionOwners) {
+		String[] eachDominoOwner=dominoSelectionOwners.split(",");
+		for (int i=0;i<eachDominoOwner.length;i++) {
+			String owner=eachDominoOwner[i];
+			if (owner.equalsIgnoreCase("none")) {
+				continue;
+			}
+			else {
+				DominoSelection tmp = new DominoSelection(sharedCucumberMethods.getPlayerByColor(owner),
+						kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(i),
+						kd.getCurrentGame().getCurrentDraft());
+			}
+		}
+		
+		for (Domino d:kd.getCurrentGame().getCurrentDraft().getIdSortedDominos()) {
+			if (d.hasDominoSelection()) 	System.out.println(d.getId()+" : "+d.getDominoSelection().getPlayer().getColor());
+			else System.out.println(d.getId()+" : none");
+		}
+	}
+	
+	@Given("the {string} player is selecting his\\/her domino with ID {int}")
+	public static void player_selecting_first_domino(String color, int id) {
+		//means making transitions from the SelectingFirstDomino state, either back itself or to Playing.CreatingNextDraft
+		
+		//normally we would do this in the @When statement. However, given the way that the state machine is setup
+		//and the fact that we need to check the selection result immediately after this in the @And,
+		//exceptionally make the triggering transition here instead
+		
+		//the choose transition always acts on the 'next' player of the game
+		kd.getCurrentGame().setNextPlayer(sharedCucumberMethods.getPlayerByColor(color));
+
+		
+		System.out.println("original state:    "+kd.getStateMachine().getGamestatusFullName());
+		firstChosen = KDController.chooseSM(KDController.getdominoByID(id));
+		System.out.println("choose successful: "+firstChosen);
+		System.out.println("new state:         "+kd.getStateMachine().getGamestatusFullName());
+	}
+	
+	@Given("the {string} player is selecting his\\/her first domino with ID {int}")
+	public static void last_player_first_turn_select(String color, int id) {
+		kd.getCurrentGame().setNextPlayer(sharedCucumberMethods.getPlayerByColor(color));
+		
+		System.out.println("original state:    "+kd.getStateMachine().getGamestatusFullName());
+		firstChosen = KDController.chooseSM(KDController.getdominoByID(id));
+		System.out.println("choose successful: "+firstChosen);
+		System.out.println("new state:         "+kd.getStateMachine().getGamestatusFullName());
+	}
+	
 }
