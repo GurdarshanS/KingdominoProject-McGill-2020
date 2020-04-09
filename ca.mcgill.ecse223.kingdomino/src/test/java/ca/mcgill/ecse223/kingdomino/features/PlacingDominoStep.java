@@ -116,6 +116,18 @@ public class PlacingDominoStep {
 	
 	@When("the current player places his\\/her domino")
 	public static void place_domin() {
+		
+		// in case of last player of the last turn, also needs to manually enable the hasAllPlayersPlayed() guard
+		// so can proceed to the EndingGame state. During normal play, this would be taken care by SM
+		// how KDQuery checks if all players have played is to see if all player's selection dominos are either PlacedInKingdom or Discarded
+		if (KDQuery.isCurrentPlayerTheLastInTurn(kd.getCurrentGame().getNextPlayer())&&KDQuery.isCurrentTurnTheLastInGame()) {
+			for (Player p:kd.getCurrentGame().getPlayers()) {
+				p.getDominoSelection().getDomino().setStatus(DominoStatus.PlacedInKingdom);
+			}
+			
+			System.out.println("all played: "+KDQuery.hasAllPlayersPlayed());
+		}
+		
 		// call the place transition of the state machine
 		// no guards to satisfy. However, if there were, we would have to manually satisfy them by calling controller/sm methods 
 		// see CreateNextDraftStep for idea
@@ -123,6 +135,7 @@ public class PlacingDominoStep {
 		boolean placed=KDController.placeSM();		//note that the placeSM takes no player as parameter, that's because it always acts on the 'next' player of the game
 		System.out.println("domino placed: "+placed);
 		View.printPlayerKingdom(kd.getCurrentGame().getNextPlayer());
+
 	}
 	
 	

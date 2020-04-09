@@ -28,6 +28,16 @@ public class KDController {
 		return sm.place();
 	}
 	
+	public static boolean scoringSM() {
+		Gameplay sm = KingdominoApplication.getStateMachine();
+		return sm.scoring();
+	}
+	
+	public static boolean manipulateLast(int posx, int posy, String dir) {
+		Gameplay sm = KingdominoApplication.getStateMachine();
+		return sm.manipulateLast(posx, posy, dir);
+	}
+	
 	public static boolean draftReadySM() {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		boolean complete=sm.draftReady();
@@ -43,6 +53,7 @@ public class KDController {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		return sm.selectionReady();
 	}
+	
 	
 	public static boolean nextSelectionReadySM() {
 		Gameplay sm = KingdominoApplication.getStateMachine();

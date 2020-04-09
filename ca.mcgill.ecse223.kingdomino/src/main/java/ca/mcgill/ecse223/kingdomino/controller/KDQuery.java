@@ -320,26 +320,8 @@ public class KDQuery {
 	}
 	
 	public static boolean isCurrentTurnTheLastInGame() {
-		Kingdomino kd = KingdominoApplication.getKingdomino();
-		Game game=kd.getCurrentGame();
-		List<Domino> dominoPile=game.getAllDominos();
 		
-		int playerNum=game.getNumberOfPlayers();
-		int index=dominoPile.size()-1;
-		
-		boolean lastTurn=true;
-		
-		if (playerNum==2||playerNum==4) {
-			for (int i=0;i<4;i++) {
-				Domino d=dominoPile.get(index);
-				if (!d.getStatus().equals(DominoStatus.InCurrentDraft)) {
-					lastTurn=false;
-					break;
-				}
-				index--;
-			}
-		}
-		return lastTurn;
+		return isDraftLimitReached();
 	}
 	
 	
