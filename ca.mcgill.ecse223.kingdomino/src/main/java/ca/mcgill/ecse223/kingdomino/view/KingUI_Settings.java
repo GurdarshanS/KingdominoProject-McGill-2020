@@ -1,5 +1,6 @@
 package ca.mcgill.ecse223.kingdomino.view;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -19,20 +20,8 @@ import javax.swing.border.Border;
 
 public class KingUI_Settings extends JFrame{
 	
-public static void main(String[] args) {
-		
-		new KingUI_Settings().setVisible(true);
-		
-	}
-	
-	public KingUI_Settings() {
-		this.setSize(500,400);
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setTitle("Kingdomino");
-		initComponents();
-	}
 
-	private void initComponents() {
+	public static void initSettings() {
 		
 		JLabel title = new JLabel("Game Settings");
 		title.setFont(new Font("Times", Font.BOLD, 60));
@@ -61,17 +50,23 @@ public static void main(String[] args) {
 		JRadioButton mighty = new JRadioButton("Mighty Duel");
 		
 		JButton cont = new JButton("Continue");
-
+		JButton back = new JButton("Back");
 		
-		GroupLayout layout = new GroupLayout(getContentPane());
-		getContentPane().setLayout(layout);
+		JPanel p1 = new JPanel();
+	
+
+		GroupLayout layout = new GroupLayout(p1);
+		p1.setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
 		
 		
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
-				.addGroup(layout.createParallelGroup()
+				.addComponent(back)
+				.addGroup(layout.createSequentialGroup())
+				.addGroup(layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 						.addComponent(title)
 						.addComponent(players)
 						.addGroup(layout.createSequentialGroup()
@@ -92,11 +87,15 @@ public static void main(String[] args) {
 								)
 						.addComponent(cont)
 						)
+				)
 
 		);
 		
 		layout.setVerticalGroup(
 				layout.createParallelGroup()
+				.addComponent(back)
+				.addGroup(layout.createParallelGroup())
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 				.addGroup(layout.createSequentialGroup()
 					.addComponent(title)
 					.addComponent(players)
@@ -118,9 +117,15 @@ public static void main(String[] args) {
 							)
 					.addComponent(cont)
 						)
-				
+				)
 		);
+		KingUI_Main.contPanel.add(p1, "2");
 		
+		back.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				KingUI_Main.c1.show(KingUI_Main.contPanel, "1");
+			}
+		});
 		
 		two.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {

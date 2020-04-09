@@ -1,5 +1,6 @@
 package ca.mcgill.ecse223.kingdomino.view;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
@@ -43,6 +44,10 @@ public class KingUI_Stats extends JFrame {
 	private int wins, played, loss;
 	private float ratio;
 	
+	public static JFrame frame = new JFrame("Kingdomino");
+	public static JPanel contPanel = new JPanel();
+	public static CardLayout c1 = new CardLayout();
+	
 	public KingUI_Stats(){
 		
 		initComponents();
@@ -58,27 +63,29 @@ public class KingUI_Stats extends JFrame {
 		setLayout(new GroupLayout(c));
 		
 		// Swing components
-		this.setSize(WIDTH, HEIGHT);
-		this.setTitle("Check your statistics");
-		this.getContentPane().setBackground(Color.LIGHT_GRAY);
+		frame.setSize(WIDTH, HEIGHT);
+		frame.setTitle("Check your statistics");
+		frame.getContentPane().setBackground(Color.LIGHT_GRAY);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		// back button
-		back = new JButton("BACK");
-		back.setFont(new Font("Times", Font.BOLD, 20));
-		back.setBounds(0, 0, textW*2, textH);
+		back = new JButton("Back");
+		back.setFont(new Font("Times", Font.BOLD, 16));
+		//back.setBounds(0, 0, textW*2, textH);
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// return to main page
 			}
 		});
-		// box with users selection
+		// box that says stats
 		border = BorderFactory.createLineBorder(Color.BLACK, 3);
 		stats = new JLabel("Insert Username Below", SwingConstants.CENTER);
 		stats.setText("Stats");
 		stats.setBorder(border);
 		stats.setFont(new Font("Times", Font.BOLD, 45));
-		stats.setBounds(WIDTH/2-150, textH/2, 300, 300);
+		//stats.setBounds(WIDTH/2-150, textH/2, 300, 300);
 		
+		// User names
 		ArrayList users = new ArrayList<String>();
 		String name;
 		try {
@@ -93,12 +100,12 @@ public class KingUI_Stats extends JFrame {
 		}
 		combo = new JComboBox(users.toArray());
 		combo.setEditable(true);
-		combo.setBounds(WIDTH/2-150, HEIGHT/2-textH-textH/2, 300, 50);
+		//combo.setBounds(WIDTH/2-150, HEIGHT/2-textH-textH/2, 300, 50);
 		
-		// search
+		// search button
 		search = new JButton("Search Stats");
-		search.setFont(new Font("Times", Font.BOLD, 20));
-		search.setBounds(WIDTH/2+WIDTH/4, HEIGHT/2-textH, textW*2, textH);
+		search.setFont(new Font("Times", Font.BOLD, 16));
+		//search.setBounds(WIDTH/2+WIDTH/4, HEIGHT/2-textH, textW*2, textH);
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				input = combo.getSelectedItem().toString();
@@ -118,24 +125,64 @@ public class KingUI_Stats extends JFrame {
 						+ "<br/><br/><br/>No. Games Tied: "
 						+ "<br/><br/><br/>Win Ratio: "+ratio +"<html>");
 		statsTwo.setBorder(borderTwo);
-		statsTwo.setFont(new Font("Times", Font.BOLD, 20));
-		statsTwo.setBounds(WIDTH/2-200, 300+textH/2+textH/3, 400, 400);
+		statsTwo.setFont(new Font("Times", Font.BOLD, 25));
+		//statsTwo.setBounds(WIDTH/2-200, 300+textH/2+textH/3, 400, 400);
 	
 		// Add
-		c.add(back);
-		c.add(stats);
-		c.add(statsTwo);
-		c.add(combo);
-		c.add(search);
+		//c.add(back);
+		//c.add(stats);
+		//c.add(statsTwo);
+		//c.add(combo);
+		//c.add(search);
+		JPanel p = new JPanel();
+		GroupLayout layout = new GroupLayout(p);
+		p.setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		contPanel.add(p);
+		contPanel.setLayout(c1);
+		c1.show(contPanel, "1");
+		frame.add(contPanel);
+		
+		
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addComponent(back)
+				.addGroup(layout.createSequentialGroup())
+				.addGroup(layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+						.addComponent(stats)
+						.addComponent(combo)
+						.addGroup(layout.createSequentialGroup()
+								.addComponent(statsTwo)
+						)
+						.addComponent(search)
+						)
+				)
+		);
+		
+		layout.setVerticalGroup(
+				layout.createParallelGroup()
+				.addComponent(back)
+				.addGroup(layout.createParallelGroup())
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+				.addGroup(layout.createSequentialGroup()
+						.addComponent(stats)
+						.addComponent(combo)
+						.addGroup(layout.createParallelGroup()
+								.addComponent(statsTwo)
+						)
+						.addComponent(search)
+						)
+				)
+		);
 	}
 	public static void main(String[] args) {
 		
 		SwingUtilities.invokeLater(new Runnable() {
 		
 			public void run() {
-				JFrame frame = new KingUI_Stats();
-				frame.setVisible(true);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				new KingUI_Stats().frame.setVisible(true);
 			}
 		});
 	}

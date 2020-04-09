@@ -11,6 +11,7 @@ import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
@@ -29,10 +30,7 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class KingUI_PlayerCreate extends JFrame {
 	
-	private int WIDTH;
-	private int HEIGHT;
-	private int textW;
-	private int textH;
+
 	private JLabel name;
 	private JTextField insertName;
 	private JLabel label;
@@ -41,75 +39,113 @@ public class KingUI_PlayerCreate extends JFrame {
 	private Border border;
 	private String input;
 	
+	public static JFrame frame = new JFrame("Kingdomino");
+	public static JPanel contPanel = new JPanel();
+	public static CardLayout c1 = new CardLayout();
+	
 	public KingUI_PlayerCreate(){
 		
 		initComponents();
 		
 	}
 	public void initComponents() {
-		WIDTH = 950;
-		HEIGHT = 800;
-		textW = textH = 75;
 		
 		// Layout Manager
-		Container c =  getContentPane();
-		setLayout(new GroupLayout(c));
+		//Container c =  getContentPane();
+		//setLayout(new GroupLayout(c));
 		
 		// Swing components
-		this.setSize(WIDTH, HEIGHT);
-		this.setTitle("Create your account");
-		this.getContentPane().setBackground(Color.LIGHT_GRAY);
+		frame.setSize(WIDTH, HEIGHT);
+		frame.setTitle("Create your account");
+		frame.getContentPane().setBackground(Color.LIGHT_GRAY);
 		
 		// back button
-		back = new JButton("BACK");
-		back.setFont(new Font("Times", Font.BOLD, 20));
-		back.setBounds(0, 0, textW*2, textH);
+		back = new JButton("Back");
+		back.setFont(new Font("Times", Font.BOLD, 16));
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// return to main page
 			}
 		});
 		// create name
-		done = new JButton("CREATE");
-		done.setFont(new Font("Times", Font.BOLD, 20));
-		done.setBounds(WIDTH/2-textW, HEIGHT-100, textW*2, textH);
+		done = new JButton("Create");
+		done.setFont(new Font("Times", Font.BOLD, 16));
 		done.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				input = insertName.getText();
 				KDController.provideUserProfile(input);
 			}
 		});
-		// box with info
+		// title
 		border = BorderFactory.createLineBorder(Color.BLACK, 3);
 		name = new JLabel("Insert Username Below", SwingConstants.CENTER);
 		name.setText("Create User Profile");
 		name.setBorder(border);
-		name.setFont(new Font("Times", Font.BOLD, 40));
-		name.setBounds(WIDTH/2-200, textH/2, 400, 400);
+		name.setFont(new Font("Times", Font.BOLD, 50));
 		
+		// instruction
 		label = new JLabel("label", SwingConstants.CENTER);
 		label.setText("Insert Username");
 		label.setFont(new Font("Times", Font.BOLD, 20));
-		label.setBounds(WIDTH/2-200, HEIGHT/4+textH-textH/5, 400, 400);
 		
 		// text box
 		insertName = new JTextField();
-		insertName.setBounds(WIDTH/2-120, HEIGHT/2+textH, 250, 50);
 		
 		// Add
-		c.add(back);
-		c.add(done);
-		c.add(insertName);
-		c.add(name);
-		c.add(label);
+		//c.add(back);
+		//c.add(done);
+		//c.add(insertName);
+		//c.add(name);
+		//c.add(label);
+		
+		JPanel p = new JPanel();
+		GroupLayout layout = new GroupLayout(p);
+		p.setLayout(layout);
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+		contPanel.add(p);
+		contPanel.setLayout(c1);
+		c1.show(contPanel, "1");
+		frame.add(contPanel);
+		
+		layout.setHorizontalGroup(
+				layout.createSequentialGroup()
+				.addComponent(back)
+				.addGroup(layout.createSequentialGroup())
+				.addGroup(layout.createSequentialGroup()
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+						.addComponent(name)
+						.addComponent(label)
+						.addGroup(layout.createSequentialGroup()
+								.addComponent(insertName)
+						)
+						.addComponent(done)
+						)
+				)
+		);
+		
+		layout.setVerticalGroup(
+				layout.createParallelGroup()
+				.addComponent(back)
+				.addGroup(layout.createParallelGroup())
+				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
+				.addGroup(layout.createSequentialGroup()
+						.addComponent(name)
+						.addComponent(label)
+						.addGroup(layout.createParallelGroup()
+								.addComponent(insertName)
+						)
+						.addComponent(done)
+						)
+				)
+		);
 	}
 	public static void main(String[] args) {
 		
 		SwingUtilities.invokeLater(new Runnable() {
 		
 			public void run() {
-				JFrame frame = new KingUI_PlayerCreate();
-				frame.setVisible(true);
+				new KingUI_PlayerCreate().frame.setVisible(true);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			}
 		});
