@@ -26,6 +26,7 @@ import javax.swing.border.Border;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
+import ca.mcgill.ecse223.kingdomino.controller.KDController2;
 import ca.mcgill.ecse223.kingdomino.model.User;
 
 public class KingUI_Stats extends JFrame {
@@ -81,7 +82,7 @@ public class KingUI_Stats extends JFrame {
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String input = combo.getSelectedItem().toString();
-				User user = User.getWithName(input);
+				User user = KDController2.queryUser(input);
 				wins = user.getWonGames();
 				played = user.getPlayedGames();
 				loss = played - wins;
@@ -89,7 +90,7 @@ public class KingUI_Stats extends JFrame {
 			}
 		});
 		
-		borderTwo = BorderFactory.createLineBorder(Color.BLACK, 3);
+		borderTwo = BorderFactory.createLineBorder(Color.BLACK);
 		statsTwo = new JLabel("User info", SwingConstants.CENTER);
 		statsTwo.setText("<html> No. Games Won: "+wins
 						+ "<br/><br/><br/>No. Games Lost: "+loss
