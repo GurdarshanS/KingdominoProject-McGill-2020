@@ -17,7 +17,7 @@ import java.util.Map;
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
-import ca.mcgill.ecse223.kingdomino.development.View;
+import ca.mcgill.ecse223.kingdomino.controller.View;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -42,6 +42,13 @@ import io.cucumber.java.en.And;
 
 
 public class SM_DiscardingDominoStep {
+	/**
+	 * These methods checks for the state machine 
+	 * transition for discarding dominos
+	 * 
+	 * @see DiscardingDomino.feature
+	 * @author Eric Guan 260930210
+	 */
 	private static Kingdomino kd = KingdominoApplication.getKingdomino();
 	
 	@Given("the game is initialized for discarding domino")
@@ -54,7 +61,6 @@ public class SM_DiscardingDominoStep {
 		//this would be one of the superstate Playing.ManipulatingDomino
 		kd.setStateMachine();
 		kd.getStateMachine().setGamestatus("ManipulatingDomino"); 						
-		System.out.println("state machine state: "+kd.getStateMachine().getGamestatusFullName());
 		
 		//we are supposed to be choosing from current draft, but we haven't made a draft yet
 		//if we just choose a random domino, wouldn't work. See KDController.chooseNext

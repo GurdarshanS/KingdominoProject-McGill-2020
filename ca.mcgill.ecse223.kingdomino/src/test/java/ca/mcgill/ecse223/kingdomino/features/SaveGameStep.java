@@ -39,7 +39,8 @@ public class SaveGameStep {
 	private static long lastModified;
 	
 	/**
-	 * @author Anthony Harissi Dagher
+	 * these methods check for serializating capability
+	 * @author Anthony Harissi Dagher 260924250
 	 * Test for saveGame
 	 * @see saveGame.feature
 	 */
@@ -47,19 +48,12 @@ public class SaveGameStep {
 	public void the_game_is_initialized_for_save_game() {
 		KDController.initiateEmptyGame();
 	}
-	/**
-	 * @author Anthony Harissi Dagher
-	 * @see saveGame.feature
-	 */
+	
 	@Given("the game is still in progress")
 	public void the_game_is_still_in_progress() {
 		assertEquals(KingdominoApplication.getKingdomino().getCurrentGame().hasNextPlayer(), true);
 	}
-	/**
-	 * @author Anthony Harissi Dagher
-	 * @param string
-	 * @see saveGame.feature
-	 */
+	
 	@Given("no file named {string} exists in the filesystem")
 	public void no_file_named_exists_in_the_filesystem(String filename) {
 		File file = new File(filename);
@@ -68,56 +62,31 @@ public class SaveGameStep {
 		}
 		assertEquals(false,file.exists());
 	}
-	/**
-	 * @author Anthony Harissi Dagher
-	 * @param string
-	 * @throws InvalidInputException
-	 * @throws IOException 
-	 * @see saveGame.feature
-	 */
+	
 	@When("the user initiates saving the game to a file named {string}")
 	public void the_user_initiates_saving_the_game_to_a_file_named(String filename) throws InvalidInputException, IOException {
 		boolean saved=KDController.saveGame(filename, true);
 		assertEquals(true,saved);
 		lastModified = new File(filename).lastModified();
 	}
-	/**
-	 * @author Anthony Harissi Dagher
-	 * @param string
-	 * @throws IOException 
-	 * @see saveGame.feature
-	 */
+	
 	@Then("a file named {string} shall be created in the filesystem")
 	public void a_file_named_shall_be_created_in_the_filesystem(String filename) throws IOException {
 		assertTrue(new File(filename).exists());
 	}
-	/**
-	 * @author Anthony Harissi Dagher
-	 * @param string
-	 * @throws IOException 
-	 * @see saveGame.feature
-	 */
+	
 	@Given("the file named {string} exists in the filesystem")
 	public void the_file_named_exists_in_the_filesystem(String filename) throws IOException  {
 		assertTrue(new File(filename).exists());
 		
 	}
-	/**
-	 * @author Anthony Harissi Dagher
-	 * @param string
-	 * @throws InvalidInputException 
-	 * @throws IOException 
-	 */
+	
 	@When("the user agrees to overwrite the existing file named {string}")
 	public void the_user_agrees_to_overwrite_the_existing_file_named(String newFilename) throws InvalidInputException, IOException {
 		boolean overwrite=true;
 		KDController.saveGame(newFilename, overwrite);
 	}
-	/**
-	 * @author Anthony Harissi Dagher
-	 * @param string
-	 * @see saveGame.feature
-	 */
+	
 	@Then("the file named {string} shall be updated in the filesystem")
 	public void the_file_named_shall_be_updated_in_the_filesystem(String filename) {
 		long newModified = new File(filename).lastModified();

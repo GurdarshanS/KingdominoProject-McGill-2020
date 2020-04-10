@@ -19,7 +19,7 @@ import java.util.HashMap;
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
-import ca.mcgill.ecse223.kingdomino.development.View;
+import ca.mcgill.ecse223.kingdomino.controller.View;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -43,6 +43,13 @@ import io.cucumber.java.en.When;
 
 
 public class SM_ResolveTieBreakStep {
+	/**
+	 * These methods checks for the state machine 
+	 * transition for resolving tiebreak
+	 * 
+	 * @see ResolveTieBreak.feature
+	 * @author Jing Han	260528152
+	 */
 
 		private static Kingdomino kd = KingdominoApplication.getKingdomino();
 		
@@ -55,7 +62,6 @@ public class SM_ResolveTieBreakStep {
 //			to resolve tie break, ie scoring, needs to be in the ConfirmingLastChoice state, 
 			kd.setStateMachine();
 			kd.getStateMachine().setGamestatus("ConfirmingLastChoice"); 						
-			System.out.println("state machine state: "+kd.getStateMachine().getGamestatusFullName());
 		}
 		
 		@Given("the players have the following two dominoes in their respective kingdoms:")
@@ -105,34 +111,14 @@ public class SM_ResolveTieBreakStep {
 				DominoSelection tmpSelect = new DominoSelection (foundPlayer,dominoToPlace2,tmpDraft);
 				
 			}
-			
-			//verify player kingdoms via console printout
-			for (Player p:kd.getCurrentGame().getPlayers()) {
-				System.out.println("Player: "+p.getColor()+" had domino "+p.getDominoSelection().getDomino().getId()+" selected and then placed");
-				for (KingdomTerritory t:p.getKingdom().getTerritories()) {
-					if (t instanceof DominoInKingdom) {
-						String row = String.format("domino ID: %1$-5d  posx: %2$-5d posy: %3$-5d direction: %4$-5s status: %5$-5s",
-								((DominoInKingdom) t).getDomino().getId(),t.getX(),t.getY(),((DominoInKingdom) t).getDirection(),
-								((DominoInKingdom) t).getDomino().getStatus());
-						System.out.println(row);
-					}
-				}
-				System.out.println();
-			}
-			
-			//verify that the guard hasAllPlayersPlayed() does indeed pass. 
-			boolean allPlayed=KDQuery.hasAllPlayersPlayed();
-			System.out.println("has all players played: "+allPlayed);
+				
 		}
 		
 	@When("calculate ranking is initiated")
 	public static void calculate_ranking_initiated() {
 		//essentially meaning that we are triggering the scoring transition between Finishing and EndingGame
 		//so check that we are in the correct original state
-		System.out.println("superstate before transition:  "+kd.getStateMachine().getGamestatusFullName());
 		boolean scored=KDController.scoringSM();
-		System.out.println("was the transition successful: "+scored);
-		System.out.println("state after the transition:    "+kd.getStateMachine().getGamestatusFullName());
 	}
 	
 	@Then("player standings should be the followings:")
@@ -154,12 +140,8 @@ public class SM_ResolveTieBreakStep {
 		for (Player p:kd.getCurrentGame().getPlayers()) {
 			int actualRanking=p.getCurrentRanking();
 			int expectedRanking=expectedPlayerRankings.get(p.getColor().name().toLowerCase());
-			String row = String.format("player ID: %1$-10s  expected ranking: %2$-5d actual ranking: %3$-5d",
-					p.getColor(),expectedRanking,actualRanking);
-			System.out.println(row);
 			
 			if (actualRanking!=expectedRanking) {
-				System.out.println("FAILED: RANKING MISMATCH!!!");
 				rankingCorrect=false;
 				break;
 			}

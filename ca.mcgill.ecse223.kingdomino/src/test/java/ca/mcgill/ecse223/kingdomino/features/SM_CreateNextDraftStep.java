@@ -17,7 +17,7 @@ import java.util.Map;
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
-import ca.mcgill.ecse223.kingdomino.development.View;
+import ca.mcgill.ecse223.kingdomino.controller.View;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -41,6 +41,13 @@ import io.cucumber.java.en.When;
 
 
 public class SM_CreateNextDraftStep {
+	/**
+	 * These methods checks for the state machine 
+	 * transition for creating next drarft
+	 * 
+	 * @see CreateNextDraft.feature
+	 * @author Massimo Vadacchino 260928064
+	 */
 	
 	private static Kingdomino kd = KingdominoApplication.getKingdomino();
 	private static List<Integer> prevNextIds=new ArrayList<Integer>();
@@ -103,7 +110,6 @@ public class SM_CreateNextDraftStep {
 			prevNextIds.add(d.getId());
 		}
 
-		System.out.println("number of drafts in game: "+kd.getCurrentGame().getAllDrafts().size());
 	}
 	
 	@Given("there is a current draft")
@@ -160,13 +166,7 @@ public class SM_CreateNextDraftStep {
 		
 		for (int i=0;i<=stopIndex;i++) {
 			kd.getCurrentGame().getAllDomino(i).setStatus(DominoStatus.Excluded);
-		}
-		
-		System.out.println("state machine: "+kd.getStateMachine().getGamestatusFullName());
-		System.out.println("all players chosen: "+KDQuery.hasAllPlayersChosen());
-		System.out.println("next draft created: "+created);
-		View.printDominos(kd);
-		
+		}	
 
 	}
 	
@@ -232,8 +232,6 @@ public class SM_CreateNextDraftStep {
 	
 	@Then("the former next draft is now the current draft")
 	public static void former_next_is_now_current() {
-		System.out.println("prevNextIds: ");
-		System.out.println(prevNextIds);
 		List<Integer> nowCurrentIds=new ArrayList<Integer>();
 		for (Domino d:kd.getCurrentGame().getCurrentDraft().getIdSortedDominos()) nowCurrentIds.add(d.getId());
 		assertEquals(prevNextIds,nowCurrentIds);

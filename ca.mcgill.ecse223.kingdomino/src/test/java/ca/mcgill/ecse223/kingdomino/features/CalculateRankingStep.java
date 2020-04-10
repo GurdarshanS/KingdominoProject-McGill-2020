@@ -14,7 +14,7 @@ import java.util.*;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
-import ca.mcgill.ecse223.kingdomino.development.View;
+import ca.mcgill.ecse223.kingdomino.controller.View;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -42,7 +42,7 @@ public class CalculateRankingStep {
 	 * based on the points of each player and then provide the calculated rankings.
 	 *  
 	 *  @see CalculateRanking.feature
-	 *  @author Gurdarshan Singh 260927466, refactored by Jing Han
+	 *  @author Gurdarshan Singh 260927466
 	 *  
 	 */
 	
@@ -52,7 +52,6 @@ public class CalculateRankingStep {
 	    
 	    kd.setStateMachine();
 		kd.getStateMachine().setGamestatus("ConfirmingLastChoice"); 						
-		System.out.println("state machine state: "+kd.getStateMachine().getGamestatusFullName());
 	}
 
 
@@ -65,7 +64,6 @@ public class CalculateRankingStep {
 		}
 		
 		KDController.calculatePlayerRanking();
-		View.printPlayers(kd);
 		
 		List<Integer> rankings=new ArrayList<Integer>();
 		

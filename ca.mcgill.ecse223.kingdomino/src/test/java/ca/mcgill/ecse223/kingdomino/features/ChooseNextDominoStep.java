@@ -48,7 +48,6 @@ public class ChooseNextDominoStep {
 			// so the state machine should be in state ConfirmingChoice
 			
 			kd.getStateMachine().setGamestatus("ConfirmingChoice");
-			System.out.println(kd.getStateMachine().getGamestatusFullName());
 		}
 	 
 	 @Given("the next draft is sorted with dominoes {string}")

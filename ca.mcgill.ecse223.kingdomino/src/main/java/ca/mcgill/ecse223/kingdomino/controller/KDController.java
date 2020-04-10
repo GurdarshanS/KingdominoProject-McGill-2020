@@ -17,60 +17,181 @@ public class KDController {
 	
 	public KDController(){}
 	
+	/**
+	 * 
+	 * wrapper method for initializing a state machine on
+	 * 
+	 * @author Jing Han 260528152
+	 * @param none
+	 * @return void
+	 * 
+	 */
+	
 	public static void initializeSM() {
 		KingdominoApplication.setStatemachine();
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		sm.setGamestatus("CreatingFirstDraft");
 	}
 	
+	
+	/**
+	 * 
+	 * wrapper method for triggering the 
+	 * place transition of state machine (SM)
+	 * 
+	 * @author Jing Han 260528152
+	 * @param none
+	 * @return boolean
+	 * 
+	 */
+	
 	public static boolean placeSM() {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		return sm.place();
 	}
+	
+	/**
+	 * 
+	 * wrapper method for triggering the 
+	 * discard transition of SM
+	 * 
+	 * @author Massimo Vadacchino 260928064
+	 * @param none
+	 * @return boolean
+	 * 
+	 */
 	
 	public static boolean discardSM() {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		return sm.discard();
 	}
 	
+	/**
+	 * 
+	 * wrapper method for triggering the 
+	 * scoring transition of SM
+	 * 
+	 * @author Massimo Vadacchino 260928064
+	 * @param none
+	 * @return boolean
+	 * 
+	 */
+	
 	public static boolean scoringSM() {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		return sm.scoring();
 	}
 	
-	public static boolean manipulateLast(int posx, int posy, String dir) {
+	/**
+	 * 
+	 * wrapper method for triggering the 
+	 * manipulateLast transition of SM
+	 * 
+	 * @author Eric Guan 260930210
+	 * @param posx
+	 * @param posy
+	 * @param dir
+	 * @return boolean
+	 * 
+	 */
+	
+	public static boolean manipulateLastSM(int posx, int posy, String dir) {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		return sm.manipulateLast(posx, posy, dir);
 	}
 	
-	public static boolean manipulateNext(int posx, int posy, String dir) {
+	/**
+	 * 
+	 * wrapper method for triggering the 
+	 * manipulateNext transition of SM
+	 * 
+	 * @author Eric Guan 260930210
+	 * @param posx
+	 * @param posy
+	 * @param dir
+	 * @return boolean
+	 * 
+	 */
+	
+	public static boolean manipulateNextSM(int posx, int posy, String dir) {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		return sm.manipulateNext(posx, posy, dir);
 	}
 	
+	/**
+	 * 
+	 * wrapper method for triggering the 
+	 * draftReady transition of SM
+	 * 
+	 * @author Anthony Harissi Dagher 260924250
+	 * @param none
+	 * @return boolean
+	 * 
+	 */
+		
 	public static boolean draftReadySM() {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		boolean complete=sm.draftReady();
 		return complete;
 	}
 	
+	/**
+	 * 
+	 * wrapper method for triggering the 
+	 * choose transition of SM
+	 * 
+	 * @author Anthony Harissi Dagher 260924250
+	 * @param domino
+	 * @return boolean
+	 * 
+	 */
 	public static boolean chooseSM(Domino domino) {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		return sm.choose(domino);
 	}
+	
+	/**
+	 * 
+	 * wrapper method for triggering the 
+	 * selectionReady transition of SM
+	 * 
+	 * @author Keon Olszewski 260927813
+	 * @param none
+	 * @return boolean
+	 * 
+	 */
 	
 	public static boolean selectionReadySM() {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		return sm.selectionReady();
 	}
 	
-	
+	/**
+	 * 
+	 * wrapper method for triggering the 
+	 * nextSelectionReady transition of SM
+	 * 
+	 * @author Keon Olszewski 260927813
+	 * @param none
+	 * @return boolean
+	 * 
+	 */
 	public static boolean nextSelectionReadySM() {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		return sm.nextSelectionReady();
 	}
 	
-	public static boolean lastSelectionReady(int posx, int posy, String dir) {
+	/**
+	 * 
+	 * wrapper method for triggering the 
+	 * lastSelectionReady transition of SM
+	 * 
+	 * @author Gurdarshan Singh 260927466
+	 * @param none
+	 * @return boolean
+	 * 
+	 */
+	public static boolean lastSelectionReadySM(int posx, int posy, String dir) {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		return sm.lastSelectionReady(posx, posy, dir);
 	}
@@ -81,7 +202,6 @@ public class KDController {
 	 * otherwise creates a new Kingdomino object and saves it
 	 * to memory for loading the next time it is called
 	 * 
-	 * refactored for deliverable 3 by Jing Han 260528152
 	 * 
 	 * @see  - LoadGame.feature
 	 * @author Anthony Harissi Dagher 260924250
@@ -105,7 +225,6 @@ public class KDController {
 	 * by default overwrites existing object in memory
 	 * if present
 	 * 
-	 * refactored for deliverable 3 by Jing Han 260528152
 	 * 
 	 * @see  - SaveGame.feature
 	 * @author Anthony Harissi Dagher 260924250
@@ -141,12 +260,10 @@ public class KDController {
 	 */
 
 	public static void initiateEmptyGame() {
-		//start empty game
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		Game game = new Game(48, kingdomino);
 		game.setNumberOfPlayers(4);
 		kingdomino.setCurrentGame(game);
-		// Populate game
 		addDefaultUsersAndPlayers(game);
 		createAllDominoes(game);
 		game.setNextPlayer(game.getPlayer(0));
@@ -186,8 +303,7 @@ public class KDController {
 	 * @see  - ProvideUserProfile.feature
 	 * @author Jing Han	260528152
 	 * @param username
-	 * @return void
-	 * @throws java.lang.IllegalArgumentException
+	 * @return boolean
 	 */
 	
 	public static boolean assignPlayerToUser(Player player, User user) {
@@ -199,20 +315,18 @@ public class KDController {
 			return false;
 		}
 	}
-	
-	
 
 	
 	/**
 	 * 
 	 * sets the game options for current game
 	 * 
-	 * refactored for deliverable 3 by Jing Han 260528152
 	 * 
 	 * @see  - SetGameOptions.feature
 	 * @author Anthony Harissi Dagher 260924250
-	 * @param none
-	 * @return boolean
+	 * @param numPlayers
+	 * @param selectedBonusOptions
+	 * @return none
 	 * @throws java.lang.InvalidInputException
 	 * 
 	 */
@@ -251,6 +365,21 @@ public class KDController {
 		
 	} 
 	
+	/**
+	 * 
+	 * creates the full domino pile from the given
+	 * .dat file. arranges in ascending order
+	 * 
+	 * 
+	 * @see  - BrowseDominoPile.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param game
+	 * @param pileSize
+	 * @return none
+	 * @throws java.lang.IllegalArgumentException
+	 * 
+	 */
+	
 	public static void createDominoPile(Game game, int pileSize) {
 		
 		List<Integer> randomIds = uniqueRandomSequence(pileSize,1,48);				
@@ -259,7 +388,7 @@ public class KDController {
 			String line = "";
 			String delimiters = "[:\\+()]";
 			while ((line = br.readLine()) != null) {
-				String[] dominoString = line.split(delimiters); // {id, leftTerrain, rightTerrain, crowns}
+				String[] dominoString = line.split(delimiters); 
 				int dominoId = Integer.decode(dominoString[0]);
 				TerrainType leftTerrain = getTerrainType(dominoString[1]);
 				TerrainType rightTerrain = getTerrainType(dominoString[2]);
@@ -287,6 +416,19 @@ public class KDController {
 		
 	}
 	
+	/**
+	 * 
+	 * shuffles the existing domino pile from 
+	 * by arranging the dominos in a random order
+	 * 
+	 * 
+	 * @see  - ShuffleDominoPile.feature
+	 * @author Gurdarshan Singh 260927466
+	 * @param none
+	 * @return none
+	 * 
+	 */
+	
 	public static void shuffleDominoPile() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
 		Game game = kd.getCurrentGame();
@@ -305,6 +447,20 @@ public class KDController {
 		game.setTopDominoInPile(game.getAllDomino(0));
 	}
 	
+	/**
+	 * 
+	 *  creates the 4 players and arrange them
+	 *  in a default order. actual play order
+	 *  to be determined by the generateInitialPlayerOrder
+	 *  method
+	 * 
+	 * 
+	 * @see  - StartANewGame.feature
+	 * @author Anthony Harissi Dagher 260924250
+	 * @param none
+	 * @return none
+	 * 
+	 */
 	public static void createPlayers() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
 		Game game = kd.getCurrentGame();
@@ -321,6 +477,19 @@ public class KDController {
 		}
 	}
 	
+	/**
+	 * 
+	 * randomly assigns playing order to the 
+	 * default generated players
+	 * 
+	 * 
+	 * @see  - InitializingGame.feature
+	 * @author Anthony Harissi Dagher 260924250
+	 * @param none
+	 * @return none
+	 * 
+	 */
+	
 	public static void generateInitialPlayerOrder() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
 		Game game = kd.getCurrentGame();
@@ -335,6 +504,19 @@ public class KDController {
 		game.setNextPlayer(game.getPlayer(0));
 		
 	}
+	
+	/**
+	 * 
+	 * updates player order based on their previous
+	 * domino selections
+	 * 
+	 * 
+	 * @see  - CreateNextDraft.feature
+	 * @author Jing Han 260528152
+	 * @param none
+	 * @return none
+	 * 
+	 */
 	
 	public static void updatePlayerOrder() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
@@ -359,36 +541,6 @@ public class KDController {
 		kd.getCurrentGame().setNextPlayer(kd.getCurrentGame().getPlayer(0));
 	}
 	
-//	public static void updatePlayerOrder() {
-//		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-//		Game game = kingdomino.getCurrentGame();
-//		Draft currentDraft = game.getCurrentDraft();
-//		for (Domino d:currentDraft.getIdSortedDominos()) {
-//			System.out.println(d.getId()+": "+d.hasDominoSelection());
-//		}
-//		
-//		List<Domino> draftDominos = currentDraft.getIdSortedDominos();
-//		
-//		List<Player> newOrderPlayers = new ArrayList<Player>();
-//		
-//		for (Domino d:draftDominos) {
-//			newOrderPlayers.add(d.getDominoSelection().getPlayer());
-//		}
-//		
-//		for (int i=0;i<newOrderPlayers.size();i++) {
-//			game.addOrMovePlayerAt(newOrderPlayers.get(i), i);
-//		}
-//		
-//		game.setNextPlayer(game.getPlayer(0));
-//		
-//
-////		for (Player p:game.getPlayers()) {                 
-////			p.getDominoSelection().delete();            
-////		}
-//		
-//
-//	}
-	
 	
 	
 	/**
@@ -398,12 +550,11 @@ public class KDController {
 	 * initial current draft, which is sorted and facing up, and the initial
 	 * next draft, which is facing down and unsorted
 	 * 
-	 * refactored for deliverable 3 by Jing Han 260528152
 	 * 
 	 * @see  - LoadGame.feature
 	 * @author Anthony Harissi Dagher 260924250
 	 * @param none
-	 * @return boolean
+	 * @return none
 	 * 
 	 */
 	
@@ -424,10 +575,9 @@ public class KDController {
 	 * does not change underlying list
 	 * 
 	 * @see  - ProvideUserProfile.feature
-	 * @author Jing Han	260528152
-	 * @param username
-	 * @return void
-	 * @throws java.lang.IllegalArgumentException
+	 * @author Gurdarshan Singh 260927466
+	 * @param none
+	 * @return sortedDominos
 	 */
 	
 	public static List<Domino> browseDominos(){
@@ -469,28 +619,12 @@ public class KDController {
 	 * end game when there is no more domino for  next 
 	 * and it is set to null
 	 * 
-	 * refactored by Jing Han 260528152
-	 * 
 	 * @see  - CreateNextDraft.feature
 	 * @author Keon Olszewski 260927813
-	 * @param player
+	 * @param none
 	 * @return void
-//	 */
-//	
-//	public static void createNextDraft() {
-//		Kingdomino kd = KingdominoApplication.getKingdomino();
-//		Game game = kd.getCurrentGame();		
-//		
-//		
-//		if(!KDQuery.isDraftLimitReached()) {
-//			Draft newDraft=createOneDraft();
-//			
-//			newDraft.setDraftStatus(DraftStatus.FaceDown);
-//			game.setCurrentDraft(newDraft);
-//			changeDraftDominoStatus(newDraft,Domino.DominoStatus.InCurrentDraft);
-//
-//		}		
-//	}
+	 */
+
 	
 	public static void createNextDraft() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
@@ -520,7 +654,6 @@ public class KDController {
 
 		}
 		else if (KDQuery.isDraftLimitReached()) {
-			System.out.println("##################### limit reached#####################");
 			if (game.getNextDraft()!=null) {
 				changeDraftDominoStatus(game.getNextDraft(),DominoStatus.InCurrentDraft);
 
@@ -530,6 +663,18 @@ public class KDController {
 		}
 		
 	}
+	
+	
+	/**
+	 * 
+	 * This method orders the dominoes in the next draft
+	 * by ID number
+	 * 
+	 * @see  - OrderAndRevealNextDraft.feature
+	 * @author Keon Olszewski 260927813
+	 * @param void
+	 * @return void
+	 */
 	
 	public static void sortNextDraft() {
 		
@@ -559,6 +704,16 @@ public class KDController {
 	}
 	
 	
+	/**
+	 * 
+	 * This method Reveals next Draft by Setting
+	 * Next Draft status to FaceUp 
+	 * 
+	 * @see  - OrderAndRevealNextDraft.feature
+	 * @author Keon Olszewski 260927813
+	 * @param void
+	 * @return void
+	 */
 	
 	public static void revealNextDraft() {
 		
@@ -575,7 +730,6 @@ public class KDController {
 	 * This method lets the next player of current game to choose a domino
 	 * from the sorted current Draft
 	 * 
-	 * refactored by Jing Han 260528152
 	 * 
 	 * @see  - ChooseNextDomino.feature
 	 * @author Keon Olszewski 260927813
@@ -594,12 +748,28 @@ public class KDController {
 			return;
 		}
 		
-//		aDomino.setStatus(DominoStatus.Excluded);
+		
+		@SuppressWarnings("unused")
 		DominoSelection currentSelection = new DominoSelection(currentPlayer,aDomino,currentDraft);
 		
 		updateNextPlayer(currentPlayer);
      
 	}
+	
+	/**
+	 * 
+	 * This method lets updates the next 'next' player of the current game
+	 * to the player positioned 1 index after the current 'next' player in
+	 * the game.getPlayers() list.
+	 * in the case of the current 'next' player being the last in list,
+	 * sets the next 'next' to the first player in the list
+	 * 
+	 * 
+	 * @see  - SelectingDomino.feature
+	 * @author Jing Han 260528152
+	 * @param currentPlayer
+	 * @return void
+	 */
 	
 	public static void updateNextPlayer(Player currentPlayer) {
 		Game game=currentPlayer.getGame();
@@ -635,7 +805,7 @@ public class KDController {
 	 * @param posx
 	 * @param posy
 	 * @param dir
-	 * @return DominoInKingdom
+	 * @return dInK
 	 * 
 	 */
 	
@@ -671,7 +841,7 @@ public class KDController {
 	 * @param posx
 	 * @param posy
 	 * @param dir
-	 * @return DominoInKingdom
+	 * @return dInK
 	 * 
 	 */
 	
@@ -703,15 +873,12 @@ public class KDController {
 	 * the 9x9 grid size. The dominoes status and position
 	 * is updated accordingly.
 	 * 
-	 * refactored by Jing Han 206528152
 	 * 
 	 * @see MoveCurrentDomino.feature
 	 * @author Massimo Vadacchino 260928064
 	 * @param aPlayer
-	 * @param dInKingdom
 	 * @param movement
 	 * @return void
-	 * @throws java.lang.IllegalArgumentException
 	 * 
 	 */
 	
@@ -738,7 +905,6 @@ public class KDController {
 			dInKingdom.setX(xPosPrevious);
 			dInKingdom.setY(yPosPrevious);
 			dInKingdom.getDomino().setStatus(prevStatus);
-//			System.out.println("invalid: grid size exceeded");
 
 			return;
 			
@@ -768,15 +934,12 @@ public class KDController {
 	 * the 9x9 grid size. The dominoes status and direction
 	 * is updated accordingly.
 	 * 
-	 * refactored by Jing Han 206528152
 	 * 
 	 * @see RotateCurrentDomino.feature
 	 * @author Massimo Vadacchino 260928064
 	 * @param aPlayer
-	 * @param dInKingdom
 	 * @param rotation
 	 * @return void
-	 * @throws java.lang.IllegalArgumentException
 	 * 
 	 */
 	
@@ -810,7 +973,6 @@ public class KDController {
 			dInKingdom.setY(yPosPrevious);
 			dInKingdom.getDomino().setStatus(prevStatus);
 			dInKingdom.setDirection(dominoDir);
-//			System.out.println("invalid: grid size exceeded\n");
 			return;
 			
 		}
@@ -840,14 +1002,11 @@ public class KDController {
 	 * of "CorrectlyPrePlaced". If not, the domino will 
 	 * have the same attributes as before. 
 	 * 
-	 * refactored by Jing Han 260528152
 	 * 
 	 * @see PlaceDomino.feature
 	 * @author Massimo Vadacchino 260928064
 	 * @param aPlayer
-	 * @param dominoToPlace
-	 * @return void
-	 * @throws java.lang.IllegalArgumentException
+	 * @return boolean
 	 * 
 	 */
 	
@@ -900,7 +1059,8 @@ public class KDController {
 	 * @see VerifyGridSize.feature
 	 * @author Jing Han 260528152
 	 * @param player
-	 * @return respectGrid
+	 * @param testDomino
+	 * @return boolean
 	 */
 	
 	public static boolean verifyGridSizeAllKingdom(Player player,DominoInKingdom testDomino) {
@@ -955,7 +1115,8 @@ public class KDController {
 	 * @see VerifyNoOverlapping.feature
 	 * @author Jing Han 260528152
 	 * @param player
-	 * @return noOverlap
+	 * @param testDomino
+	 * @return boolean
 	 */
 	
 	public static boolean verifyNoOverlapLastTerritory(Player player,DominoInKingdom testDomino) {
@@ -1000,41 +1161,6 @@ public class KDController {
 		}
 	}
 	
-//	public static boolean verifyNoOverlapLastTerritory(Player player) {
-//		
-//		boolean noOverlap=true;
-//		
-//		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
-//		
-//		if (territories.size()==1) {
-//			noOverlap=true;
-//			return noOverlap;
-//		}
-//		
-//		else {
-//			
-//			KingdomTerritory tA;
-//			KingdomTerritory tB;
-//	
-//			tA=territories.get(territories.size()-1);
-//				
-//			for (int j=territories.size()-2;j>-1;j--) {
-//					
-//					tB=territories.get(j);
-//
-//					if (checkOverlap(tA,tB)){
-//						noOverlap=false;
-//						break;
-//					}
-//					else {
-//						noOverlap=true;
-//					}
-//					
-//				}
-//			return noOverlap;
-//			}
-//			
-//	}
 	
 	/**
 	 * 
@@ -1044,7 +1170,8 @@ public class KDController {
 	 * @see VerifyCastleAdjacency.fature
 	 * @author Jing Han 260528152
 	 * @param player
-	 * @return castleAdj
+	 * @param testDomino
+	 * @return boolean
 	 */
 	
 	public static boolean verifyCastleAdjacency(Player player,DominoInKingdom testDomino) {
@@ -1087,7 +1214,8 @@ public class KDController {
 	 * @see VerifyNeighborAdjacency.fature
 	 * @author Jing Han 260528152
 	 * @param player
-	 * @return neighborAdj
+	 * @param testDomino
+	 * @return boolean
 	 */
 	
 	
@@ -1142,57 +1270,6 @@ public class KDController {
 
 	}
 	
-//	public static boolean verifyNeighborAdjacencyLastTerritory(Player player) {
-//		
-//		boolean neighborAdj=true;
-//		
-//		List<KingdomTerritory> t =player.getKingdom().getTerritories();
-//		
-//		if (t.size()==1) {
-//			neighborAdj=true;
-//			return neighborAdj;
-//		}
-//		else {
-//			
-//			int validNeighborCount=0;
-//			
-//			DominoInKingdom prePlacedDomino = (DominoInKingdom) t.get(t.size()-1);
-//			
-//			Neighborhood leftNeighborhood = getDominoLeftNeighbors(t,prePlacedDomino);
-//			Neighborhood rightNeighborhood =getDominoRightNeighbors(t,prePlacedDomino);
-//
-//			List<TerrainType> leftTileNeighborTerrains = leftNeighborhood.getNeighborTerrainType();
-//			
-//			List<TerrainType> rightTileNeighborTerrains = rightNeighborhood.getNeighborTerrainType();
-//			
-//			if (!leftTileNeighborTerrains.isEmpty()) {
-//				String leftTerrain=prePlacedDomino.getDomino().getLeftTile().name();
-//				for (TerrainType testTerrain:leftTileNeighborTerrains) {
-//					String testTerrainName=testTerrain.name();
-//					if (testTerrainName.equalsIgnoreCase(leftTerrain)){
-//						validNeighborCount++;
-//					}
-//				}
-//			}
-//			
-//			if (!rightTileNeighborTerrains.isEmpty()) {
-//				for (TerrainType testTerrain:rightTileNeighborTerrains) {
-//					if (testTerrain.name().equalsIgnoreCase(prePlacedDomino.getDomino().getRightTile().name())){
-//						validNeighborCount++;
-//					}
-//				}
-//			}
-//			
-//			if (validNeighborCount==0) {
-//				neighborAdj=false;
-//			}
-//			else {
-//				neighborAdj=true;
-//			}
-//			return neighborAdj;
-//		}
-//		
-//	}
 	
 	/**
 	 * 
@@ -1228,6 +1305,14 @@ public class KDController {
 		   }
 	}
 
+	/**
+	 * 
+	 * This method calculates the ranking of players in kingdom
+	 * @see  - CalculatePlayerRanking.feature
+	 * @author Jing Han 260528152
+	 * @param none
+	 * @return void
+	 */
 	public static void calculatePlayerRanking() {
 		
 		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
@@ -1266,6 +1351,14 @@ public class KDController {
 		}		
 	}
 	
+	
+	/**
+	 * 
+	 * This class the Exception class
+	 * @author Anthony Harissi Dagher
+	 * @param errorMessage
+	 */
+	
 	public static class InvalidInputException extends Exception {
 		
 		private static final long serialVersionUID = -5633915762703837868L;
@@ -1287,8 +1380,8 @@ public class KDController {
 	 * 
 	 * @see CalculateRanking.feature
 	 * @author Gurdarshan Singh 260927466
-	 * @param String
-	 * @return PlayerColor
+	 * @param s1
+	 * @return p
 	 */
 	
 	public static PlayerColor retrieveColor(String s1) {
@@ -1353,8 +1446,9 @@ public class KDController {
 	 * 
 	 * @see BrowseDominoPile.feature
 	 * @author Gurdarshan Singh 260927466
-	 * @param String
+	 * @param terrain
 	 * @return TerrainType
+	 * @throws java.lang.IllegalArgumentException
 	 */
 	
 	public static TerrainType retrieveTerrainType(String terrain) {
@@ -1573,7 +1667,7 @@ public class KDController {
 	/**
 	 * 
 	 * This method gets gets a user by Name
-	 * 
+	 * @author Keon Olszewski 260927813
 	 * @param userName
 	 * @return userList
 	 */
@@ -1590,6 +1684,23 @@ public class KDController {
 		return null;
 	}
 	
+	/**
+	 * 
+	 * This method gets gets a domino by its id
+	 * @author Massimo Vadacchino 260928064
+	 * @param userName
+	 * @return userList
+	 */
+	
+	public static Domino getdominoByID(int id) {
+		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
+		for (Domino domino : game.getAllDominos()) {
+			if (domino.getId() == id) {
+				return domino;
+			}
+		}
+		throw new java.lang.IllegalArgumentException("Domino with ID " + id + " not found.");
+	}
 	
 	////////////////////////////////////////
 	/// ---- Private Helper Methods ---- ///
@@ -2260,14 +2371,6 @@ public class KDController {
 		}
 	}
 	
-	public static Domino getdominoByID(int id) {
-		Game game = KingdominoApplication.getKingdomino().getCurrentGame();
-		for (Domino domino : game.getAllDominos()) {
-			if (domino.getId() == id) {
-				return domino;
-			}
-		}
-		throw new java.lang.IllegalArgumentException("Domino with ID " + id + " not found.");
-	}
+
 	
 }

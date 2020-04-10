@@ -12,6 +12,18 @@ public class KDQuery {
 	
 	public KDQuery() {}
 	
+	/**
+	 * 
+	 * This method checks returns a
+	 * 'valid' or 'invalid' status
+	 * for a player's kingdom based
+	 * on the verification methods
+	 * of the controller
+	 * 
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return validity
+	 */
 	
 	public static String getKingdomVerificationResult(Player player) {
 		String validity="valid";
@@ -23,6 +35,17 @@ public class KDQuery {
 		
 		return validity;
 	}
+	
+	/**
+	 * 
+	 * This method returns the size of the
+	 * largest territory in a player's kingdom
+	 * and the player's total number of crowns
+	 * 
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return sizeAndCrown
+	 */
 	
 	public static int[] playerMaxPropSizeAndNumCrown(Player player) {
 		int size=-1;
@@ -37,6 +60,17 @@ public class KDQuery {
 		return sizeAndCrown;
 	}
 	
+	/**
+	 * 
+	 * This method returns a list of Dominos
+	 * in a player's kingdom that violates
+	 * the verification methods
+	 * 
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return errorDominos
+	 */
+	
 	public static List<DominoInKingdom> getErroneouslyPrePlacedDomino(Player player) {
 		List<DominoInKingdom> errorDominos = new ArrayList<DominoInKingdom>();
 		List<KingdomTerritory> t = getPlayerTerritory(player);
@@ -50,24 +84,29 @@ public class KDQuery {
 		return errorDominos;
 	}
 	
+	/**
+	 * 
+	 * simple wrapper method for getting the territories of a player
+	 * 
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return List<KingdomTerritory>
+	 */
+	
 	public static List<KingdomTerritory> getPlayerTerritory(Player player){
 		return player.getKingdom().getTerritories();		
 	}
 	
-	public static int getPlayerKingdomSize(Player player) {
-		
-		int[][] dominoPos=getPlayerTerritoryCoordinates(player);
+	/**
+	 * 
+	 * simple wrapper method for returning the coordinates 
+	 * of all tiles in a player's kingdom
+	 * 
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return dominoPos
+	 */
 
-		int maxSize=0;
-		for (int[] each:dominoPos) {
-			int[] minmax=minMaxArray(each);
-			int newSize=minmax[1]-minmax[0]+1;
-			if (newSize>maxSize) {
-				maxSize=newSize;
-			}
-		}
-		return maxSize;
-	}
 	
 	public static int[][] getPlayerTerritoryCoordinates(Player player) {
 		
@@ -95,6 +134,17 @@ public class KDQuery {
 		}
 		return dominoPos;
 	}
+	
+	/**
+	 * 
+	 * simple wrapper method for calculating the 
+	 * position of a domino's right tile based on 
+	 * left tile and direction
+	 * 
+	 * @author Jing Han 260528152
+	 * @param d
+	 * @return coord2
+	 */
 	
 	public static int[] calculateRightPos(KingdomTerritory d) {
 		
@@ -130,7 +180,18 @@ public class KDQuery {
 		}
 		return coord2;
 	}
-		
+	
+	/**
+	 * 
+	 * determines valid coordinates for next domino placement
+	 * in a player's kingdom. useful for discarding
+	 * 
+	 * @see DiscardDomino.feature 
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return allPossibleCoords
+	 */
+	
 	public static List<List<Integer>> getValidFreeCoordinates(Player player) {
 		List<List<Integer>> allPossibleCoords = new ArrayList<List<Integer>>();
 		List<List<Integer>> combinedOccupiedCoords = new ArrayList<List<Integer>>();
@@ -179,21 +240,61 @@ public class KDQuery {
 
 	}
 	
+	/**
+	 * 
+	 * simple wrapper method for returning the 
+	 * number of drafts created so far in game
+	 * 
+	 * @author Jing Han 260528152
+	 * @param none
+	 * @return int
+	 */
 	public static int getNumDraftsInGame() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
 		Game game = kd.getCurrentGame();
 		return game.getAllDrafts().size();
 	}
 	
+	/**
+	 * 
+	 * determines whether a domino has already been 
+	 * chosen based on .hasDominoSelection
+	 * 
+	 * @author Jing Han 260528152
+	 * @param domino
+	 * @return boolean
+	 */
 	public static boolean isDominoTaken(Domino domino) {
 		return domino.hasDominoSelection();
 	}
+	
+	/**
+	 * 
+	 * determines whether the current player is the last
+	 * in the current turn
+	 *
+	 * @see guard [isCurrentPlayerTheLastInTurn] of state machine 
+	 * @author Jing Han 260528152
+	 * @param p
+	 * @return boolean
+	 */
 	
 	public static boolean isCurrentPlayerTheLastInTurn(Player p) {
 		List<Player> allPlayers=p.getGame().getPlayers();
 		Player lastPlayer=allPlayers.get(allPlayers.size()-1);
 		return p.equals(lastPlayer);
 	}
+	
+	/**
+	 * 
+	 * determines whether all the players have chosen in the 
+	 * current round after placing/discarding their dominos
+	 *
+	 * @see guard [hasAllPlayersChosen] of state machine 
+	 * @author Jing Han 260528152
+	 * @param none
+	 * @return boolean
+	 */
 	
 	public static boolean hasAllPlayersChosen() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
@@ -210,10 +311,20 @@ public class KDQuery {
 		return allChosen;
 	}
 	
+	/**
+	 * whether a domino has a valid placement given the player's
+	 * current kingdom
+	 *
+	 * @see [isThereAvailablePlacement] guard of SM
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @param dInK
+	 * @return boolean
+	 */
+	
 	public static boolean isThereAvailablePlacement(Player player, DominoInKingdom dInK) {
 		List<List<Integer>> freeCoords=KDQuery.getValidFreeCoordinates(player);
 		if (freeCoords.size()==0) {
-//			System.out.println("no free space on board at all, return false");
 			return false;
 		}
 		
@@ -230,27 +341,21 @@ public class KDQuery {
 			dInK.setY(coord.get(1));
 			
 			if (verifyDominoInKingdom(player,dInK)) {
-//				System.out.println("initial pre-placement valid, return true");
 				return true;
 			}
 			
 			else {
 				for (int i=0;i<4;i++) {
 					KDController.rotateLatestDomino(player, "clockwise");
-//					System.out.println("rotating clockwise...");
 					if (verifyDominoInKingdom(player,dInK)) {
-//						System.out.println("rotated placement valid, return true");
-//						System.out.println("valid placement found at: ["+dInK.getX()+","+dInK.getY()+","+dInK.getDirection()+"]");
 						dInK.setX(prevX);
 						dInK.setY(prevY);
 						dInK.setDirection(prevD);
 						dInK.getDomino().setStatus(prevStatus);
 						return true;
 					}
-//					System.out.println("invalid placement, rotate again");
 				}
 				
-//				System.out.println("all orientations at this position invalid, remove and try again");
 			}
 			
 		}
@@ -262,6 +367,20 @@ public class KDQuery {
 		return false;
 	}
 	
+
+	/**
+	 * wrapper method to execute all the 
+	 * verification methods in the controller
+	 * simultaneously to determine the validity
+	 * of a domino's position
+	 *
+	 * @see [verifyDomino] guard in SM
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @param dominoToPlace
+	 * @return boolean
+	 */
+	
 	public static boolean verifyDominoInKingdom(Player player, DominoInKingdom dominoToPlace) {
 		
 		if (KDController.verifyGridSizeAllKingdom(player,dominoToPlace)) {
@@ -270,20 +389,28 @@ public class KDQuery {
 					return true;
 				}
 				else {
-//					System.out.println("\ninvalid: neither neighbor or castle adjacent");
 					return false;
 				}
 			}
 			else {
-//				System.out.println("\ninvalid: overlap\n");
 				return false;
 			}
 		}
 		else {
-//			System.out.println("\ninvalid: grid size exceeded\n");
 			return false;
 		}
 	}
+	
+	/**
+	 * returns whether if the game's domino pile no longer has any dominos 
+	 * of the status InPile or inNextDraft. Signlas when to proceed to 
+	 * the Finishing state of the State Machine
+	 * 
+	 * @see [isDominoPileEmpty] guard of state machine
+	 * @author Jing Han 260528152
+	 * @param none
+	 * @return boolean
+	 */
 	
 	public static boolean isDominoPileEmpty() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
@@ -300,6 +427,16 @@ public class KDQuery {
 		if (counter==0) return true;
 		else return false;
 	}
+	
+	/**
+	 * determines whether all the players have played in this turn by either discarding or 
+	 * placing their dominos
+	 * 
+	 * @see [hasAllPlayersPlayed] guard of state machine
+	 * @author Jing Han 260528152
+	 * @param none
+	 * @return boolean
+	 */
 	
 	public static boolean hasAllPlayersPlayed() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
@@ -319,31 +456,29 @@ public class KDQuery {
 		return allPlayed;
 	}
 	
+	/**
+	 * determines whether the current turn is the last turn of the game
+	 * 
+	 * @see [isCurrentTurnTheLastInGame] guard of state machine
+	 * @author Jing Han 260528152
+	 * @param none
+	 * @return boolean
+	 */
+	
 	public static boolean isCurrentTurnTheLastInGame() {
 		
 		return isDraftLimitReached();
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	/**
+	 * determines whether the maximum number of drafts have been 
+	 * reached for the given number of players
+	 * 
+	 * @author Jing Han 260528152
+	 * @param none
+	 * @return boolean
+	 */
+
 	public static boolean isDraftLimitReached() {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
 		Game game = kd.getCurrentGame();
@@ -355,6 +490,10 @@ public class KDQuery {
 		return getNumDraftsInGame()==draftNumLimit;
 	}
 	
+	
+	///////////////////////////////////////////////
+	//				helper methods				 //
+	///////////////////////////////////////////////
 
 	private static int[] minMaxArray(int[] x) {
 		int[] xTemp=x.clone();

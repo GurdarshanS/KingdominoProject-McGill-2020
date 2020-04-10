@@ -47,3 +47,11 @@ import org.junit.runner.RunWith;
 		glue = "ca.mcgill.ecse223.kingdomino.features")
 public class CucumberTestsRunner {
 }
+//"src/test/resources/ca/mcgill/ecse223/kingdomino/features/CalculateRanking.feature",
+//"src/test/resources/ca/mcgill/ecse223/kingdomino/features/CalculatingPlayerScore.feature",
+//"src/test/resources/ca/mcgill/ecse223/kingdomino/features/DiscardingDomino.feature",
+//"src/test/resources/ca/mcgill/ecse223/kingdomino/features/DiscardingLastDomino.feature",
+
+
+
+

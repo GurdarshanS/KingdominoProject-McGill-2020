@@ -17,7 +17,7 @@ import java.util.Map;
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
-import ca.mcgill.ecse223.kingdomino.development.View;
+import ca.mcgill.ecse223.kingdomino.controller.View;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -41,6 +41,13 @@ import io.cucumber.java.en.When;
 import io.cucumber.java.en.And;
 
 public class SM_PlacingLastDominoStep {
+	/**
+	 * These methods checks for the state machine 
+	 * transition for Placing last dominos
+	 * 
+	 * @see PlacingLastDomino.feature
+	 * @author Keon Olszewski 260927813
+	 */
 	
 	private static Kingdomino kd = KingdominoApplication.getKingdomino();
 	private static Domino dominoToPlace;
@@ -53,7 +60,6 @@ public class SM_PlacingLastDominoStep {
 		KDController.initiateEmptyGame();
 		kd.setStateMachine();
 		kd.getStateMachine().setGamestatus("ManipulatingLastDomino"); 						
-		System.out.println("state machine state: "+kd.getStateMachine().getGamestatusFullName());
 		
 	}
 	
@@ -81,14 +87,12 @@ public class SM_PlacingLastDominoStep {
 		}
 		
 		boolean lastTurn=KDQuery.isCurrentTurnTheLastInGame();				//pretty much all of the guard conditions are in the KDQuery class
-		System.out.println("is last turn: "+lastTurn);
 		
 	}
 	
 	@Then("the next player shall be placing his\\/her domino")
 	public static void next_player_shall_be_placing() {
 		//first lets make sure that we are now in the ConfirmingLastChoice state
-		System.out.println("current state after placing: "+kd.getStateMachine().getGamestatusFullName());
 		
 		//essentially here we check whether the firable action at ConfirmingLastChoice state is manipulateLast and not scoring
 		//but we should also check that the player who manipulated again was infact the player after the current 'next' player
@@ -98,7 +102,7 @@ public class SM_PlacingLastDominoStep {
 		int oldNextIndex=colors.indexOf(kd.getCurrentGame().getNextPlayer().getColor());
 		Player newNextPlayer=kd.getCurrentGame().getPlayer(oldNextIndex+1);
 		
-		boolean manipulateAgain=KDController.manipulateLast(0, 0, "right"); 	//here we don't particularly care if it's a correct preplacement
+		boolean manipulateAgain=KDController.manipulateLastSM(0, 0, "right"); 	//here we don't particularly care if it's a correct preplacement
 		boolean score=KDController.scoringSM();
 		
 		assertEquals(true,manipulateAgain==true && score==false && newNextPlayer.equals(kd.getCurrentGame().getNextPlayer()));
@@ -106,13 +110,9 @@ public class SM_PlacingLastDominoStep {
 
 	@Then("the game shall be finished")
 	public static void game_finished() {
-		for (Player p:kd.getCurrentGame().getPlayers()) {
-			System.out.println(p.getDominoSelection().getDomino().getStatus());
-		}
+
 		//check if we can enter the EndingGame state from the ConfirmingLastChoice state
-		System.out.println("state before scoring: "+kd.getStateMachine().getGamestatusFullName());
 		boolean scoring=KDController.scoringSM();
-		System.out.println("state after scoring: "+kd.getStateMachine().getGamestatusFullName());
 		assertEquals(Gameplay.Gamestatus.EndingGame.toString(),kd.getStateMachine().getGamestatusFullName());
 	}
 	

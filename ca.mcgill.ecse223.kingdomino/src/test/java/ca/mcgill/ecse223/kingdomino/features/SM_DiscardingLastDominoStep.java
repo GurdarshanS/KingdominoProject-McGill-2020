@@ -17,7 +17,7 @@ import java.util.Map;
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
-import ca.mcgill.ecse223.kingdomino.development.View;
+import ca.mcgill.ecse223.kingdomino.controller.View;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -42,6 +42,15 @@ import io.cucumber.java.en.And;
 
 
 public class SM_DiscardingLastDominoStep {
+	
+	/**
+	 * These methods checks for the state machine 
+	 * transition for discarding last dominos
+	 * 
+	 * @see DiscardingLastDomino.feature
+	 * @author Eric Guan 260930210
+	 */
+	
 	private static Kingdomino kd = KingdominoApplication.getKingdomino();
 	
 	@Given("the game is initialized for discarding last domino")
@@ -52,7 +61,6 @@ public class SM_DiscardingLastDominoStep {
 		KDController.initiateEmptyGame();
 		kd.setStateMachine();
 		kd.getStateMachine().setGamestatus("ManipulatingLastDomino"); 						
-		System.out.println("state machine state: "+kd.getStateMachine().getGamestatusFullName());
 	}
 	
 	@Then("the final results after discard shall be computed")

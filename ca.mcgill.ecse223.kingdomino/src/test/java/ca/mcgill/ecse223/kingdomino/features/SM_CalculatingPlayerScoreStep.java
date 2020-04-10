@@ -19,7 +19,7 @@ import java.util.HashMap;
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
-import ca.mcgill.ecse223.kingdomino.development.View;
+import ca.mcgill.ecse223.kingdomino.controller.View;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -44,6 +44,14 @@ import io.cucumber.java.en.And;
 
 public class SM_CalculatingPlayerScoreStep {
 	
+	/**
+	 * These methods checks for the state machine 
+	 * transition for calcuating player score
+	 * 
+	 * @see CalculatingPlayerScore.feature
+	 * @author Jing Han	260528152
+	 */
+	
 	private static Kingdomino kd = KingdominoApplication.getKingdomino();
 //	private static Player player;
 	
@@ -56,11 +64,10 @@ public class SM_CalculatingPlayerScoreStep {
 		KDController.initiateEmptyGame();
 		
 		//make the 'player' in this series of tests the player from kd.getCurrentGame.getPlayers().get(0)
-//		player=kd.getCurrentGame().getPlayer(0);
+		//player=kd.getCurrentGame().getPlayer(0);
 		
 		kd.setStateMachine();
 		kd.getStateMachine().setGamestatus("ManipulatingLastDomino"); 						
-		System.out.println("state machine state: "+kd.getStateMachine().getGamestatusFullName());
 		
 		
 	}
@@ -82,8 +89,6 @@ public class SM_CalculatingPlayerScoreStep {
 	
 	@Given("the score of the current player is {int}")
 	public static void score_of_current_player_is(int expectedScore) {
-//		View.printPlayerKingdom(player);
-		System.out.println(kd.getCurrentGame().getNextPlayer().hasKingdom());
 		KDController.calculateIndividualPlayerScore(kd.getCurrentGame().getNextPlayer());
 		int actualScore=kd.getCurrentGame().getPlayer(0).getTotalScore();
 		assertEquals(expectedScore,actualScore);
@@ -111,13 +116,11 @@ public class SM_CalculatingPlayerScoreStep {
 		List<KingdomTerritory> allT=kd.getCurrentGame().getNextPlayer().getKingdom().getTerritories();
 		DominoInKingdom latestPreplacedDomino=(DominoInKingdom) allT.get(allT.size()-1);
 		boolean canPlace=KDQuery.isThereAvailablePlacement(kd.getCurrentGame().getNextPlayer(), latestPreplacedDomino);
-		System.out.println(canPlace);
 	}
 	
 	@When("the current player discards his\\/her domino")
 	public static void discard_impossible_placement() {
 		//first see if we are still in the ManipulatingLastDomino state
-		System.out.println("state machine state: "+kd.getStateMachine().getGamestatusFullName());
 		
 		//if yes, can then make the transition to ConfirmingLastChoice with discard event
 		//but discard only works on the 'next' player
@@ -126,8 +129,6 @@ public class SM_CalculatingPlayerScoreStep {
 		boolean lastTurn=KDQuery.isCurrentTurnTheLastInGame();
 		
 		boolean discarded=KDController.discardSM();
-		System.out.println("successful discard: "+discarded);
-		System.out.println("state machine state: "+kd.getStateMachine().getGamestatusFullName());
 		
 		//manually trigger the scoring event right away to satisfy the tests
 		//in real game, the state machine would require a scoring event after all players have 
@@ -138,10 +139,7 @@ public class SM_CalculatingPlayerScoreStep {
 			for (Player p:kd.getCurrentGame().getPlayers()) {
 				p.getDominoSelection().getDomino().setStatus(DominoStatus.PlacedInKingdom);
 			}
-			System.out.println("directly to scoring");
-			System.out.println("has all played: "+KDQuery.hasAllPlayersPlayed());
 			KDController.scoringSM();
-			System.out.println("state machine state: "+kd.getStateMachine().getGamestatusFullName());
 
 		}
 		assertEquals(true,discarded);

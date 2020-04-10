@@ -20,6 +20,15 @@ import io.cucumber.java.en.When;
 import io.cucumber.java.en.And;
 
 public class SM_SortingAndRevealingDraftStep {
+	
+	/**
+	 * These methods checks for the state machine 
+	 * transition for sorting and revealing next draft
+	 * 
+	 * @see SortingAndRevealingDraft.feature
+	 * @author Massimo Vadacchino 260928064
+	 */
+	
 	private static Kingdomino kd = KingdominoApplication.getKingdomino();
 
 	@Given("there is a next draft, face down")
@@ -50,10 +59,7 @@ public class SM_SortingAndRevealingDraftStep {
 		
 		for(Domino domino : KingdominoApplication.getKingdomino().getCurrentGame().getCurrentDraft().getIdSortedDominos()) {
 			
-			boolean chosen=KDController.chooseSM(domino);
-			System.out.println("chosen: "+chosen);
-			System.out.println("d has selection: "+domino.hasDominoSelection());
-		
+			boolean chosen=KDController.chooseSM(domino);		
 		}
 		
 	}
@@ -68,7 +74,6 @@ public class SM_SortingAndRevealingDraftStep {
 	@When("next draft is revealed")
 	public void next_draft_is_revealed() {
 		
-		System.out.println(kd.getStateMachine().getGamestatusFullName());
 		KDController.draftReadySM();
 		
 		

@@ -2,6 +2,19 @@ package ca.mcgill.ecse223.kingdomino.controller;
 import ca.mcgill.ecse223.kingdomino.model.TerrainType;
 
 public class PropertyAttribute {
+	
+	/**
+	 * 
+	 * This class stores the relevant attributes of a property
+	 * 
+	 * @see - no direct features, but associated with identifyProperties
+	 * @author Jing Han 260528152
+	 * @param terrain
+	 * @param size 
+	 * @param crownNum
+	 * @param score
+	 */
+	
 	private TerrainType terrain;
 	private int size;
 	private int crownNum;

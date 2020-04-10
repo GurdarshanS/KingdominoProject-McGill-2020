@@ -30,7 +30,7 @@ public class CalculatePropertyAttributesStep {
 	/**
 	 * These methods calculates Propety Attributes
 	 * @see CalculatePropertyAttributes.feature
-	 * @author Eric Guan 260930210, refactored by Jing Han 260528152
+	 * @author Eric Guan 260930210
 	 */
 	
 	@Given("the game is initialized for calculate property attributes")
@@ -95,19 +95,15 @@ public class CalculatePropertyAttributesStep {
 							int testSize=pa.get(j).getSize();
 							int testCrown=pa.get(j).getCrown();
 							String testTerrain=sharedCucumberMethods.getStringByTerrainType(pa.get(j).getTerrain());
-							System.out.println("expected index: "+ i+" --- terrain: "+currentTerrain+" --- size: "+currentSize+" --- crown: "+currentCrown);
-							System.out.println("test     index: "+j+" --- terrain: "+testTerrain+" --- size: "+testSize+" --- crown: "+testCrown);
 							if (currentTerrain.equalsIgnoreCase(testTerrain) && testSize==currentSize && testCrown==currentCrown) {
 								num_match++;
 								ignoreIndex.add(j);
-								System.out.println("match!");
 								break;
 							}
 						}
 					}
 					if (num_match!=1) assertEquals(true,false);
 					
-					System.out.println("===========================================");		
 			}
 
 		}

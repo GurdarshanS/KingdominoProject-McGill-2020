@@ -1,9 +1,7 @@
-package ca.mcgill.ecse223.kingdomino.development;
+package ca.mcgill.ecse223.kingdomino.controller;
 
 import java.util.List;
 
-import ca.mcgill.ecse223.kingdomino.controller.KDController;
-import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom;
@@ -14,6 +12,13 @@ import ca.mcgill.ecse223.kingdomino.model.Property;
 import ca.mcgill.ecse223.kingdomino.model.User;
 
 public class View {
+	/**
+	 * 
+	 * Simple wrapper class to facilitate console printout of information for debugging and textual simulating
+	 * 
+	 * @see - no direct features, but associated with identifyProperties
+	 * @author Jing Han 260528152
+	 */
 	
 	public static void printNextRoundPlayerOrder(Kingdomino kd) {
 		System.out.println("======== next round player ordering =========");
@@ -51,7 +56,6 @@ public class View {
 	}
 	
 	public static void printPlayerKingdom(Player p) {
-//		System.out.println("================================== "+p.getColor()+" player kingdom =====================================");
 			System.out.println("\n"+KDQuery.getKingdomVerificationResult(p)+" kingdom\n");
 			for (KingdomTerritory territory:p.getKingdom().getTerritories()) {
 				String row="none";

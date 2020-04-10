@@ -43,11 +43,19 @@ import io.cucumber.java.en.When;
 
 import ca.mcgill.ecse223.kingdomino.controller.KDController.InvalidInputException;
 import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
-import ca.mcgill.ecse223.kingdomino.development.View;
+import ca.mcgill.ecse223.kingdomino.controller.View;
 
 
 
 public class SM_LoadGameStep{
+	
+	/**
+	 * These methods test the loading 
+	 * of a kingdomino game
+	 * @see LoadGame.feature
+	 * @author Anthony Harissi Dagher 260924250
+	 */
+	
 	private static Kingdomino kd = KingdominoApplication.getKingdomino();
 	private static File file;
 	private static List<String> data=new ArrayList<String>();

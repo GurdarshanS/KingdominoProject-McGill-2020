@@ -45,7 +45,7 @@ public class SM_InitializingGameStep {
 	 * These methods test the initialization
 	 * of a kingdomino game using state machine
 	 * @see InitializingGame.feature
-	 * @author Jing Han 260528152
+	 * @author Anthony Harissi Dagher 260924250
 	 */
 	
 	

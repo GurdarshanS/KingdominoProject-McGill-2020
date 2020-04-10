@@ -18,7 +18,7 @@ import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
 import ca.mcgill.ecse223.kingdomino.model.Player.PlayerColor;
 import ca.mcgill.ecse223.kingdomino.controller.PropertyAttribute;
-import ca.mcgill.ecse223.kingdomino.development.View;
+import ca.mcgill.ecse223.kingdomino.controller.View;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -45,7 +45,6 @@ public class VerifyNeighborAdjacencyStep {
 	@When("check current preplaced domino adjacency is initiated")
 	public static void initialize_neighbor_adjacency_verification() {
 		Player player=KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
-		View.printPlayerKingdom(player);
 
 		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
 		if (territories.size()==1) {

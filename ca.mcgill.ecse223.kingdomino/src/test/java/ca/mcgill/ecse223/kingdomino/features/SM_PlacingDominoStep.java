@@ -17,7 +17,7 @@ import java.util.Map;
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
-import ca.mcgill.ecse223.kingdomino.development.View;
+import ca.mcgill.ecse223.kingdomino.controller.View;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -42,6 +42,14 @@ import io.cucumber.java.en.And;
 
 public class SM_PlacingDominoStep {
 	
+	/**
+	 * These methods checks for the state machine 
+	 * transition for Placing a domino
+	 * 
+	 * @see PlacingDomino.feature
+	 * @author Keon Olszewski 260927813
+	 */
+	
 	private static Kingdomino kd = KingdominoApplication.getKingdomino();
 	private static Domino dominoToPlace;
 	
@@ -52,7 +60,6 @@ public class SM_PlacingDominoStep {
 		KDController.initiateEmptyGame();
 		kd.setStateMachine();
 		kd.getStateMachine().setGamestatus("ManipulatingDomino"); 						
-		System.out.println("state machine state: "+kd.getStateMachine().getGamestatusFullName());
 		
 		//we are supposed to be choosing from current draft, but we haven't made a draft yet
 		//if we just choose a random domino, wouldn't work. See KDController.chooseNext
@@ -71,15 +78,14 @@ public class SM_PlacingDominoStep {
 	@Given("it is not the last turn of the game")
 	public static void not_last_turn_in_game(){
 		boolean lastTurn=KDQuery.isCurrentTurnTheLastInGame();				//pretty much all of the guard conditions are in the KDQuery class
-		System.out.println("is last turn: "+lastTurn);
+		assertEquals(false,lastTurn);
 	}
 	
 	@Given("the current player is not the last player in the turn")
 	public static void not_last_player_in_turn() {
 		//work with the 'next' player of this turn
 		boolean lastPlayer=KDQuery.isCurrentPlayerTheLastInTurn(kd.getCurrentGame().getNextPlayer());
-		System.out.println("is last player: "+lastPlayer);
-		
+		assertEquals(false,lastPlayer);
 	}
 	
 	@Given("the current player is preplacing his\\/her domino with ID {int} at location {int}:{int} with direction {string}")
@@ -97,9 +103,7 @@ public class SM_PlacingDominoStep {
 				((DominoInKingdom) t).getDomino().setStatus(DominoStatus.PlacedInKingdom);
 			}
 		}
-		
-		View.printPlayerKingdom(kd.getCurrentGame().getNextPlayer());	// view to see we actually have kingdom with these dominos
-		
+				
 		
 		// use KDController.preplaceArbitraryDomino, the default KDController.preplaceLatestDomino always preplaces the domino that was
 		// most recently added to player.getKingdom.getKingdomTerritories(). 
@@ -107,16 +111,12 @@ public class SM_PlacingDominoStep {
 		// status accordingly by themselves. 
 		dominoToPlace=KDController.getdominoByID(id);
 		KDController.preplaceArbitraryDomino(kd.getCurrentGame().getNextPlayer(), dominoToPlace, posx, posy, dir);	
-		View.printPlayerKingdom(kd.getCurrentGame().getNextPlayer());
 		
 		
 		List<KingdomTerritory> allT=kd.getCurrentGame().getNextPlayer().getKingdom().getTerritories();
 		DominoInKingdom latestPreplacedDomino=(DominoInKingdom) allT.get(allT.size()-1);
-		System.out.println(latestPreplacedDomino.getDomino().getId());
-		System.out.println(latestPreplacedDomino);
 
 		boolean canPlace=KDQuery.isThereAvailablePlacement(kd.getCurrentGame().getNextPlayer(), latestPreplacedDomino);
-		System.out.println(canPlace);
 	}
 	
 	@And("the preplaced domino has the status {string}")
@@ -135,7 +135,6 @@ public class SM_PlacingDominoStep {
 				p.getDominoSelection().getDomino().setStatus(DominoStatus.PlacedInKingdom);
 			}
 			
-			System.out.println("all played: "+KDQuery.hasAllPlayersPlayed());
 		}
 		
 		// call the place transition of the state machine
@@ -143,8 +142,6 @@ public class SM_PlacingDominoStep {
 		// see CreateNextDraftStep for idea
 		
 		boolean placed=KDController.placeSM();		//note that the placeSM takes no player as parameter, that's because it always acts on the 'next' player of the game
-		System.out.println("domino placed: "+placed);
-		View.printPlayerKingdom(kd.getCurrentGame().getNextPlayer());
 
 	}
 	
@@ -152,18 +149,13 @@ public class SM_PlacingDominoStep {
 	@Then("this player now shall be making his\\/her domino selection")
 	public static void now_make_selection(){
 		//first check if the transition to the ConfirimingChoice stat has been made
-		System.out.println("new state: "+kd.getStateMachine().getGamestatusFullName());
 		
 
 		Domino randomDomino=kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0);		//33 not in the list of ids used in this test
-		System.out.println("domino to choose: "+randomDomino.getId());
 		//remember that the choose transition in the state machine automatically updates the 'next' player
 		//so to check out previous 'next' player has selected, we need to make a reference to it before the udpate
 		Player original=kd.getCurrentGame().getNextPlayer();
-		System.out.println("player "+kd.getCurrentGame().getNextPlayer().getColor()+" choose?");
 		boolean chosen = KDController.chooseSM(randomDomino);	
-		System.out.println("player "+original.getColor()+" now has selection: "+(chosen&&original.hasDominoSelection()));
-		System.out.println("player "+original.getColor()+"'s new selection has domino: "+original.getDominoSelection().getDomino().getId());
 		assertEquals(true,original.getDominoSelection().getDomino().getId()==randomDomino.getId());
 
 	}
@@ -175,23 +167,10 @@ public class SM_PlacingDominoStep {
 		//remember this scenario is unrelataed to the first one, so the upates that we made to the player order there
 		//doesn't carry thru to this scenario. otherwise, only update 2 times
 		
-		System.out.println("========= player order ==========");
-		for (Player p:kd.getCurrentGame().getPlayers()) {
-			System.out.println(p.getColor());
-		}
 		
-		System.out.println("current 'next' plyaer: "+kd.getCurrentGame().getNextPlayer().getColor());
 		KDController.updateNextPlayer(kd.getCurrentGame().getNextPlayer());
-		System.out.println("current 'next' plyaer: "+kd.getCurrentGame().getNextPlayer().getColor());
 		KDController.updateNextPlayer(kd.getCurrentGame().getNextPlayer());
-		System.out.println("current 'next' plyaer: "+kd.getCurrentGame().getNextPlayer().getColor());
 		KDController.updateNextPlayer(kd.getCurrentGame().getNextPlayer());
-		System.out.println("current 'next' plyaer: "+kd.getCurrentGame().getNextPlayer().getColor());
-		
-		System.out.println("is last player: "+KDQuery.isCurrentPlayerTheLastInTurn(kd.getCurrentGame().getNextPlayer()));
-		
-		
-		
 		
 	}
 	
