@@ -337,30 +337,64 @@ public class KDController {
 	}
 	
 	public static void updatePlayerOrder() {
-		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-		Game game = kingdomino.getCurrentGame();
-		Draft currentDraft = game.getCurrentDraft();
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		HashMap<Integer,Player> idPlayerPair = new HashMap<Integer,Player>();
+		List<Integer> ids = new ArrayList<Integer>();
 		
-		List<Domino> draftDominos = currentDraft.getIdSortedDominos();
-		List<Player> newOrderPlayers = new ArrayList<Player>();
-		
-		for (Domino d:draftDominos) {
-			newOrderPlayers.add(d.getDominoSelection().getPlayer());
+		for (Player p:kd.getCurrentGame().getPlayers()) {
+			int key = p.getDominoSelection().getDomino().getId();
+			idPlayerPair.put(key, p);
+			ids.add(key);
 		}
 		
-		for (int i=0;i<newOrderPlayers.size();i++) {
-			game.addOrMovePlayerAt(newOrderPlayers.get(i), i);
+		Collections.sort(ids);
+		
+		for (int i=0;i<ids.size();i++) {
+			int index=i;
+			int key=ids.get(i);
+			Player p = idPlayerPair.get(key);
+			kd.getCurrentGame().addOrMovePlayerAt(p, index);
 		}
 		
-		game.setNextPlayer(game.getPlayer(0));
+		kd.getCurrentGame().setNextPlayer(kd.getCurrentGame().getPlayer(0));
 		
 
-		for (Player p:game.getPlayers()) {                 
-			p.getDominoSelection().delete();            
-		}
+//		for (Player p:game.getPlayers()) {                 
+//			p.getDominoSelection().delete();            
+//		}
 		
 
 	}
+	
+//	public static void updatePlayerOrder() {
+//		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+//		Game game = kingdomino.getCurrentGame();
+//		Draft currentDraft = game.getCurrentDraft();
+//		for (Domino d:currentDraft.getIdSortedDominos()) {
+//			System.out.println(d.getId()+": "+d.hasDominoSelection());
+//		}
+//		
+//		List<Domino> draftDominos = currentDraft.getIdSortedDominos();
+//		
+//		List<Player> newOrderPlayers = new ArrayList<Player>();
+//		
+//		for (Domino d:draftDominos) {
+//			newOrderPlayers.add(d.getDominoSelection().getPlayer());
+//		}
+//		
+//		for (int i=0;i<newOrderPlayers.size();i++) {
+//			game.addOrMovePlayerAt(newOrderPlayers.get(i), i);
+//		}
+//		
+//		game.setNextPlayer(game.getPlayer(0));
+//		
+//
+////		for (Player p:game.getPlayers()) {                 
+////			p.getDominoSelection().delete();            
+////		}
+//		
+//
+//	}
 	
 	
 	

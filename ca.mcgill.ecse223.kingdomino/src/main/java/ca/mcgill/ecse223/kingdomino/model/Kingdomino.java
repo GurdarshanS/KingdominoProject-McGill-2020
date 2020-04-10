@@ -5,6 +5,10 @@ package ca.mcgill.ecse223.kingdomino.model;
 import java.io.Serializable;
 import java.util.*;
 
+import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
+import ca.mcgill.ecse223.kingdomino.controller.KDController;
+import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
+
 // line 4 "../../../../../KingdominoPersistence.ump"
 // line 6 "../../../../../Kingdomino.ump"
 public class Kingdomino implements Serializable
@@ -426,3 +430,4 @@ public class Kingdomino implements Serializable
 
   
 }
+

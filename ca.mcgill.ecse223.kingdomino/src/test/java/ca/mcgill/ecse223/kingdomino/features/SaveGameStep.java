@@ -45,7 +45,7 @@ public class SaveGameStep {
 	 */
 	@Given("the game is initialized for save game")
 	public void the_game_is_initialized_for_save_game() {
-		KDController.initiateEmptyGame();;
+		KDController.initiateEmptyGame();
 	}
 	/**
 	 * @author Anthony Harissi Dagher
@@ -77,7 +77,8 @@ public class SaveGameStep {
 	 */
 	@When("the user initiates saving the game to a file named {string}")
 	public void the_user_initiates_saving_the_game_to_a_file_named(String filename) throws InvalidInputException, IOException {
-		KDController.saveGame(filename, true);
+		boolean saved=KDController.saveGame(filename, true);
+		assertEquals(true,saved);
 		lastModified = new File(filename).lastModified();
 	}
 	/**

@@ -1,5 +1,4 @@
-package to_do;
-//package ca.mcgill.ecse223.kingdomino.features;
+//package to_do;
 //
 //import static org.junit.Assert.assertEquals;
 //import static org.junit.Assert.assertTrue;
@@ -37,7 +36,7 @@ package to_do;
 //
 //
 //
-//public class LoadGameStep{
+//public class SM_LoadGameStep2{
 //		
 //	/**
 //		 * @author Anthony Harissi Dagher

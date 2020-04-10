@@ -1,7 +1,11 @@
 namespace ca.mcgill.ecse223.kingdomino.model;
+external interface Serializable {}
 
 class Gameplay {
-
+	depend java.io.Serializable;
+  	isA Serializable;
+  	private static final long serialVersionUID = 30L;
+  	
     gamestatus {
 
         Initializing {

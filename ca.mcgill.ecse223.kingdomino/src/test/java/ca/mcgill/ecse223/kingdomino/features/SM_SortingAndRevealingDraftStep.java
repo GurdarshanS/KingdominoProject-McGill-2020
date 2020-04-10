@@ -2,6 +2,7 @@ package ca.mcgill.ecse223.kingdomino.features;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
@@ -24,7 +25,19 @@ public class SM_SortingAndRevealingDraftStep {
 	@Given("there is a next draft, face down")
 	public void there_is_a_next_draft_face_down() {
 	    
-		KDController.initiateEmptyGame();
+		int numPlayers=4;
+		List<String> selectedBonusOptions = new ArrayList<String>();
+		
+		try{
+			KDController.setGameOptions(numPlayers, selectedBonusOptions);
+			int dominoNums=kd.getCurrentGame().getMaxPileSize();
+			KDController.createDominoPile(kd.getCurrentGame(),dominoNums);
+			KDController.createPlayers();
+			
+		}
+		catch(Exception e) {}
+		
+		
 		kd.setStateMachine();
 		kd.getStateMachine().setGamestatus("CreatingFirstDraft"); 	
 		
@@ -37,7 +50,9 @@ public class SM_SortingAndRevealingDraftStep {
 		
 		for(Domino domino : KingdominoApplication.getKingdomino().getCurrentGame().getCurrentDraft().getIdSortedDominos()) {
 			
-			KDController.chooseSM(domino);
+			boolean chosen=KDController.chooseSM(domino);
+			System.out.println("chosen: "+chosen);
+			System.out.println("d has selection: "+domino.hasDominoSelection());
 		
 		}
 		
@@ -52,8 +67,10 @@ public class SM_SortingAndRevealingDraftStep {
 
 	@When("next draft is revealed")
 	public void next_draft_is_revealed() {
-	   
+		
+		System.out.println(kd.getStateMachine().getGamestatusFullName());
 		KDController.draftReadySM();
+		
 		
 	}
 
