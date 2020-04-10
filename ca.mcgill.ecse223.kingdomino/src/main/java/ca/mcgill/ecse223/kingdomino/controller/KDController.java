@@ -352,9 +352,9 @@ public class KDController {
 		
 		game.setNextPlayer(game.getPlayer(0));
 		
-		for (Player p:game.getPlayers()) {
-			p.getDominoSelection().delete();
-		}
+//		for (Player p:game.getPlayers()) {
+//			p.getDominoSelection().delete();
+//		}
 	}
 	
 	
@@ -525,6 +525,8 @@ public class KDController {
 		
 		currentDraft.setDraftStatus(DraftStatus.Sorted);
 	}
+	
+	
 	
 	public static void revealNextDraft() {
 		
@@ -1555,6 +1557,7 @@ public class KDController {
 		
 		return null;
 	}
+	
 	
 	////////////////////////////////////////
 	/// ---- Private Helper Methods ---- ///
