@@ -77,6 +77,8 @@ public class KingUI_PlayerCreate extends JFrame {
 		done.setFont(new Font("Times", Font.BOLD, 16));
 		done.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				KingUI_Stats.initComponents();
+				KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
 				String input = insertName.getText();
 				KDController.provideUserProfile(input);
 			}

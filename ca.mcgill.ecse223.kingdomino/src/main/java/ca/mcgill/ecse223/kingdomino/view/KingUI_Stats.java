@@ -29,45 +29,21 @@ import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.model.User;
 
 public class KingUI_Stats extends JFrame {
+	static int wins = 0, played=0, loss=0;
+	 static double ratio= 0.0;
 	
-	private int WIDTH;
-	private int HEIGHT;
-	private int textW;
-	private int textH;
-	private JLabel stats;
-	private JLabel statsTwo;
-	private Border border;
-	private JButton back, search;
-	private JComboBox combo;
-	private Border borderTwo;
-	private String input;
-	private int wins, played, loss;
-	private float ratio;
-	
-	public static JFrame frame = new JFrame("Kingdomino");
-	public static JPanel contPanel = new JPanel();
-	public static CardLayout c1 = new CardLayout();
-	
-	public KingUI_Stats(){
+	 public KingUI_Stats(){
 		
 		initComponents();
 	}
-	public void initComponents() {
-		
-		WIDTH = 950;
-		HEIGHT = 800;
-		textW = textH = 75;
-		
-		// Layout Manager
-		Container c =  getContentPane();
-		setLayout(new GroupLayout(c));
-		
-		// Swing components
-		frame.setSize(WIDTH, HEIGHT);
-		frame.setTitle("Check your statistics");
-		frame.getContentPane().setBackground(Color.LIGHT_GRAY);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+	public static void initComponents() {
+		 JLabel stats;
+		 JLabel statsTwo;
+		 Border border;
+		 JButton back, search;
+		 JComboBox combo;
+		 Border borderTwo;
+	
 		// back button
 		back = new JButton("Back");
 		back.setFont(new Font("Times", Font.BOLD, 16));
@@ -108,7 +84,7 @@ public class KingUI_Stats extends JFrame {
 		//search.setBounds(WIDTH/2+WIDTH/4, HEIGHT/2-textH, textW*2, textH);
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				input = combo.getSelectedItem().toString();
+				String input = combo.getSelectedItem().toString();
 				User user = User.getWithName(input);
 				wins = user.getWonGames();
 				played = user.getPlayedGames();
@@ -134,16 +110,12 @@ public class KingUI_Stats extends JFrame {
 		//c.add(statsTwo);
 		//c.add(combo);
 		//c.add(search);
-		JPanel p = new JPanel();
-		GroupLayout layout = new GroupLayout(p);
-		p.setLayout(layout);
+		JPanel p3 = new JPanel();
+		GroupLayout layout = new GroupLayout(p3);
+		p3.setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-		contPanel.add(p);
-		contPanel.setLayout(c1);
-		c1.show(contPanel, "1");
-		frame.add(contPanel);
-		
+		KingUI_Main.contPanel.add(p3, "4");
 		
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
@@ -176,14 +148,5 @@ public class KingUI_Stats extends JFrame {
 						)
 				)
 		);
-	}
-	public static void main(String[] args) {
-		
-		SwingUtilities.invokeLater(new Runnable() {
-		
-			public void run() {
-				new KingUI_Stats().frame.setVisible(true);
-			}
-		});
 	}
 }
