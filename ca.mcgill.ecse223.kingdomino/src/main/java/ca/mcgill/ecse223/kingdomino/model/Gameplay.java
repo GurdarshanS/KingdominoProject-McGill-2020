@@ -641,11 +641,11 @@ public class Gameplay
     {
       case CreatingNextDraft:
         // line 23 "../../../../../Gameplay.ump"
-        createNextDraft();orderNextDraft();
+    	 updatePlayerOrder();createNextDraft();orderNextDraft();  ////// CHANGED THIS LINE
         break;
       case RevealingNextDraft:
         // line 28 "../../../../../Gameplay.ump"
-        revealNextDraft();updatePlayerOrder();
+        revealNextDraft();
         break;
       case ManipulatingDomino:
         if (gamestatusPlayingManipulatingDomino == GamestatusPlayingManipulatingDomino.Null) { setGamestatusPlayingManipulatingDomino(GamestatusPlayingManipulatingDomino.IdlingDomino); }
