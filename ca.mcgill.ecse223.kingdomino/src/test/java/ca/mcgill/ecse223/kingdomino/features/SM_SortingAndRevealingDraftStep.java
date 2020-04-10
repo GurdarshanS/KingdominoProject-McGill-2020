@@ -11,22 +11,26 @@ import ca.mcgill.ecse223.kingdomino.model.Draft;
 import ca.mcgill.ecse223.kingdomino.model.Draft.DraftStatus;
 import ca.mcgill.ecse223.kingdomino.model.Game;
 import ca.mcgill.ecse223.kingdomino.model.Gameplay;
+import ca.mcgill.ecse223.kingdomino.model.Kingdomino;
 import ca.mcgill.ecse223.kingdomino.model.Player;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.java.en.And;
 
 public class SM_SortingAndRevealingDraftStep {
+	private static Kingdomino kd = KingdominoApplication.getKingdomino();
 
 	@Given("there is a next draft, face down")
 	public void there_is_a_next_draft_face_down() {
 	    
 		KDController.initiateEmptyGame();
-		Gameplay sm = KingdominoApplication.getStateMachine(); // Initializes State Machine
+		kd.setStateMachine();
+		kd.getStateMachine().setGamestatus("CreatingFirstDraft"); 	
 		
 	}
 
-	@Given("all dominoes in current draft are selected")
+	@And("all dominoes in current draft are selected")
 	public void all_dominoes_in_current_draft_are_selected() {
 	   
 		KDController.draftReadySM();
