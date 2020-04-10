@@ -353,9 +353,9 @@ public class KDController {
 		game.setNextPlayer(game.getPlayer(0));
 		
 
-//		for (Player p:game.getPlayers()) {                 COMMENTED OUT!!!!!!!
-//			p.getDominoSelection().delete();            
-//		}
+		for (Player p:game.getPlayers()) {                 
+			p.getDominoSelection().delete();            
+		}
 		
 
 	}
@@ -833,7 +833,6 @@ public class KDController {
 		
 		if (dInKingdom.getDomino().getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
 			dInKingdom.getDomino().setStatus(DominoStatus.PlacedInKingdom);
-			aPlayer.getDominoSelection().delete();  ///// ADDED THIS LINE
 			return true; 
 		}
 		else {
@@ -856,7 +855,6 @@ public class KDController {
 		}
 		else {
 			dInKingdom.getDomino().setStatus(DominoStatus.Discarded);
-			aPlayer.getDominoSelection().delete(); //// ADDED THIS LINE
 			return true;
 		}
 	}
@@ -1489,7 +1487,6 @@ public class KDController {
 		
 	}
 	
-<<<<<<< HEAD
 	/**
 	 * 
 	 * This method returns the list of users
@@ -1565,8 +1562,6 @@ public class KDController {
 	}
 	
 	
-=======
->>>>>>> parent of 6c7061b... d2 refactoring almost complete
 	////////////////////////////////////////
 	/// ---- Private Helper Methods ---- ///
 	////////////////////////////////////////

@@ -641,7 +641,7 @@ public class Gameplay
     {
       case CreatingNextDraft:
         // line 23 "../../../../../Gameplay.ump"
-    	 updatePlayerOrder();createNextDraft();orderNextDraft();  ////// CHANGED THIS LINE
+    	createNextDraft();orderNextDraft();  ////// CHANGED THIS LINE
         break;
       case RevealingNextDraft:
         // line 28 "../../../../../Gameplay.ump"
