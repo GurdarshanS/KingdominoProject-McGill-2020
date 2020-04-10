@@ -18,6 +18,8 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
+import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
+
 public class KingUI_Settings extends JFrame{
 	
 
@@ -200,10 +202,13 @@ public class KingUI_Settings extends JFrame{
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				if(two.isSelected()) {
 					System.out.println("two selected");
+					KingdominoApplication.getKingdomino().getCurrentGame().setNumberOfPlayers(2);
 				} else if(three.isSelected()) {
 					System.out.println("three selected");
+					KingdominoApplication.getKingdomino().getCurrentGame().setNumberOfPlayers(3);
 				} else if(four.isSelected()) {
 					System.out.println("four selected");
+					KingdominoApplication.getKingdomino().getCurrentGame().setNumberOfPlayers(4);
 				}
 				
 				if(yes.isSelected()) {

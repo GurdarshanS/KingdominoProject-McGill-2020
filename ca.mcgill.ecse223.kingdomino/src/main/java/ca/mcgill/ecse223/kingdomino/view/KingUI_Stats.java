@@ -47,19 +47,17 @@ public class KingUI_Stats extends JFrame {
 		// back button
 		back = new JButton("Back");
 		back.setFont(new Font("Times", Font.BOLD, 16));
-		//back.setBounds(0, 0, textW*2, textH);
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				KingUI_Main.c1.show(KingUI_Main.contPanel, "3");
 			}
 		});
 		// box that says stats
-		border = BorderFactory.createLineBorder(Color.BLACK, 3);
+		border = BorderFactory.createLineBorder(Color.BLACK);
 		stats = new JLabel("Insert Username Below", SwingConstants.CENTER);
-		stats.setText("Stats");
+		stats.setText("Player Statistics");
 		stats.setBorder(border);
-		stats.setFont(new Font("Times", Font.BOLD, 45));
-		//stats.setBounds(WIDTH/2-150, textH/2, 300, 300);
+		stats.setFont(new Font("Times", Font.BOLD, 55));
 		
 		// User names
 		ArrayList users = new ArrayList<String>();
@@ -76,12 +74,10 @@ public class KingUI_Stats extends JFrame {
 		}
 		combo = new JComboBox(users.toArray());
 		combo.setEditable(true);
-		//combo.setBounds(WIDTH/2-150, HEIGHT/2-textH-textH/2, 300, 50);
 		
 		// search button
 		search = new JButton("Search Stats");
 		search.setFont(new Font("Times", Font.BOLD, 16));
-		//search.setBounds(WIDTH/2+WIDTH/4, HEIGHT/2-textH, textW*2, textH);
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String input = combo.getSelectedItem().toString();
@@ -102,7 +98,6 @@ public class KingUI_Stats extends JFrame {
 						+ "<br/><br/><br/>Win Ratio: "+ratio +"<html>");
 		statsTwo.setBorder(borderTwo);
 		statsTwo.setFont(new Font("Times", Font.BOLD, 25));
-		//statsTwo.setBounds(WIDTH/2-200, 300+textH/2+textH/3, 400, 400);
 	
 		// Add
 		//c.add(back);
@@ -124,11 +119,12 @@ public class KingUI_Stats extends JFrame {
 				.addGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 						.addComponent(stats)
-						.addComponent(combo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
+						.addComponent(combo, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE )
+						.addGap(50)
+						.addComponent(search)
 						.addGroup(layout.createSequentialGroup()
 								.addComponent(statsTwo)
 						)
-						.addComponent(search)
 						)
 				)
 		);
@@ -139,12 +135,15 @@ public class KingUI_Stats extends JFrame {
 				.addGroup(layout.createParallelGroup())
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 				.addGroup(layout.createSequentialGroup()
+						.addGap(50)
 						.addComponent(stats)
 						.addComponent(combo,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE  )
+						.addGap(50)
+						.addComponent(search)
+						.addGap(50)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(statsTwo)
 						)
-						.addComponent(search)
 						)
 				)
 		);
