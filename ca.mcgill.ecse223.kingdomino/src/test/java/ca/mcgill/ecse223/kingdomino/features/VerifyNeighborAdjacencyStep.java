@@ -45,6 +45,7 @@ public class VerifyNeighborAdjacencyStep {
 	@When("check current preplaced domino adjacency is initiated")
 	public static void initialize_neighbor_adjacency_verification() {
 		Player player=KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+		View.printPlayerKingdom(player);
 
 		List<KingdomTerritory> territories = player.getKingdom().getTerritories();
 		if (territories.size()==1) {

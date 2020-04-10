@@ -1489,6 +1489,7 @@ public class KDController {
 		
 	}
 	
+<<<<<<< HEAD
 	/**
 	 * 
 	 * This method returns the list of users
@@ -1564,6 +1565,8 @@ public class KDController {
 	}
 	
 	
+=======
+>>>>>>> parent of 6c7061b... d2 refactoring almost complete
 	////////////////////////////////////////
 	/// ---- Private Helper Methods ---- ///
 	////////////////////////////////////////
