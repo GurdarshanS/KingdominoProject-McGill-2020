@@ -107,6 +107,16 @@ public class SM_PlacingDominoStep {
 		// status accordingly by themselves. 
 		dominoToPlace=KDController.getdominoByID(id);
 		KDController.preplaceArbitraryDomino(kd.getCurrentGame().getNextPlayer(), dominoToPlace, posx, posy, dir);	
+		View.printPlayerKingdom(kd.getCurrentGame().getNextPlayer());
+		
+		
+		List<KingdomTerritory> allT=kd.getCurrentGame().getNextPlayer().getKingdom().getTerritories();
+		DominoInKingdom latestPreplacedDomino=(DominoInKingdom) allT.get(allT.size()-1);
+		System.out.println(latestPreplacedDomino.getDomino().getId());
+		System.out.println(latestPreplacedDomino);
+
+		boolean canPlace=KDQuery.isThereAvailablePlacement(kd.getCurrentGame().getNextPlayer(), latestPreplacedDomino);
+		System.out.println(canPlace);
 	}
 	
 	@And("the preplaced domino has the status {string}")

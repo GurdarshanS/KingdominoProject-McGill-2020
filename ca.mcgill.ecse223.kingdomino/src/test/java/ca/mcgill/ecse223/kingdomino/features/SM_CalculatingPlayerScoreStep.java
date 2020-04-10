@@ -45,7 +45,7 @@ import io.cucumber.java.en.And;
 public class SM_CalculatingPlayerScoreStep {
 	
 	private static Kingdomino kd = KingdominoApplication.getKingdomino();
-	private static Player player;
+//	private static Player player;
 	
 	@Given("the game is initialized for calculating player score")
 	public static void game_initialized_for_calculating_player_score() {
@@ -56,7 +56,7 @@ public class SM_CalculatingPlayerScoreStep {
 		KDController.initiateEmptyGame();
 		
 		//make the 'player' in this series of tests the player from kd.getCurrentGame.getPlayers().get(0)
-		player=kd.getCurrentGame().getPlayer(0);
+//		player=kd.getCurrentGame().getPlayer(0);
 		
 		kd.setStateMachine();
 		kd.getStateMachine().setGamestatus("ManipulatingLastDomino"); 						
@@ -71,7 +71,7 @@ public class SM_CalculatingPlayerScoreStep {
 		
 		boolean hasDomino=false;
 		
-		for (KingdomTerritory t:player.getKingdom().getTerritories()) {
+		for (KingdomTerritory t:kd.getCurrentGame().getNextPlayer().getKingdom().getTerritories()) {
 			if (t instanceof DominoInKingdom) {
 				hasDomino=true;
 				break;
@@ -83,16 +83,16 @@ public class SM_CalculatingPlayerScoreStep {
 	@Given("the score of the current player is {int}")
 	public static void score_of_current_player_is(int expectedScore) {
 //		View.printPlayerKingdom(player);
-		System.out.println(player.hasKingdom());
-		KDController.calculateIndividualPlayerScore(player);
-		int actualScore=player.getTotalScore();
+		System.out.println(kd.getCurrentGame().getNextPlayer().hasKingdom());
+		KDController.calculateIndividualPlayerScore(kd.getCurrentGame().getNextPlayer());
+		int actualScore=kd.getCurrentGame().getPlayer(0).getTotalScore();
 		assertEquals(expectedScore,actualScore);
 	}
 	
 	@Then("the score of the current player shall be {int}")
 	public static void score_of_current_player_shall_be(int expectedScore) {
-		KDController.calculateIndividualPlayerScore(player);
-		int actualScore=player.getTotalScore();
+		KDController.calculateIndividualPlayerScore(kd.getCurrentGame().getNextPlayer());
+		int actualScore=kd.getCurrentGame().getNextPlayer().getTotalScore();
 		assertEquals(expectedScore,actualScore);
 	}
 	
@@ -103,14 +103,14 @@ public class SM_CalculatingPlayerScoreStep {
 	
 	@Given("the current player is placing his\\/her domino with ID {int}")
 	public static void placing_to_discard(int id) {
-		KDController.preplaceArbitraryDomino(player, KDController.getdominoByID(id), 0, 0, "up");
+		KDController.preplaceArbitraryDomino(kd.getCurrentGame().getNextPlayer(), KDController.getdominoByID(id), 0, 0, "up");
 	}
 	
 	@And("it is impossible to place the current domino in his\\/her kingdom")
 	public static void impossible_to_place() {
-		List<KingdomTerritory> allT=player.getKingdom().getTerritories();
+		List<KingdomTerritory> allT=kd.getCurrentGame().getNextPlayer().getKingdom().getTerritories();
 		DominoInKingdom latestPreplacedDomino=(DominoInKingdom) allT.get(allT.size()-1);
-		boolean canPlace=KDQuery.isThereAvailablePlacement(player, latestPreplacedDomino);
+		boolean canPlace=KDQuery.isThereAvailablePlacement(kd.getCurrentGame().getNextPlayer(), latestPreplacedDomino);
 		System.out.println(canPlace);
 	}
 	
@@ -123,12 +123,14 @@ public class SM_CalculatingPlayerScoreStep {
 		//but discard only works on the 'next' player
 		//so manually set the player we've been working with to the 'next' player of the game
 		
-		kd.getCurrentGame().setNextPlayer(player);
 		boolean discarded=KDController.discardSM();
 		System.out.println("successful discard: "+discarded);
 		
 		assertEquals(true,discarded);
 	}
+	
+	
+	
 	
 	
 
