@@ -50,7 +50,7 @@ public class KingUI_Stats extends JFrame {
 		//back.setBounds(0, 0, textW*2, textH);
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// return to main page
+				KingUI_Main.c1.show(KingUI_Main.contPanel, "3");
 			}
 		});
 		// box that says stats
@@ -124,7 +124,7 @@ public class KingUI_Stats extends JFrame {
 				.addGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 						.addComponent(stats)
-						.addComponent(combo)
+						.addComponent(combo, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
 						.addGroup(layout.createSequentialGroup()
 								.addComponent(statsTwo)
 						)
@@ -140,7 +140,7 @@ public class KingUI_Stats extends JFrame {
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 				.addGroup(layout.createSequentialGroup()
 						.addComponent(stats)
-						.addComponent(combo)
+						.addComponent(combo,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE  )
 						.addGroup(layout.createParallelGroup()
 								.addComponent(statsTwo)
 						)

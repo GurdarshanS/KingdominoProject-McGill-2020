@@ -3,6 +3,7 @@ package ca.mcgill.ecse223.kingdomino.view;
 import javax.swing.JLabel;
 
 import javax.swing.JTextField;
+import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
@@ -71,7 +72,7 @@ public class KingUI_PlayerCreate extends JFrame {
 		
 		// text box
 		insertName = new JTextField();
-		
+		insertName.setColumns(10);
 		// create name
 		done = new JButton("Create");
 		done.setFont(new Font("Times", Font.BOLD, 16));
@@ -100,13 +101,14 @@ public class KingUI_PlayerCreate extends JFrame {
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
 				.addComponent(back)
+				.addGap(400)
 				.addGroup(layout.createSequentialGroup())
 				.addGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 						.addComponent(name)
 						.addComponent(label)
 						.addGroup(layout.createSequentialGroup()
-								.addComponent(insertName)
+								.addComponent(insertName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
 						)
 						.addComponent(done)
 						)
@@ -119,10 +121,11 @@ public class KingUI_PlayerCreate extends JFrame {
 				.addGroup(layout.createParallelGroup())
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 				.addGroup(layout.createSequentialGroup()
+						.addGap(300)
 						.addComponent(name)
 						.addComponent(label)
 						.addGroup(layout.createParallelGroup()
-								.addComponent(insertName)
+								.addComponent(insertName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
 						)
 						.addComponent(done)
 						)
