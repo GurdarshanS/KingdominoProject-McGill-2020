@@ -90,11 +90,12 @@ public class KDController {
 	 * 
 	 */
 	
-	public static Kingdomino loadGame() {
+	public static Kingdomino loadGame(String newFilename) {
+		KDPersistence.setFilename(newFilename);
 		Kingdomino kd = KDPersistence.load();
 		if (kd==null) kd = new Kingdomino();		
 		KingdominoApplication.setKingdomino(kd);
-		KDPersistence.save(kd);
+		KDPersistence.save(kd,true);
 		return kd;
 	}
 	
@@ -113,10 +114,11 @@ public class KDController {
 	 * 
 	 */
 	
-	public static boolean saveGame() {
+	public static boolean saveGame(String newFilename,boolean overwrite) {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
 		try{
-			KDPersistence.save(kd);
+			KDPersistence.setFilename(newFilename);
+			KDPersistence.save(kd,overwrite);
 			return true;
 		}
 		catch(Exception e) {

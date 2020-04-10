@@ -46,89 +46,89 @@ public class KDController2 {
 		game.setNextPlayer(game.getPlayer(0));
 	}
 	
-	/**
-	 * @author Anthony Harissi Dagher
-	 * Feature 6: This method loads a saved game for the player.
-	 * @param file
-	 * @return boolean
-	 * @throws java.lang.IllegalArgumentException	
-	 *  */
-	
-	public static Kingdomino loadGame() {
-		Kingdomino kd = KDPersistence.load();
-		if (kd==null) {
-			kd = new Kingdomino();
-//			System.out.println("no kingdomino serialization found");
-//			System.out.println("created new kingdomino instance");
-//			System.out.println("serialized new kingdomino instance");
-		}
-		else {
-//			System.out.println("loaded kingdomino serialization");	
-		}
-		
-		KingdominoApplication.setKingdomino(kd);
-		KDPersistence.save(kd);
-		
-		return kd;
-	}
-	
-//	public static boolean loadGame(File file) throws InvalidInputException {
-//		
-//		boolean gameLoaded = false;
-//		String directory = "./src/test/resources/"+file.getName();	
-//		File fileSearch = new File(directory);
-//		if (fileSearch.isFile()) {
-//			if(fileSearch.canRead()) {
-//				try{
-//					KDPersistence.load();
-//					gameLoaded = true;
-//				}
-//				catch(RuntimeException r) {
-//					throw new InvalidInputException("Invalid file name.");
-//				}
-//			}
-//		}
-//		return gameLoaded;
-//	}
-	
-	/**
-	 * @author Anthony Harissi Dagher
-	 * Feature 7: This method saves the current game for the player.
-	 * @param file
-	 * @return boolean
-	 * @throws java.lang.IllegalArgumentException
-	 */
-	
-	public static boolean saveGame() {
-		Kingdomino kd = KingdominoApplication.getKingdomino();
-		try{
-			KDPersistence.save(kd);
-			return true;
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-//	public static boolean saveGame(File file, boolean overwrite) throws InvalidInputException {
-//		
-//		boolean gameSaved;
-//		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
-//		String directory = "./src/test/resources/"+file.getName();
-//		File fileSearch = new File(directory);
-//		if(fileSearch.exists() && overwrite == false) {
-//			gameSaved = false;
+//	/**
+//	 * @author Anthony Harissi Dagher
+//	 * Feature 6: This method loads a saved game for the player.
+//	 * @param file
+//	 * @return boolean
+//	 * @throws java.lang.IllegalArgumentException	
+//	 *  */
+//	
+//	public static Kingdomino loadGame() {
+//		Kingdomino kd = KDPersistence.load();
+//		if (kd==null) {
+//			kd = new Kingdomino();
+////			System.out.println("no kingdomino serialization found");
+////			System.out.println("created new kingdomino instance");
+////			System.out.println("serialized new kingdomino instance");
 //		}
 //		else {
-//			try {
-//				KDPersistence.save(kingdomino); 
-//				gameSaved = true;
-//			}catch(RuntimeException r) {
-//				throw new InvalidInputException(r.getMessage());
-//			}
+////			System.out.println("loaded kingdomino serialization");	
 //		}
-//		return gameSaved;
+//		
+//		KingdominoApplication.setKingdomino(kd);
+//		KDPersistence.save(kd);
+//		
+//		return kd;
 //	}
+//	
+////	public static boolean loadGame(File file) throws InvalidInputException {
+////		
+////		boolean gameLoaded = false;
+////		String directory = "./src/test/resources/"+file.getName();	
+////		File fileSearch = new File(directory);
+////		if (fileSearch.isFile()) {
+////			if(fileSearch.canRead()) {
+////				try{
+////					KDPersistence.load();
+////					gameLoaded = true;
+////				}
+////				catch(RuntimeException r) {
+////					throw new InvalidInputException("Invalid file name.");
+////				}
+////			}
+////		}
+////		return gameLoaded;
+////	}
+//	
+//	/**
+//	 * @author Anthony Harissi Dagher
+//	 * Feature 7: This method saves the current game for the player.
+//	 * @param file
+//	 * @return boolean
+//	 * @throws java.lang.IllegalArgumentException
+//	 */
+//	
+//	public static boolean saveGame() {
+//		Kingdomino kd = KingdominoApplication.getKingdomino();
+//		try{
+//			KDPersistence.save(kd);
+//			return true;
+//		}
+//		catch(Exception e) {
+//			e.printStackTrace();
+//			return false;
+//		}
+//	}
+////	public static boolean saveGame(File file, boolean overwrite) throws InvalidInputException {
+////		
+////		boolean gameSaved;
+////		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
+////		String directory = "./src/test/resources/"+file.getName();
+////		File fileSearch = new File(directory);
+////		if(fileSearch.exists() && overwrite == false) {
+////			gameSaved = false;
+////		}
+////		else {
+////			try {
+////				KDPersistence.save(kingdomino); 
+////				gameSaved = true;
+////			}catch(RuntimeException r) {
+////				throw new InvalidInputException(r.getMessage());
+////			}
+////		}
+////		return gameSaved;
+////	}
 	
 	
 	/**
