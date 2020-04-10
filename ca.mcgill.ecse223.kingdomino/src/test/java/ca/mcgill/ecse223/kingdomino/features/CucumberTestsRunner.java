@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
 		plugin = "pretty", 
 		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features",
-//		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features/SortingAndRevealingDraft.feature",
+//		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features/LoadGame.feature",
 //		features = {
 //					"src/test/resources/ca/mcgill/ecse223/kingdomino/features/SaveGame.feature",
 //					"src/test/resources/ca/mcgill/ecse223/kingdomino/features/BrowseDominoPile.feature",

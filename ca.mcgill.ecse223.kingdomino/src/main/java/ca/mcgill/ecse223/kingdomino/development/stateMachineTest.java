@@ -132,6 +132,8 @@ public class stateMachineTest {
 			System.out.println(sm.getGamestatusFullName());
 			
 			View.printDominos(kd);
+			View.printNextRoundPlayerOrder(kd);
+
 
 		}
 		

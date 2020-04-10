@@ -357,13 +357,6 @@ public class KDController {
 		}
 		
 		kd.getCurrentGame().setNextPlayer(kd.getCurrentGame().getPlayer(0));
-		
-
-//		for (Player p:game.getPlayers()) {                 
-//			p.getDominoSelection().delete();            
-//		}
-		
-
 	}
 	
 //	public static void updatePlayerOrder() {
