@@ -15,28 +15,51 @@ public class mockGamePlaying {
 		{	
 			Kingdomino kd = KDController.loadGame(null);
 			
+			System.out.println("\n===============================================================================================");
+			System.out.println("                      setting up game, state machine uninitialized");
+			System.out.println("===============================================================================================");
 			
-			kd.setStateMachine();				//pairs state machine with the Kingdomino object
-			KDController.initializeSM();		//initializes the state machine to Initializing.CreatingFirstDraft, 
-												//state actions include ShuffleDominoPile,CreateNextDraft, and OrderNextDraft
+			
 			View.printUsers(kd);
+			System.out.println("dominos before state machine initialization");
+			View.printDominos(kd);	
 			System.out.println("player order before draftReady transition");
-			View.printNextRoundPlayerOrder(kd);
-			System.out.println(kd.getStateMachine().getGamestatusFullName());
-//			boolean draftReady=KDController.draftReadySM();	
-			KDController.generateInitialPlayerOrder();
-			// draftReady transition of SM from Initializing.CreatingFirstDraft to
-			// Initializing.SelectingFirstDomino, actions include revealNextDraft()
-			// and generateInitialPlayerOrder()
+			View.printPlayers(kd);
 			
-			View.printNextRoundPlayerOrder(kd);
+			System.out.println("\n===============================================================================================");
 			
+			kd.setStateMachine();				//initializes the state machine to Initializing.CreatingFirstDraft, 
+												//state actions include ShuffleDominoPile,CreateNextDraft, and OrderNextDraft
+			
+			System.out.println("                              state machine initialized");
+			System.out.println("===============================================================================================");
+			System.out.println("current state: "+kd.getStateMachine().getGamestatusFullName());
+			System.out.println("===============================================================================================");
+
+			Gameplay sm = kd.getStateMachine();
+			
+			System.out.println("dominos after state machine initialization");
+			View.printDominos(kd);
+			View.printDraft(kd);
+			
+			System.out.println("\n===============================================================================================");
+			System.out.println("original state: "+sm.getGamestatusFullName());
+			
+			KDController.draftReadySM();		// draftReady transition of SM from Initializing.CreatingFirstDraft to
+												// Initializing.SelectingFirstDomino, actions include revealNextDraft()
+												// and generateInitialPlayerOrder()
+			System.out.println("transition:     draftReady()");
+			System.out.println("new state:      "+sm.getGamestatusFullName());
+			System.out.println("===============================================================================================");
 
 			
-//			System.out.println("\n===============================================================================================");
-//			System.out.println("                      setting up game, state machine uninitialized");
-//			System.out.println("===============================================================================================");
-//			
+			
+			System.out.println("player order after draftReady transition");
+			View.printPlayers(kd);
+			View.printDraft(kd);
+			System.out.println(kd.getStateMachine().getGamestatusFullName());
+			
+			
 //			View.printDominos(kd);
 //			View.printTotalDraftNum(kd);
 //			View.printNextRoundPlayerOrder(kd);
@@ -44,12 +67,7 @@ public class mockGamePlaying {
 //			KDController.initializeSM();
 //			Gameplay sm=KingdominoApplication.getStateMachine();
 //			
-//			System.out.println("\n===============================================================================================");
-//			System.out.println("                              state machine initialized");
-//			System.out.println("===============================================================================================");
-//			System.out.println("current state: "+sm.getGamestatusFullName());
-//			System.out.println("===============================================================================================");
-//
+
 //			
 //			View.printDominos(kd);
 //			View.printDraft(kd);

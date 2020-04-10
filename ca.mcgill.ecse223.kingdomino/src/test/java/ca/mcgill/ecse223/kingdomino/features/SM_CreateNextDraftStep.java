@@ -66,7 +66,7 @@ public class SM_CreateNextDraftStep {
 		}
 		catch(Exception e) {}
 		
-		
+		kd.removeStateMachine();
 		kd.setStateMachine();
 		
 //		since entering the state machine means shuffling the pile, the rest of this method is to ensure that the 
@@ -82,15 +82,13 @@ public class SM_CreateNextDraftStep {
 		
 		List<Integer>ids=new ArrayList<Integer>();
 		
-		for (Domino d:kd.getCurrentGame().getAllDominos()) ids.add(d.getId());
+		List<Domino> forcedDominos = new ArrayList<Domino>();
+		for (int i=1;i<49;i++) forcedDominos.add(KDController.getdominoByID(i));
 		
-		for (int i=0;i<13;i++) {
-			int oldIndex=ids.indexOf(i+1);
-			Domino swapA=kd.getCurrentGame().getAllDomino(oldIndex);
-			Domino swapB=kd.getCurrentGame().getAllDomino(i);
-			kd.getCurrentGame().addOrMoveAllDominoAt(swapA, i);
-			kd.getCurrentGame().addOrMoveAllDominoAt(swapB, oldIndex);
+		for (int i=0;i<forcedDominos.size();i++) {
+			kd.getCurrentGame().addOrMoveAllDominoAt(forcedDominos.get(i), i);
 		}
+
 		
 		kd.getCurrentGame().setTopDominoInPile(kd.getCurrentGame().getAllDomino(0));
 		
@@ -119,6 +117,7 @@ public class SM_CreateNextDraftStep {
 	
 	@Given("there is a next draft")
 	public static void there_is_a_next_draft() {
+		View.printDominos(kd);
 		assertEquals(true,kd.getCurrentGame().hasNextDraft());
 	}
 	
