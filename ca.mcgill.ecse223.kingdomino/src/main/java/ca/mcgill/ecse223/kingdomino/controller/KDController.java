@@ -211,7 +211,9 @@ public class KDController {
 	 */
 	
 	public static Kingdomino loadGame(String newFilename) {
-		KDPersistence.setFilename(newFilename);
+		if (newFilename!=null) {
+			KDPersistence.setFilename(newFilename);
+		}
 		Kingdomino kd = KDPersistence.load();
 		if (kd==null) kd = new Kingdomino();		
 		KingdominoApplication.setKingdomino(kd);
@@ -236,7 +238,9 @@ public class KDController {
 	public static boolean saveGame(String newFilename,boolean overwrite) {
 		Kingdomino kd = KingdominoApplication.getKingdomino();
 		try{
-			KDPersistence.setFilename(newFilename);
+			if (newFilename!=null) {
+				KDPersistence.setFilename(newFilename);
+			}
 			KDPersistence.save(kd,overwrite);
 			return true;
 		}
@@ -496,9 +500,12 @@ public class KDController {
 		
 		int playerNums=game.getNumberOfPlayers();
 		List<Integer> playerOrder = uniqueRandomSequence(playerNums,0,playerNums-1);
+		List<Player> tmpPlayers=new ArrayList<Player>();
+		for (int i:playerOrder) tmpPlayers.add(game.getPlayer(i));
 		
-		for (int i=0;i<game.getPlayers().size();i++) {
-			game.addOrMovePlayerAt(game.getPlayer(i), playerOrder.get(i));
+		for (int i=0;i<tmpPlayers.size();i++) {
+			boolean moved=game.addOrMovePlayerAt(tmpPlayers.get(i),i);
+			
 		}
 		
 		game.setNextPlayer(game.getPlayer(0));
@@ -2287,7 +2294,7 @@ public class KDController {
 	
 	private static List<Integer> uniqueRandomSequence(int size,int min,int max){
 		List<Integer> sequence = new ArrayList<Integer>();
-		Random rand = new Random(2);			//seeded to get consistent random numbers to help development
+		Random rand = new Random();			//seeded to get consistent random numbers to help development
 												//remove seed before deployment
 		
 		while (sequence.size()<size){

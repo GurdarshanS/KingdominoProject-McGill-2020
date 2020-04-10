@@ -234,7 +234,16 @@ public class SM_CreateNextDraftStep {
 	public static void former_next_is_now_current() {
 		List<Integer> nowCurrentIds=new ArrayList<Integer>();
 		for (Domino d:kd.getCurrentGame().getCurrentDraft().getIdSortedDominos()) nowCurrentIds.add(d.getId());
-		assertEquals(prevNextIds,nowCurrentIds);
+
+		boolean sizeMatch=prevNextIds.size()==nowCurrentIds.size();
+		boolean contentMatch=true;
+		for (int tmpId:nowCurrentIds) {
+			if (!prevNextIds.contains(tmpId)) {
+				contentMatch=false;
+				break;
+			}
+		}
+		assertEquals(true,contentMatch&&sizeMatch);
 	}
 	
 	@Given("this is a {int} player game")

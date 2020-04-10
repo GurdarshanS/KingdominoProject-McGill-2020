@@ -56,23 +56,22 @@ public class View {
 	}
 	
 	public static void printPlayerKingdom(Player p) {
-			System.out.println("\n"+KDQuery.getKingdomVerificationResult(p)+" kingdom\n");
+			
 			for (KingdomTerritory territory:p.getKingdom().getTerritories()) {
 				String row="none";
 				if (territory instanceof Castle) {
-					row=String.format("   NoID   %1$-20s  left x: %2$-5d left y: %3$-5d right x: %4$-5d right y: %5$-5d %6$-10s status: %7$-2s",
+					row=String.format("ID 000 %1$-20s  left x: %2$-5d left y: %3$-5d right x: %4$-5d right y: %5$-5d %6$-10s status: %7$-2s",
 							"Castle",territory.getX(),territory.getY(),0,0,"none","none");
 				}
 				else if (territory instanceof DominoInKingdom){
 					int[] otherPos=KDQuery.calculateRightPos(territory);
-					row=String.format("   %1$-5d  %2$-20s  left x: %3$-5d left y: %4$-5d right x: %5$-5d right y: %6$-5d %7$-10s status: %8$-2s",
+					row=String.format("ID%1$-5d  %2$-20s  left x: %3$-5d left y: %4$-5d right x: %5$-5d right y: %6$-5d %7$-10s status: %8$-2s",
 							((DominoInKingdom) territory).getDomino().getId(),"DominoInKingdom",territory.getX(),territory.getY(),otherPos[0],otherPos[1],((DominoInKingdom) territory).getDirection(),
 							((DominoInKingdom) territory).getDomino().getStatus());
 				}
 				System.out.println(row);
 			}
-			
-			System.out.println("------------------------------------------------------------------------------------------------------------------");
+			System.out.println(KDQuery.getKingdomVerificationResult(p)+" kingdom ---------------------------------------------------------------------------------------------------\n");
 	}
 	
 	public static void printAllKingdoms(Kingdomino kd) {
@@ -100,8 +99,20 @@ public class View {
 	public static void printUsers(Kingdomino kd) {
 		//		view all users of kingdomino (NOT players)
 		System.out.println("==================================== users in kingdomino ==================================");
-		for (User user:kd.getUsers()) {
-			System.out.println(user.getName());
+		for (User user:KDQuery.getUsers()) {
+			
+			String row;
+			if (user.hasPlayerInGames()) {
+				row= String.format("name: %1$-10s playing as: %2$-20s:  games won: %3$-5d games played: %4$-5d",
+						user.getName(),user.getPlayerInGames().get(0).getColor(),user.getWonGames(),user.getPlayedGames());
+			}
+			else {
+				row= String.format("name: %1$-10s playing as: %2$-20s:  games won: %3$-5d games played: %4$-5d",
+						user.getName(),"no player selected",user.getWonGames(),user.getPlayedGames());
+			}
+			
+			System.out.println(row);
+		
 		}
 		System.out.println();
 	}
@@ -149,7 +160,6 @@ public class View {
 				}
 			}
 			System.out.println(row);
-//			printProperties(p);
 			printPlayerKingdom(p);
 		}
 		System.out.println();

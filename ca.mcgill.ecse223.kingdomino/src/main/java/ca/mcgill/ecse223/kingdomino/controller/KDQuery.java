@@ -15,6 +15,23 @@ public class KDQuery {
 	/**
 	 * 
 	 * This method checks returns a
+	 * all the users of the current
+	 * Kingdomino object
+	 * 
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return users
+	 */
+	
+	public static List<User> getUsers(){
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		List<User> users = kd.getUsers();
+		return users;
+	}
+	
+	/**
+	 * 
+	 * This method checks returns a
 	 * 'valid' or 'invalid' status
 	 * for a player's kingdom based
 	 * on the verification methods
