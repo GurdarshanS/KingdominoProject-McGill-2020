@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
 		plugin = "pretty", 
 		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features",
-//		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features/CalculatingPlayerScore.feature",
+//		features = "src/test/resources/ca/mcgill/ecse223/kingdomino/features/DiscardingLastDomino.feature",
 		glue = "ca.mcgill.ecse223.kingdomino.features")
 public class CucumberTestsRunner {
 }

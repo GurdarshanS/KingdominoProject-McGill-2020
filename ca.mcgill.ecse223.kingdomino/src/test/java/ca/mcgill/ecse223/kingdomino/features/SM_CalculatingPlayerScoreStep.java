@@ -122,10 +122,28 @@ public class SM_CalculatingPlayerScoreStep {
 		//if yes, can then make the transition to ConfirmingLastChoice with discard event
 		//but discard only works on the 'next' player
 		//so manually set the player we've been working with to the 'next' player of the game
+		boolean lastPlayer=KDQuery.isCurrentPlayerTheLastInTurn(kd.getCurrentGame().getNextPlayer());
+		boolean lastTurn=KDQuery.isCurrentTurnTheLastInGame();
 		
 		boolean discarded=KDController.discardSM();
 		System.out.println("successful discard: "+discarded);
+		System.out.println("state machine state: "+kd.getStateMachine().getGamestatusFullName());
 		
+		//manually trigger the scoring event right away to satisfy the tests
+		//in real game, the state machine would require a scoring event after all players have 
+		//placed or discared their last domino, which itself is the guard hasAllPlayersPlayed
+		if (discarded&&lastPlayer&&lastTurn) {
+			
+			//manually satisfy the hasAllPlayersPlayed guard, automatic in a real game
+			for (Player p:kd.getCurrentGame().getPlayers()) {
+				p.getDominoSelection().getDomino().setStatus(DominoStatus.PlacedInKingdom);
+			}
+			System.out.println("directly to scoring");
+			System.out.println("has all played: "+KDQuery.hasAllPlayersPlayed());
+			KDController.scoringSM();
+			System.out.println("state machine state: "+kd.getStateMachine().getGamestatusFullName());
+
+		}
 		assertEquals(true,discarded);
 	}
 	
