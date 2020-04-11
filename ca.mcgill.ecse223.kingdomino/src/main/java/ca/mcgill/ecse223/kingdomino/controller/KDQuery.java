@@ -103,6 +103,50 @@ public class KDQuery {
 	
 	/**
 	 * 
+	 * determines if all players in game has been assigned user
+	 * 
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return p
+	 * @throws java.lang.IllegalArgumentException
+	 */
+	
+	public static boolean hasAllPlayersAUser() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		boolean allAssigned=true;
+		for (Player p:kd.getCurrentGame().getPlayers()) {
+			if (!p.hasUser()) {
+				allAssigned=false;
+				break;
+			}
+		}
+		return allAssigned;
+	}
+	
+	/**
+	 * 
+	 * simple wrapper method for retrieving a player by color,
+	 * applicable for 3-4 player game, further work needed for
+	 * 2 player game
+	 * 
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return p
+	 * @throws java.lang.IllegalArgumentException
+	 */
+	
+	public static Player getPlayerByColor(String color) {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		
+		for (Player p:kd.getCurrentGame().getPlayers()) {
+			if (p.getColor().name().equalsIgnoreCase(color)) return p;
+		}
+		
+		throw new IllegalArgumentException("specified player color does not exist in current game");
+	}
+	
+	/**
+	 * 
 	 * simple wrapper method for getting the territories of a player
 	 * 
 	 * @author Jing Han 260528152

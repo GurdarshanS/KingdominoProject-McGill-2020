@@ -12,6 +12,9 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
 
 public class KDController {
 	
@@ -308,15 +311,31 @@ public class KDController {
 	 * @author Jing Han	260528152
 	 * @param username
 	 * @return boolean
+	 * @throws java.lang.IllegalArgumentException
 	 */
 	
-	public static boolean assignPlayerToUser(Player player, User user) {
+	public static boolean assignPlayerToUser(Player player, User user) throws IllegalArgumentException {
+		
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		
+		Set<Player> playersInThisGame=new HashSet<Player> (kd.getCurrentGame().getPlayers());
+		Set<Player> playersOfThisUser = new HashSet<Player> (user.getPlayerInGames());
+		Set<Player> playersOfThisUserInThisGame=Sets.intersection(playersInThisGame, playersOfThisUser);
+		
+		if (!playersOfThisUserInThisGame.isEmpty()) {
+			String assignedColors="";
+			for (Player p:playersOfThisUserInThisGame) {
+				assignedColors+=(" "+p.getColor().toString());
+			}
+			throw new IllegalArgumentException("user "+user.getName()+" is already assigned to player"+assignedColors+" in this game");
+		}
+		
 		if (!player.hasUser()) {
 			player.setUser(user);
 			return true;
 		}
 		else {
-			return false;
+			throw new IllegalArgumentException("player "+player.getColor().toString()+" is already assigned to user "+user.getName()+" in this game");
 		}
 	}
 
@@ -564,16 +583,16 @@ public class KDController {
 	 * @return none
 	 * 
 	 */
-	
 	public static void startANewGame() {
-			
-			Kingdomino kd = KingdominoApplication.getKingdomino();
-			Game game = kd.getCurrentGame();
-			
-			int dominoNums=game.getMaxPileSize();
-			createDominoPile(game,dominoNums);
-			createPlayers();
-		}
+		
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		KDController.createPlayers();
+		
+		Game game = kd.getCurrentGame();
+		int dominoNums=game.getMaxPileSize();
+		createDominoPile(game,dominoNums);
+		generateInitialPlayerOrder();
+	}
 	
 	/**
 	 * 
@@ -1677,18 +1696,19 @@ public class KDController {
 	 * @author Keon Olszewski 260927813
 	 * @param userName
 	 * @return userList
+	 * @throws java.lang.IllegalArgumentException
 	 */
 	
-	public static User getUserByName(String username) {
+	public static User getUserByName(String username) throws IllegalArgumentException {
 		Kingdomino kingdomino = KingdominoApplication.getKingdomino();
 		List<User> userList = kingdomino.getUsers();
 		
 		for(int i = 0; i< userList.size(); i++) {
 			
-			if(userList.get(i).getName().equals(username)) return userList.get(i);
+			if(userList.get(i).getName().equalsIgnoreCase(username)) return userList.get(i);
 		}
 		
-		return null;
+		throw new IllegalArgumentException("username provided does not exist");
 	}
 	
 	/**
@@ -1708,6 +1728,8 @@ public class KDController {
 		}
 		throw new java.lang.IllegalArgumentException("Domino with ID " + id + " not found.");
 	}
+	
+	
 	
 	////////////////////////////////////////
 	/// ---- Private Helper Methods ---- ///
