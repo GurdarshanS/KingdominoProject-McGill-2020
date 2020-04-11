@@ -486,14 +486,30 @@ public class KDQuery {
 		
 		int counter=0;
 		for (Domino d:dominoPile) {
-			if (d.getStatus().equals(DominoStatus.InPile)||d.getStatus().equals(DominoStatus.InNextDraft)) {
+			if (d.getStatus().equals(DominoStatus.PlacedInKingdom)||d.getStatus().equals(DominoStatus.Discarded)||d.getStatus().equals(DominoStatus.Excluded)) {
 				counter+=1;
 			}
 		}
 		
-		if (counter==0) return true;
+		if (counter==dominoPile.size()) return true;
 		else return false;
 	}
+	
+//	public static boolean isDominoPileEmpty() {
+//		Kingdomino kd = KingdominoApplication.getKingdomino();
+//		Game game=kd.getCurrentGame();
+//		List<Domino> dominoPile=game.getAllDominos();
+//		
+//		int counter=0;
+//		for (Domino d:dominoPile) {
+//			if (d.getStatus().equals(DominoStatus.InPile)||d.getStatus().equals(DominoStatus.InNextDraft)) {
+//				counter+=1;
+//			}
+//		}
+//		
+//		if (counter==0) return true;
+//		else return false;
+//	}
 	
 	/**
 	 * determines whether all the players have played in this turn by either discarding or 

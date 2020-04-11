@@ -262,8 +262,11 @@ public class SM_CreateNextDraftStep {
 	
 	@Then("the pile is empty")
 	public static void pile_is_empty() {
-		
-		
+		for (Domino d:kd.getCurrentGame().getAllDominos()) {
+			if (d.getStatus().equals(DominoStatus.InCurrentDraft)) {
+				d.setStatus(DominoStatus.Excluded);
+			}
+		}
 		assertEquals(true,KDQuery.isDominoPileEmpty());
 	}
 	
