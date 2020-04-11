@@ -135,10 +135,17 @@ public class SM_CalculatingPlayerScoreStep {
 		//placed or discared their last domino, which itself is the guard hasAllPlayersPlayed
 		if (discarded&&lastPlayer&&lastTurn) {
 			
-			//manually satisfy the hasAllPlayersPlayed guard, automatic in a real game
+			//but needs to pass the hasAllPlayersPlayed guard, which checks to see if players still have domino selections
+			//In a real game, since getting the last player to the original Finishing.ConfirmingLastChoice means that all the
+			//players have either discared or placed, which would have deleted their selections automatically so the guard
+			//would be satisified. Here, however, since we weren't calling the placing and discarding transitions, need
+			//to manually satisfy that guard condition
 			for (Player p:kd.getCurrentGame().getPlayers()) {
-				p.getDominoSelection().getDomino().setStatus(DominoStatus.PlacedInKingdom);
+				if (p.hasDominoSelection()) {
+					p.getDominoSelection().delete();
+				}
 			}
+
 			KDController.scoringSM();
 
 		}

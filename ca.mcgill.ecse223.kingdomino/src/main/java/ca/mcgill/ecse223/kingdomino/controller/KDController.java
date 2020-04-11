@@ -36,6 +36,37 @@ public class KDController {
 		sm.setGamestatus("CreatingFirstDraft");
 	}
 	
+	/**
+	 * 
+	 * wrapper method for triggering the 
+	 * rotate transition of state machine (SM)
+	 * 
+	 * @author Jing Han 260528152
+	 * @param none
+	 * @return boolean
+	 * 
+	 */
+	
+	public static boolean rotateSM(String dir) {
+		Gameplay sm = KingdominoApplication.getStateMachine();
+		return sm.rotate(dir);
+	}
+	
+	/**
+	 * 
+	 * wrapper method for triggering the 
+	 * move transition of state machine (SM)
+	 * 
+	 * @author Massimo Vadacchino 260928064
+	 * @param none
+	 * @return boolean
+	 * 
+	 */
+	
+	public static boolean moveSM(String movement) {
+		Gameplay sm = KingdominoApplication.getStateMachine();
+		return sm.move(movement);
+	}
 	
 	/**
 	 * 
@@ -1066,6 +1097,7 @@ public class KDController {
 		
 		if (dInKingdom.getDomino().getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
 			dInKingdom.getDomino().setStatus(DominoStatus.PlacedInKingdom);
+			if (aPlayer.hasDominoSelection()) aPlayer.getDominoSelection().delete();
 			return true; 
 		}
 		else {
@@ -1088,6 +1120,7 @@ public class KDController {
 		}
 		else {
 			dInKingdom.getDomino().setStatus(DominoStatus.Discarded);
+			if (aPlayer.hasDominoSelection()) aPlayer.getDominoSelection().delete();
 			return true;
 		}
 	}

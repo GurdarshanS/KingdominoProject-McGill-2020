@@ -116,9 +116,19 @@ public class SM_ResolveTieBreakStep {
 		
 	@When("calculate ranking is initiated")
 	public static void calculate_ranking_initiated() {
-		//essentially meaning that we are triggering the scoring transition between Finishing and EndingGame
+		//essentially meaning that we are triggering the scoring transition between Finishing.ConfirmingLastChoice and EndingGame
 		//so check that we are in the correct original state
+		
+		//but needs to pass the hasAllPlayersPlayed guard, which checks to see if players still have domino selections
+		//In a real game, since getting the last player to the original Finishing.ConfirmingLastChoice means that all the
+		//players have either discared or placed, which would have deleted their selections automatically so the guard
+		//would be satisified. Here, however, since we weren't calling the placing and discarding transitions, need
+		//to manually satisfy that guard condition
+		for (Player p:kd.getCurrentGame().getPlayers()) p.getDominoSelection().delete();
+
+		
 		boolean scored=KDController.scoringSM();
+		System.out.println("scoring transition: "+scored);
 	}
 	
 	@Then("player standings should be the followings:")

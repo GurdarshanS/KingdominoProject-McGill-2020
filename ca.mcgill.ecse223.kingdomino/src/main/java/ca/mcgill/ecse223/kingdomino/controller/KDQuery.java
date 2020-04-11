@@ -507,8 +507,12 @@ public class KDQuery {
 		boolean allPlayed=true;
 		
 		for (Player p:players) {
-			Domino lastDomino=p.getDominoSelection().getDomino();
-			if (!(lastDomino.getStatus().equals(DominoStatus.PlacedInKingdom)||lastDomino.getStatus().equals(DominoStatus.Discarded))) {
+//			Domino lastDomino=p.getDominoSelection().getDomino();
+//			if (!(lastDomino.getStatus().equals(DominoStatus.PlacedInKingdom)||lastDomino.getStatus().equals(DominoStatus.Discarded))) {
+//				allPlayed=false;
+//				break;
+//			}
+			if (p.hasDominoSelection()) {
 				allPlayed=false;
 				break;
 			}

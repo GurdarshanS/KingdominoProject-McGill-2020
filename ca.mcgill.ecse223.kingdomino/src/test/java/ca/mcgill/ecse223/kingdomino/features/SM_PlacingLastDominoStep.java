@@ -112,6 +112,17 @@ public class SM_PlacingLastDominoStep {
 	public static void game_finished() {
 
 		//check if we can enter the EndingGame state from the ConfirmingLastChoice state
+		//needs to pass the hasAllPlayersPlayed guard, which checks to see if players still have domino selections
+		//the placingSM() in the @When in SM_PlacingDomino places and deletes the domino selection for player 4
+		//but it doesn't account for the other 3 players, so manually delete them here. In a real game, since the previous
+		//3 players would have to either place or discard, their selections would be deleted automatically
+		for (int i=0;i<3;i++) {
+			Player p=kd.getCurrentGame().getPlayer(i);
+			if (p.hasDominoSelection()) {
+				p.getDominoSelection().delete();
+			}
+		}
+		
 		boolean scoring=KDController.scoringSM();
 		assertEquals(Gameplay.Gamestatus.EndingGame.toString(),kd.getStateMachine().getGamestatusFullName());
 	}

@@ -102,7 +102,53 @@ public class mockGamePlaying {
 					boolean manipulateFirst=KDController.manipulateFirstSM(posx, posy, dir);
 					System.out.println("event processed: "+manipulateFirst);
 					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					
+					break;
+				
+				case "rotate":
+					System.out.println("processing SM event rotate, input rotation direction ('clockwise','counterclockwise'):");
+					String rotateDir = in.nextLine();
+					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
+					
+					boolean rotated=KDController.rotateSM(rotateDir);
+					
+					System.out.println("event processed: "+rotated);
+					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					break;
+				
+				case "move":
+					System.out.println("processing SM event move, input movement direction ('up','down','left','right'):");
+					String movement = in.nextLine();
+					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
+					
+					boolean moved=KDController.moveSM(movement);
+					
+					System.out.println("event processed: "+moved);
+					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					break;
+				
+				case "place":
+					System.out.println("processing SM event place...");
+					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
+					
+					boolean placed=KDController.placeSM();
 
+					System.out.println("event processed: "+placed);
+					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					
+					System.out.println("isDominoPileEmpty: "+KDQuery.isDominoPileEmpty());
+					System.out.println("hasAllPlayersChosen: "+KDQuery.hasAllPlayersChosen());
+					break;
+				
+				case "discard":
+					System.out.println("processing SM event discard...");
+					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
+					
+					boolean discarded=KDController.discardSM();
+
+					System.out.println("event processed: "+discarded);
+					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					break;
 					
 			  	case "stop":
 			  		run=false;
