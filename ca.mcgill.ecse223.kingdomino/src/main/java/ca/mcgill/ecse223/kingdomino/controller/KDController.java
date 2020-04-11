@@ -2368,7 +2368,7 @@ public class KDController {
 	
 	private static List<Integer> uniqueRandomSequence(int size,int min,int max){
 		List<Integer> sequence = new ArrayList<Integer>();
-		Random rand = new Random();			//seeded to get consistent random numbers to help development
+		Random rand = new Random(2);			//seeded to get consistent random numbers to help development
 												//remove seed before deployment
 		
 		while (sequence.size()<size){

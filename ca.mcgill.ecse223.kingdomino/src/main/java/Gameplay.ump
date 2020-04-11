@@ -61,8 +61,8 @@ class Gameplay {
           
           SelectingStandardDomino{
             manipulateNext(int posx, int posy, String dir)[!hasAllPlayersChosen()]/{preplaceLatestDomino(posx,posy,dir);} ->Playing.ManipulatingDomino;
-			nextSelectionReady[hasAllPlayersChosen()&&!isDominoPileEmpty()]->Playing;
-			lastSelectionReady(int posx, int posy, String dir)[hasAllPlayersChosen()&&isDominoPileEmpty()]/{updatePlayerOrder();preplaceLatestDomino(posx,posy,dir);}->Finishing;
+			nextSelectionReady[hasAllPlayersChosen()&&!isDominoPileEmpty()&&isCurrentPlayerTheLastInTurn()]->Playing;
+			lastSelectionReady(int posx, int posy, String dir)[hasAllPlayersChosen()&&isDominoPileEmpty()&&isCurrentPlayerTheLastInTurn()]/{updatePlayerOrder();preplaceLatestDomino(posx,posy,dir);}->Finishing;
           }  
         
       }

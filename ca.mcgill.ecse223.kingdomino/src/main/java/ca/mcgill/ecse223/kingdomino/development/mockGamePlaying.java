@@ -89,13 +89,40 @@ public class mockGamePlaying {
 					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
 					break;
 				
-				case "manipulate first":
-					System.out.println("processing SM event manipulateFirst, input preplacement posx, posy, and direction");
+				case "next selection ready":
+					System.out.println("processing SM event nextSelectionReady...");
+					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
+					
+					boolean nextSelectionReady=KDController.nextSelectionReadySM();
+
+					System.out.println("event processed: "+nextSelectionReady);
+					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					break;
+				
+				case "last selection ready":
+					System.out.println("processing SM event lastSelectionReady, input preplacement posx, posy, and direction");			
 					String data = in.nextLine();
 					int posx=Integer.decode(data.split(",")[0]);
 					int posy=Integer.decode(data.split(",")[1]);
 					String dir=data.split(",")[2];
 					String confirm = String.format("inputed data was posx: %1$-5d, posy: %2$-5d, direction: ", 
+							posx,posy,dir);
+					
+					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
+					
+					boolean lastSelectionReady=KDController.lastSelectionReadySM(posx, posy, dir);
+
+					System.out.println("event processed: "+lastSelectionReady);
+					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					break;
+				
+				case "manipulate first":
+					System.out.println("processing SM event manipulateFirst, input preplacement posx, posy, and direction");
+					data = in.nextLine();
+					posx=Integer.decode(data.split(",")[0]);
+					posy=Integer.decode(data.split(",")[1]);
+					dir=data.split(",")[2];
+					confirm = String.format("inputed data was posx: %1$-5d, posy: %2$-5d, direction: ", 
 							posx,posy,dir);
 					System.out.println(confirm);
 					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
@@ -105,6 +132,51 @@ public class mockGamePlaying {
 					
 					break;
 				
+				case "manipulate next":
+					System.out.println("processing SM event manipulateNext, input preplacement posx, posy, and direction");
+					data = in.nextLine();
+					posx=Integer.decode(data.split(",")[0]);
+					posy=Integer.decode(data.split(",")[1]);
+					dir=data.split(",")[2];
+					confirm = String.format("inputed data was posx: %1$-5d, posy: %2$-5d, direction: ", 
+							posx,posy,dir);
+					System.out.println(confirm);
+					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
+					boolean manipulateNext=KDController.manipulateNextSM(posx, posy, dir);
+					System.out.println("event processed: "+manipulateNext);
+					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					
+					break;
+				
+				case "manipulate last":
+					System.out.println("processing SM event manipulateLast, input preplacement posx, posy, and direction");
+					data = in.nextLine();
+					posx=Integer.decode(data.split(",")[0]);
+					posy=Integer.decode(data.split(",")[1]);
+					dir=data.split(",")[2];
+					confirm = String.format("inputed data was posx: %1$-5d, posy: %2$-5d, direction: ", 
+							posx,posy,dir);
+					System.out.println(confirm);
+					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
+					boolean manipulateLast=KDController.manipulateLastSM(posx, posy, dir);
+					System.out.println("event processed: "+manipulateLast);
+					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					
+					break;
+				
+				case "scoring":
+					System.out.println("processing SM event scoring...");
+
+					boolean scored=KDController.scoringSM();
+					
+					System.out.println("event processed: "+scored);
+					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					break;
+				
+				case "see ranking":
+					View.printRankings(kd);
+					break;
+					
 				case "rotate":
 					System.out.println("processing SM event rotate, input rotation direction ('clockwise','counterclockwise'):");
 					String rotateDir = in.nextLine();
@@ -136,8 +208,6 @@ public class mockGamePlaying {
 					System.out.println("event processed: "+placed);
 					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
 					
-					System.out.println("isDominoPileEmpty: "+KDQuery.isDominoPileEmpty());
-					System.out.println("hasAllPlayersChosen: "+KDQuery.hasAllPlayersChosen());
 					break;
 				
 				case "discard":
@@ -148,6 +218,39 @@ public class mockGamePlaying {
 
 					System.out.println("event processed: "+discarded);
 					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					break;
+				
+				
+				
+				case "has all chosen":
+					System.out.println("has all players chosen: "+KDQuery.hasAllPlayersChosen());
+					break;
+				
+				case "has all played":
+					System.out.println("has all players played: "+KDQuery.hasAllPlayersPlayed());
+					break;
+				
+				case "is pile empty":
+					System.out.println("is pile empty: "+KDQuery.isDominoPileEmpty());
+					break;
+				
+				case "current player":
+					System.out.println("current player: "+kd.getCurrentGame().getNextPlayer().getColor());
+					break;
+					
+				case "is last in turn":
+					System.out.println("is the last in turn: "+KDQuery.lastPlayerInTurn(kd.getCurrentGame().getNextPlayer()));
+					break;
+					
+				case "is domino taken":
+					System.out.println("enter domino id");
+					int testId= Integer.decode(in.nextLine());
+					Domino testDomino=KDController.getdominoByID(testId);
+					System.out.println("is domino "+testId+" taken: "+KDQuery.isDominoTaken(testDomino));
+					break;
+				
+				case "current state":
+					System.out.println("current state: "+kd.getStateMachine().getGamestatusFullName());
 					break;
 					
 			  	case "stop":

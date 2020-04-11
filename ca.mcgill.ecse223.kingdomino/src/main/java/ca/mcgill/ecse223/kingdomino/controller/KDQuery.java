@@ -346,6 +346,12 @@ public class KDQuery {
 		return p.equals(lastPlayer);
 	}
 	
+	public static boolean lastPlayerInTurn(Player p) {
+		List<Player> allPlayers=p.getGame().getPlayers();
+		Player lastPlayer=allPlayers.get(0);
+		return p.equals(lastPlayer);
+	}
+	
 	/**
 	 * 
 	 * determines whether all the players have chosen in the 

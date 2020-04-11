@@ -60,7 +60,7 @@ public class View {
 			for (KingdomTerritory territory:p.getKingdom().getTerritories()) {
 				String row="none";
 				if (territory instanceof Castle) {
-					row=String.format("ID 000 %1$-20s  left x: %2$-5d left y: %3$-5d right x: %4$-5d right y: %5$-5d %6$-10s status: %7$-2s",
+					row=String.format("ID0 %1$-20s  left x: %2$-5d left y: %3$-5d right x: %4$-5d right y: %5$-5d %6$-10s status: %7$-2s",
 							"Castle",territory.getX(),territory.getY(),0,0,"none","none");
 				}
 				else if (territory instanceof DominoInKingdom){

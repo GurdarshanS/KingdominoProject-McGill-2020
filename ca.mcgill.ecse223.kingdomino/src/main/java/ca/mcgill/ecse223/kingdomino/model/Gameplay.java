@@ -302,7 +302,7 @@ public class Gameplay implements Serializable
     switch (aGamestatusPlaying)
     {
       case SelectingStandardDomino:
-        if (!(hasAllPlayersChosen()))
+        if (!(lastPlayerInTurn()))
         {
           exitGamestatusPlaying();
         // line 63 "../../../../../Gameplay.ump"
@@ -327,7 +327,7 @@ public class Gameplay implements Serializable
     switch (aGamestatusPlaying)
     {
       case SelectingStandardDomino:
-        if (hasAllPlayersChosen()&&!(isDominoPileEmpty()))
+        if (lastPlayerInTurn())
         {
           exitGamestatus();
           setGamestatus(Gamestatus.Playing);
@@ -350,7 +350,7 @@ public class Gameplay implements Serializable
     switch (aGamestatusPlaying)
     {
       case SelectingStandardDomino:
-        if (hasAllPlayersChosen()&&isDominoPileEmpty())
+        if (isDominoPileEmpty()&&lastPlayerInTurn())
         {
           exitGamestatus();
         // line 65 "../../../../../Gameplay.ump"
@@ -952,6 +952,14 @@ public class Gameplay implements Serializable
    /**
     * Guards
     */
+   
+   public boolean lastPlayerInTurn(){
+   	   Kingdomino kd = KingdominoApplication.getKingdomino();
+   	   Game game=kd.getCurrentGame();
+   	   Player player=game.getNextPlayer();
+   	   return KDQuery.lastPlayerInTurn(player);
+   }
+   
    // line 219 "../../../../../Gameplay.ump"
     public boolean isCurrentPlayerTheLastInTurn(){
    	   Kingdomino kd = KingdominoApplication.getKingdomino();
