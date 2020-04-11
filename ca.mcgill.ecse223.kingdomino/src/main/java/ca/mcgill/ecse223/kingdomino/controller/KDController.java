@@ -88,9 +88,9 @@ public class KDController {
 	/**
 	 * 
 	 * wrapper method for triggering the 
-	 * manipulateLast transition of SM
+	 * manipulateFirst transition of SM
 	 * 
-	 * @author Eric Guan 260930210
+	 * @author Jing	Han 260528152
 	 * @param posx
 	 * @param posy
 	 * @param dir
@@ -98,9 +98,9 @@ public class KDController {
 	 * 
 	 */
 	
-	public static boolean manipulateLastSM(int posx, int posy, String dir) {
+	public static boolean manipulateFirstSM(int posx, int posy, String dir) {
 		Gameplay sm = KingdominoApplication.getStateMachine();
-		return sm.manipulateLast(posx, posy, dir);
+		return sm.manipulateFirst(posx, posy, dir);
 	}
 	
 	/**
@@ -120,6 +120,25 @@ public class KDController {
 		Gameplay sm = KingdominoApplication.getStateMachine();
 		return sm.manipulateNext(posx, posy, dir);
 	}
+	
+	/**
+	 * 
+	 * wrapper method for triggering the 
+	 * manipulateLast transition of SM
+	 * 
+	 * @author Eric Guan 260930210
+	 * @param posx
+	 * @param posy
+	 * @param dir
+	 * @return boolean
+	 * 
+	 */
+	
+	public static boolean manipulateLastSM(int posx, int posy, String dir) {
+		Gameplay sm = KingdominoApplication.getStateMachine();
+		return sm.manipulateLast(posx, posy, dir);
+	}
+	
 	
 	/**
 	 * 
@@ -774,7 +793,7 @@ public class KDController {
 			return;
 		}
 		
-		
+		aDomino.setStatus(DominoStatus.Excluded);
 		@SuppressWarnings("unused")
 		DominoSelection currentSelection = new DominoSelection(currentPlayer,aDomino,currentDraft);
 		

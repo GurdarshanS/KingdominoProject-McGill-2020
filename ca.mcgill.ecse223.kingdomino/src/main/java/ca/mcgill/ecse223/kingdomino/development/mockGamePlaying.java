@@ -1,6 +1,7 @@
 package ca.mcgill.ecse223.kingdomino.development;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.List;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
@@ -13,152 +14,103 @@ public class mockGamePlaying {
 	
 		public static void main(String [] args)
 		{	
+			Scanner in = new Scanner(System.in);
 			Kingdomino kd = KDController.loadGame(null);
 			
-			System.out.println("\n===============================================================================================");
-			System.out.println("                      setting up game, state machine uninitialized");
-			System.out.println("===============================================================================================");
+			System.out.println("\n===================================================================================================");
+			System.out.println("                      			Kingdomino Gameplay");
+			System.out.println("===================================================================================================");
 			
-			
-			View.printUsers(kd);
-			System.out.println("dominos before state machine initialization");
-			View.printDominos(kd);	
-			System.out.println("player order before draftReady transition");
-			View.printPlayers(kd);
-			
-			System.out.println("\n===============================================================================================");
-			
-			kd.setStateMachine();				//initializes the state machine to Initializing.CreatingFirstDraft, 
-												//state actions include ShuffleDominoPile,CreateNextDraft, and OrderNextDraft
-			
-			System.out.println("                              state machine initialized");
-			System.out.println("===============================================================================================");
-			System.out.println("current state: "+kd.getStateMachine().getGamestatusFullName());
-			System.out.println("===============================================================================================");
+			System.out.println("input command: ");
+			boolean run=true;
+			while (run) {
+				String cmd = in.nextLine();
+				
+				switch(cmd) {
+				
+				case "view players":
+					View.printPlayers(kd);
+					break;
+				    
+				case "view next order":
+					View.printNextRoundPlayerOrder(kd);
+					break;
+					
+			  	case "browse sorted":
+			  		System.out.println("event: browse sorted domino pile");
+			  		View.printSortedDominos(kd);
+			  		break;
+			  	
+			  	case "browse unsorted":
+			  		System.out.println("event: browse unsorted domino pile");
+			  		View.printDominos(kd);
+			  		break;
+				
+			  	case "start":
+			  		System.out.println("event: starting game and state machine");
+			  		kd.setStateMachine();
+					System.out.println("initial state:  "+kd.getStateMachine().getGamestatusFullName());
+			  		break;
+			  		
+			  	case "view draft":
+					System.out.println("event: view draft");
+					View.printDraft(kd);
+					break;
+					
+				case "draft ready":
+					System.out.println("processing SM event draftReady...");
+					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
+					
+					boolean draftReady=KDController.draftReadySM();
 
-			Gameplay sm = kd.getStateMachine();
-			
-			System.out.println("dominos after state machine initialization");
-			View.printDominos(kd);
-			View.printDraft(kd);
-			
-			System.out.println("\n===============================================================================================");
-			System.out.println("original state: "+sm.getGamestatusFullName());
-			
-			KDController.draftReadySM();		// draftReady transition of SM from Initializing.CreatingFirstDraft to
-												// Initializing.SelectingFirstDomino, actions include revealNextDraft()
-												// and generateInitialPlayerOrder()
-			System.out.println("transition:     draftReady()");
-			System.out.println("new state:      "+sm.getGamestatusFullName());
-			System.out.println("===============================================================================================");
+					System.out.println("event processed: "+draftReady);
+					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					break;
+				
+				case "choose":
+					System.out.println("processing SM event choose, input chosen domino ID:");
+					String id = in.nextLine();
+					int dominoID=Integer.decode(id);
+					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
+					
+					boolean choose=KDController.chooseSM(KDController.getdominoByID(dominoID));
+					
+					System.out.println("event processed: "+choose);
+					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					break;
+				
+				case "selection ready":
+					System.out.println("processing SM event selectionReady...");
+					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
+					
+					boolean selectionReady=KDController.selectionReadySM();
 
-			
-			
-			System.out.println("player order after draftReady transition");
-			View.printPlayers(kd);
-			View.printDraft(kd);
-			System.out.println(kd.getStateMachine().getGamestatusFullName());
-			
-			
-//			View.printDominos(kd);
-//			View.printTotalDraftNum(kd);
-//			View.printNextRoundPlayerOrder(kd);
-//			
-//			KDController.initializeSM();
-//			Gameplay sm=KingdominoApplication.getStateMachine();
-//			
+					System.out.println("event processed: "+selectionReady);
+					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					break;
+				
+				case "manipulate first":
+					System.out.println("processing SM event manipulateFirst, input preplacement posx, posy, and direction");
+					String data = in.nextLine();
+					int posx=Integer.decode(data.split(",")[0]);
+					int posy=Integer.decode(data.split(",")[1]);
+					String dir=data.split(",")[2];
+					String confirm = String.format("inputed data was posx: %1$-5d, posy: %2$-5d, direction: ", 
+							posx,posy,dir);
+					System.out.println(confirm);
+					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
+					boolean manipulateFirst=KDController.manipulateFirstSM(posx, posy, dir);
+					System.out.println("event processed: "+manipulateFirst);
+					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
 
-//			
-//			View.printDominos(kd);
-//			View.printDraft(kd);
-//			View.printNextRoundPlayerOrder(kd);
-//
-//			
-//			System.out.println("\n===============================================================================================");
-//			System.out.println("original state: "+sm.getGamestatusFullName());
-//			System.out.println("transition:     draftReady()");
-//			
-//			KDController.draftReadySM();
-//			
-//			System.out.println("new state:      "+sm.getGamestatusFullName());
-//			System.out.println("===============================================================================================");
-//			
-//			
-//			
-//			System.out.println("current draft - status: "+kd.getCurrentGame().getCurrentDraft().getDraftStatus());
-//			View.printNextRoundPlayerOrder(kd);
-//			
-//			System.out.println("\n===============================================================================================");
-//			System.out.println("original state: "+sm.getGamestatusFullName());
-//			System.out.println("transition:     choose(Domino domino)");
-//			System.out.println("new state:      "+sm.getGamestatusFullName());
-//			System.out.println("===============================================================================================");
-//			
-//			boolean selected=KDController.chooseSM(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(0));
-//			System.out.println("\nsuccessfully chosen:  "+selected);
-//
-//			View.printDraft(kd);
-//			View.printNextRoundPlayerOrder(kd);
-//			
-//			boolean ready=KDController.selectionReadySM();
-//			System.out.println("\nall players selected: "+ready);
-//			
-//			
-//			
-//			System.out.println("\n===============================================================================================");
-//			System.out.println("original state: "+sm.getGamestatusFullName());
-//			System.out.println("transition:     choose(Domino domino)");
-//			System.out.println("new state:      "+sm.getGamestatusFullName());
-//			System.out.println("===============================================================================================");
-//			
-//			selected=KDController.chooseSM(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(3));
-//			System.out.println("\nsuccessfully chosen:  "+selected);
-//			
-//			View.printDraft(kd);
-//			View.printNextRoundPlayerOrder(kd);
-//			
-//			ready=KDController.selectionReadySM();			
-//			System.out.println("\nall players selected: "+ready);
-//			
-//			
-//
-//			System.out.println("\n===============================================================================================");
-//			System.out.println("original state: "+sm.getGamestatusFullName());
-//			System.out.println("transition:     choose(Domino domino)");
-//			System.out.println("new state:      "+sm.getGamestatusFullName());
-//			System.out.println("===============================================================================================");
-//			
-//			selected=KDController.chooseSM(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(2));
-//			System.out.println("\nsuccessfully chosen:  "+selected);
-//
-//			View.printDraft(kd);
-//			View.printNextRoundPlayerOrder(kd);
-//			
-//			ready=KDController.selectionReadySM();			
-//			System.out.println("\nall players selected: "+ready);
-//			
-//			
-//			
-//			System.out.println("\n===============================================================================================");
-//			System.out.println("original state: "+sm.getGamestatusFullName());
-//			System.out.println("transition:     choose(Domino domino)");
-//			System.out.println("new state:      "+sm.getGamestatusFullName());
-//			System.out.println("===============================================================================================");
-//			
-//			selected=KDController.chooseSM(kd.getCurrentGame().getCurrentDraft().getIdSortedDomino(1));
-//			System.out.println("\nsuccessfully chosen:  "+selected);
-//
-//			View.printDraft(kd);
-//			View.printNextRoundPlayerOrder(kd);
-//			
-//			ready=KDController.selectionReadySM();	
-//			System.out.println("\nall players selected: "+ready);
-//			
-//			System.out.println(sm.getGamestatusFullName());
-//			
-//			View.printDominos(kd);
-//			View.printNextRoundPlayerOrder(kd);
-
+					
+			  	case "stop":
+			  		run=false;
+			  		break;
+			}
+				
+				System.out.println("\ninput new command: ");
+			}
 
 		}
 		
