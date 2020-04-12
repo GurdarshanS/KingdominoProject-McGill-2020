@@ -1,104 +1,108 @@
 namespace ca.mcgill.ecse223.kingdomino.model;
+external interface Serializable {}
 
 class Gameplay {
-
+	depend java.io.Serializable;
+  	isA Serializable;
+  	private static final long serialVersionUID = 30L;
+  	
     gamestatus {
 
         Initializing {
           
             CreatingFirstDraft {
-              
-                entry/{shuffleDominoPile(); createNextDraft(); orderNextDraft();}
-              
-                draftReady -> /{revealNextDraft(); generateInitialPlayerOrder();} Initializing.SelectingFirstDomino;
-              
+            	entry/{shuffleDominoPile(); createNextDraft(); orderNextDraft();}
+                draftReady/{revealNextDraft(); generateInitialPlayerOrder();} -> Initializing.SelectingFirstDomino;
             }
           
             SelectingFirstDomino {
-           
-              choose(Domino domino)[!isDominoTaken(domino)]/{chooseDomino(domino);} -> SelectingFirstDomino;
-              
-              selectionReady(Player player)[isLastPlayerInTurn(player) && hasChosen(player)] -> Playing;
-              
+           		choose(Domino domino)[!isDominoPileEmpty() && !isDominoTaken(domino) && !hasAllPlayersChosen()]/{chooseDomino(domino);} -> Initializing.SelectingFirstDomino;
+              	selectionReady()[hasAllPlayersChosen()] -> Playing;
             }
         }
       
         Playing{
           
-          scoring(Game game)[isLastTurn(game) && allPlayersPlayed(game)]/{calculateAllPlayerScores(game); calculatePlayerRanking(game);} -> Scoring;
-        
           CreatingNextDraft{
-            
-            entry/{createNextDraft(); orderNextDraft();}
-            
-            draftReady -> RevealingNextDraft;
-            
-            
+          		entry/{createNextDraft();orderNextDraft();}
+            	draftReady->Playing.RevealingNextDraft;  
           }
         
           RevealingNextDraft{
-        
-            entry/{revealNextDraft(); updatePlayerOrder();}
-            
-            manipulate(Player player, int posx, int posy, String dir)/{prePlaceDomino(player, posx, posy, dir);} -> ManipulatingDomino;
-            
+        		entry/{revealNextDraft();updatePlayerOrder();}
+            	manipulateFirst(int posx, int posy, String dir)/{preplaceLatestDomino(posx,posy,dir);} ->Playing.ManipulatingDomino;
           }
           
           ManipulatingDomino{
+          
+            discard()[!isThereAvailablePlacement()]/{discardLatestDomino();} -> Playing.ConfirmingChoice;
+            place()[verifyDomino()]/{placeLatestDomino();updatePlayerScore();}-> Playing.ConfirmingChoice;
             
-            discard(Player player)[!isThereAvailablePlacement(player, dInK)]/{discardLatestDomino(player);} -> ConfirmingChoice;
-            
-            place(Player player)[verifyDomino(player)]/{placeLatestDomino(player); updatePlayerScore(player);} -> ConfirmingChoice;
-            
-            Idle{
-              
-              rotate(Player player, String direction)/{rotateLatestDomino(player, direction);} -> RotatingDomino;
-              
-              move(Player player, String movement)/{moveLatestDomino(player, movement);} -> MovingDomino;
-              
+            IdlingDomino{
+            	rotate(String dir)/{rotateLatestDomino(dir);}->Playing.ManipulatingDomino.RotatingDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Playing.ManipulatingDomino.MovingDomino;               
             }  
             
             RotatingDomino{
-              
-            rotate(Player player, String direction)/{rotateLatestDomino(player, direction);} -> RotatingDomino;
-              
-               move(Player player, String movement)/{moveLatestDomino(player, movement);} -> MovingDomino;
-             
+           		rotate(String dir)/{rotateLatestDomino(dir);}->Playing.ManipulatingDomino.RotatingDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Playing.ManipulatingDomino.MovingDomino; 
             }
             
             MovingDomino{
-              
-              rotate(Player player, String direction)/{rotateLatestDomino(player, direction);} -> RotatingDomino;
-              
-               move(Player player, String movement)/{moveLatestDomino(player, movement);} -> MovingDomino;
-            
+              	rotate(String dir)/{rotateLatestDomino(dir);}->Playing.ManipulatingDomino.RotatingDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Playing.ManipulatingDomino.MovingDomino; 
             }
               
           }
           
           ConfirmingChoice{
-            
-            lastManipulate(Game game, Player player, int posx, int posy, String dir)[isLastTurn(game)]/{prePlaceDomino(player, posx, posy, dir);} -> ManipulatingDomino;
-            
-            chooseStandardDomino(Domino domino, Game game)[!isDominoTaken(domino) && !isLastTurn(game)]/{chooseDomino(domino);} -> SelectingStandardDomino;
-              
+          	choose(Domino domino)[!isDominoPileEmpty() && !isDominoTaken(domino) && !hasAllPlayersChosen()]/{chooseDomino(domino);} -> SelectingStandardDomino;
           }
           
           SelectingStandardDomino{
-            
-            selectionReady(Player player)[isLastPlayerInTurn(player) && hasChosen(player)] -> Playing;
-            
-            manipulate(Player player, int posx, int posy, String dir)/{prePlaceDomino(player, posx, posy, dir);} -> ManipulatingDomino;
-            
+            manipulateNext(int posx, int posy, String dir)[!hasAllPlayersChosen()]/{preplaceLatestDomino(posx,posy,dir);} ->Playing.ManipulatingDomino;
+			nextSelectionReady[hasAllPlayersChosen()&&!isDominoPileEmpty()&&isCurrentPlayerTheLastInTurn()]->Playing;
+			lastSelectionReady(int posx, int posy, String dir)[hasAllPlayersChosen()&&isDominoPileEmpty()&&isCurrentPlayerTheLastInTurn()]/{updatePlayerOrder();preplaceLatestDomino(posx,posy,dir);}->Finishing;
           }  
         
       }
       
-     final Scoring{
+     
+     Finishing{
+     
+     	ManipulatingLastDomino{
+     		discard()[!isThereAvailablePlacement()]/{discardLatestDomino();} -> Finishing.ConfirmingLastChoice;
+            place()[verifyDomino()]/{placeLatestDomino();updatePlayerScore();}-> Finishing.ConfirmingLastChoice;
+            
+     		IdlingLastDomino{
+     			rotate(String dir)/{rotateLatestDomino(dir);}->Finishing.ManipulatingLastDomino.RotatingLastDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Finishing.ManipulatingLastDomino.MovingLastDomino; 
+     		}
+     		
+     		RotatingLastDomino{
+     			rotate(String dir)/{rotateLatestDomino(dir);}->Finishing.ManipulatingLastDomino.RotatingLastDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Finishing.ManipulatingLastDomino.MovingLastDomino; 
+     		}
+     		
+     		MovingLastDomino{
+     			rotate(String dir)/{rotateLatestDomino(dir);}->Finishing.ManipulatingLastDomino.RotatingLastDomino;
+            	move(String movement)/{moveLatestDomino(movement);}->Finishing.ManipulatingLastDomino.MovingLastDomino; 
+     		}
+     	}
+     	
+     	ConfirmingLastChoice{
+     		manipulateLast(int posx, int posy, String dir)[!hasAllPlayersPlayed()]/{setNextPlayer();preplaceLatestDomino(posx,posy,dir);}->Finishing.ManipulatingLastDomino;
+     		scoring[hasAllPlayersPlayed()]/{calculateAllPlayerScores();calculatePlayerRanking();}->EndingGame;
+     	}
+     
+     }
+      
+    final EndingGame{
        
         
         
-      } 
+     }
+       
       
     }
 
@@ -111,43 +115,93 @@ class Gameplay {
         switch (status) {
           
        	case "CreatingFirstDraft":
-          
-       	    gamestatus = Gamestatus.Initializing;
-       	    gamestatusInitializing = GamestatusInitializing.CreatingFirstDraft;
+          		
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		
+	       	    gamestatus = Gamestatus.Initializing;
+	       	    gamestatusInitializing = GamestatusInitializing.CreatingFirstDraft;
                   
                break;
           
        	case "SelectingFirstDomino":
-          
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		
                 gamestatus = Gamestatus.Initializing;
                 gamestatusInitializing = GamestatusInitializing.SelectingFirstDomino;
           
                break;
           
           case "CreatingNextDraft":
-          
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		          
                 gamestatus = Gamestatus.Playing;
                 gamestatusPlaying = GamestatusPlaying.CreatingNextDraft;
           
                 break;
           
           case "RevealingNextDraft":
-          
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		          
                 gamestatus = Gamestatus.Playing;
                 gamestatusPlaying = GamestatusPlaying.RevealingNextDraft;
           
                 break;
           
-          case "Idle":
+          case "ManipulatingDomino":
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		          
+          		gamestatus = Gamestatus.Playing;
+                gamestatusPlaying = GamestatusPlaying.ManipulatingDomino;
+                
+                break;
           
+          case "IdlingDomino":
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		          
                 gamestatus = Gamestatus.Playing;
                 gamestatusPlaying = GamestatusPlaying.ManipulatingDomino;
-                gamestatusPlayingManipulatingDomino = GamestatusPlayingManipulatingDomino.Idle;
+                gamestatusPlayingManipulatingDomino = GamestatusPlayingManipulatingDomino.IdlingDomino;
           
                 break;
           
           case "MovingDomino":
-          
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		          
                 gamestatus = Gamestatus.Playing;
                 gamestatusPlaying = GamestatusPlaying.ManipulatingDomino;
                 gamestatusPlayingManipulatingDomino = GamestatusPlayingManipulatingDomino.MovingDomino;
@@ -155,7 +209,13 @@ class Gameplay {
                 break;
           
           case "RotatingDomino":
-          
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		          
                 gamestatus = Gamestatus.Playing;
                 gamestatusPlaying = GamestatusPlaying.ManipulatingDomino;
                 gamestatusPlayingManipulatingDomino = GamestatusPlayingManipulatingDomino.RotatingDomino;
@@ -163,22 +223,99 @@ class Gameplay {
                 break;
           
           case "ConfirmingChoice":
-          
-                 gamestatus = Gamestatus.Playing;
-                 gamestatusPlaying = GamestatusPlaying.ConfirmingChoice;
-          
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		          
+            	gamestatus = Gamestatus.Playing;
+             	gamestatusPlaying = GamestatusPlaying.ConfirmingChoice;
+      
                 break;
           
           case "SelectingStandardDomino":
-          
-                 gamestatus = Gamestatus.Playing;
-                 gamestatusPlaying = GamestatusPlaying.SelectingStandardDomino;
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		          
+                gamestatus = Gamestatus.Playing;
+                gamestatusPlaying = GamestatusPlaying.SelectingStandardDomino;
           
                 break;
           
-          case "Scoring":
+          case "ManipulatingLastDomino":
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		          
+           		gamestatus=Gamestatus.Finishing;
+          		gamestatusFinishing=GamestatusFinishing.ManipulatingLastDomino;
+          		
+          		break;         
+          case "IdlingLastDomino":
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		          
+          		gamestatus=Gamestatus.Finishing;
+          		gamestatusFinishing=GamestatusFinishing.ManipulatingLastDomino;
+          		gamestatusFinishingManipulatingLastDomino=GamestatusFinishingManipulatingLastDomino.IdlingLastDomino;
+          		break;
           
-                gamestatus = Gamestatus.Scoring;
+          case "MovingLastDomino":
+          		gamestatus=Gamestatus.Finishing;
+          		gamestatusFinishing=GamestatusFinishing.ManipulatingLastDomino;
+          		gamestatusFinishingManipulatingLastDomino=GamestatusFinishingManipulatingLastDomino.MovingLastDomino;
+          		
+          		break;
+          		
+          case "RotatingLastDomino":
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		          
+          		gamestatus=Gamestatus.Finishing;
+          		gamestatusFinishing=GamestatusFinishing.ManipulatingLastDomino;
+          		gamestatusFinishingManipulatingLastDomino=GamestatusFinishingManipulatingLastDomino.RotatingLastDomino;
+          		
+          		break;
+          		
+          case "ConfirmingLastChoice":
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		          
+          		gamestatus=Gamestatus.Finishing;
+          		gamestatusFinishing=GamestatusFinishing.ConfirmingLastChoice;
+          		
+          		break;
+          		
+          case "EndingGame":
+          		exitGamestatusInitializing();
+          		exitGamestatusFinishing();
+	       		exitGamestatusPlaying();
+	       		exitGamestatusPlayingManipulatingDomino();
+	       		exitGamestatusFinishing();
+	       		exitGamestatusFinishingManipulatingLastDomino();
+          		          
+                gamestatus = Gamestatus.EndingGame;
           
                 break;
           
@@ -193,144 +330,35 @@ class Gameplay {
      */
     
     
-  public boolean isDominoTaken(Domino domino){
-    
-    
-    
-   return true;
-    
-  }
-  
-  public boolean isLastPlayerInTurn(Player player){
-    
-    
-    
-    return true;
-    
-  }
-      
-  public boolean isLastTurn(Game game){
-        
-        
-    return true;
-    
-  }
- 
-  public boolean hasChosen(Player player){
-    
-    
-    
-    
-    return true;
-    
-  }
-  
-  public boolean isThereAvailablePlacement(Player player, DominoInKingdom dInK){
-    
-    
-    return true;
-    
-  }
-  
-  public boolean verifyDomino(Player player){
-    
-    
-    return true;
-    
-  }
-      
-  public boolean allPlayersPlayed(Game game){
-        
-        
-    return true;
-            
-  }
-    
+  public boolean isCurrentPlayerTheLastInTurn(){return true;}
+  public boolean isCurrentTurnTheLastInGame(){return true;}
+  public boolean isDominoTaken(Domino domino){return true;}
+  public boolean hasAllPlayersChosen(){return true;}
+  public boolean isThereAvailablePlacement(){return true;}
+  public boolean verifyDomino(){return true;}
+  public boolean isDominoPileEmpty(){return true;}
+  public boolean hasAllPlayersPlayed(){return true;}
     // You may need to add more guards here
         
     /*
      * Actions
      */
-    
-    public void shuffleDominoPile() {
-        // TODO: implement this
-    }
-    
-    public void generateInitialPlayerOrder() {
-        // TODO: implement this
-    }
-    
-    public void createNextDraft() {
-        // TODO: implement this
-    }
-    
-    public void orderNextDraft() {
-        // TODO: implement this
-    }
-    
-    public void revealNextDraft() {
-        // TODO: implement this
-    }
+  public void shuffleDominoPile(){}
+  public void createNextDraft(){}
+  public void orderNextDraft(){}
+  public void revealNextDraft(){}
+  public void generateInitialPlayerOrder(){}
+  public void chooseDomino(Domino domino){}
+  public void updatePlayerOrder(){}
+  public void updatePlayerScore(){}
+  public void preplaceLatestDomino(int posx, int posy, String dir){}
+  public void rotateLatestDomino(String dir){}
+  public void moveLatestDomino(String movement){}
+  public void placeLatestDomino(){}
+  public void discardLatestDomino(){}
+  public void setNextPlayer(){}
+  public void calculateAllPlayerScores(){}
+  public void calculatePlayerRanking(){}
   
-  public void chooseDomino(Domino domino){
-   
-    
-  }
-  
-  public void prePlaceDomino(Player player, int posx, int posy, String dir){
-    
-    
-  }
-  
-  public void placeLatestDomino(Player player){
-    
-    
-    
-  
-  }
-  
-  public void discardLatestDomino(Player player){
-    
-    
-    
-  }
-  
-  public void updatePlayerScore(Player player){
-    
-    
-    
-  }
-      
-  public void calculateAllPlayerScores(Game game){
-        
-        
-        
-  }
-      
-  public void calculatePlayerRanking(Game game){
-        
-        
-        
-        
-  }
-      
-   public void rotateLatestDomino(Player player, String direction){
-        
-        
-        
-  }
-      
-  public void moveLatestDomino(Player player, String movement){
-        
-        
-        
-   }
-   
-   public void updatePlayerOrder(){
-   
-   
-   }
-      
- }
   
 }

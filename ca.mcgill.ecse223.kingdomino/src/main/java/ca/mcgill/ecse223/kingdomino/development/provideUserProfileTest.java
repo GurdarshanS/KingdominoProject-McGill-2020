@@ -7,7 +7,7 @@ import ca.mcgill.ecse223.kingdomino.controller.KDController;
 public class provideUserProfileTest {
 	
 	public static void main (String [] args) {
-		Kingdomino kd = KDController.loadGame();
+		Kingdomino kd = KDController.loadGame(null);
 		
 		String usernameA="userA";
 		String usernameB="userB";
@@ -16,14 +16,21 @@ public class provideUserProfileTest {
 		String usernameE="userE";
 		String usernameF="userF";
 		
-		KDController.provideUserProfile(usernameA);
-		KDController.provideUserProfile(usernameB);
-		KDController.provideUserProfile(usernameC);
-		KDController.provideUserProfile(usernameD);
-		KDController.provideUserProfile(usernameE);
-		KDController.provideUserProfile(usernameF);
+		try {
+			KDController.provideUserProfile(usernameA);
+			KDController.provideUserProfile(usernameB);
+			KDController.provideUserProfile(usernameC);
+			KDController.provideUserProfile(usernameD);
+			KDController.provideUserProfile(usernameE);
+			KDController.provideUserProfile(usernameF);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 		
-		KDController.saveGame();
+		for (User user:kd.getUsers()) System.out.println(user.getName());
+		
+		KDController.saveGame(null, true);
 		
 	}
 

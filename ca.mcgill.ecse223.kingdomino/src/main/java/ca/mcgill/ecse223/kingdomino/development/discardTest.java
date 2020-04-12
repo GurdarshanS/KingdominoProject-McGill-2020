@@ -53,7 +53,7 @@ public class discardTest {
 		
 		Domino testDomino=game.getCurrentDraft().getIdSortedDomino(0);
 		
-		KDController.ChoosNextDomino(testDomino);
+		KDController.chooseNextDomino(testDomino);
 		KDController.preplaceLatestDomino(player1, 0, 0, "left");
 		
 		boolean discarded=KDController.discardLatestDomino(player1);
