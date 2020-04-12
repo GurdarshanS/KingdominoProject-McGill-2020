@@ -9,6 +9,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -17,42 +19,51 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
+import ca.mcgill.ecse223.kingdomino.controller.KDController;
+import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
+import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom;
+import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
+import ca.mcgill.ecse223.kingdomino.model.Kingdom;
+import ca.mcgill.ecse223.kingdomino.model.KingdomTerritory;
+import ca.mcgill.ecse223.kingdomino.model.Kingdomino;
 import ca.mcgill.ecse223.kingdomino.model.Player;
+import ca.mcgill.ecse223.kingdomino.model.Property;
 import ca.mcgill.ecse223.kingdomino.model.TerrainType;
 
 public class Rotation extends JFrame{
 
 	public  JFrame frameR = new JFrame("Kingdomino");
 	private HashMap<Integer, JPanel> coordinates = new HashMap<Integer, JPanel>();
-	public JPanel currentLeft = new JPanel();
-	public JPanel currentRight = new JPanel();
-	public int LeftId = 0;
-	public int RightId = 0;
-	public String direction = "";
-	public JPanel crowns1;
-	public JPanel crowns2;
-	public Domino domino;
+	private JPanel currentLeft = new JPanel();
+	private JPanel currentRight = new JPanel();
+	private int LeftId = 0;
+	private int RightId = 0;
+	private JPanel crowns1;
+	private JPanel crowns2;
+	private JPanel crowns3;
+	JButton rotateR = new JButton("Rotate Clockwise");
+	JButton rotateL = new JButton("Rotate CounterClockwise");
+	JButton moveR = new JButton("Move Right");
+	JButton moveL = new JButton("Move Left");
+	JButton moveU = new JButton("Move Up");
+	JButton moveD = new JButton("Move Down");
+	JButton place = new JButton("Place Domino");
+	Color panelPrevColorLeft;
+	Color panelPrevColorRight;
 	
 
 	
-	public Rotation(Player p1, int x, int y, Domino dom, String dir) {
+	public Rotation(Player p1, int x, int y, DominoInKingdom dom) {
 		
 		frameR.setSize(1350, 850);
 		frameR.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		initComponents(p1,x,y,dom,dir);
+		drawInitialKingdom(p1);
+		drawNewDomino(p1,x,y,dom);
 	}
 
-	private void initComponents(Player p1, int x, int y, Domino dom, String dir) {
-		
+	private void drawInitialKingdom(Player p1) {
 
-		JButton rotateR = new JButton("Rotate Clockwise");
-		JButton rotateL = new JButton("Rotate CounterClockwise");
-		JButton moveR = new JButton("Move Right");
-		JButton moveL = new JButton("Move Left");
-		JButton moveU = new JButton("Move Up");
-		JButton moveD = new JButton("Move Down");
-		JButton place = new JButton("Place Domino");
 		
 		Border blackline = BorderFactory.createLineBorder(Color.black);
 
@@ -86,429 +97,163 @@ public class Rotation extends JFrame{
 
 		display.add(board);
 		display.add(buttons, BorderLayout.SOUTH);
+		frameR.add(display);
 		
-		int z = x-(9*y)+41;
-		domino = dom;
-		direction = dir;
-		
-		if(dir.equals("right")) {
-			LeftId = z;
-			RightId = z+1;
-		} else if(dir.equals("left")) {
-			LeftId = z;
-			RightId = z-1;
-		} else if(dir.equals("up")) {
-			LeftId = z;
-			RightId = z-9;
-		} else if(dir.equals("down")) {
-			LeftId = z;
-			RightId = z+9;
+			for(KingdomTerritory dInK : p1.getKingdom().getTerritories()) {
+			
+			if(dInK instanceof Castle) continue;
+			
+			DominoInKingdom domino = (DominoInKingdom) dInK;
+			
+			if(domino.equals((DominoInKingdom)(p1.getKingdom().getTerritory(p1.getKingdom().getTerritories().size()-1)))) break;
+			
+			draw(domino, domino.getDirection());
+			
 		}
-		this.currentLeft = this.coordinates.get(LeftId);
-		this.currentRight = this.coordinates.get(RightId);
-		this.currentLeft.setBackground(getColor(domino.getLeftTile()));
-		this.currentRight.setBackground(getColor(domino.getRightTile()));
-		System.out.println(domino.getLeftCrown());
-		System.out.println(domino.getRightCrown());
-		addCrowns(this.currentLeft,domino.getLeftCrown());
-		addCrowns(this.currentRight,domino.getRightCrown());
+		
+		
 		
 		this.coordinates.get(41).setBackground(Color.MAGENTA);
 		
-		frameR.add(display);
+	}	
+		
+	private int translate(int x, int y) {
+			
+			return x-(9*y)+41;
+			
+		}
+	
+	private void draw(DominoInKingdom domino, DirectionKind dir) {
+			
+			int squareToDraw = translate(domino.getX(), domino.getY());
+			
+			if(dir.equals(DirectionKind.Right)) {
+				LeftId = squareToDraw;
+				RightId = squareToDraw+1;
+			} else if(dir.equals(DirectionKind.Left)) {
+				LeftId = squareToDraw;
+				RightId = squareToDraw-1;
+			} else if(dir.equals(DirectionKind.Up)) {
+				LeftId = squareToDraw;
+				RightId = squareToDraw-9;
+			} else if(dir.equals(DirectionKind.Down)) {
+				LeftId = squareToDraw;
+				RightId = squareToDraw+9;
+			}
+			
+			this.currentLeft = this.coordinates.get(LeftId);
+			this.currentRight = this.coordinates.get(RightId);
+			
+			panelPrevColorLeft = this.currentLeft.getBackground();
+			panelPrevColorRight = this.currentRight.getBackground();
+		
+			this.currentLeft.setBackground(getColor(domino.getDomino().getLeftTile()));
+			this.currentRight.setBackground(getColor(domino.getDomino().getRightTile()));
+			addCrowns(this.currentLeft,domino.getDomino().getLeftCrown());
+			addCrowns(this.currentRight,domino.getDomino().getRightCrown());
+			
+		}
+	
+		
+	private void undraw(DominoInKingdom domino, DirectionKind dir) {
+			
+			int squareToDraw = translate(domino.getX(), domino.getY());
+			
+			if(dir.equals(DirectionKind.Right)) {
+				LeftId = squareToDraw;
+				RightId = squareToDraw+1;
+			} else if(dir.equals(DirectionKind.Left)) {
+				LeftId = squareToDraw;
+				RightId = squareToDraw-1;
+			} else if(dir.equals(DirectionKind.Up)) {
+				LeftId = squareToDraw;
+				RightId = squareToDraw-9;
+			} else if(dir.equals(DirectionKind.Down)) {
+				LeftId = squareToDraw;
+				RightId = squareToDraw+9;
+			}
+			
+			this.currentLeft = this.coordinates.get(LeftId);
+			this.currentRight = this.coordinates.get(RightId);
+			this.currentLeft.setBackground(panelPrevColorLeft);
+			this.currentRight.setBackground(panelPrevColorRight);
+			
+		}
+		
+	private void drawNewDomino(Player p1, int x, int y, DominoInKingdom domino) {
+
+		draw(domino, domino.getDirection());
 		
 		moveR.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-
-				if(LeftId==9 || RightId==9 || LeftId==18 || RightId==18 || LeftId==27 || RightId==27 || LeftId==36 || RightId==36 || LeftId==45 || RightId==45 || LeftId==54 || RightId==54 || LeftId==63 || RightId==63 || LeftId==72 || RightId==72 || LeftId==81 || RightId==81 || (RightId+1) ==41 || (LeftId+1) ==41) {
-
-					currentLeft = coordinates.get(LeftId);
-					currentRight = coordinates.get(RightId);
-				}
-				else {
-					LeftId = LeftId + 1;
-					RightId = RightId + 1;
-					currentLeft.remove(crowns1);
-					currentLeft.remove(crowns2);
-					currentRight.remove(crowns1);
-					currentRight.remove(crowns2);
-					
-					
-					if(direction.equals("right")){
-						Color templeft = currentLeft.getBackground(); 
-						Color tempright = currentRight.getBackground();
-						currentLeft.setBackground(Color.WHITE);	
-						currentLeft = coordinates.get(LeftId);
-						currentLeft.setBackground(templeft);
-						currentRight = coordinates.get(RightId);
-						currentRight.setBackground(tempright);
-						
-					}
-					else if(direction.equals("left")) {
-						Color templeft = currentLeft.getBackground(); 
-						Color tempright = currentRight.getBackground();
-						currentRight.setBackground(Color.WHITE);
-						currentLeft = coordinates.get(LeftId);
-						currentLeft.setBackground(templeft);
-						currentRight = coordinates.get(RightId);
-						currentRight.setBackground(tempright);
-						
-					}
-					else if (direction.equals("up") || direction.equals("down")){
-						Color templeft = currentLeft.getBackground(); 
-						Color tempright = currentRight.getBackground();
-						currentRight.setBackground(Color.WHITE);
-						currentLeft.setBackground(Color.WHITE);
-						currentLeft = coordinates.get(LeftId);
-						currentLeft.setBackground(templeft);
-						currentRight = coordinates.get(RightId);
-						currentRight.setBackground(tempright);
-						
-					} 
-						currentLeft.add(crowns1);
-						currentLeft.add(crowns2);
-						currentRight.add(crowns1);
-						currentRight.add(crowns2);
-				}
+				
+				undraw(domino,  domino.getDirection());
+				KDController.moveLatestDomino(p1, "right");
+				draw(domino,  domino.getDirection());
+				
 			}
 		});
 		
 		moveL.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
-				if(LeftId==1 || RightId==1 || LeftId==10 || RightId==10 || LeftId==19 || RightId==19 || LeftId==28 || RightId==28 || LeftId==37 || RightId==37 || LeftId==46 || RightId==46 || LeftId==55 || RightId==55 || LeftId==64 || RightId==64 || LeftId==73 || RightId==73 || (LeftId-1)==41 || (RightId-1)==41) {
-					currentLeft = coordinates.get(LeftId);
-					currentRight = coordinates.get(RightId);
-				}
-				else {
-					LeftId = LeftId - 1;
-					RightId = RightId - 1;
-					currentLeft.remove(crowns1);
-					currentLeft.remove(crowns2);
-					currentRight.remove(crowns1);
-					currentRight.remove(crowns2);
-					if(direction.equals("right")) {
-						Color templeft = currentLeft.getBackground(); 
-						Color tempright = currentRight.getBackground();
-						currentRight.setBackground(Color.WHITE);	
-						currentLeft = coordinates.get(LeftId);
-						currentLeft.setBackground(templeft);
-						currentRight = coordinates.get(RightId);
-						currentRight.setBackground(tempright);
-					}
-					else if(direction.equals("left")) {
-						Color templeft = currentLeft.getBackground(); 
-						Color tempright = currentRight.getBackground();
-						currentLeft.setBackground(Color.WHITE);	
-						currentLeft = coordinates.get(LeftId);
-						currentLeft.setBackground(templeft);
-						currentRight = coordinates.get(RightId);
-						currentRight.setBackground(tempright);
-					}
-					else if(direction.equals("up") || direction.equals("down")) {
-						Color templeft = currentLeft.getBackground(); 
-						Color tempright = currentRight.getBackground();
-						currentRight.setBackground(Color.WHITE);
-						currentLeft.setBackground(Color.WHITE);
-						currentLeft = coordinates.get(LeftId);
-						currentLeft.setBackground(templeft);
-						currentRight = coordinates.get(RightId);
-						currentRight.setBackground(tempright);
-					}
-					currentLeft.add(crowns1);
-					currentLeft.add(crowns2);
-					currentRight.add(crowns1);
-					currentRight.add(crowns2);
-				}
+				undraw(domino,  domino.getDirection());
+				KDController.moveLatestDomino(p1, "left");
+				draw(domino,  domino.getDirection());
+				
 			}
 		});
 		
 		moveU.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
-				if(LeftId==1 || RightId==1 || LeftId==2 || RightId==2 || LeftId==3 || RightId==3 || LeftId==4 || RightId==4 || LeftId==5 || RightId==5 || LeftId==6 || RightId==6 || LeftId==7 || RightId==7 || LeftId==8 || RightId==8 || LeftId==9 || RightId==9 ||(RightId-9)==41 || (LeftId-9)==41) {
-					currentLeft = coordinates.get(LeftId);
-					currentRight = coordinates.get(RightId);
-				}
-				else {
-					LeftId = LeftId - 9;
-					RightId = RightId - 9;
-					currentLeft.remove(crowns1);
-					currentLeft.remove(crowns2);
-					currentRight.remove(crowns1);
-					currentRight.remove(crowns2);
-					if(direction.equals("right") || direction.equals("left")) {
-						Color templeft = currentLeft.getBackground(); 
-						Color tempright = currentRight.getBackground();
-						currentLeft.setBackground(Color.WHITE);	
-						currentRight.setBackground(Color.WHITE);	
-						currentLeft = coordinates.get(LeftId);
-						currentLeft.setBackground(templeft);
-						currentRight = coordinates.get(RightId);
-						currentRight.setBackground(tempright);
-					
-					}
-					else if(direction.equals("up")) {
-						Color templeft = currentLeft.getBackground(); 
-						Color tempright = currentRight.getBackground();	
-						currentLeft.setBackground(Color.WHITE);	
-						currentLeft = coordinates.get(LeftId);
-						currentLeft.setBackground(templeft);
-						currentRight = coordinates.get(RightId);
-						currentRight.setBackground(tempright);
-					}
-					else if(direction.equals("down")) {
-						Color templeft = currentLeft.getBackground(); 
-						Color tempright = currentRight.getBackground();
-						currentRight.setBackground(Color.WHITE);	
-						currentLeft = coordinates.get(LeftId);
-						currentLeft.setBackground(templeft);
-						currentRight = coordinates.get(RightId);
-						currentRight.setBackground(tempright);
-					}
-					currentLeft.add(crowns1);
-					currentLeft.add(crowns2);
-					currentRight.add(crowns1);
-					currentRight.add(crowns2);
-				}
+				undraw(domino,  domino.getDirection());
+				KDController.moveLatestDomino(p1, "up");
+				draw(domino,  domino.getDirection());
+				
 			}
 		});
 		
 		moveD.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
-				if(LeftId==73 || RightId==73 || LeftId==74 || RightId==74 || LeftId==75 || RightId==75 || LeftId==76 || RightId==76 || LeftId==77 || RightId==77 || LeftId==78 || RightId==78 || LeftId==79 || RightId==79 || LeftId==80 || RightId==80 || LeftId==81 || RightId==81 ||(RightId+9)==41 ||(LeftId+9)==41) {
-					currentLeft = coordinates.get(LeftId);
-					currentRight = coordinates.get(RightId);
-				}
-				else {
-					LeftId = LeftId + 9;
-					RightId = RightId + 9;
-					currentLeft.remove(crowns1);
-					currentLeft.remove(crowns2);
-					currentRight.remove(crowns1);
-					currentRight.remove(crowns2);
-					if(direction.equals("right") || direction.equals("left")) {
-					Color templeft = currentLeft.getBackground(); 
-					Color tempright = currentRight.getBackground();
-					currentLeft.setBackground(Color.WHITE);	
-					currentRight.setBackground(Color.WHITE);	
-					currentLeft = coordinates.get(LeftId);
-					currentLeft.setBackground(templeft);
-					currentRight = coordinates.get(RightId);
-					currentRight.setBackground(tempright);
-					
-					}
-					else if(direction.equals("up")) {
-						Color templeft = currentLeft.getBackground(); 
-						Color tempright = currentRight.getBackground();	
-						currentRight.setBackground(Color.WHITE);	
-						currentLeft = coordinates.get(LeftId);
-						currentLeft.setBackground(templeft);
-						currentRight = coordinates.get(RightId);
-						currentRight.setBackground(tempright);
-					}
-					else if(direction.equals("down")) {
-						Color templeft = currentLeft.getBackground(); 
-						Color tempright = currentRight.getBackground();
-						currentLeft.setBackground(Color.WHITE);	
-						currentLeft = coordinates.get(LeftId);
-						currentLeft.setBackground(templeft);
-						currentRight = coordinates.get(RightId);
-						currentRight.setBackground(tempright);
-					}
-					currentLeft.add(crowns1);
-					currentLeft.add(crowns2);
-					currentRight.add(crowns1);
-					currentRight.add(crowns2);
-				}
+				undraw(domino,  domino.getDirection());
+				KDController.moveLatestDomino(p1, "down");
+				draw(domino,  domino.getDirection());
+				
 			}
 		});
 		
 		rotateR.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				
-				currentLeft.remove(crowns1);
-				currentLeft.remove(crowns2);
-				currentRight.remove(crowns1);
-				currentRight.remove(crowns2);
-							if(direction.equals("right")) {
-								
-								if(RightId ==74 || RightId==75 || RightId==76 || RightId==77 || RightId ==78 || RightId==79 || RightId==80 || RightId==81 || (RightId+8)==41 ){
-									currentLeft = coordinates.get(LeftId);
-									currentRight = coordinates.get(RightId);
-								} else {
-										Color tempright = currentRight.getBackground();
-										currentRight.setBackground(Color.WHITE);
-										RightId = RightId+8;
-										currentRight = coordinates.get(RightId);
-										currentRight.setBackground(tempright);
-										direction = "down";
-										}
-								currentLeft.add(crowns1);
-								currentLeft.add(crowns2);
-								currentRight.add(crowns1);
-								currentRight.add(crowns2);
-							}
-						
-				
-							else if(direction.equals("down")) {
-								 
-								 if(RightId ==10 || RightId==19 || RightId==28 || RightId==37 || RightId ==46 || RightId==55 || RightId==64 || RightId==73 || (RightId-10)==41 ){
-										currentLeft = coordinates.get(LeftId);
-										currentRight = coordinates.get(RightId);
-								 } else {
-											Color tempright = currentRight.getBackground();
-											currentRight.setBackground(Color.WHITE);
-											RightId = RightId-10;
-											currentRight = coordinates.get(RightId);
-											currentRight.setBackground(tempright);
-											direction = "left";
-											
-										}
-								 currentLeft.add(crowns1);
-								 currentLeft.add(crowns2);
-								 currentRight.add(crowns1);
-								 currentRight.add(crowns2);
-							 }
-						
-							else if(direction.equals("left")){
-								
-								if(RightId ==1 || RightId==2 || RightId==3 || RightId==4 || RightId ==5 || RightId==6 || RightId==7 || RightId==8 || (RightId-8)==41 ) {
-									currentLeft = coordinates.get(LeftId);
-									currentRight = coordinates.get(RightId);
-								} else {
-										Color tempright = currentRight.getBackground();
-										currentRight.setBackground(Color.WHITE);
-										RightId = RightId-8;
-										currentRight = coordinates.get(RightId);
-										currentRight.setBackground(tempright);
-										direction = "up";
-										}
-								currentLeft.add(crowns1);
-								currentLeft.add(crowns2);
-								currentRight.add(crowns1);
-								currentRight.add(crowns2);
-							}
-				
-							else if(direction.equals("up")) {
-								
-								if(RightId ==9 || RightId==18 || RightId==27 || RightId==36 || RightId ==45 || RightId==54 || RightId==63 || RightId==72 || (RightId+10)==41 ) {
-									currentLeft = coordinates.get(LeftId);
-									currentRight = coordinates.get(RightId);
-								} else {	
-										Color tempright = currentRight.getBackground();
-										currentRight.setBackground(Color.WHITE);
-										RightId = RightId+10;
-										currentRight = coordinates.get(RightId);
-										currentRight.setBackground(tempright);
-										direction = "right";
-										}
-								currentLeft.add(crowns1);
-								currentLeft.add(crowns2);
-								currentRight.add(crowns1);
-								currentRight.add(crowns2);
-							}
+			
+				undraw(domino,  domino.getDirection());
+				KDController.rotateLatestDomino(p1, "Clockwise");
+				draw(domino,  domino.getDirection());
 				
 			}
 		});
 		
 		rotateL.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				currentLeft.remove(crowns1);
-				currentLeft.remove(crowns2);
-				currentRight.remove(crowns1);
-				currentRight.remove(crowns2);
 				
-				if(direction.equals("right")) {
-					
-					if(RightId ==2 || RightId==3 || RightId==4 || RightId==5 || RightId ==6 || RightId==7 || RightId==8 || RightId==9 || (RightId-10)==41 ) {
-						currentLeft = coordinates.get(LeftId);
-						currentRight = coordinates.get(RightId);
-					} 		else {
-									Color tempright = currentRight.getBackground();
-									currentRight.setBackground(Color.WHITE);
-									RightId = RightId-10;
-									currentRight = coordinates.get(RightId);
-									currentRight.setBackground(tempright);
-									direction = "up";
-								}
-					currentLeft.add(crowns1);
-					currentLeft.add(crowns2);
-					currentRight.add(crowns1);
-					currentRight.add(crowns2);
-				}
-				else if(direction.equals("up")) {
-					
-					if(RightId ==1 || RightId==10 || RightId==19 || RightId==28 || RightId ==37 || RightId==46 || RightId==55 || RightId==64 || (RightId+8)==41 ) {
-						currentLeft = coordinates.get(LeftId);
-						currentRight = coordinates.get(RightId);
-					} 		else {
-									Color tempright = currentRight.getBackground();
-									currentRight.setBackground(Color.WHITE);
-									RightId = RightId+8;
-									currentRight = coordinates.get(RightId);
-									currentRight.setBackground(tempright);
-									direction = "left";
-								}
-					currentLeft.add(crowns1);
-					currentLeft.add(crowns2);
-					currentRight.add(crowns1);
-					currentRight.add(crowns2);
-				}
-				else if(direction.equals("left")){
-					
-					if(RightId ==73 || RightId==74 || RightId==75 || RightId==76 || RightId ==77 || RightId==78 || RightId==79 || RightId==80 || (RightId+10)==41 ) {
-						currentLeft = coordinates.get(LeftId);
-						currentRight = coordinates.get(RightId);
-					} 		else {
-									Color tempright = currentRight.getBackground();
-									currentRight.setBackground(Color.WHITE);
-									RightId = RightId+10;
-									currentRight = coordinates.get(RightId);
-									currentRight.setBackground(tempright);
-									direction = "down";
-								}
-					currentLeft.add(crowns1);
-					currentLeft.add(crowns2);
-					currentRight.add(crowns1);
-					currentRight.add(crowns2);
-				}
-				else if(direction.equals("down")) {
-					
-					if(RightId ==18 || RightId==27 || RightId==36 || RightId==45 || RightId ==54 || RightId==63 || RightId==72 || RightId==81 || (RightId-8)==41 ) {
-						currentLeft = coordinates.get(LeftId);
-						currentRight = coordinates.get(RightId);
-					} 		else {
-									Color tempright = currentRight.getBackground();
-									currentRight.setBackground(Color.WHITE);
-									RightId = RightId-8;
-									currentRight = coordinates.get(RightId);
-									currentRight.setBackground(tempright);
-									direction = "right";
-								}
-					currentLeft.add(crowns1);
-					currentLeft.add(crowns2);
-					currentRight.add(crowns1);
-					currentRight.add(crowns2);
-				}
+				undraw(domino,  domino.getDirection());
+				KDController.rotateLatestDomino(p1, "CounterClockwise");
+				draw(domino,  domino.getDirection());
+				
 			}
 		});
 		
 		
 		place.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				currentLeft = coordinates.get(LeftId);
-				currentRight = coordinates.get(RightId);
-				//initComponents();
+				
 			}
 		});
 		
+	}
 		
 			
-		
-		
-	}
 	
 		private Color getColor(TerrainType t1) {
 			Color c1 = null;
@@ -533,11 +278,24 @@ public class Rotation extends JFrame{
 			crowns1.setBackground(new Color(255,255,0));
 			crowns2 = new JPanel();
 			crowns2.setBackground(new Color(255,255,0));
+			crowns3 = new JPanel();
+			crowns3.setBackground(new Color(255,255,0));
 			if(n1==1) {
 				p1.add(crowns1);
 			} else if(n1==2) {
 				p1.add(crowns1);
 				p1.add(crowns2);
+			} else if(n1==3) {
+				p1.add(crowns1);
+				p1.add(crowns2);
+				p1.add(crowns3);
 			}
 		}
+		
+	
+
+				
+			
+		
 }
+		
