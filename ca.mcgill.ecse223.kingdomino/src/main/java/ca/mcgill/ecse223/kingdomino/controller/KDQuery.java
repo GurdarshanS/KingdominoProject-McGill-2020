@@ -3,6 +3,8 @@ package ca.mcgill.ecse223.kingdomino.controller;
 
 import java.util.*;
 
+import com.google.common.collect.Sets;
+
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom.DirectionKind;
@@ -121,6 +123,48 @@ public class KDQuery {
 			}
 		}
 		return allAssigned;
+	}
+	
+	/**
+	 * 
+	 * simple wrapper method to retreive users that
+	 * can be assigned to a player in the current game
+	 * 
+	 * @author Jing Han 260528152
+	 * @param player
+	 * @return p
+	 * @throws java.lang.IllegalArgumentException
+	 */
+	
+	public static List<User> getAvailableUserThisGame() {
+		Kingdomino kd = KingdominoApplication.getKingdomino();
+		List<User> availableUsers = new ArrayList<User>();
+		for (User user:kd.getUsers()) {
+			if (!user.hasPlayerInGames()) {
+				availableUsers.add(user);
+			}
+			else {
+				boolean noPlayersInThisGame=true;
+				for (Player p:user.getPlayerInGames()) {
+					if (p.getGame().equals(kd.getCurrentGame())) {
+						noPlayersInThisGame=false;
+						break;
+					}
+				}
+				if (noPlayersInThisGame) {
+					availableUsers.add(user);
+				}
+			}
+		}
+		return availableUsers;
+		
+	}
+	
+	public static List<String> getAvailableUserNamesThisGame() {
+		List<User> availableUsers=getAvailableUserThisGame();
+		List<String> names= new ArrayList<String>();
+		for (User u:availableUsers) names.add(u.getName());
+		return names;
 	}
 	
 	/**

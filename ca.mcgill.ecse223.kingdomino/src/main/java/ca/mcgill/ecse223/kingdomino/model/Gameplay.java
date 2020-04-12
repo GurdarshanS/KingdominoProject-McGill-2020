@@ -327,7 +327,7 @@ public class Gameplay implements Serializable
     switch (aGamestatusPlaying)
     {
       case SelectingStandardDomino:
-        if (lastPlayerInTurn())
+        if (lastPlayerInTurn()&&!isDominoPileEmpty())
         {
           exitGamestatus();
           setGamestatus(Gamestatus.Playing);
