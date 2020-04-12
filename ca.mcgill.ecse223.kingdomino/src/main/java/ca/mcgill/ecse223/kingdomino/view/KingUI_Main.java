@@ -87,7 +87,7 @@ public class KingUI_Main {
 		
 		load.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				KDController.loadGame();
+				//KDController.loadGame();
 			}
 		});
 	}

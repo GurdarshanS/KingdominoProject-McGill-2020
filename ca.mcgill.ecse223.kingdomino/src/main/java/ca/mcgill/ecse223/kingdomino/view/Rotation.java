@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
+import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
@@ -49,6 +50,7 @@ public class Rotation extends JFrame{
 	JButton moveU = new JButton("Move Up");
 	JButton moveD = new JButton("Move Down");
 	JButton place = new JButton("Place Domino");
+	JButton discard = new JButton("Discard Domino");
 	Color panelPrevColorLeft;
 	Color panelPrevColorRight;
 	
@@ -93,6 +95,7 @@ public class Rotation extends JFrame{
 		buttons.add(moveU);
 		buttons.add(moveD);
 		buttons.add(place);
+		buttons.add(discard);
 
 
 		display.add(board);
@@ -188,7 +191,9 @@ public class Rotation extends JFrame{
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				undraw(domino,  domino.getDirection());
-				KDController.moveLatestDomino(p1, "right");
+				KDController.moveSM("right");
+				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
+				//KDController.moveLatestDomino(p1, "right");
 				draw(domino,  domino.getDirection());
 				
 			}
@@ -198,7 +203,9 @@ public class Rotation extends JFrame{
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				undraw(domino,  domino.getDirection());
-				KDController.moveLatestDomino(p1, "left");
+				KDController.moveSM("left");
+				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
+				//KDController.moveLatestDomino(p1, "left");
 				draw(domino,  domino.getDirection());
 				
 			}
@@ -208,7 +215,9 @@ public class Rotation extends JFrame{
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				undraw(domino,  domino.getDirection());
-				KDController.moveLatestDomino(p1, "up");
+				KDController.moveSM("up");
+				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
+				//KDController.moveLatestDomino(p1, "up");
 				draw(domino,  domino.getDirection());
 				
 			}
@@ -218,7 +227,9 @@ public class Rotation extends JFrame{
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				undraw(domino,  domino.getDirection());
-				KDController.moveLatestDomino(p1, "down");
+				KDController.moveSM("down");
+				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
+				//KDController.moveLatestDomino(p1, "down");
 				draw(domino,  domino.getDirection());
 				
 			}
@@ -228,7 +239,9 @@ public class Rotation extends JFrame{
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 			
 				undraw(domino,  domino.getDirection());
-				KDController.rotateLatestDomino(p1, "Clockwise");
+				KDController.rotateSM("clockwise");
+				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
+				//KDController.rotateLatestDomino(p1, "Clockwise");
 				draw(domino,  domino.getDirection());
 				
 			}
@@ -238,7 +251,9 @@ public class Rotation extends JFrame{
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				undraw(domino,  domino.getDirection());
-				KDController.rotateLatestDomino(p1, "CounterClockwise");
+				KDController.rotateSM("counterclockwise");
+				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
+				//KDController.rotateLatestDomino(p1, "CounterClockwise");
 				draw(domino,  domino.getDirection());
 				
 			}
@@ -247,7 +262,15 @@ public class Rotation extends JFrame{
 		
 		place.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				
+				boolean placed = KDController.placeSM();
+				System.out.println(placed);
+			}
+		});
+		
+		discard.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				boolean discarded = KDController.discardSM();
+				System.out.println(discarded);
 			}
 		});
 		
