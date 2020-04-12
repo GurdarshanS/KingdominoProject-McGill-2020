@@ -255,7 +255,7 @@ public class User implements Serializable
 
   // line 85 "../../../../../KingdominoPersistence.ump"
    public static  void reinitializeUsers(List<User> allUsers){
-    usersByName = new HashMap<String, User>()
+    usersByName = new HashMap<String, User>();
     for (User user : allUsers) {
       usersByName.put(user.getName(), user);
     }
