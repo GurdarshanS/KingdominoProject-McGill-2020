@@ -19,16 +19,21 @@ public class BoardTest extends JFrame {
 		
 	public static void main(String[] args) {
 		
-		Kingdomino kd = KDController.loadGame("tryingBoard.data");
-		boolean used = KDController.manipulateFirstSM(-3, 3, "up");
-		List<KingdomTerritory> t1 = kd.getCurrentGame().getNextPlayer().getKingdom().getTerritories();
-		Player player = kd.getCurrentGame().getNextPlayer();
-		DominoInKingdom dom = (DominoInKingdom) t1.get(1);
-		int x = dom.getX();
-		int y = dom.getY();
-		Rotation r1 = new Rotation(player, x, y, dom);
-		r1.frameR.setVisible(true);
-		View.printPlayers(kd);
+		Kingdomino kd = KDController.loadGame("saveTest.data");
+		KDController.lastSelectionReadySM(0, -1, "down");
+		
+		  //boolean used = KDController.manipulateFirstSM(-3, 3, "up");
+		  List<KingdomTerritory> t1 =
+		  kd.getCurrentGame().getNextPlayer().getKingdom().getTerritories(); Player
+		  player = kd.getCurrentGame().getNextPlayer(); 
+		  DominoInKingdom dom = (DominoInKingdom) (player.getKingdom().getTerritory(player.getKingdom().getTerritories().size()-1)); 
+		  int x = dom.getX(); 
+		  int y = dom.getY(); 
+		  Rotation r1 = new Rotation(player, x, y, dom); r1.frameR.setVisible(true);
+		 
+		  View.printPlayers(kd);
+		  System.out.println(kd.getStateMachine().getGamestatusFullName());
+		 
 		
 	}
 }

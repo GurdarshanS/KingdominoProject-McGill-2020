@@ -143,7 +143,8 @@ public class Rotation extends JFrame{
 				LeftId = squareToDraw;
 				RightId = squareToDraw+9;
 			}
-			
+			System.out.println(LeftId);
+			System.out.println(RightId);
 			this.currentLeft = this.coordinates.get(LeftId);
 			this.currentRight = this.coordinates.get(RightId);
 			
@@ -184,7 +185,9 @@ public class Rotation extends JFrame{
 		}
 		
 	private void drawNewDomino(Player p1, int x, int y, DominoInKingdom domino) {
-
+		
+		System.out.println(p1.getKingdom().getTerritory(p1.getKingdom().getTerritories().size()-1));
+		System.out.println(domino.getDomino().getId());
 		draw(domino, domino.getDirection());
 		
 		moveR.addActionListener(new java.awt.event.ActionListener() {
