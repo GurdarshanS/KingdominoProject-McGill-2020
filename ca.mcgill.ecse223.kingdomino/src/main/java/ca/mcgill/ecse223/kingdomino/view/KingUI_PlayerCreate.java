@@ -69,19 +69,13 @@ public class KingUI_PlayerCreate extends JFrame {
 		
 		// instruction
 		label = new JLabel("label", SwingConstants.CENTER);
-		label.setText("Insert Player Usernames");
+		label.setText("Insert Player Username");
 		label.setFont(new Font("Times", Font.BOLD, 20));
 		
 		// text box
 		insertName = new JTextField();
-		JTextField insertName2 = new JTextField();
-		JTextField insertName3 = new JTextField();
-		JTextField insertName4 = new JTextField();
 
 		insertName.setColumns(10);
-		insertName2.setColumns(10);
-		insertName3.setColumns(10);
-		insertName4.setColumns(10);
 
 		// create name
 		done = new JButton("Create");
@@ -100,12 +94,7 @@ public class KingUI_PlayerCreate extends JFrame {
 					// create profiles for these new players/users
 					String input = insertName.getText();
 					KDController.provideUserProfile(input);
-					String input2 = insertName2.getText();
-					KDController.provideUserProfile(input2);
-					String input3 = insertName3.getText();
-					KDController.provideUserProfile(input3);
-					String input4 = insertName4.getText();
-					KDController.provideUserProfile(input4);
+	
 				
 					for(int j = 0; j < KDQuery.getUsers().size(); j++) {
 						
@@ -113,25 +102,10 @@ public class KingUI_PlayerCreate extends JFrame {
 							
 							i = j;	
 						}
-						if (KDQuery.getUsers().get(i).getName().equalsIgnoreCase(input2)) {
-							
-							i2 = j;	
-						} 
-						if (KDQuery.getUsers().get(i).getName().equalsIgnoreCase(input3)) {
-							
-							i3 = j;	
-						} 
-						if (KDQuery.getUsers().get(i).getName().equalsIgnoreCase(input4)) {
-							
-							i4= j;	
-						} 
+		
 					}
 					// assign player to user based of user list search
 					KDController.assignPlayerToUser(KingdominoApplication.getKingdomino().getCurrentGame().getPlayer(1), KDQuery.getUsers().get(i));
-					KDController.assignPlayerToUser(KingdominoApplication.getKingdomino().getCurrentGame().getPlayer(2), KDQuery.getUsers().get(i2));
-					KDController.assignPlayerToUser(KingdominoApplication.getKingdomino().getCurrentGame().getPlayer(3), KDQuery.getUsers().get(i3));
-					KDController.assignPlayerToUser(KingdominoApplication.getKingdomino().getCurrentGame().getPlayer(4), KDQuery.getUsers().get(i4));
-
 				}
 				/*if(KingdominoApplication.getKingdomino().getCurrentGame().getNumberOfPlayers() == 3) {
 					String input = insertName.getText();
@@ -171,11 +145,6 @@ public class KingUI_PlayerCreate extends JFrame {
 							.addGroup(layout.createSequentialGroup()
 									.addComponent(insertName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
 									.addGap(10)
-									.addComponent(insertName2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
-									.addGap(10)
-									.addComponent(insertName3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
-									.addGap(10)
-									.addComponent(insertName4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
 								)
 							.addComponent(done)
 							)
@@ -193,11 +162,6 @@ public class KingUI_PlayerCreate extends JFrame {
 							.addGroup(layout.createParallelGroup()
 									.addComponent(insertName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
 									.addGap(10)
-									.addComponent(insertName2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
-									.addGap(10)
-									.addComponent(insertName3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
-									.addGap(10)
-									.addComponent(insertName4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
 							)
 							.addComponent(done)
 							)
