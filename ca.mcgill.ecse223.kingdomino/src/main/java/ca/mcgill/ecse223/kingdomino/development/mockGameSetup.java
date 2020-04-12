@@ -9,7 +9,7 @@ import ca.mcgill.ecse223.kingdomino.controller.*;
 import ca.mcgill.ecse223.kingdomino.model.*;
 import ca.mcgill.ecse223.kingdomino.persistence.*;
 
-public class mockGamesSetup {
+public class mockGameSetup {
 	
 	public static void main(String [] args) {
 		
@@ -36,6 +36,7 @@ public class mockGamesSetup {
 					System.out.println(i+". "+u.getName());
 					i+=1;
 				}
+
 				break;
 			}
 			

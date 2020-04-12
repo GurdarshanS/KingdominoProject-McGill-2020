@@ -36,7 +36,7 @@
           </vertices>
           <vertices xsi:type="sgraph:State" xmi:id="_TWJx8Hf9Eeqg4cvYF5O61g" name="SelectingStandardDomino" incomingTransitions="_Vy0BoHf9Eeqg4cvYF5O61g">
             <outgoingTransitions xmi:id="_ofuzwHf9Eeqg4cvYF5O61g" specification="manipulateNext[!lastPlayerInTurn()]/&#xD;&#xA;preplaceLatestDomino&#xD;&#xA;(game.getNextPlayer() ,posx,posy,dir)" target="_yLBxMHf5Eeqg4cvYF5O61g"/>
-            <outgoingTransitions xmi:id="_6fngwHf9Eeqg4cvYF5O61g" specification="nextSelectionReady&#xD;&#xA;[lastPlayerInTurn()]" target="_adtAQHf5Eeqg4cvYF5O61g"/>
+            <outgoingTransitions xmi:id="_6fngwHf9Eeqg4cvYF5O61g" specification="nextSelectionReady&#xD;&#xA;[lastPlayerInTurn()&#xD;&#xA;&#x9;&amp;&amp;!isDominoPileEmpty()]" target="_adtAQHf5Eeqg4cvYF5O61g"/>
             <outgoingTransitions xmi:id="_ozBRQHf_Eeqg4cvYF5O61g" specification="lastSelectionReady &#xD;&#xA;[lastPlayerInTurn()&amp;&amp;&#xD;&#xA;&#x9;isDominoPileEmpty()]/&#xD;&#xA;updatePlayerOrder();&#xD;&#xA;preplaceLatestDomino&#xD;&#xA;(game.getNextPlayer() ,posx,posy,dir)" target="_i8AakHf_Eeqg4cvYF5O61g"/>
           </vertices>
           <vertices xsi:type="sgraph:Entry" xmi:id="_NzkZoHjuEeq745-TxyBhpg">

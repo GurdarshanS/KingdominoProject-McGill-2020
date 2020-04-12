@@ -15,11 +15,25 @@ public class mockGamePlaying {
 		public static void main(String [] args)
 		{	
 			Scanner in = new Scanner(System.in);
-			Kingdomino kd = KDController.loadGame(null);
+			Kingdomino kd;
 			
 			System.out.println("\n===================================================================================================");
 			System.out.println("                      			Kingdomino Gameplay");
 			System.out.println("===================================================================================================");
+			
+			System.out.println("loading game. provide disk location or hit Enter to load from default directory: ");
+			String fname=in.nextLine();
+			if (fname.isEmpty()) {
+				System.out.println("no location provided, loading from default directory...");
+				kd=KDController.loadGame(null);
+				System.out.println("game loaded");
+			}
+			else {
+				System.out.println("loading saved game from location: "+fname);
+				kd=KDController.loadGame(fname);
+				System.out.println("game loaded");
+			}
+
 			
 			System.out.println("input command: ");
 			boolean run=true;
@@ -65,9 +79,12 @@ public class mockGamePlaying {
 
 					System.out.println("event processed: "+draftReady);
 					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
+					System.out.println("current player: "+kd.getCurrentGame().getNextPlayer().getColor());
+
 					break;
 				
 				case "choose":
+					System.out.println("current player: "+kd.getCurrentGame().getNextPlayer().getColor());
 					System.out.println("processing SM event choose, input chosen domino ID:");
 					String id = in.nextLine();
 					int dominoID=Integer.decode(id);
@@ -80,6 +97,7 @@ public class mockGamePlaying {
 					break;
 				
 				case "selection ready":
+					System.out.println("current player: "+kd.getCurrentGame().getNextPlayer().getColor());
 					System.out.println("processing SM event selectionReady...");
 					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
 					
@@ -90,6 +108,7 @@ public class mockGamePlaying {
 					break;
 				
 				case "next selection ready":
+					System.out.println("current player: "+kd.getCurrentGame().getNextPlayer().getColor());
 					System.out.println("processing SM event nextSelectionReady...");
 					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
 					
@@ -100,6 +119,7 @@ public class mockGamePlaying {
 					break;
 				
 				case "last selection ready":
+					System.out.println("current player: "+kd.getCurrentGame().getNextPlayer().getColor());
 					System.out.println("processing SM event lastSelectionReady, input preplacement posx, posy, and direction");			
 					String data = in.nextLine();
 					int posx=Integer.decode(data.split(",")[0]);
@@ -117,6 +137,7 @@ public class mockGamePlaying {
 					break;
 				
 				case "manipulate first":
+					System.out.println("current player: "+kd.getCurrentGame().getNextPlayer().getColor());
 					System.out.println("processing SM event manipulateFirst, input preplacement posx, posy, and direction");
 					data = in.nextLine();
 					posx=Integer.decode(data.split(",")[0]);
@@ -133,6 +154,7 @@ public class mockGamePlaying {
 					break;
 				
 				case "manipulate next":
+					System.out.println("current player: "+kd.getCurrentGame().getNextPlayer().getColor());
 					System.out.println("processing SM event manipulateNext, input preplacement posx, posy, and direction");
 					data = in.nextLine();
 					posx=Integer.decode(data.split(",")[0]);
@@ -142,13 +164,16 @@ public class mockGamePlaying {
 							posx,posy,dir);
 					System.out.println(confirm);
 					System.out.println("original state:  "+kd.getStateMachine().getGamestatusFullName());
+					
 					boolean manipulateNext=KDController.manipulateNextSM(posx, posy, dir);
+					
 					System.out.println("event processed: "+manipulateNext);
 					System.out.println("new state:       "+kd.getStateMachine().getGamestatusFullName());
 					
 					break;
 				
 				case "manipulate last":
+					System.out.println("current player: "+kd.getCurrentGame().getNextPlayer().getColor());
 					System.out.println("processing SM event manipulateLast, input preplacement posx, posy, and direction");
 					data = in.nextLine();
 					posx=Integer.decode(data.split(",")[0]);
@@ -252,10 +277,19 @@ public class mockGamePlaying {
 				case "current state":
 					System.out.println("current state: "+kd.getStateMachine().getGamestatusFullName());
 					break;
+				
+				case "save":
+					System.out.println("provide disk location: ");
+					fname=in.nextLine();
+					System.out.println("saving game to disk location: "+fname);
+					KDController.saveGame(fname, true);
+					System.out.println("game saved");
+					break;
 					
 			  	case "stop":
 			  		run=false;
 			  		break;
+			  		
 			}
 				
 				System.out.println("\ninput new command: ");
