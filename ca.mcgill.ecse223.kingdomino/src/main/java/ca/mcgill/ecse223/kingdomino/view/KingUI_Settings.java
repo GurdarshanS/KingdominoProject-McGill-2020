@@ -20,7 +20,6 @@ import javax.swing.border.Border;
 
 public class KingUI_Settings extends JFrame{
 	
-
 	public static void initSettings() {
 		
 		JLabel title = new JLabel("Game Settings");
