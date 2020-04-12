@@ -17,6 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
+import ca.mcgill.ecse223.kingdomino.controller.KDController;
+
 public class KingUI_Main {
 	
 	public static JFrame frame = new JFrame("Kingdomino");
@@ -76,6 +78,7 @@ public class KingUI_Main {
 		
 		start.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				KDController.initiateEmptyGame();
 				KingUI_Settings.initSettings();
 				c1.show(contPanel, "2");
 				
@@ -84,7 +87,7 @@ public class KingUI_Main {
 		
 		load.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				System.out.println("sup");
+				KDController.loadGame();
 			}
 		});
 	}

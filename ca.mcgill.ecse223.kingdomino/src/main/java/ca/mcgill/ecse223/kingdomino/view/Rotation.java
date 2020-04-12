@@ -17,6 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
+import ca.mcgill.ecse223.kingdomino.model.Domino;
+import ca.mcgill.ecse223.kingdomino.model.Player;
+import ca.mcgill.ecse223.kingdomino.model.TerrainType;
+
 public class Rotation extends JFrame{
 
 	public  JFrame frameR = new JFrame("Kingdomino");
@@ -26,21 +30,20 @@ public class Rotation extends JFrame{
 	public int LeftId = 0;
 	public int RightId = 0;
 	public String direction = "";
+	public JPanel crowns1;
+	public JPanel crowns2;
+	public Domino domino;
 	
-public static void main(String[] args) {
-		
-		new Rotation().frameR.setVisible(true);
-		
-	}
+
 	
-	public Rotation() {
+	public Rotation(Player p1, int x, int y, Domino dom, String dir) {
 		
 		frameR.setSize(1350, 850);
 		frameR.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		initComponents();
+		initComponents(p1,x,y,dom,dir);
 	}
 
-	private void initComponents() {
+	private void initComponents(Player p1, int x, int y, Domino dom, String dir) {
 		
 
 		JButton rotateR = new JButton("Rotate Clockwise");
@@ -83,14 +86,33 @@ public static void main(String[] args) {
 
 		display.add(board);
 		display.add(buttons, BorderLayout.SOUTH);
-
-		this.currentLeft = this.coordinates.get(1);
-		this.currentRight = this.coordinates.get(2);
-		this.currentLeft.setBackground(Color.BLUE);
-		this.currentRight.setBackground(Color.GREEN);
-		LeftId = 1;
-		RightId = 2;
-		direction = "right";
+		
+		int z = x-(9*y)+41;
+		domino = dom;
+		direction = dir;
+		
+		if(dir.equals("right")) {
+			LeftId = z;
+			RightId = z+1;
+		} else if(dir.equals("left")) {
+			LeftId = z;
+			RightId = z-1;
+		} else if(dir.equals("up")) {
+			LeftId = z;
+			RightId = z-9;
+		} else if(dir.equals("down")) {
+			LeftId = z;
+			RightId = z+9;
+		}
+		this.currentLeft = this.coordinates.get(LeftId);
+		this.currentRight = this.coordinates.get(RightId);
+		this.currentLeft.setBackground(getColor(domino.getLeftTile()));
+		this.currentRight.setBackground(getColor(domino.getRightTile()));
+		System.out.println(domino.getLeftCrown());
+		System.out.println(domino.getRightCrown());
+		addCrowns(this.currentLeft,domino.getLeftCrown());
+		addCrowns(this.currentRight,domino.getRightCrown());
+		
 		this.coordinates.get(41).setBackground(Color.MAGENTA);
 		
 		frameR.add(display);
@@ -98,7 +120,7 @@ public static void main(String[] args) {
 		moveR.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 
-				if(LeftId==9 || RightId==9 || LeftId==18 || RightId==18 || LeftId==27 || RightId==27 || LeftId==36 || RightId==36 || LeftId==45 || RightId==45 || LeftId==54 || RightId==54 || LeftId==63 || RightId==63 || LeftId==72 || RightId==72 || LeftId==81 || RightId==81 || (RightId+1) ==41) {
+				if(LeftId==9 || RightId==9 || LeftId==18 || RightId==18 || LeftId==27 || RightId==27 || LeftId==36 || RightId==36 || LeftId==45 || RightId==45 || LeftId==54 || RightId==54 || LeftId==63 || RightId==63 || LeftId==72 || RightId==72 || LeftId==81 || RightId==81 || (RightId+1) ==41 || (LeftId+1) ==41) {
 
 					currentLeft = coordinates.get(LeftId);
 					currentRight = coordinates.get(RightId);
@@ -106,6 +128,11 @@ public static void main(String[] args) {
 				else {
 					LeftId = LeftId + 1;
 					RightId = RightId + 1;
+					currentLeft.remove(crowns1);
+					currentLeft.remove(crowns2);
+					currentRight.remove(crowns1);
+					currentRight.remove(crowns2);
+					
 					
 					if(direction.equals("right")){
 						Color templeft = currentLeft.getBackground(); 
@@ -115,6 +142,7 @@ public static void main(String[] args) {
 						currentLeft.setBackground(templeft);
 						currentRight = coordinates.get(RightId);
 						currentRight.setBackground(tempright);
+						
 					}
 					else if(direction.equals("left")) {
 						Color templeft = currentLeft.getBackground(); 
@@ -137,6 +165,10 @@ public static void main(String[] args) {
 						currentRight.setBackground(tempright);
 						
 					} 
+						currentLeft.add(crowns1);
+						currentLeft.add(crowns2);
+						currentRight.add(crowns1);
+						currentRight.add(crowns2);
 				}
 			}
 		});
@@ -144,13 +176,17 @@ public static void main(String[] args) {
 		moveL.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
-				if(LeftId==1 || RightId==1 || LeftId==10 || RightId==10 || LeftId==19 || RightId==19 || LeftId==28 || RightId==28 || LeftId==37 || RightId==37 || LeftId==46 || RightId==46 || LeftId==55 || RightId==55 || LeftId==64 || RightId==64 || LeftId==73 || RightId==73 ||(RightId-1)==41) {
+				if(LeftId==1 || RightId==1 || LeftId==10 || RightId==10 || LeftId==19 || RightId==19 || LeftId==28 || RightId==28 || LeftId==37 || RightId==37 || LeftId==46 || RightId==46 || LeftId==55 || RightId==55 || LeftId==64 || RightId==64 || LeftId==73 || RightId==73 || (LeftId-1)==41 || (RightId-1)==41) {
 					currentLeft = coordinates.get(LeftId);
 					currentRight = coordinates.get(RightId);
 				}
 				else {
 					LeftId = LeftId - 1;
 					RightId = RightId - 1;
+					currentLeft.remove(crowns1);
+					currentLeft.remove(crowns2);
+					currentRight.remove(crowns1);
+					currentRight.remove(crowns2);
 					if(direction.equals("right")) {
 						Color templeft = currentLeft.getBackground(); 
 						Color tempright = currentRight.getBackground();
@@ -179,6 +215,10 @@ public static void main(String[] args) {
 						currentRight = coordinates.get(RightId);
 						currentRight.setBackground(tempright);
 					}
+					currentLeft.add(crowns1);
+					currentLeft.add(crowns2);
+					currentRight.add(crowns1);
+					currentRight.add(crowns2);
 				}
 			}
 		});
@@ -186,13 +226,17 @@ public static void main(String[] args) {
 		moveU.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
-				if(LeftId==1 || RightId==1 || LeftId==2 || RightId==2 || LeftId==3 || RightId==3 || LeftId==4 || RightId==4 || LeftId==5 || RightId==5 || LeftId==6 || RightId==6 || LeftId==7 || RightId==7 || LeftId==8 || RightId==8 || LeftId==9 || RightId==9 ||(RightId-9)==41) {
+				if(LeftId==1 || RightId==1 || LeftId==2 || RightId==2 || LeftId==3 || RightId==3 || LeftId==4 || RightId==4 || LeftId==5 || RightId==5 || LeftId==6 || RightId==6 || LeftId==7 || RightId==7 || LeftId==8 || RightId==8 || LeftId==9 || RightId==9 ||(RightId-9)==41 || (LeftId-9)==41) {
 					currentLeft = coordinates.get(LeftId);
 					currentRight = coordinates.get(RightId);
 				}
 				else {
 					LeftId = LeftId - 9;
 					RightId = RightId - 9;
+					currentLeft.remove(crowns1);
+					currentLeft.remove(crowns2);
+					currentRight.remove(crowns1);
+					currentRight.remove(crowns2);
 					if(direction.equals("right") || direction.equals("left")) {
 						Color templeft = currentLeft.getBackground(); 
 						Color tempright = currentRight.getBackground();
@@ -222,6 +266,10 @@ public static void main(String[] args) {
 						currentRight = coordinates.get(RightId);
 						currentRight.setBackground(tempright);
 					}
+					currentLeft.add(crowns1);
+					currentLeft.add(crowns2);
+					currentRight.add(crowns1);
+					currentRight.add(crowns2);
 				}
 			}
 		});
@@ -229,13 +277,17 @@ public static void main(String[] args) {
 		moveD.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
-				if(LeftId==73 || RightId==73 || LeftId==74 || RightId==74 || LeftId==75 || RightId==75 || LeftId==76 || RightId==76 || LeftId==77 || RightId==77 || LeftId==78 || RightId==78 || LeftId==79 || RightId==79 || LeftId==80 || RightId==80 || LeftId==81 || RightId==81 ||(RightId+9)==41) {
+				if(LeftId==73 || RightId==73 || LeftId==74 || RightId==74 || LeftId==75 || RightId==75 || LeftId==76 || RightId==76 || LeftId==77 || RightId==77 || LeftId==78 || RightId==78 || LeftId==79 || RightId==79 || LeftId==80 || RightId==80 || LeftId==81 || RightId==81 ||(RightId+9)==41 ||(LeftId+9)==41) {
 					currentLeft = coordinates.get(LeftId);
 					currentRight = coordinates.get(RightId);
 				}
 				else {
 					LeftId = LeftId + 9;
 					RightId = RightId + 9;
+					currentLeft.remove(crowns1);
+					currentLeft.remove(crowns2);
+					currentRight.remove(crowns1);
+					currentRight.remove(crowns2);
 					if(direction.equals("right") || direction.equals("left")) {
 					Color templeft = currentLeft.getBackground(); 
 					Color tempright = currentRight.getBackground();
@@ -265,6 +317,10 @@ public static void main(String[] args) {
 						currentRight = coordinates.get(RightId);
 						currentRight.setBackground(tempright);
 					}
+					currentLeft.add(crowns1);
+					currentLeft.add(crowns2);
+					currentRight.add(crowns1);
+					currentRight.add(crowns2);
 				}
 			}
 		});
@@ -272,7 +328,10 @@ public static void main(String[] args) {
 		rotateR.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
-				
+				currentLeft.remove(crowns1);
+				currentLeft.remove(crowns2);
+				currentRight.remove(crowns1);
+				currentRight.remove(crowns2);
 							if(direction.equals("right")) {
 								
 								if(RightId ==74 || RightId==75 || RightId==76 || RightId==77 || RightId ==78 || RightId==79 || RightId==80 || RightId==81 || (RightId+8)==41 ){
@@ -286,6 +345,10 @@ public static void main(String[] args) {
 										currentRight.setBackground(tempright);
 										direction = "down";
 										}
+								currentLeft.add(crowns1);
+								currentLeft.add(crowns2);
+								currentRight.add(crowns1);
+								currentRight.add(crowns2);
 							}
 						
 				
@@ -303,6 +366,10 @@ public static void main(String[] args) {
 											direction = "left";
 											
 										}
+								 currentLeft.add(crowns1);
+								 currentLeft.add(crowns2);
+								 currentRight.add(crowns1);
+								 currentRight.add(crowns2);
 							 }
 						
 							else if(direction.equals("left")){
@@ -318,6 +385,10 @@ public static void main(String[] args) {
 										currentRight.setBackground(tempright);
 										direction = "up";
 										}
+								currentLeft.add(crowns1);
+								currentLeft.add(crowns2);
+								currentRight.add(crowns1);
+								currentRight.add(crowns2);
 							}
 				
 							else if(direction.equals("up")) {
@@ -333,6 +404,10 @@ public static void main(String[] args) {
 										currentRight.setBackground(tempright);
 										direction = "right";
 										}
+								currentLeft.add(crowns1);
+								currentLeft.add(crowns2);
+								currentRight.add(crowns1);
+								currentRight.add(crowns2);
 							}
 				
 			}
@@ -340,6 +415,10 @@ public static void main(String[] args) {
 		
 		rotateL.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				currentLeft.remove(crowns1);
+				currentLeft.remove(crowns2);
+				currentRight.remove(crowns1);
+				currentRight.remove(crowns2);
 				
 				if(direction.equals("right")) {
 					
@@ -354,6 +433,10 @@ public static void main(String[] args) {
 									currentRight.setBackground(tempright);
 									direction = "up";
 								}
+					currentLeft.add(crowns1);
+					currentLeft.add(crowns2);
+					currentRight.add(crowns1);
+					currentRight.add(crowns2);
 				}
 				else if(direction.equals("up")) {
 					
@@ -368,6 +451,10 @@ public static void main(String[] args) {
 									currentRight.setBackground(tempright);
 									direction = "left";
 								}
+					currentLeft.add(crowns1);
+					currentLeft.add(crowns2);
+					currentRight.add(crowns1);
+					currentRight.add(crowns2);
 				}
 				else if(direction.equals("left")){
 					
@@ -382,6 +469,10 @@ public static void main(String[] args) {
 									currentRight.setBackground(tempright);
 									direction = "down";
 								}
+					currentLeft.add(crowns1);
+					currentLeft.add(crowns2);
+					currentRight.add(crowns1);
+					currentRight.add(crowns2);
 				}
 				else if(direction.equals("down")) {
 					
@@ -396,6 +487,10 @@ public static void main(String[] args) {
 									currentRight.setBackground(tempright);
 									direction = "right";
 								}
+					currentLeft.add(crowns1);
+					currentLeft.add(crowns2);
+					currentRight.add(crowns1);
+					currentRight.add(crowns2);
 				}
 			}
 		});
@@ -405,14 +500,44 @@ public static void main(String[] args) {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				currentLeft = coordinates.get(LeftId);
 				currentRight = coordinates.get(RightId);
-				initComponents();
+				//initComponents();
 			}
 		});
 		
 		
+			
+		
 		
 	}
 	
-	
+		private Color getColor(TerrainType t1) {
+			Color c1 = null;
+			if(t1.equals(TerrainType.Forest)) {
+				c1 = new Color(0,102,0);
+			} else if(t1.equals(TerrainType.Grass)) {
+				c1 = Color.GREEN;
+			} else if(t1.equals(TerrainType.Lake)) {
+				c1 = Color.BLUE;
+			} else if(t1.equals(TerrainType.Mountain)) {
+				c1 = new Color(51,0,0);
+			} else if(t1.equals(TerrainType.Swamp)) {
+				c1 = new Color(153,102,0);
+			} else if (t1.equals(TerrainType.WheatField)) {
+				c1 = new Color(255,204,0);
+			}
+			return c1;
+		}
 		
+		private void addCrowns(JPanel p1, int n1) {
+			crowns1 = new JPanel();
+			crowns1.setBackground(new Color(255,255,0));
+			crowns2 = new JPanel();
+			crowns2.setBackground(new Color(255,255,0));
+			if(n1==1) {
+				p1.add(crowns1);
+			} else if(n1==2) {
+				p1.add(crowns1);
+				p1.add(crowns2);
+			}
+		}
 }
