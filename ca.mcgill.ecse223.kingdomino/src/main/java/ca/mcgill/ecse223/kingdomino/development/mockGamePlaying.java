@@ -259,6 +259,10 @@ public class mockGamePlaying {
 					System.out.println("is pile empty: "+KDQuery.isDominoPileEmpty());
 					break;
 				
+				case "is there available":
+					System.out.println("is there available placement: "+kd.getStateMachine().isThereAvailablePlacement());
+					break;
+				
 				case "current player":
 					System.out.println("current player: "+kd.getCurrentGame().getNextPlayer().getColor());
 					break;

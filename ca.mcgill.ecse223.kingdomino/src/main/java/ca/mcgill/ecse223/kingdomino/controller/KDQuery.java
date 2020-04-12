@@ -434,6 +434,9 @@ public class KDQuery {
 	 */
 	
 	public static boolean isThereAvailablePlacement(Player player, DominoInKingdom dInK) {
+		if (dInK.getDomino().getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
+			return true;
+		}
 		List<List<Integer>> freeCoords=KDQuery.getValidFreeCoordinates(player);
 		if (freeCoords.size()==0) {
 			return false;
