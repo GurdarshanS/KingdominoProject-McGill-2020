@@ -5,6 +5,10 @@ package ca.mcgill.ecse223.kingdomino.model;
 import java.io.Serializable;
 import java.util.*;
 
+import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
+import ca.mcgill.ecse223.kingdomino.controller.KDController;
+import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
+
 // line 4 "../../../../../KingdominoPersistence.ump"
 // line 6 "../../../../../Kingdomino.ump"
 public class Kingdomino implements Serializable
@@ -19,6 +23,7 @@ public class Kingdomino implements Serializable
   private List<BonusOption> bonusOptions;
   private List<Game> allGames;
   private Game currentGame;
+  private Gameplay sm;												//model extension -- added state machine												
 
   //------------------------
   // CONSTRUCTOR
@@ -30,11 +35,36 @@ public class Kingdomino implements Serializable
     bonusOptions = new ArrayList<BonusOption>();
     allGames = new ArrayList<Game>();
   }
+  
+  
+  //---------------------------
+  //	STATE MACHINE INTERFACE
+  //---------------------------
+  
+  public boolean hasStateMachine() {
+	  if (this.sm==null) return false;
+	  else return true;
+  }
+  
+  public Gameplay getStateMachine() {
+	  return this.sm;
+  }
+  
+  public void setStateMachine() {
+	  this.sm=new Gameplay();
+  }
+  
+  public void removeStateMachine() {
+	  if (this.sm!=null)  this.sm=null;
+  }
+  
 
   //------------------------
   // INTERFACE
   //------------------------
   /* Code from template association_GetMany */
+  
+  
   public User getUser(int index)
   {
     User aUser = users.get(index);
@@ -396,7 +426,5 @@ public class Kingdomino implements Serializable
   //------------------------
   
   // line 7 "../../../../../KingdominoPersistence.ump"
-  private static final long serialVersionUID = 1L ;
-
-  
+  private static final long serialVersionUID = 1L ; 
 }

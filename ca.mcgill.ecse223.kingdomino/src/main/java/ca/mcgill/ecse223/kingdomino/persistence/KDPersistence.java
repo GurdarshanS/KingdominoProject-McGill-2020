@@ -1,15 +1,23 @@
 package ca.mcgill.ecse223.kingdomino.persistence;
 
 import ca.mcgill.ecse223.kingdomino.persistence.PersistenceObjectStream;
+
+import java.io.File;
+import java.nio.file.Files;
+
 import ca.mcgill.ecse223.kingdomino.model.*;
 
 public class KDPersistence {
 	
 	private static String fileName = "kingdomino.data";
 
-	public static void save(Kingdomino kingdomino) {
-		PersistenceObjectStream.setFilename(fileName);
-		PersistenceObjectStream.serialize(kingdomino);
+	public static void save(Kingdomino kingdomino,boolean overwrite) {
+		
+		
+			PersistenceObjectStream.setFilename(fileName);
+			PersistenceObjectStream.serialize(kingdomino);
+		
+
 	}
 	
 	public static Kingdomino load() {
