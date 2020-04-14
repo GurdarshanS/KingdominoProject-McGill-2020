@@ -19,21 +19,20 @@ public class BoardTest extends JFrame {
 		
 	public static void main(String[] args) {
 		
-		Kingdomino kd = KDController.loadGame("saveTest.data");
-		KDController.lastSelectionReadySM(0, -1, "down");
+		Kingdomino kd = KDController.loadGame("regularPlayStart2.data");
+		KDController.manipulateFirstSM(-3, 3, "right");
 		
-		  //boolean used = KDController.manipulateFirstSM(-3, 3, "up");
-		  List<KingdomTerritory> t1 =
-		  kd.getCurrentGame().getNextPlayer().getKingdom().getTerritories(); Player
-		  player = kd.getCurrentGame().getNextPlayer(); 
-		  DominoInKingdom dom = (DominoInKingdom) (player.getKingdom().getTerritory(player.getKingdom().getTerritories().size()-1)); 
-		  int x = dom.getX(); 
-		  int y = dom.getY(); 
-		  Rotation r1 = new Rotation(player, x, y, dom); r1.frameR.setVisible(true);
+		 List<KingdomTerritory> t1 =
+		 kd.getCurrentGame().getNextPlayer().getKingdom().getTerritories(); 
+		 Player player = kd.getCurrentGame().getNextPlayer(); 
+		 DominoInKingdom dom = (DominoInKingdom) (player.getKingdom().getTerritory(player.getKingdom().getTerritories().size()-1)); 
+		 int x = dom.getX(); 
+		 int y = dom.getY(); 
 		 
-		  View.printPlayers(kd);
-		  System.out.println(kd.getStateMachine().getGamestatusFullName());
-		 
+		 Rotation2 r1 = new Rotation2(player, x, y, dom); 
+		 r1.frameR.setVisible(true);
 		
+		 System.out.println(kd.getStateMachine().getGamestatusFullName());
+		 
 	}
 }

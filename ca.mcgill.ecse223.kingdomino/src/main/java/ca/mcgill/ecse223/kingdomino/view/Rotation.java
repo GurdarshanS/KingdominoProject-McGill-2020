@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -15,7 +16,9 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
@@ -40,9 +43,7 @@ public class Rotation extends JFrame{
 	private JPanel currentRight = new JPanel();
 	private int LeftId = 0;
 	private int RightId = 0;
-	private JPanel crowns1;
-	private JPanel crowns2;
-	private JPanel crowns3;
+
 	JButton rotateR = new JButton("Rotate Clockwise");
 	JButton rotateL = new JButton("Rotate CounterClockwise");
 	JButton moveR = new JButton("Move Right");
@@ -51,15 +52,19 @@ public class Rotation extends JFrame{
 	JButton moveD = new JButton("Move Down");
 	JButton place = new JButton("Place Domino");
 	JButton discard = new JButton("Discard Domino");
+	
 	Color panelPrevColorLeft;
 	Color panelPrevColorRight;
-	
 
+	private JPanel crowns1;
+	private JPanel crowns2;
+	private JPanel crowns3;
 	
 	public Rotation(Player p1, int x, int y, DominoInKingdom dom) {
 		
 		frameR.setSize(1350, 850);
 		frameR.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+	
 		drawInitialKingdom(p1);
 		drawNewDomino(p1,x,y,dom);
 	}
@@ -84,10 +89,7 @@ public class Rotation extends JFrame{
 		for(int i=1; i<=81; i++) {
 			this.coordinates.put(i, panels[i-1]);
 		}
-		
 
-		
-		
 		buttons.add(rotateR);
 		buttons.add(rotateL);
 		buttons.add(moveL);
@@ -110,11 +112,9 @@ public class Rotation extends JFrame{
 			
 			if(domino.equals((DominoInKingdom)(p1.getKingdom().getTerritory(p1.getKingdom().getTerritories().size()-1)))) break;
 			
-			draw(domino, domino.getDirection());
+			draw(domino, domino.getDirection(), false);
 			
 		}
-		
-		
 		
 		this.coordinates.get(41).setBackground(Color.MAGENTA);
 		
@@ -124,9 +124,9 @@ public class Rotation extends JFrame{
 			
 			return x-(9*y)+41;
 			
-		}
+	}
 	
-	private void draw(DominoInKingdom domino, DirectionKind dir) {
+	private void draw(DominoInKingdom domino, DirectionKind dir, boolean lastDomino) {
 			
 			int squareToDraw = translate(domino.getX(), domino.getY());
 			
@@ -143,8 +143,7 @@ public class Rotation extends JFrame{
 				LeftId = squareToDraw;
 				RightId = squareToDraw+9;
 			}
-			System.out.println(LeftId);
-			System.out.println(RightId);
+			
 			this.currentLeft = this.coordinates.get(LeftId);
 			this.currentRight = this.coordinates.get(RightId);
 			
@@ -153,6 +152,14 @@ public class Rotation extends JFrame{
 		
 			this.currentLeft.setBackground(getColor(domino.getDomino().getLeftTile()));
 			this.currentRight.setBackground(getColor(domino.getDomino().getRightTile()));
+			
+			if(lastDomino) {
+				
+				this.currentLeft.setBorder(BorderFactory.createLineBorder(Color.RED)); 
+				this.currentRight.setBorder(BorderFactory.createLineBorder(Color.RED)); 
+				
+			}
+			
 			addCrowns(this.currentLeft,domino.getDomino().getLeftCrown());
 			addCrowns(this.currentRight,domino.getDomino().getRightCrown());
 			
@@ -182,13 +189,17 @@ public class Rotation extends JFrame{
 			this.currentLeft.setBackground(panelPrevColorLeft);
 			this.currentRight.setBackground(panelPrevColorRight);
 			
+			this.currentLeft.setBorder(BorderFactory.createLineBorder(Color.BLACK)); 
+			this.currentRight.setBorder(BorderFactory.createLineBorder(Color.BLACK)); 
+			
+			removeCrowns(this.currentLeft, domino.getDomino().getLeftCrown());
+			removeCrowns(this.currentRight, domino.getDomino().getRightCrown());
+	
 		}
 		
 	private void drawNewDomino(Player p1, int x, int y, DominoInKingdom domino) {
 		
-		System.out.println(p1.getKingdom().getTerritory(p1.getKingdom().getTerritories().size()-1));
-		System.out.println(domino.getDomino().getId());
-		draw(domino, domino.getDirection());
+		draw(domino, domino.getDirection(), true);
 		
 		moveR.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -197,7 +208,7 @@ public class Rotation extends JFrame{
 				KDController.moveSM("right");
 				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
 				//KDController.moveLatestDomino(p1, "right");
-				draw(domino,  domino.getDirection());
+				draw(domino,  domino.getDirection(), true);
 				
 			}
 		});
@@ -209,7 +220,7 @@ public class Rotation extends JFrame{
 				KDController.moveSM("left");
 				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
 				//KDController.moveLatestDomino(p1, "left");
-				draw(domino,  domino.getDirection());
+				draw(domino,  domino.getDirection(), true);
 				
 			}
 		});
@@ -221,7 +232,7 @@ public class Rotation extends JFrame{
 				KDController.moveSM("up");
 				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
 				//KDController.moveLatestDomino(p1, "up");
-				draw(domino,  domino.getDirection());
+				draw(domino,  domino.getDirection(), true);
 				
 			}
 		});
@@ -233,7 +244,7 @@ public class Rotation extends JFrame{
 				KDController.moveSM("down");
 				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
 				//KDController.moveLatestDomino(p1, "down");
-				draw(domino,  domino.getDirection());
+				draw(domino,  domino.getDirection(), true);
 				
 			}
 		});
@@ -245,7 +256,7 @@ public class Rotation extends JFrame{
 				KDController.rotateSM("clockwise");
 				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
 				//KDController.rotateLatestDomino(p1, "Clockwise");
-				draw(domino,  domino.getDirection());
+				draw(domino,  domino.getDirection(), true);
 				
 			}
 		});
@@ -257,7 +268,7 @@ public class Rotation extends JFrame{
 				KDController.rotateSM("counterclockwise");
 				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
 				//KDController.rotateLatestDomino(p1, "CounterClockwise");
-				draw(domino,  domino.getDirection());
+				draw(domino,  domino.getDirection(), true);
 				
 			}
 		});
@@ -300,12 +311,14 @@ public class Rotation extends JFrame{
 		}
 		
 		private void addCrowns(JPanel p1, int n1) {
+			
 			crowns1 = new JPanel();
 			crowns1.setBackground(new Color(255,255,0));
 			crowns2 = new JPanel();
 			crowns2.setBackground(new Color(255,255,0));
 			crowns3 = new JPanel();
 			crowns3.setBackground(new Color(255,255,0));
+		
 			if(n1==1) {
 				p1.add(crowns1);
 			} else if(n1==2) {
@@ -315,13 +328,31 @@ public class Rotation extends JFrame{
 				p1.add(crowns1);
 				p1.add(crowns2);
 				p1.add(crowns3);
+			
 			}
+		
 		}
 		
-	
-
-				
+		private void removeCrowns(JPanel p1, int n1) {
 			
+			if(n1==1) {
+				crowns1.setVisible(false);
+				p1.remove(crowns1);
+			} else if(n1==2) {
+				crowns1.setVisible(false);
+				crowns2.setVisible(false);
+				p1.remove(crowns1);
+				p1.remove(crowns2);
+			} else if(n1==3) {
+				crowns1.setVisible(false);
+				crowns2.setVisible(false);
+				crowns3.setVisible(false);
+				p1.remove(crowns1);
+				p1.remove(crowns2);
+				p1.remove(crowns3);
+			}
+	
+		}			
 		
 }
 		
