@@ -2,6 +2,7 @@ package ca.mcgill.ecse223.kingdomino.view;
 
 import javax.swing.JLabel;
 
+
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
@@ -10,6 +11,7 @@ import javax.swing.border.Border;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
+import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -67,38 +69,45 @@ public class KingUI_PlayerCreate extends JFrame {
 		
 		// instruction
 		label = new JLabel("label", SwingConstants.CENTER);
-		label.setText("Insert Player Usernames");
+		label.setText("Insert Player Username");
 		label.setFont(new Font("Times", Font.BOLD, 20));
 		
 		// text box
 		insertName = new JTextField();
-		JTextField insertName2 = new JTextField();
-		JTextField insertName3 = new JTextField();
-		JTextField insertName4 = new JTextField();
 
 		insertName.setColumns(10);
-		insertName2.setColumns(10);
-		insertName3.setColumns(10);
-		insertName4.setColumns(10);
 
 		// create name
 		done = new JButton("Create");
 		done.setFont(new Font("Times", Font.BOLD, 16));
 		done.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				KingUI_Stats.initComponents();
 				KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
+				
 				if(KingdominoApplication.getKingdomino().getCurrentGame().getNumberOfPlayers() == 4) {
+					int i = 0;
+					int i2 = 0;
+					int i3 = 0;
+					int i4 = 0;
+					// create profiles for these new players/users
 					String input = insertName.getText();
 					KDController.provideUserProfile(input);
-					String input2 = insertName2.getText();
-					KDController.provideUserProfile(input2);
-					String input3 = insertName3.getText();
-					KDController.provideUserProfile(input3);
-					String input4 = insertName4.getText();
-					KDController.provideUserProfile(input4);
+	
+				
+					for(int j = 0; j < KDQuery.getUsers().size(); j++) {
+						
+						if (KDQuery.getUsers().get(i).getName().equalsIgnoreCase(input)) {
+							
+							i = j;	
+						}
+		
+					}
+					// assign player to user based of user list search
+					KDController.assignPlayerToUser(KingdominoApplication.getKingdomino().getCurrentGame().getPlayer(1), KDQuery.getUsers().get(i));
 				}
-				if(KingdominoApplication.getKingdomino().getCurrentGame().getNumberOfPlayers() == 3) {
+				/*if(KingdominoApplication.getKingdomino().getCurrentGame().getNumberOfPlayers() == 3) {
 					String input = insertName.getText();
 					KDController.provideUserProfile(input);
 					String input2 = insertName2.getText();
@@ -111,16 +120,9 @@ public class KingUI_PlayerCreate extends JFrame {
 					KDController.provideUserProfile(input);
 					String input2 = insertName2.getText();
 					KDController.provideUserProfile(input2);
-				}
+				}*/
 			}
 		});
-		
-		// Add
-		//c.add(back);
-		//c.add(done);
-		//c.add(insertName);
-		//c.add(name);
-		//c.add(label);
 		
 		JPanel p2 = new JPanel();
 		GroupLayout layout = new GroupLayout(p2);
@@ -134,7 +136,7 @@ public class KingUI_PlayerCreate extends JFrame {
 			layout.setHorizontalGroup(
 					layout.createSequentialGroup()
 					.addComponent(back)
-					.addGap(400)
+					.addGap(340)
 					.addGroup(layout.createSequentialGroup())
 					.addGroup(layout.createSequentialGroup()
 					.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
@@ -143,17 +145,11 @@ public class KingUI_PlayerCreate extends JFrame {
 							.addGroup(layout.createSequentialGroup()
 									.addComponent(insertName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
 									.addGap(10)
-									.addComponent(insertName2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
-									.addGap(10)
-									.addComponent(insertName3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
-									.addGap(10)
-									.addComponent(insertName4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
 								)
 							.addComponent(done)
 							)
 					)
 			);
-			
 			layout.setVerticalGroup(
 					layout.createParallelGroup()
 					.addComponent(back)
@@ -166,11 +162,6 @@ public class KingUI_PlayerCreate extends JFrame {
 							.addGroup(layout.createParallelGroup()
 									.addComponent(insertName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
 									.addGap(10)
-									.addComponent(insertName2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
-									.addGap(10)
-									.addComponent(insertName3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
-									.addGap(10)
-									.addComponent(insertName4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE )
 							)
 							.addComponent(done)
 							)
@@ -178,7 +169,6 @@ public class KingUI_PlayerCreate extends JFrame {
 			);
 		
 		}
-		
 		KingUI_Main.contPanel.add(p2, "3");
 	}
 }

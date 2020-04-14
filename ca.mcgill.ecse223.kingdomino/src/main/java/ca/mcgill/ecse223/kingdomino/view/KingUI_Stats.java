@@ -1,6 +1,7 @@
 package ca.mcgill.ecse223.kingdomino.view;
 
 import java.awt.CardLayout;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
@@ -11,6 +12,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
@@ -18,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -26,6 +29,7 @@ import javax.swing.border.Border;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
+import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
 import ca.mcgill.ecse223.kingdomino.model.User;
 
 public class KingUI_Stats extends JFrame {
@@ -60,41 +64,28 @@ public class KingUI_Stats extends JFrame {
 		stats.setFont(new Font("Times", Font.BOLD, 55));
 		
 		// User names
-		ArrayList users = new ArrayList<String>();
-		String name;
-		try {
-			File newFile = new File("usernames.txt");
-			FileReader get = new FileReader(newFile.getAbsolutePath());
-			BufferedReader buff = new BufferedReader(get);
-			while((name = buff.readLine()) != null) {
-				users.add(name);
-			} get.close();
-		} catch(IOException exception) {
-			exception.printStackTrace();
-		}
-		combo = new JComboBox(users.toArray());
-		combo.setEditable(true);
-		
-		// search button
-		search = new JButton("Search Stats");
+		List<User> users = KDQuery.getUsers();
+		JList list = new JList(users.toArray());
+		list.setFont(new Font("Times", Font.BOLD, 16));
+		JTextField input = new JTextField();
+		search = new JButton("Search");
 		search.setFont(new Font("Times", Font.BOLD, 16));
 		search.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String input = combo.getSelectedItem().toString();
-				User user = User.getWithName(input);
+				String name = input.getText();
+				User user = KDController.getUserByName(name);
 				wins = user.getWonGames();
 				played = user.getPlayedGames();
-				loss = played - wins;
+				loss = played-wins;
 				ratio = wins/played;
 			}
 		});
 		
-		borderTwo = BorderFactory.createLineBorder(Color.BLACK, 3);
+		borderTwo = BorderFactory.createLineBorder(Color.BLACK);
 		statsTwo = new JLabel("User info", SwingConstants.CENTER);
 		statsTwo.setText("<html> No. Games Won: "+wins
 						+ "<br/><br/><br/>No. Games Lost: "+loss
 						+ "<br/><br/><br/>No. Games Played: "+played
-						+ "<br/><br/><br/>No. Games Tied: "
 						+ "<br/><br/><br/>Win Ratio: "+ratio +"<html>");
 		statsTwo.setBorder(borderTwo);
 		statsTwo.setFont(new Font("Times", Font.BOLD, 25));
@@ -119,7 +110,7 @@ public class KingUI_Stats extends JFrame {
 				.addGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 						.addComponent(stats)
-						.addComponent(combo, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE )
+						.addComponent(input, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE )
 						.addGap(50)
 						.addComponent(search)
 						.addGroup(layout.createSequentialGroup()
@@ -137,7 +128,7 @@ public class KingUI_Stats extends JFrame {
 				.addGroup(layout.createSequentialGroup()
 						.addGap(50)
 						.addComponent(stats)
-						.addComponent(combo,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE  )
+						.addComponent(input,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE  )
 						.addGap(50)
 						.addComponent(search)
 						.addGap(50)
