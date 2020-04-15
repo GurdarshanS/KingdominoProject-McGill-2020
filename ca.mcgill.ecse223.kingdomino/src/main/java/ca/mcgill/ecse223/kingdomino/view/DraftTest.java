@@ -60,7 +60,6 @@ public class DraftTest {
 		JButton choose = new JButton("Choose #1");
 		choose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Player player = KingdominoApplication.getKingdomino()
 				Rotation r = new Rotation(Player p1, int x, int y, DominoInKingdom dom);
 				c1.show(contPanel, "2");
 			}
@@ -149,7 +148,8 @@ public class DraftTest {
 						.addComponent(command)
 						.addGroup(layout.createSequentialGroup()
 								.addComponent(dom1, 200, 200, 200)
-								.addGap(10)
+								.addGap(10))
+								.addGroup(layout.createSequentialGroup()
 								.addComponent(dom2, 200, 200, 200)
 								.addGap(10)
 								.addComponent(dom3, 200, 200, 200)
@@ -179,7 +179,6 @@ public class DraftTest {
 								)
 						)
 				)
-
 		);
 		
 		layout.setVerticalGroup(
@@ -223,7 +222,6 @@ public class DraftTest {
 							.addComponent(choose4)
 							)
 					)
-					
 				)
 		);
 	}
