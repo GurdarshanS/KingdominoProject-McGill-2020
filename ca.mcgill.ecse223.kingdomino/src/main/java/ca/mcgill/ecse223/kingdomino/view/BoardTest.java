@@ -19,7 +19,10 @@ public class BoardTest extends JFrame {
 		
 	public static void main(String[] args) {
 		
-		Kingdomino kd = KDController.loadGame("regularPlayStart2.data");
+		Kingdomino kd = KDController.loadGame("regularPlayStart.data");
+		System.out.println(kd.getStateMachine().getGamestatusFullName());
+		KDController.nextSelectionReadySM();
+		KDController.draftReadySM();
 		KDController.manipulateFirstSM(-3, 3, "right");
 		
 		 List<KingdomTerritory> t1 =
@@ -29,7 +32,7 @@ public class BoardTest extends JFrame {
 		 int x = dom.getX(); 
 		 int y = dom.getY(); 
 		 
-		 Rotation2 r1 = new Rotation2(player, x, y, dom); 
+		 PlayingUI r1 = new PlayingUI(player, x, y, dom); 
 		 r1.frameR.setVisible(true);
 		
 		 System.out.println(kd.getStateMachine().getGamestatusFullName());
