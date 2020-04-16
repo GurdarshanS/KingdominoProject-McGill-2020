@@ -7,11 +7,13 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
@@ -26,6 +28,7 @@ import ca.mcgill.ecse223.kingdomino.model.Draft;
 import ca.mcgill.ecse223.kingdomino.model.Kingdomino;
 import ca.mcgill.ecse223.kingdomino.model.Player;
 import ca.mcgill.ecse223.kingdomino.model.TerrainType;
+import ca.mcgill.ecse223.kingdomino.model.Player.PlayerColor;
 
 public class StartPlayingUI {
 
@@ -36,6 +39,7 @@ public class StartPlayingUI {
 	
 	JPanel display = new JPanel(new BorderLayout());
 	JPanel start = new JPanel();
+	JPanel score = new JPanel();
 	
 	JButton playing = new JButton("READY");
 	
@@ -44,6 +48,19 @@ public class StartPlayingUI {
 	JButton choose3 = new JButton("Choose #3");
 	JButton choose4 = new JButton("Choose #4");
 	
+	JLabel green = new JLabel("Player GREEN");
+	JLabel blue = new JLabel("Player BLUE");
+	JLabel yellow = new JLabel("Player YELLOW");
+	JLabel pink = new JLabel("Player PINK");
+	
+	JLabel order = new JLabel("Player Order:  ");
+	
+	JLabel turnNum;
+	JLabel greenP;
+	JLabel blueP;
+	JLabel yellowP;
+	JLabel pinkP;
+
 	public StartPlayingUI() {
 		
 		frameR.setSize(1350, 850);
@@ -94,6 +111,7 @@ public class StartPlayingUI {
 		playing.setFont(new Font("Times", Font.BOLD, 100));
 		playing.setForeground(Color.BLACK);
 		playing.setBackground(Color.PINK);
+		
 		start.add(playing);
 		
 		JPanel[] firstDomino = new JPanel[2];
@@ -190,9 +208,15 @@ public class StartPlayingUI {
 			dom4.add(fourth[i]);
 		}
 		
+		order.setFont(new Font("Times", Font.BOLD, 20));
+		score.add(order);
+		displayPlayerOrder(score);
+		displayTurnNumber(score);
+		
 		display.add(draft);
 		frameR.add(display, BorderLayout.WEST);
 		frameR.add(start, BorderLayout.CENTER);
+		frameR.add(score, BorderLayout.NORTH);
 		
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
@@ -395,5 +419,46 @@ public class StartPlayingUI {
 			c1 = new Color(255,204,0);
 		}
 		return c1;
+	}
+	
+	private void displayPlayerOrder(JPanel panel) {
+		
+		List<Player> playerOrder = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers();
+		
+		greenP = new JLabel("GREEN  ");
+		greenP.setFont(new Font("Times", Font.BOLD, 20));
+		greenP.setForeground(Color.GREEN);
+		
+		pinkP = new JLabel("PINK  ");
+		pinkP.setFont(new Font("Times", Font.BOLD, 20));
+		pinkP.setForeground(Color.PINK);
+		
+		blueP = new JLabel("BLUE  ");
+		blueP.setFont(new Font("Times", Font.BOLD, 20));
+		blueP.setForeground(Color.BLUE);
+		
+		yellowP = new JLabel("YELLOW  ");
+		yellowP.setFont(new Font("Times", Font.BOLD, 20));
+		yellowP.setForeground(new Color(255,215,15));
+		
+		for(Player player : playerOrder) {
+			
+			if(player.getColor().equals(PlayerColor.Blue)) panel.add(blueP);
+			else if(player.getColor().equals(PlayerColor.Green)) panel.add(greenP);
+			else if(player.getColor().equals(PlayerColor.Pink)) panel.add(pinkP);
+			else panel.add(yellowP);
+			
+		}
+		
+	}
+
+	private void displayTurnNumber(JPanel panel) {
+		
+		int turn = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer().getKingdom().getTerritories().size()-1;
+		
+		turnNum = new JLabel("         Turn: " + turn +"/12");
+		turnNum.setFont(new Font("Times", Font.BOLD, 20));
+		panel.add(turnNum);
+		
 	}
 }

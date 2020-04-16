@@ -388,6 +388,7 @@ public class PlayingUI extends JFrame{
 					if(KDQuery.lastPlayerInTurn(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer())) {
 						
 						nextRound.setEnabled(true);
+						nextRound.setBackground(Color.GREEN);
 						
 					}
 					
