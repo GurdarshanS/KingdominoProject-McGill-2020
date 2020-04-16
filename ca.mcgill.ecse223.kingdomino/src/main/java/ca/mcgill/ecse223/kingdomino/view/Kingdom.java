@@ -36,6 +36,7 @@ public class Kingdom extends JFrame {
 	
 	public static void initKingdom() {
 		
+		Boolean dominoExist = false;
 		Border border = BorderFactory.createLineBorder(Color.DARK_GRAY);
 		int gap = 40;
 		//Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
@@ -217,16 +218,22 @@ public class Kingdom extends JFrame {
 		for(int i=0; i<81; i++) {
 			
 			panels[i] = new JPanel();
-			panels[i].setBackground(Color.WHITE);
+			
+			if (dominoExist) {
+				panels[i].setBackground(Color.GRAY);
+			}
+			else {
+				panels[i].setBackground(Color.WHITE);
+			}
+			
 			panels[i].setBorder(border);
 			p3.add(panels[i]);
 		}
+		panels[40].setBackground(Color.black);
 		
 		frame.add(p3, BorderLayout.CENTER);
-		
 		frame.add(p, BorderLayout.NORTH);
 		frame.add(p1, BorderLayout.WEST);
-		//frame.add(p2, BorderLayout.EAST);
 		frame.setVisible(true);
 	} 
 }
