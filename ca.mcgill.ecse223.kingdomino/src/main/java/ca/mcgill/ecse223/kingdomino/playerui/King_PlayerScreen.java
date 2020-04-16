@@ -45,7 +45,7 @@ public class King_PlayerScreen extends JFrame {
 		
 		Kingdomino kd = KDController.loadGame(null);
 		
-		this.setSize(500,400);
+		this.setSize(1350,850);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setTitle("Kingdomino");
 		
@@ -175,9 +175,10 @@ public class King_PlayerScreen extends JFrame {
 			
 			browse1.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent evt) {
+
+					 new AssignPlayer_Screen("Blue");
 					
-					//pop up 
-					Player playerBlue = KDQuery.getPlayerByColor("blue");
+					
 				}
 	
 			});
@@ -190,7 +191,7 @@ public class King_PlayerScreen extends JFrame {
 				
 				browse2.addActionListener(new java.awt.event.ActionListener() {
 					public void actionPerformed(java.awt.event.ActionEvent evt) {
-						System.out.println("browse profiles2 initiated");
+						new AssignPlayer_Screen("Pink");
 					}
 		
 				});
@@ -203,7 +204,7 @@ public class King_PlayerScreen extends JFrame {
 					
 					browse3.addActionListener(new java.awt.event.ActionListener() {
 						public void actionPerformed(java.awt.event.ActionEvent evt) {
-							System.out.println("browse profiles3 initiated");
+							new AssignPlayer_Screen("Yellow");
 						}
 			
 					});
@@ -216,7 +217,7 @@ public class King_PlayerScreen extends JFrame {
 						
 						browse4.addActionListener(new java.awt.event.ActionListener() {
 							public void actionPerformed(java.awt.event.ActionEvent evt) {
-								System.out.println("browse profiles4 initiated");
+								new AssignPlayer_Screen("Green");
 							}
 				
 						});
