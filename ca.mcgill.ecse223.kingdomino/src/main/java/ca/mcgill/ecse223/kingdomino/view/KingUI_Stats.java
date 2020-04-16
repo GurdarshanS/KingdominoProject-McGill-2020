@@ -61,9 +61,9 @@ public class KingUI_Stats extends JFrame {
 				ratio = wins/played;
 			}
 			DecimalFormat df = new DecimalFormat("#.##");
-			String row = String.format("%1$-20s \t\tGames Won: %2$-15d \t\tGames Lost: %3$-15d \t\tGames Played: %4$-15d \t\tWin Ratio: %5$-5s \n",
+			String row = String.format("Users: %1$-20s \t\t Won: %2$-15d \t\t Lost: %3$-15d \t\t Played: %4$-15d \t\t Ratio: %5$-5s \n",
 										u.getName(), wins, loss, played, df.format(ratio));
-	
+			
 			sList.add(row);
 		}
 		
@@ -97,7 +97,7 @@ public class KingUI_Stats extends JFrame {
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
 				.addComponent(back)
-				.addGap(300)
+				.addGap(270)
 				.addGroup(layout.createSequentialGroup())
 				.addGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
@@ -116,7 +116,7 @@ public class KingUI_Stats extends JFrame {
 				.addGroup(layout.createParallelGroup())
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 				.addGroup(layout.createSequentialGroup()
-						.addGap(100)
+						.addGap(150)
 						.addComponent(stats)
 						.addComponent(list)
 						//.addComponent(input,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE  )

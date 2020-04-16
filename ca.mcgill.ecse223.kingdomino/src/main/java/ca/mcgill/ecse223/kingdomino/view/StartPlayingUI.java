@@ -38,7 +38,7 @@ public class StartPlayingUI {
 	Draft currentDraft = KingdominoApplication.getKingdomino().getCurrentGame().getCurrentDraft();
 	
 	JPanel display = new JPanel(new BorderLayout());
-	JPanel start = new JPanel();
+	JPanel start = new JPanel(new BorderLayout());
 	JPanel score = new JPanel();
 	
 	JButton playing = new JButton("READY");
@@ -116,7 +116,7 @@ public class StartPlayingUI {
 		playing.setForeground(Color.BLACK);
 		playing.setBackground(Color.PINK);
 		
-		start.add(playing);
+		start.add(playing, BorderLayout.CENTER);
 		
 		JPanel[] firstDomino = new JPanel[2];
 		for(int i=0; i<2; i++) {
@@ -248,6 +248,7 @@ public class StartPlayingUI {
 								.addGap(10))
 						.addGroup(layout.createSequentialGroup()
 								.addComponent(choose4))
+								
 						.addGroup(layout.createSequentialGroup()
 								.addComponent(browse)
 						)
@@ -289,7 +290,8 @@ public class StartPlayingUI {
 							.addComponent(dom4, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addGap(75))
 					.addGroup(layout.createParallelGroup()
-							.addComponent(choose4))
+							.addComponent(choose4)
+							.addGap(75))
 					.addGroup(layout.createParallelGroup()
 							.addComponent(browse)
 					)

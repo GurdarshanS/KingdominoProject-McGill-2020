@@ -19,7 +19,7 @@ public class BoardTest extends JFrame {
 		
 	public static void main(String[] args) {
 		
-		Kingdomino kd = KDController.loadGame("tryingBoard.data");
+		Kingdomino kd = KDController.loadGame("almostEndGame.data");
 		boolean used = KDController.manipulateFirstSM(-3, 3, "up");
 		List<KingdomTerritory> t1 = kd.getCurrentGame().getNextPlayer().getKingdom().getTerritories();
 		Player player = kd.getCurrentGame().getNextPlayer();
