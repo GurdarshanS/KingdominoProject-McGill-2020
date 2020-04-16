@@ -100,7 +100,9 @@ public class KingUI_Main {
 		
 		search.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				//KDController.loadGame();
+				KDController.loadGame(null);
+				KingUI_Stats.initComponents();
+				c1.show(contPanel, "6");
 			}
 		});
 	}

@@ -35,8 +35,6 @@ public class AssignPlayer_Screen extends JFrame {
 		//Kingdomino kd = KDController.loadGame(null);
 		
 		List<String> users = KDQuery.getAvailableUserNamesThisGame();
-		
-		
 		JList list = new JList(users.toArray());
 		list.setFont(new Font("Times", Font.BOLD, 16));
 		

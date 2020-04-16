@@ -45,15 +45,30 @@ public class KingUI_Stats extends JFrame {
 		 JLabel statsTwo;
 		 Border border;
 		 JButton back, search;
-		 JComboBox combo;
 		 Border borderTwo;
 	
+		List<User> users = KingdominoApplication.getKingdomino().getUsers();
+		List<String> sList = new ArrayList<String>();
+		for(User u: users) {
+			wins = u.getWonGames();
+			played = u.getPlayedGames();
+			loss = played-wins;
+			//ratio = wins/played;
+			String row = String.format("%1$-20s Games Won: %2$-5d Games Lost: %3$-5d Games Played: %4$-5d Win Ratio: %5$-5f",
+										u.getName(), wins, loss, played, ratio);
+			sList.add(row);
+		}
+		
+		JList list = new JList(sList.toArray());
+		list.setFont(new Font("Times", Font.BOLD, 16));
+		
 		// back button
 		back = new JButton("Back");
 		back.setFont(new Font("Times", Font.BOLD, 16));
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				KingUI_Main.c1.show(KingUI_Main.contPanel, "3");
+				
+				KingUI_Main.c1.show(KingUI_Main.contPanel, "1");
 			}
 		});
 		// box that says stats
@@ -63,56 +78,26 @@ public class KingUI_Stats extends JFrame {
 		stats.setBorder(border);
 		stats.setFont(new Font("Times", Font.BOLD, 55));
 		
-		// User names
-		List<User> users = KDQuery.getUsers();
-		JList list = new JList(users.toArray());
-		list.setFont(new Font("Times", Font.BOLD, 16));
-		JTextField input = new JTextField();
-		search = new JButton("Search");
-		search.setFont(new Font("Times", Font.BOLD, 16));
-		search.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String name = input.getText();
-				User user = KDController.getUserByName(name);
-				wins = user.getWonGames();
-				played = user.getPlayedGames();
-				loss = played-wins;
-				ratio = wins/played;
-			}
-		});
 		
 		borderTwo = BorderFactory.createLineBorder(Color.BLACK);
-		statsTwo = new JLabel("User info", SwingConstants.CENTER);
-		statsTwo.setText("<html> No. Games Won: "+wins
-						+ "<br/><br/><br/>No. Games Lost: "+loss
-						+ "<br/><br/><br/>No. Games Played: "+played
-						+ "<br/><br/><br/>Win Ratio: "+ratio +"<html>");
-		statsTwo.setBorder(borderTwo);
-		statsTwo.setFont(new Font("Times", Font.BOLD, 25));
-	
-		// Add
-		//c.add(back);
-		//c.add(stats);
-		//c.add(statsTwo);
-		//c.add(combo);
-		//c.add(search);
 		JPanel p3 = new JPanel();
 		GroupLayout layout = new GroupLayout(p3);
 		p3.setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-		KingUI_Main.contPanel.add(p3, "4");
+		KingUI_Main.contPanel.add(p3, "6");
 		
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
 				.addComponent(back)
+				.addGap(300)
 				.addGroup(layout.createSequentialGroup())
 				.addGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 						.addComponent(stats)
-						.addComponent(input, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE )
+						.addComponent(list)
+						//.addComponent(input, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE )
 						.addGap(50)
-						.addComponent(search)
 						.addGroup(layout.createSequentialGroup()
 								.addComponent(statsTwo)
 						)
@@ -126,11 +111,10 @@ public class KingUI_Stats extends JFrame {
 				.addGroup(layout.createParallelGroup())
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 				.addGroup(layout.createSequentialGroup()
-						.addGap(50)
+						.addGap(100)
 						.addComponent(stats)
-						.addComponent(input,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE  )
-						.addGap(50)
-						.addComponent(search)
+						.addComponent(list)
+						//.addComponent(input,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE  )
 						.addGap(50)
 						.addGroup(layout.createParallelGroup()
 								.addComponent(statsTwo)

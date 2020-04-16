@@ -75,6 +75,7 @@ public class KingUI_Settings extends JFrame{
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
 				.addComponent(back)
+				.addGap(400)
 				.addGroup(layout.createSequentialGroup())
 				.addGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
@@ -108,6 +109,7 @@ public class KingUI_Settings extends JFrame{
 				.addGroup(layout.createParallelGroup())
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 				.addGroup(layout.createSequentialGroup()
+					.addGap(250)
 					.addComponent(title)
 					.addComponent(players)
 					.addGroup(layout.createParallelGroup()
