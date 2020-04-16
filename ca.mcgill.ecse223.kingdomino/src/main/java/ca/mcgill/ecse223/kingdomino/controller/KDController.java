@@ -385,7 +385,7 @@ public class KDController {
 			return true;
 		}
 		else {
-			throw new IllegalArgumentException("player "+player.getColor().toString()+" is already assigned to user "+user.getName()+" in this game");
+			throw new IllegalArgumentException("player "+player.getColor().toString()+" is already assigned to user "+player.getUser().getName()+" in this game");
 		}
 	}
 

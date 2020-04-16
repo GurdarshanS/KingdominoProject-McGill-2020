@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.List;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
@@ -24,6 +26,8 @@ public class KingUI_Main {
 	public static JFrame frame = new JFrame("Kingdomino");
 	public static JPanel contPanel = new JPanel();
 	public static CardLayout c1 = new CardLayout();
+	public static int playerNum = 4;
+	public static ArrayList<String> bonusOptions = new ArrayList<String>();
 	
 	public static void main(String[] args) {
 		
@@ -45,7 +49,7 @@ public class KingUI_Main {
 		title.setBorder(blackline);
 		JButton start = new JButton("Start New Game");
 		JButton load = new JButton("Load Game");
-
+		JButton search = new JButton("Player Statistics");
 		
 		JPanel p1 = new JPanel();
 		JPanel p2 = new JPanel(new GridBagLayout());
@@ -66,6 +70,9 @@ public class KingUI_Main {
 		constraints.gridx = 0;
 		constraints.gridy = 1;
 		p2.add(load, constraints);
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		p2.add(search, constraints);
 		
 		p3.add(p1, BorderLayout.NORTH);
 		p3.add(p2);
@@ -78,7 +85,7 @@ public class KingUI_Main {
 		
 		start.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				KDController.initiateEmptyGame();
+				KDController.loadGame(null);
 				KingUI_Settings.initSettings();
 				c1.show(contPanel, "2");
 				
@@ -86,6 +93,12 @@ public class KingUI_Main {
 		});
 		
 		load.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				//KDController.loadGame();
+			}
+		});
+		
+		search.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				//KDController.loadGame();
 			}

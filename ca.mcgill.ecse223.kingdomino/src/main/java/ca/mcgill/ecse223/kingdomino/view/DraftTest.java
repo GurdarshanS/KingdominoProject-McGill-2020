@@ -60,28 +60,28 @@ public class DraftTest {
 		JButton choose = new JButton("Choose #1");
 		choose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Rotation r = new Rotation(Player p1, int x, int y, DominoInKingdom dom);
-				c1.show(contPanel, "2");
+				//Rotation r = new Rotation(Player p1, int x, int y, DominoInKingdom dom);
+				//c1.show(contPanel, "2");
 			}
 		});
 		JButton choose2 = new JButton("Choose #2");
 		choose2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Rotation r = new Rotation(Player p1, int x, int y, DominoInKingdom dom);
+				//Rotation r = new Rotation(Player p1, int x, int y, DominoInKingdom dom);
 				c1.show(contPanel, "2");
 			}
 		});
 		JButton choose3 = new JButton("Choose #3");
 		choose3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Rotation r = new Rotation(Player p1, int x, int y, DominoInKingdom dom);
+				//Rotation r = new Rotation(Player p1, int x, int y, DominoInKingdom dom);
 				c1.show(contPanel, "2");
 			}
 		});
 		JButton choose4 = new JButton("Choose #4");
 		choose4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Rotation r = new Rotation(Player p1, int x, int y, DominoInKingdom dom);
+				//Rotation r = new Rotation(Player p1, int x, int y, DominoInKingdom dom);
 				c1.show(contPanel, "2");
 			}
 		});

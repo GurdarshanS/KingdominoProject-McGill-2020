@@ -1,8 +1,7 @@
 package ca.mcgill.ecse223.kingdomino.view;
 
 import javax.swing.JLabel;
-
-
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
@@ -12,6 +11,9 @@ import javax.swing.border.Border;
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
+import ca.mcgill.ecse223.kingdomino.model.Player;
+import ca.mcgill.ecse223.kingdomino.model.Player.PlayerColor;
+import ca.mcgill.ecse223.kingdomino.model.User;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -33,12 +35,12 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class KingUI_PlayerCreate extends JFrame {
 	
-	public KingUI_PlayerCreate(){
+	public KingUI_PlayerCreate(String color){
 		
-		initComponents();
+		initComponents(color);
 		
 	}
-	public static void initComponents() {
+	public static void initComponents(String color) {
 		
 		// Layout Manager
 		//Container c =  getContentPane();
@@ -57,7 +59,8 @@ public class KingUI_PlayerCreate extends JFrame {
 		back.setFont(new Font("Times", Font.BOLD, 16));
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				KingUI_Main.c1.show(KingUI_Main.contPanel, "2");
+				King_PlayerScreen.initComponents();
+				KingUI_Main.c1.show(KingUI_Main.contPanel, "3");
 			}
 		});
 		// title
@@ -82,46 +85,49 @@ public class KingUI_PlayerCreate extends JFrame {
 		done.setFont(new Font("Times", Font.BOLD, 16));
 		done.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				KingUI_Stats.initComponents();
-				KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
-				
-				if(KingdominoApplication.getKingdomino().getCurrentGame().getNumberOfPlayers() == 4) {
-					int i = 0;
-					int i2 = 0;
-					int i3 = 0;
-					int i4 = 0;
-					// create profiles for these new players/users
 					String input = insertName.getText();
-					KDController.provideUserProfile(input);
-	
-				
-					for(int j = 0; j < KDQuery.getUsers().size(); j++) {
-						
-						if (KDQuery.getUsers().get(i).getName().equalsIgnoreCase(input)) {
-							
-							i = j;	
+					try {
+						KDController.provideUserProfile(input);
+						User u = KDController.getUserByName(input);
+						Player p = KDQuery.getPlayerByColor(color);
+						KDController.assignPlayerToUser(p, u);
+						for(Player p1: KingdominoApplication.getKingdomino().getCurrentGame().getPlayers()) {
+							if(p1.hasUser()) {
+								System.out.println(p1.getColor()+" "+p1.getUser().getName());
+							}
+							else {
+								System.out.println(p1.getColor()+" no user");
+							}
 						}
-		
+						if(color.equalsIgnoreCase("blue")) {
+							King_PlayerScreen.browse1.setEnabled(false);
+							King_PlayerScreen.createNew1.setEnabled(false);
+							King_PlayerScreen.nouser1.setEnabled(false);
+
+						}
+						if(color.equalsIgnoreCase("green")) {
+							King_PlayerScreen.browse4.setEnabled(false);
+							King_PlayerScreen.createNew4.setEnabled(false);
+							King_PlayerScreen.nouser4.setEnabled(false);
+
+						}
+						if(color.equalsIgnoreCase("pink")) {
+							King_PlayerScreen.browse2.setEnabled(false);
+							King_PlayerScreen.createNew2.setEnabled(false);
+							King_PlayerScreen.nouser2.setEnabled(false);
+
+						}
+						if(color.equalsIgnoreCase("yellow")) {
+							King_PlayerScreen.browse3.setEnabled(false);
+							King_PlayerScreen.createNew3.setEnabled(false);
+							King_PlayerScreen.nouser3.setEnabled(false);
+						}
+						King_PlayerScreen.initComponents();
+						KingUI_Main.c1.show(KingUI_Main.contPanel, "3");
+					}catch(Exception ex) {
+						JOptionPane.showMessageDialog(null,ex.getMessage());
 					}
-					// assign player to user based of user list search
-					KDController.assignPlayerToUser(KingdominoApplication.getKingdomino().getCurrentGame().getPlayer(1), KDQuery.getUsers().get(i));
 				}
-				/*if(KingdominoApplication.getKingdomino().getCurrentGame().getNumberOfPlayers() == 3) {
-					String input = insertName.getText();
-					KDController.provideUserProfile(input);
-					String input2 = insertName2.getText();
-					KDController.provideUserProfile(input2);
-					String input3 = insertName3.getText();
-					KDController.provideUserProfile(input3);
-				}
-				if(KingdominoApplication.getKingdomino().getCurrentGame().getNumberOfPlayers() == 2) {
-					String input = insertName.getText();
-					KDController.provideUserProfile(input);
-					String input2 = insertName2.getText();
-					KDController.provideUserProfile(input2);
-				}*/
-			}
 		});
 		
 		JPanel p2 = new JPanel();
@@ -129,9 +135,6 @@ public class KingUI_PlayerCreate extends JFrame {
 		p2.setLayout(layout);
 		layout.setAutoCreateGaps(true);
 		layout.setAutoCreateContainerGaps(true);
-
-		// I'm only doing this possibility since for now we only need 4 player mode
-		if(KingdominoApplication.getKingdomino().getCurrentGame().getNumberOfPlayers() == 4) {
 			
 			layout.setHorizontalGroup(
 					layout.createSequentialGroup()
@@ -167,8 +170,6 @@ public class KingUI_PlayerCreate extends JFrame {
 							)
 					)
 			);
-		
-		}
-		KingUI_Main.contPanel.add(p2, "3");
+		KingUI_Main.contPanel.add(p2, "4");
 	}
 }
