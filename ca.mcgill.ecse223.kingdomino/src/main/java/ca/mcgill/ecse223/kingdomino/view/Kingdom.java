@@ -1,7 +1,12 @@
 package ca.mcgill.ecse223.kingdomino.view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -29,6 +34,7 @@ public class Kingdom extends JFrame {
 	
 	public static void initKingdom() {
 		
+		int gap = 40;
 		//Player player = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
 		String player = "player_name";
 		
@@ -39,20 +45,30 @@ public class Kingdom extends JFrame {
 		
 		JLabel territory = new JLabel("Territory Score");
 		territory.setFont(new Font("Times", Font.BOLD, 50));
-		JLabel wheatScore = new JLabel("W");
+		JLabel wheatScore = new JLabel("4");
+		JPanel wheat = new JPanel(new GridLayout(1,1));
+		wheat.setBackground(Color.YELLOW);
 		wheatScore.setFont(new Font("Times", Font.BOLD, 50));
-		JLabel forestScore = new JLabel("F");
+		JLabel forestScore = new JLabel("0");
+		JPanel forest = new JPanel(new GridLayout(1,1));
+		forest.setBackground(Color.GREEN);
 		forestScore.setFont(new Font("Times", Font.BOLD, 50));
-		JLabel grassScore = new JLabel("G");
+		JLabel grassScore = new JLabel("15");
+		JPanel grass = new JPanel(new GridLayout(1,1));
+		grass.setBackground(Color.GREEN);
 		grassScore.setFont(new Font("Times", Font.BOLD, 50));
-		JLabel swampScore = new JLabel("S");
+		JLabel swampScore = new JLabel("7");
+		JPanel swamp = new JPanel(new GridLayout(1,1));
+		swamp.setBackground(Color.black);
 		swampScore.setFont(new Font("Times", Font.BOLD, 50));
-		JLabel lakeScore = new JLabel("L");
+		JLabel lakeScore = new JLabel("3");
+		JPanel lake = new JPanel(new GridLayout(1,1));
+		lake.setBackground(Color.BLUE);
 		lakeScore.setFont(new Font("Times", Font.BOLD, 50));
 		
 		JLabel kingdom = new JLabel("Kingdom Score");
 		kingdom.setFont(new Font("Times", Font.BOLD, 50));
-		JLabel kingdomScore = new JLabel("K");
+		JLabel kingdomScore = new JLabel("29");
 		kingdomScore.setFont(new Font("Times", Font.BOLD, 50));
 		
 		JLabel playerName = new JLabel(player+"'s Kingdom");
@@ -67,7 +83,7 @@ public class Kingdom extends JFrame {
 			}
 		});
 		
-		JButton next = new JButton("View next player's kingdom.");
+		JButton next = new JButton("View Next Player's Kingdom");
 		next.setFont(new Font("Times", Font.BOLD, 16));
 		next.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -75,12 +91,41 @@ public class Kingdom extends JFrame {
 				//Kingdom.initKingdom();
 			}
 		});
+		JPanel p2 = new JPanel(new GridBagLayout());
 		
 		JPanel p = new JPanel();
+		GroupLayout group = new GroupLayout(p);
+		group.setAutoCreateContainerGaps(true);
+		group.setAutoCreateGaps(true);
 		
-		p.add(back);
-		p.add(playerName);
-		p.add(next);
+		group.setHorizontalGroup(
+				group.createSequentialGroup()
+				.addGroup(group.createSequentialGroup())
+				.addGroup(group.createSequentialGroup()
+				.addGroup(group.createParallelGroup(GroupLayout.Alignment.CENTER)						
+						.addGroup(group.createSequentialGroup()
+								.addComponent(back)
+								.addComponent(playerName)
+								.addComponent(next)
+								)
+						)
+				)
+		);
+		
+		group.setVerticalGroup(
+				group.createParallelGroup()
+				.addGroup(group.createParallelGroup())
+				.addGroup(group.createParallelGroup(GroupLayout.Alignment.CENTER)
+				.addGroup(group.createSequentialGroup()						
+						.addGroup(group.createParallelGroup()
+								.addComponent(back)								
+								.addComponent(playerName)
+								.addComponent(next)								
+								)
+						)
+				)
+		);
+		p.setLayout(group);		
 		
 		JPanel p1 = new JPanel();
 		GroupLayout group1 = new GroupLayout(p1);
@@ -94,21 +139,29 @@ public class Kingdom extends JFrame {
 				.addGroup(group1.createParallelGroup(GroupLayout.Alignment.CENTER)
 						.addComponent(territory)
 						.addGroup(group1.createSequentialGroup()
-						
-								
+								.addComponent(wheat)
+								.addComponent(forest)
+								.addComponent(grass)
+								.addComponent(swamp)
+								.addComponent(lake)
 						)
 						.addGroup(group1.createSequentialGroup()
 								.addComponent(wheatScore)
+								.addGap(gap)
 								.addComponent(forestScore)
+								.addGap(gap)
 								.addComponent(grassScore)
+								.addGap(gap)
 								.addComponent(swampScore)
+								.addGap(gap)
 								.addComponent(lakeScore)
-						)
+								)
+						.addComponent(p2)
 						.addComponent(kingdom)
 						.addComponent(kingdomScore)
+						.addComponent(p2)
 						)
 				)
-
 		);
 		
 		group1.setVerticalGroup(
@@ -118,26 +171,35 @@ public class Kingdom extends JFrame {
 				.addGroup(group1.createSequentialGroup()
 						.addComponent(territory)
 						.addGroup(group1.createParallelGroup()
-						
-								
+								.addComponent(wheat)
+								.addComponent(forest)
+								.addComponent(grass)
+								.addComponent(swamp)
+								.addComponent(lake)
 						)
 						.addGroup(group1.createParallelGroup()
 								.addComponent(wheatScore)
+								.addGap(gap)
 								.addComponent(forestScore)
+								.addGap(gap)
 								.addComponent(grassScore)
+								.addGap(gap)
 								.addComponent(swampScore)
+								.addGap(gap)
 								.addComponent(lakeScore)
-						)
+								)
+						.addComponent(p2)
 						.addComponent(kingdom)
 						.addComponent(kingdomScore)
+						.addComponent(p2)
 						)
 				)
-
 		);
-		
 		p1.setLayout(group1);
+		
 		frame.add(p, BorderLayout.NORTH);
 		frame.add(p1, BorderLayout.WEST);
+		//frame.add(p2, BorderLayout.EAST);
 		frame.setVisible(true);
 	}
 }
