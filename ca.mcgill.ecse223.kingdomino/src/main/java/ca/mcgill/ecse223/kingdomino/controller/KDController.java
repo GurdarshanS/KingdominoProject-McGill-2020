@@ -385,7 +385,7 @@ public class KDController {
 			return true;
 		}
 		else {
-			throw new IllegalArgumentException("player "+player.getColor().toString()+" is already assigned to user "+player.getUser().getName()+" in this game");
+			throw new IllegalArgumentException("player "+player.getColor().toString()+" is already assigned to user "+user.getName()+" in this game");
 		}
 	}
 
@@ -969,6 +969,9 @@ public class KDController {
 		
 		int xPosPrevious = dInKingdom.getX();
 		int yPosPrevious = dInKingdom.getY();
+		
+		System.out.println("8     " + dInKingdom.getX() + "  " + dInKingdom.getY());
+		
 		DominoStatus prevStatus=dInKingdom.getDomino().getStatus();
 
 		if(movement.equalsIgnoreCase("Right")) dInKingdom.setX(xPosPrevious + 1);

@@ -300,19 +300,16 @@ public class King_PlayerScreen extends JFrame {
 				
 						});
 				
-				done.addActionListener(new java.awt.event.ActionListener() {
-						public void actionPerformed(java.awt.event.ActionEvent evt) {
-						
-							KDController.saveGame(null, true);
-							for(Player p : KingdominoApplication.getKingdomino().getCurrentGame().getPlayers() ) {
-								if(p.hasUser()) {
-									System.out.println(p.getColor()+" "+p.getUser().getName());
-								}
-								if(!p.hasUser()) {
-									System.out.println(p.getColor()+" noo");
-								}
-							}
-							System.out.println("Back");
+						done.addActionListener(new java.awt.event.ActionListener() {
+							public void actionPerformed(java.awt.event.ActionEvent evt) {
+							
+								KDController.saveGame(null, true);
+								KingdominoApplication.getStateMachine();
+								KDController.draftReadySM();
+								
+								new StartPlayingUI();
+								KingUI_Main.frame.dispose();
+								System.out.println("Back");
 						}
 				});
 		

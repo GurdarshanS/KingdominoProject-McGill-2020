@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,18 +54,24 @@ public class KingUI_Stats extends JFrame {
 			wins = u.getWonGames();
 			played = u.getPlayedGames();
 			loss = played-wins;
-			//ratio = wins/played;
-			String row = String.format("%1$-20s Games Won: %2$-5d Games Lost: %3$-5d Games Played: %4$-5d Win Ratio: %5$-5f",
-										u.getName(), wins, loss, played, ratio);
+			if(played==0) {
+				ratio = 0;
+			}
+			else {
+				ratio = wins/played;
+			}
+			DecimalFormat df = new DecimalFormat("#.##");
+			String row = String.format("%1$-20s \t\tGames Won: %2$-15d \t\tGames Lost: %3$-15d \t\tGames Played: %4$-15d \t\tWin Ratio: %5$-5s \n",
+										u.getName(), wins, loss, played, df.format(ratio));
+	
 			sList.add(row);
 		}
 		
 		JList list = new JList(sList.toArray());
-		list.setFont(new Font("Times", Font.BOLD, 16));
+		list.setFont(new Font("Times", Font.PLAIN, 16));
 		
 		// back button
 		back = new JButton("Back");
-		back.setFont(new Font("Times", Font.BOLD, 16));
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -98,9 +105,7 @@ public class KingUI_Stats extends JFrame {
 						.addComponent(list)
 						//.addComponent(input, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE )
 						.addGap(50)
-						.addGroup(layout.createSequentialGroup()
-								.addComponent(statsTwo)
-						)
+						
 						)
 				)
 		);
@@ -116,9 +121,6 @@ public class KingUI_Stats extends JFrame {
 						.addComponent(list)
 						//.addComponent(input,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE  )
 						.addGap(50)
-						.addGroup(layout.createParallelGroup()
-								.addComponent(statsTwo)
-						)
 						)
 				)
 		);
