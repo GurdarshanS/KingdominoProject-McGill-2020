@@ -437,6 +437,7 @@ public class KDQuery {
 		if (dInK.getDomino().getStatus().equals(DominoStatus.CorrectlyPreplaced)) {
 			return true;
 		}
+		
 		List<List<Integer>> freeCoords=KDQuery.getValidFreeCoordinates(player);
 		if (freeCoords.size()==0) {
 			return false;
@@ -447,7 +448,6 @@ public class KDQuery {
 		DominoInKingdom.DirectionKind prevD=dInK.getDirection();
 		Domino.DominoStatus prevStatus=dInK.getDomino().getStatus();
 		
-		
 		for (int j=0;j<freeCoords.size();j++) {
 			
 			List<Integer> coord=freeCoords.get(j);
@@ -455,6 +455,10 @@ public class KDQuery {
 			dInK.setY(coord.get(1));
 			
 			if (verifyDominoInKingdom(player,dInK)) {
+				dInK.setX(prevX);
+				dInK.setY(prevY);
+				dInK.setDirection(prevD);
+				dInK.getDomino().setStatus(prevStatus);
 				return true;
 			}
 			

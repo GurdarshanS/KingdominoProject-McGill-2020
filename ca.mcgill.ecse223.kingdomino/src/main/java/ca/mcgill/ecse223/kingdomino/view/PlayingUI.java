@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
@@ -24,7 +25,6 @@ import javax.swing.border.Border;
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
-import ca.mcgill.ecse223.kingdomino.controller.View;
 import ca.mcgill.ecse223.kingdomino.model.Castle;
 import ca.mcgill.ecse223.kingdomino.model.Domino;
 import ca.mcgill.ecse223.kingdomino.model.Domino.DominoStatus;
@@ -46,6 +46,7 @@ public class PlayingUI extends JFrame{
 	private int RightId = 0;
 
 	Border line = BorderFactory.createLineBorder(Color.black);
+	JPanel display = new JPanel(new BorderLayout());
 	
 	JButton rotateR = new JButton("Rotate Clockwise");
 	JButton rotateL = new JButton("Rotate CounterClockwise");
@@ -75,10 +76,18 @@ public class PlayingUI extends JFrame{
 	JLabel yellow = new JLabel("Player YELLOW");
 	JLabel pink = new JLabel("Player PINK");
 	
+	JLabel order = new JLabel("Player Order:  ");
+	
 	Draft currentDraft = KingdominoApplication.getKingdomino().getCurrentGame().getCurrentDraft();
 	
 	JPanel score = new JPanel();
 	JLabel scoreOfPlayer;
+	
+	JLabel turnNum;
+	JLabel greenP;
+	JLabel blueP;
+	JLabel yellowP;
+	JLabel pinkP;
 	
 	JButton lookKingdom1 = new JButton("Look at Blue's Kingdom");
 	JButton lookKingdom2 = new JButton("Look at Pink's Kingdom");
@@ -92,7 +101,8 @@ public class PlayingUI extends JFrame{
 
 		frameR.setSize(1350, 850);
 		frameR.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-	
+		frameR.setLocationRelativeTo(null);
+		
 		drawInitialKingdom(p1);
 		drawNewDomino(p1,x,y,dom);
 	}
@@ -102,7 +112,6 @@ public class PlayingUI extends JFrame{
 		Border blackline = BorderFactory.createLineBorder(Color.DARK_GRAY);
 
 		JPanel board = new JPanel(new GridLayout(9,9));
-		JPanel display = new JPanel(new BorderLayout());
 		JPanel buttons = new JPanel();
 		JPanel draft = new JPanel();		
 		
@@ -155,8 +164,6 @@ public class PlayingUI extends JFrame{
 			firstDomino[i] = new JPanel();
 			
 			Domino d1 = currentDraft.getIdSortedDomino(0);
-			System.out.println(d1.getLeftTile() + "    " + d1.getRightTile() + "    " + d1.getLeftCrown() + "    " + d1.getRightCrown() + "    " + d1.getId());
-			View.printDraft(KingdominoApplication.getKingdomino());
 			
 			if(i == 0) {
 				
@@ -251,6 +258,7 @@ public class PlayingUI extends JFrame{
 		choose3.setEnabled(false);
 		choose4.setEnabled(false);
 		nextRound.setEnabled(false);
+		discard.setEnabled(false);
 
 		if(p1.getColor().equals(PlayerColor.Green)) {
 			green.setFont(new Font("Times", Font.BOLD, 20));
@@ -276,10 +284,15 @@ public class PlayingUI extends JFrame{
 		int playerScore = p1.getTotalScore();
 		String s = String.format("%1$-5s", playerScore); 
 		
-		scoreOfPlayer = new JLabel("                                      Score: " + s);
+		scoreOfPlayer = new JLabel("                 Score: " + s + "            ");
 		scoreOfPlayer.setFont(new Font("Times", Font.BOLD, 20));
 		
 		score.add(scoreOfPlayer);
+		
+		order.setFont(new Font("Times", Font.BOLD, 20));
+		score.add(order);
+		displayPlayerOrder(score);
+		displayTurnNumber(score);
 		
 		display.add(board);
 		display.add(buttons, BorderLayout.SOUTH);
@@ -367,8 +380,7 @@ public class PlayingUI extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				
 				boolean chosen = KDController.chooseSM(currentDraft.getIdSortedDomino(0));
-				View.printDraft(KingdominoApplication.getKingdomino());
-				
+			
 				if(chosen) {
 					
 					choose.setEnabled(false);
@@ -381,14 +393,13 @@ public class PlayingUI extends JFrame{
 					
 					else {
 						
-					
 						frameR.dispose();
 						
 						KDController.manipulateNextSM(-3, 3, "right");
 
 						Player currentPlayer = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
 						DominoInKingdom dInK = (DominoInKingdom) currentPlayer.getKingdom().getTerritory(currentPlayer.getKingdom().getTerritories().size()-1);
-						PlayingUI newGame = new PlayingUI(currentPlayer, dInK.getX(), dInK.getY(), dInK);
+						PlayingUI newGame = new PlayingUI(currentPlayer, -3, 3, dInK);
 						newGame.frameR.setVisible(true);
 						
 					}
@@ -402,7 +413,7 @@ public class PlayingUI extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 
 				boolean chosen = KDController.chooseSM(currentDraft.getIdSortedDomino(1));
-				View.printDraft(KingdominoApplication.getKingdomino());
+			
 				if(chosen) {
 					
 					choose2.setEnabled(false);
@@ -421,7 +432,7 @@ public class PlayingUI extends JFrame{
 						Player currentPlayer = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
 						DominoInKingdom dInK = (DominoInKingdom) currentPlayer.getKingdom().getTerritory(currentPlayer.getKingdom().getTerritories().size()-1);
 					
-						PlayingUI newGame = new PlayingUI(currentPlayer, dInK.getX(), dInK.getY(), dInK);
+						PlayingUI newGame = new PlayingUI(currentPlayer, -3, 3, dInK);
 						newGame.frameR.setVisible(true);
 						
 					}
@@ -434,7 +445,7 @@ public class PlayingUI extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 
 				boolean chosen = KDController.chooseSM(currentDraft.getIdSortedDomino(2));
-				View.printDraft(KingdominoApplication.getKingdomino());
+	
 				if(chosen) {
 					
 					choose3.setEnabled(false);
@@ -453,7 +464,7 @@ public class PlayingUI extends JFrame{
 						Player currentPlayer = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
 						DominoInKingdom dInK = (DominoInKingdom) currentPlayer.getKingdom().getTerritory(currentPlayer.getKingdom().getTerritories().size()-1);
 					
-						PlayingUI newGame = new PlayingUI(currentPlayer, dInK.getX(), dInK.getY(), dInK);
+						PlayingUI newGame = new PlayingUI(currentPlayer, -3, 3, dInK);
 						newGame.frameR.setVisible(true);
 						
 					}
@@ -462,11 +473,12 @@ public class PlayingUI extends JFrame{
 				
 			}
 		});
+		
 		choose4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			
 				boolean chosen = KDController.chooseSM(currentDraft.getIdSortedDomino(3));
-				View.printDraft(KingdominoApplication.getKingdomino());
+			
 				if(chosen) {
 					
 					choose4.setEnabled(false);
@@ -485,7 +497,7 @@ public class PlayingUI extends JFrame{
 						Player currentPlayer = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
 						DominoInKingdom dInK = (DominoInKingdom) currentPlayer.getKingdom().getTerritory(currentPlayer.getKingdom().getTerritories().size()-1);
 					
-						PlayingUI newGame = new PlayingUI(currentPlayer, dInK.getX(), dInK.getY(), dInK);
+						PlayingUI newGame = new PlayingUI(currentPlayer, -3, 3, dInK);
 						newGame.frameR.setVisible(true);
 						
 					}
@@ -512,7 +524,7 @@ public class PlayingUI extends JFrame{
 					Player currentPlayer = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
 					DominoInKingdom dInK = (DominoInKingdom) currentPlayer.getKingdom().getTerritory(currentPlayer.getKingdom().getTerritories().size()-1);
 				
-					PlayingUI newGame = new PlayingUI(currentPlayer, dInK.getX(), dInK.getY(), dInK);
+					PlayingUI newGame = new PlayingUI(currentPlayer, -3, 3, dInK);
 					newGame.frameR.setVisible(true);
 					
 				}
@@ -521,12 +533,12 @@ public class PlayingUI extends JFrame{
 					
 					frameR.dispose();
 					
-					KDController.lastSelectionReadySM(-3, -3, "right");
+					KDController.lastSelectionReadySM(-3, 3, "right");
 					
 					Player currentPlayer = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
 					DominoInKingdom dInK = (DominoInKingdom) currentPlayer.getKingdom().getTerritory(currentPlayer.getKingdom().getTerritories().size()-1);
 				
-					PlayingUI newGame = new PlayingUI(currentPlayer, dInK.getX(), dInK.getY(), dInK);
+					PlayingUI newGame = new PlayingUI(currentPlayer, -3, 3, dInK);
 					newGame.frameR.setVisible(true);
 					
 				}
@@ -541,7 +553,8 @@ public class PlayingUI extends JFrame{
 			DominoInKingdom domino = (DominoInKingdom) dInK;
 			
 			if(domino.equals((DominoInKingdom)(p1.getKingdom().getTerritory(p1.getKingdom().getTerritories().size()-1)))) break;
-			if(domino.getDomino().getStatus().equals(DominoStatus.Discarded)) continue;
+			if(!domino.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) continue;
+			
 			draw(domino, domino.getDirection(), false);
 			addCrowns(this.currentLeft,domino.getDomino().getLeftCrown());
 			addCrowns(this.currentRight,domino.getDomino().getRightCrown());
@@ -589,12 +602,12 @@ public class PlayingUI extends JFrame{
 				
 				this.currentLeft.setBorder(BorderFactory.createLineBorder(Color.CYAN)); 
 				this.currentRight.setBorder(BorderFactory.createLineBorder(Color.CYAN)); 
+				System.out.println("2   " + domino.getX() + "  " + domino.getY());
 				
 			}
 			
 		}
 	
-		
 	private void undraw(DominoInKingdom domino, DirectionKind dir) {
 			
 			int squareToDraw = translate(domino.getX(), domino.getY());
@@ -625,20 +638,35 @@ public class PlayingUI extends JFrame{
 		
 	private void drawNewDomino(Player p1, int x, int y, DominoInKingdom domino) {
 		
+		System.out.println("3    " + domino.getX() + "  " + domino.getY());
+		
 		draw(domino, domino.getDirection(), true);
+		
+		System.out.println("4   " + domino.getX() + "  " + domino.getY());
 		
 		manageAfterMove(domino);
 		changeIfUnderneath(domino);
 		
+		System.out.println("5    " + domino.getX() + "  " + domino.getY());
+		
+		if(!KDQuery.isThereAvailablePlacement(p1, domino)) discard.setEnabled(true);
+		
+		System.out.println("5.5   " + domino.getX() + "  " + domino.getY());
+		
 		moveR.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				
+				System.out.println("6    " + domino.getX() + "  " + domino.getY());
 				
 				manageBeforeMove(domino);
 				undraw(domino,  domino.getDirection());
 				
+				System.out.println("7    " + domino.getX() + "  " + domino.getY());
+				
 				KDController.moveSM("right");
-				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
 			
+				System.out.println("9   " + domino.getX() + "  " + domino.getY());
+				
 				draw(domino,  domino.getDirection(), true);
 				
 				manageAfterMove(domino);
@@ -650,12 +678,17 @@ public class PlayingUI extends JFrame{
 		moveL.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
+				System.out.println("6    " + domino.getX() + "  " + domino.getY());
+				
 				manageBeforeMove(domino);
 				undraw(domino,  domino.getDirection());
 				
+				System.out.println("7    " + domino.getX() + "  " + domino.getY());
+				
 				KDController.moveSM("left");
-				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
-		
+			
+				System.out.println("9   " + domino.getX() + "  " + domino.getY());
+				
 				draw(domino,  domino.getDirection(), true);
 				
 				manageAfterMove(domino);
@@ -666,12 +699,14 @@ public class PlayingUI extends JFrame{
 		
 		moveU.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				
+				System.out.println("6   " + domino.getX() + "  " + domino.getY());
 				manageBeforeMove(domino);
 				undraw(domino,  domino.getDirection());
+				System.out.println("7   " + domino.getX() + "  " + domino.getY());
 				
 				KDController.moveSM("up");
-				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
+				
+				System.out.println("9   " + domino.getX() + "  " + domino.getY());
 			
 				draw(domino,  domino.getDirection(), true);
 				
@@ -683,13 +718,12 @@ public class PlayingUI extends JFrame{
 		
 		moveD.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				
+				System.out.println("6   " + domino.getX() + "  " + domino.getY());
 				manageBeforeMove(domino);
 				undraw(domino,  domino.getDirection());
-				
+				System.out.println("7   " + domino.getX() + "  " + domino.getY());
 				KDController.moveSM("down");
-				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
-				
+				System.out.println("9   " + domino.getX() + "  " + domino.getY());
 				draw(domino,  domino.getDirection(), true);
 				
 				manageAfterMove(domino);
@@ -706,9 +740,10 @@ public class PlayingUI extends JFrame{
 				undraw(domino,  domino.getDirection());
 				
 				KDController.rotateSM("clockwise");
-				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
 			
 				draw(domino,  domino.getDirection(), true);
+				
+				System.out.println(domino.getX() + "  " + domino.getY());
 				
 				manageAfterMove(domino);
 				changeIfUnderneath(domino);
@@ -724,9 +759,10 @@ public class PlayingUI extends JFrame{
 				undraw(domino,  domino.getDirection());
 				
 				KDController.rotateSM("counterclockwise");
-				System.out.println(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName());
-				
+			
 				draw(domino,  domino.getDirection(), true);
+				
+				System.out.println(domino.getX() + "  " + domino.getY());
 				
 				manageAfterMove(domino);
 				changeIfUnderneath(domino);
@@ -737,8 +773,7 @@ public class PlayingUI extends JFrame{
 		place.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				boolean placed = KDController.placeSM();
-				System.out.println(placed);
-				
+			
 				if(placed) {
 					
 					choose.setEnabled(true);
@@ -746,15 +781,35 @@ public class PlayingUI extends JFrame{
 					choose3.setEnabled(true);
 					choose4.setEnabled(true);
 					
+					moveL.setEnabled(false);
+					moveU.setEnabled(false);
+					moveD.setEnabled(false);
+					moveR.setEnabled(false);
+					rotateR.setEnabled(false);
+					rotateL.setEnabled(false);
+					place.setEnabled(false);
+					discard.setEnabled(false);
+					
 					currentLeft.setBorder(BorderFactory.createLineBorder(Color.GREEN)); 
 					currentRight.setBorder(BorderFactory.createLineBorder(Color.GREEN)); 
 					
 					int playerScore = p1.getTotalScore();
 					String s = String.format("%1$-5s", playerScore); 
 					score.remove(scoreOfPlayer);
-					scoreOfPlayer = new JLabel("                                      Score: " + s);
+					score.remove(blueP);
+					score.remove(pinkP);
+					score.remove(yellowP);
+					score.remove(greenP);
+					score.remove(turnNum);
+					score.remove(order);
+					scoreOfPlayer = new JLabel("                 Score: " + s + "            ");
 					scoreOfPlayer.setFont(new Font("Times", Font.BOLD, 20));
 					score.add(scoreOfPlayer);
+					order.setFont(new Font("Times", Font.BOLD, 20));
+					score.add(order);
+					displayPlayerOrder(score);
+					displayTurnNumber(score);
+					frameR.setVisible(true);
 					
 					if(currentDraft.getIdSortedDomino(0).hasDominoSelection() || currentDraft.getIdSortedDomino(0).getStatus().equals(DominoStatus.Discarded)) choose.setEnabled(false);
 					if(currentDraft.getIdSortedDomino(1).hasDominoSelection() || currentDraft.getIdSortedDomino(1).getStatus().equals(DominoStatus.Discarded)) choose2.setEnabled(false);
@@ -771,7 +826,7 @@ public class PlayingUI extends JFrame{
 						
 						Player currentPlayer = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
 						DominoInKingdom dInK = (DominoInKingdom) currentPlayer.getKingdom().getTerritory(currentPlayer.getKingdom().getTerritories().size()-1);
-						PlayingUI newGame = new PlayingUI(currentPlayer, dInK.getX(), dInK.getY(), dInK);
+						PlayingUI newGame = new PlayingUI(currentPlayer, -3, 3, dInK);
 						newGame.frameR.setVisible(true);
 						
 					}
@@ -782,11 +837,9 @@ public class PlayingUI extends JFrame{
 						
 						KDController.scoringSM();
 						
-						View.printRankings(KingdominoApplication.getKingdomino());
-						
 						 JFrame frame = new JFrame("Rankings");
 
-					     frame.setSize(500, 500);
+						 frame.setSize(1000, 500);
 					     frame.setLocationRelativeTo(null);
 					     frame.setResizable(false);
 					     frame.setBackground(Color.LIGHT_GRAY);
@@ -797,30 +850,133 @@ public class PlayingUI extends JFrame{
 						 pan.setBounds(5, 5, 1300, 800);
 						 textArea.setFont(new Font("Serif", Font.ITALIC, 16));
 						 
+						 ArrayList<String> winners = new ArrayList<String>();
+							
+						 String empty = "";
+						 
 					     for (Player p:KingdominoApplication.getKingdomino().getCurrentGame().getPlayers()) {
 					    	 
 								int[] sizeCrown=KDQuery.playerMaxPropSizeAndNumCrown(p);
-								textArea.append("%1$-10s" +   p.getColor() + " rank: %2$-5d" + p.getCurrentRanking() + 
-												"score: %3$-5d" + p.getTotalScore() + " size: %4$-5d" + sizeCrown[0] + 
-												" crown: %5$-5d" + sizeCrown[1] + "\n");
-											
+								String row=String.format("%1$-20s  rank: %2$-10d score: %3$-10d size: %4$-10d crown: %5$-10d \n", 
+										  				 p.getColor(),p.getCurrentRanking(),p.getTotalScore(),sizeCrown[0],sizeCrown[1]);
+								
+								textArea.append(row);
+								
+								if(p.getCurrentRanking() == 1) empty += (p.getColor().toString() + "\n");
+									
 					     }
-			
-						  frame.add(pan);
-					
-						  frame.setVisible(true);
 					     
+					      textArea.append("WINNER: ");
+					      textArea.append(empty);
+						  frame.add(pan, BorderLayout.CENTER);
+						  
+						  JPanel buttonsKingdom = new JPanel();
+						  buttonsKingdom.add(lookKingdom1);
+						  buttonsKingdom.add(lookKingdom2);
+						  buttonsKingdom.add(lookKingdom3);
+						  buttonsKingdom.add(lookKingdom4);
+						  
+						  JPanel manage = new JPanel();
+						  manage.add(saveStats);
+						  manage.add(exit);
+						  manage.add(playAgain);
+						
+						  frame.add(buttonsKingdom, BorderLayout.SOUTH);
+						  frame.add(manage, BorderLayout.NORTH);
+	
+						  frame.setVisible(true);
+						  
+						  lookKingdom1.addActionListener(new ActionListener() {
+
+							public void actionPerformed(ActionEvent arg0) {
+								
+								Player blue = KDQuery.getPlayerByColor("blue");
+								
+								LookAtKingdom blueKingdom = new LookAtKingdom(blue);
+								blueKingdom.frameR.setVisible(true);
+								
+							}
+			
+						  });
+						  
+						  lookKingdom2.addActionListener(new ActionListener() {
+
+								public void actionPerformed(ActionEvent arg0) {
+									
+									Player pink = KDQuery.getPlayerByColor("pink");
+									
+									LookAtKingdom pinkKingdom = new LookAtKingdom(pink);
+									pinkKingdom.frameR.setVisible(true);
+									
+								}
+				
+						});
+						  
+						  lookKingdom3.addActionListener(new ActionListener() {
+
+								public void actionPerformed(ActionEvent arg0) {
+									
+									Player green = KDQuery.getPlayerByColor("green");
+									
+									LookAtKingdom greenKingdom = new LookAtKingdom(green);
+									greenKingdom.frameR.setVisible(true);
+									
+								}
+				
+						});
+						  
+						  lookKingdom4.addActionListener(new ActionListener() {
+
+								public void actionPerformed(ActionEvent arg0) {
+									
+									Player yellow = KDQuery.getPlayerByColor("yellow");
+									
+									LookAtKingdom yellowKingdom = new LookAtKingdom(yellow);
+									yellowKingdom.frameR.setVisible(true);
+									
+								}
+				
+						 });
+						  
+						  saveStats.addActionListener(new ActionListener() {
+
+							public void actionPerformed(ActionEvent arg0) {
+								
+								KDController.saveGame(null, true);
+								
+							}
+							
+						  });
+						  
+						  exit.addActionListener(new ActionListener() {
+
+							public void actionPerformed(ActionEvent e) {
+								
+								System.exit(0);
+								
+							}
+						
+						  });
+						  
+						  playAgain.addActionListener(new ActionListener() {
+
+							public void actionPerformed(ActionEvent e) {
+								
+								System.out.println("FUCK YOU");
+								
+							}
+						
+						  });
+			  
 					}
 				}
 				
 			}
 		});
 
-		
 		discard.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				boolean discarded = KDController.discardSM();
-				System.out.println(discarded);
 				
 				if(discarded) {
 					
@@ -828,6 +984,15 @@ public class PlayingUI extends JFrame{
 					choose2.setEnabled(true);
 					choose3.setEnabled(true);
 					choose4.setEnabled(true);
+					
+					moveL.setEnabled(false);
+					moveU.setEnabled(false);
+					moveD.setEnabled(false);
+					moveR.setEnabled(false);
+					rotateR.setEnabled(false);
+					rotateL.setEnabled(false);
+					place.setEnabled(false);
+					discard.setEnabled(false);
 					
 					if(currentDraft.getIdSortedDomino(0).hasDominoSelection() || currentDraft.getIdSortedDomino(0).getStatus().equals(DominoStatus.Discarded)) choose.setEnabled(false);
 					if(currentDraft.getIdSortedDomino(1).hasDominoSelection() || currentDraft.getIdSortedDomino(1).getStatus().equals(DominoStatus.Discarded)) choose2.setEnabled(false);
@@ -844,7 +1009,7 @@ public class PlayingUI extends JFrame{
 						
 						Player currentPlayer = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
 						DominoInKingdom dInK = (DominoInKingdom) currentPlayer.getKingdom().getTerritory(currentPlayer.getKingdom().getTerritories().size()-1);
-						PlayingUI newGame = new PlayingUI(currentPlayer, dInK.getX(), dInK.getY(), dInK);
+						PlayingUI newGame = new PlayingUI(currentPlayer, -3, 3, dInK);
 						newGame.frameR.setVisible(true);
 						
 					}
@@ -854,8 +1019,6 @@ public class PlayingUI extends JFrame{
 						frameR.dispose();
 						
 						KDController.scoringSM();
-						
-						View.printRankings(KingdominoApplication.getKingdomino());
 						
 						 JFrame frame = new JFrame("Rankings");
 
@@ -995,7 +1158,7 @@ public class PlayingUI extends JFrame{
 		
 	}
 		
-		private Color getColor(TerrainType t1) {
+	private Color getColor(TerrainType t1) {
 			Color c1 = null;
 			if(t1.equals(TerrainType.Forest)) {
 				c1 = new Color(0,102,0);
@@ -1013,7 +1176,7 @@ public class PlayingUI extends JFrame{
 			return c1;
 		}
 		
-		private void addCrowns(JPanel p1, int n1) {
+	private void addCrowns(JPanel p1, int n1) {
 			
 			JPanel crowns1 = new JPanel();
 			crowns1.setBackground(new Color(255,255,0));
@@ -1031,11 +1194,13 @@ public class PlayingUI extends JFrame{
 				p1.add(crowns1);
 				p1.add(crowns2);
 				p1.add(crowns3);
-			}
+			}	
 		
-		}
+			frameR.setVisible(true);
+			
+	}
 		
-		private void removeCrowns(JPanel p1, int n1) {
+	private void removeCrowns(JPanel p1, int n1) {
 			
 			if(n1==1) {
 				p1.getComponent(0).setVisible(false);
@@ -1056,7 +1221,7 @@ public class PlayingUI extends JFrame{
 	
 		}
 		
-		private void changeIfUnderneath(DominoInKingdom domino) {
+	private void changeIfUnderneath(DominoInKingdom domino) {
 			
 			int[] otherPosMine = KDQuery.calculateRightPos(domino);
 			
@@ -1072,7 +1237,7 @@ public class PlayingUI extends JFrame{
 				else {
 						
 					DominoInKingdom dInK = (DominoInKingdom) kTerritory;
-					if(dInK.equals(domino)) continue;
+					if(dInK.equals(domino) || !dInK.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) continue;
 				
 					int[] otherPos = KDQuery.calculateRightPos(kTerritory);
 					
@@ -1088,7 +1253,7 @@ public class PlayingUI extends JFrame{
 			
 		}
 		
-		private void manageBeforeMove(DominoInKingdom domino) {
+	private void manageBeforeMove(DominoInKingdom domino) {
 			
 			removeCrowns(currentLeft, domino.getDomino().getLeftCrown());
 			removeCrowns(currentRight, domino.getDomino().getRightCrown());
@@ -1098,7 +1263,7 @@ public class PlayingUI extends JFrame{
 			
 		}
 		
-		private void manageAfterMove(DominoInKingdom domino) {
+	private void manageAfterMove(DominoInKingdom domino) {
 						
 			prevNumCrownsLeft = currentLeft.getComponentCount();
 			prevNumCrownsRight = currentRight.getComponentCount();
@@ -1110,4 +1275,44 @@ public class PlayingUI extends JFrame{
 			
 		}
 		
+	private void displayPlayerOrder(JPanel panel) {
+		
+		List<Player> playerOrder = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers();
+		
+		greenP = new JLabel("GREEN  ");
+		greenP.setFont(new Font("Times", Font.BOLD, 20));
+		greenP.setForeground(Color.GREEN);
+		
+		pinkP = new JLabel("PINK  ");
+		pinkP.setFont(new Font("Times", Font.BOLD, 20));
+		pinkP.setForeground(Color.PINK);
+		
+		blueP = new JLabel("BLUE  ");
+		blueP.setFont(new Font("Times", Font.BOLD, 20));
+		blueP.setForeground(Color.BLUE);
+		
+		yellowP = new JLabel("YELLOW  ");
+		yellowP.setFont(new Font("Times", Font.BOLD, 20));
+		yellowP.setForeground(new Color(255,215,15));
+		
+		for(Player player : playerOrder) {
+			
+			if(player.getColor().equals(PlayerColor.Blue)) panel.add(blueP);
+			else if(player.getColor().equals(PlayerColor.Green)) panel.add(greenP);
+			else if(player.getColor().equals(PlayerColor.Pink)) panel.add(pinkP);
+			else panel.add(yellowP);
+			
+		}
+		
+	}
+
+	private void displayTurnNumber(JPanel panel) {
+		
+		int turn = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer().getKingdom().getTerritories().size()-1;
+		
+		turnNum = new JLabel("         Turn: " + turn +"/12");
+		turnNum.setFont(new Font("Times", Font.BOLD, 20));
+		panel.add(turnNum);
+		
+	}
 }

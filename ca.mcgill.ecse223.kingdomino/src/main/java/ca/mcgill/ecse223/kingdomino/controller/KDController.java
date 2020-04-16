@@ -969,6 +969,9 @@ public class KDController {
 		
 		int xPosPrevious = dInKingdom.getX();
 		int yPosPrevious = dInKingdom.getY();
+		
+		System.out.println("8     " + dInKingdom.getX() + "  " + dInKingdom.getY());
+		
 		DominoStatus prevStatus=dInKingdom.getDomino().getStatus();
 
 		if(movement.equalsIgnoreCase("Right")) dInKingdom.setX(xPosPrevious + 1);
