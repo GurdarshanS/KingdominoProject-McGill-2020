@@ -19,20 +19,19 @@ import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
 import ca.mcgill.ecse223.kingdomino.model.Kingdomino;
 public class AssignPlayer_Screen extends JFrame {
 	
-//public static void main(String[] args) {
-//		
-//		new AssignPlayer_Screen(Color).setVisible(true);
-//
-//	}
-	
 	public AssignPlayer_Screen(String ColorIn) {
 		
 		initComponents(ColorIn);	
 	}
 	
+	/**
+	 * It does stuff!
+	 * 
+	 * @author Team
+	 * @param ColorIn String
+	 */
 	public static void initComponents(String ColorIn) {
 		
-		//Kingdomino kd = KDController.loadGame(null);
 		
 		List<String> users = KDQuery.getAvailableUserNamesThisGame();
 		JList list = new JList(users.toArray());
@@ -144,7 +143,7 @@ public class AssignPlayer_Screen extends JFrame {
 				}
 				catch(Exception xx) {
 					JOptionPane.showMessageDialog(null,xx.getMessage());
-				}System.out.println(King_PlayerScreen.p1Complete + " "+ King_PlayerScreen.p2Complete +" "+King_PlayerScreen.p3Complete + " "+King_PlayerScreen.p4Complete);
+				}
 				if(King_PlayerScreen.p1Complete && King_PlayerScreen.p2Complete && King_PlayerScreen.p3Complete && King_PlayerScreen.p4Complete) {
 					King_PlayerScreen.done.setEnabled(true);
 				

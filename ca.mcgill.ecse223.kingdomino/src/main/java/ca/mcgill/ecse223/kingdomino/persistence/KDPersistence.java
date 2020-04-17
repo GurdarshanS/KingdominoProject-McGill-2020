@@ -9,7 +9,7 @@ import ca.mcgill.ecse223.kingdomino.model.*;
 
 public class KDPersistence {
 	
-	private static String fileName = "kingdomino.data";
+	private static String fileName = "default.data";
 
 	public static void save(Kingdomino kingdomino,boolean overwrite) {
 		

@@ -36,6 +36,7 @@ import ca.mcgill.ecse223.kingdomino.model.KingdomTerritory;
 import ca.mcgill.ecse223.kingdomino.model.Player;
 import ca.mcgill.ecse223.kingdomino.model.Player.PlayerColor;
 import ca.mcgill.ecse223.kingdomino.model.TerrainType;
+import ca.mcgill.ecse223.kingdomino.persistence.KDPersistence;
 
 public class PlayingUI extends JFrame{
 
@@ -163,6 +164,7 @@ public class PlayingUI extends JFrame{
 		draft.add(dom4);
 		draft.add(browse);
 		draft.add(save);
+		
 		JPanel[] firstDomino = new JPanel[2];
 		for(int i=0; i<2; i++) {
 			firstDomino[i] = new JPanel();
@@ -393,19 +395,9 @@ public class PlayingUI extends JFrame{
 		);
 		save.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			
-				String ans = JOptionPane.showInputDialog(null, "Provide file name (.data) or leave empty for default save!");
-				try {
-				if(!ans.isEmpty()) {
-					KDController.saveGame(ans, true);
-					
-				}
-				else {
-					KDController.saveGame(null, true);
-				}
-			}catch(Exception ex) {
 				
-			}
+			KDController.saveGame(KingUI_Main.SAVE, true);
+				
 		}});
 		browse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -460,6 +452,7 @@ public class PlayingUI extends JFrame{
 					if(KDQuery.lastPlayerInTurn(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer())) {
 						
 						nextRound.setEnabled(true);
+						nextRound.setBackground(Color.GREEN);
 						
 					}
 					
@@ -473,7 +466,6 @@ public class PlayingUI extends JFrame{
 					
 						PlayingUI newGame = new PlayingUI(currentPlayer, -3, 3, dInK);
 						newGame.frameR.setVisible(true);
-						
 					}
 					
 				}
@@ -492,6 +484,7 @@ public class PlayingUI extends JFrame{
 					if(KDQuery.lastPlayerInTurn(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer())) {
 						
 						nextRound.setEnabled(true);
+						nextRound.setBackground(Color.GREEN);
 						
 					}
 					
@@ -525,6 +518,7 @@ public class PlayingUI extends JFrame{
 					if(KDQuery.lastPlayerInTurn(KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer())) {
 						
 						nextRound.setEnabled(true);
+						nextRound.setBackground(Color.GREEN);
 						
 					}
 					
@@ -641,8 +635,7 @@ public class PlayingUI extends JFrame{
 				
 				this.currentLeft.setBorder(BorderFactory.createLineBorder(Color.CYAN)); 
 				this.currentRight.setBorder(BorderFactory.createLineBorder(Color.CYAN)); 
-				System.out.println("2   " + domino.getX() + "  " + domino.getY());
-				
+			
 			}
 			
 		}
@@ -677,18 +670,343 @@ public class PlayingUI extends JFrame{
 		
 	private void drawNewDomino(Player p1, int x, int y, DominoInKingdom domino) {
 		
+		if(!KDQuery.isThereAvailablePlacement(p1, domino)) discard.setEnabled(true);
 		
 		draw(domino, domino.getDirection(), true);
 		
 		
 		manageAfterMove(domino);
 		changeIfUnderneath(domino);
-		if(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName()) {
+		
+		if(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName().equals("EndingGame")) {
+			
+			frameR.dispose();
+			
+			KDController.scoringSM();
+			
+			 JFrame frame = new JFrame("Rankings");
+
+			 frame.setSize(1000, 500);
+		     frame.setLocationRelativeTo(null);
+		     frame.setResizable(false);
+		     frame.setBackground(Color.LIGHT_GRAY);
+		     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		
+		     JTextArea textArea = new JTextArea();
+			 JScrollPane pan = new JScrollPane(textArea);
+			 pan.setBounds(5, 5, 1300, 800);
+			 textArea.setFont(new Font("Serif", Font.ITALIC, 16));
+			 
+			 ArrayList<String> winners = new ArrayList<String>();
+				
+			 String empty = "";
+			 
+		     for (Player p:KingdominoApplication.getKingdomino().getCurrentGame().getPlayers()) {
+		    	 
+					int[] sizeCrown=KDQuery.playerMaxPropSizeAndNumCrown(p);
+					String row=String.format("%1$-20s  rank: %2$-10d score: %3$-10d size: %4$-10d crown: %5$-10d \n", 
+							  				 p.getColor(),p.getCurrentRanking(),p.getTotalScore(),sizeCrown[0],sizeCrown[1]);
+					
+					textArea.append(row);
+					
+					if(p.getCurrentRanking() == 1) empty += (p.getColor().toString() + "\n");
+						
+		     }
+		     
+		      textArea.append("WINNER: ");
+		      textArea.append(empty);
+			  frame.add(pan, BorderLayout.CENTER);
+			  
+			  JPanel buttonsKingdom = new JPanel();
+			  buttonsKingdom.add(lookKingdom1);
+			  buttonsKingdom.add(lookKingdom2);
+			  buttonsKingdom.add(lookKingdom3);
+			  buttonsKingdom.add(lookKingdom4);
+			  
+			  JPanel manage = new JPanel();
+			  manage.add(saveStats);
+			  manage.add(exit);
+			  manage.add(playAgain);
+			
+			  frame.add(buttonsKingdom, BorderLayout.SOUTH);
+			  frame.add(manage, BorderLayout.NORTH);
+
+			  frame.setVisible(true);
+			  
+			  lookKingdom1.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent arg0) {
+					
+					Player blue = KDQuery.getPlayerByColor("blue");
+					
+					LookAtKingdom blueKingdom = new LookAtKingdom(blue);
+					blueKingdom.frameR.setVisible(true);
+					
+				}
+
+			  });
+			  
+			  lookKingdom2.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent arg0) {
+						
+						Player pink = KDQuery.getPlayerByColor("pink");
+						
+						LookAtKingdom pinkKingdom = new LookAtKingdom(pink);
+						pinkKingdom.frameR.setVisible(true);
+						
+					}
+	
+			});
+			  
+			  lookKingdom3.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent arg0) {
+						
+						Player green = KDQuery.getPlayerByColor("green");
+						
+						LookAtKingdom greenKingdom = new LookAtKingdom(green);
+						greenKingdom.frameR.setVisible(true);
+						
+					}
+	
+			});
+			  
+			  lookKingdom4.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent arg0) {
+						
+						Player yellow = KDQuery.getPlayerByColor("yellow");
+						
+						LookAtKingdom yellowKingdom = new LookAtKingdom(yellow);
+						yellowKingdom.frameR.setVisible(true);
+						
+					}
+	
+			 });
+			  
+			  saveStats.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent arg0) {
+					
+					KDController.saveGame(KingUI_Main.SAVE, true);
+					
+				}
+				
+			  });
+			  
+			  exit.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					
+					System.exit(0);
+					
+				}
+			
+			  });
+			  
+			  playAgain.addActionListener(new ActionListener() {
+
+				public void actionPerformed(ActionEvent e) {
+					
+					frame.dispose();
+					
+					new KingUI_Main().frame.setVisible(true);
+					
+				}
+			
+			  });
+  
+		}
+		
+		if(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName().equals("Playing.SelectingStandardDomino") && KDQuery.lastPlayerInTurn(p1)) {
+			
+			nextRound.setEnabled(true);
+			nextRound.setBackground(Color.GREEN);
 			
 		}
 		
-		if(!KDQuery.isThereAvailablePlacement(p1, domino)) discard.setEnabled(true);
+		if(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName().equals("Playing.ConfirmingChoice")) {
+			
+			choose.setEnabled(true);
+			choose2.setEnabled(true);
+			choose3.setEnabled(true);
+			choose4.setEnabled(true);
+			
+			moveL.setEnabled(false);
+			moveU.setEnabled(false);
+			moveD.setEnabled(false);
+			moveR.setEnabled(false);
+			rotateR.setEnabled(false);
+			rotateL.setEnabled(false);
+			place.setEnabled(false);
+			discard.setEnabled(false);
+			
+			currentLeft.setBorder(BorderFactory.createLineBorder(Color.GREEN)); 
+			currentRight.setBorder(BorderFactory.createLineBorder(Color.GREEN)); 
+			
+			if(currentDraft.getIdSortedDomino(0).hasDominoSelection() || currentDraft.getIdSortedDomino(0).getStatus().equals(DominoStatus.Discarded)) choose.setEnabled(false);
+			if(currentDraft.getIdSortedDomino(1).hasDominoSelection() || currentDraft.getIdSortedDomino(1).getStatus().equals(DominoStatus.Discarded)) choose2.setEnabled(false);
+			if(currentDraft.getIdSortedDomino(2).hasDominoSelection() || currentDraft.getIdSortedDomino(2).getStatus().equals(DominoStatus.Discarded)) choose3.setEnabled(false);
+			if(currentDraft.getIdSortedDomino(3).hasDominoSelection() || currentDraft.getIdSortedDomino(3).getStatus().equals(DominoStatus.Discarded)) choose4.setEnabled(false);
+			
+			boolean inLastState = KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName().equalsIgnoreCase("Finishing.ConfirmingLastChoice");
+			
+			if(inLastState && !KDQuery.hasAllPlayersPlayed()) {
+				
+				frameR.dispose();
+				
+				KDController.manipulateLastSM(-3, 3, "right");
+				
+				Player currentPlayer = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer();
+				DominoInKingdom dInK = (DominoInKingdom) currentPlayer.getKingdom().getTerritory(currentPlayer.getKingdom().getTerritories().size()-1);
+				PlayingUI newGame = new PlayingUI(currentPlayer, -3, 3, dInK);
+				newGame.frameR.setVisible(true);
+				
+			}
+			
+			else if(inLastState && KDQuery.hasAllPlayersPlayed()) {
+				
+				frameR.dispose();
+				
+				KDController.scoringSM();
+				
+				 JFrame frame = new JFrame("Rankings");
+
+				 frame.setSize(1000, 500);
+			     frame.setLocationRelativeTo(null);
+			     frame.setResizable(false);
+			     frame.setBackground(Color.LIGHT_GRAY);
+			     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+			
+			     JTextArea textArea = new JTextArea();
+				 JScrollPane pan = new JScrollPane(textArea);
+				 pan.setBounds(5, 5, 1300, 800);
+				 textArea.setFont(new Font("Serif", Font.ITALIC, 16));
+				 
+				 ArrayList<String> winners = new ArrayList<String>();
+					
+				 String empty = "";
+				 
+			     for (Player p:KingdominoApplication.getKingdomino().getCurrentGame().getPlayers()) {
+			    	 
+						int[] sizeCrown=KDQuery.playerMaxPropSizeAndNumCrown(p);
+						String row=String.format("%1$-20s  rank: %2$-10d score: %3$-10d size: %4$-10d crown: %5$-10d \n", 
+								  				 p.getColor(),p.getCurrentRanking(),p.getTotalScore(),sizeCrown[0],sizeCrown[1]);
+						
+						textArea.append(row);
+						
+						if(p.getCurrentRanking() == 1) empty += (p.getColor().toString() + "\n");
+							
+			     }
+			     
+			      textArea.append("WINNER: ");
+			      textArea.append(empty);
+				  frame.add(pan, BorderLayout.CENTER);
+				  
+				  JPanel buttonsKingdom = new JPanel();
+				  buttonsKingdom.add(lookKingdom1);
+				  buttonsKingdom.add(lookKingdom2);
+				  buttonsKingdom.add(lookKingdom3);
+				  buttonsKingdom.add(lookKingdom4);
+				  
+				  JPanel manage = new JPanel();
+				  manage.add(saveStats);
+				  manage.add(exit);
+				  manage.add(playAgain);
+				
+				  frame.add(buttonsKingdom, BorderLayout.SOUTH);
+				  frame.add(manage, BorderLayout.NORTH);
+
+				  frame.setVisible(true);
+				  
+				  lookKingdom1.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent arg0) {
+						
+						Player blue = KDQuery.getPlayerByColor("blue");
+						
+						LookAtKingdom blueKingdom = new LookAtKingdom(blue);
+						blueKingdom.frameR.setVisible(true);
+						
+					}
+	
+				  });
+				  
+				  lookKingdom2.addActionListener(new ActionListener() {
+
+						public void actionPerformed(ActionEvent arg0) {
+							
+							Player pink = KDQuery.getPlayerByColor("pink");
+							
+							LookAtKingdom pinkKingdom = new LookAtKingdom(pink);
+							pinkKingdom.frameR.setVisible(true);
+							
+						}
 		
+				});
+				  
+				  lookKingdom3.addActionListener(new ActionListener() {
+
+						public void actionPerformed(ActionEvent arg0) {
+							
+							Player green = KDQuery.getPlayerByColor("green");
+							
+							LookAtKingdom greenKingdom = new LookAtKingdom(green);
+							greenKingdom.frameR.setVisible(true);
+							
+						}
+		
+				});
+				  
+				  lookKingdom4.addActionListener(new ActionListener() {
+
+						public void actionPerformed(ActionEvent arg0) {
+							
+							Player yellow = KDQuery.getPlayerByColor("yellow");
+							
+							LookAtKingdom yellowKingdom = new LookAtKingdom(yellow);
+							yellowKingdom.frameR.setVisible(true);
+							
+						}
+		
+				 });
+				  
+				  saveStats.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent arg0) {
+						
+						KDController.saveGame(KingUI_Main.SAVE, true);
+						
+					}
+					
+				  });
+				  
+				  exit.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						
+						System.exit(0);
+						
+					}
+				
+				  });
+				  
+				  playAgain.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						
+						frame.dispose();
+						
+						new KingUI_Main().frame.setVisible(true);
+						
+					}
+				
+				  });
+	  
+			}
+			
+		}
 		
 		moveR.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -719,8 +1037,6 @@ public class PlayingUI extends JFrame{
 				
 				KDController.moveSM("left");
 			
-				System.out.println("9   " + domino.getX() + "  " + domino.getY());
-				
 				draw(domino,  domino.getDirection(), true);
 				
 				manageAfterMove(domino);
@@ -731,14 +1047,14 @@ public class PlayingUI extends JFrame{
 		
 		moveU.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				System.out.println("6   " + domino.getX() + "  " + domino.getY());
+				
 				manageBeforeMove(domino);
 				undraw(domino,  domino.getDirection());
-				System.out.println("7   " + domino.getX() + "  " + domino.getY());
+				
 				
 				KDController.moveSM("up");
 				
-				System.out.println("9   " + domino.getX() + "  " + domino.getY());
+			
 			
 				draw(domino,  domino.getDirection(), true);
 				
@@ -750,12 +1066,12 @@ public class PlayingUI extends JFrame{
 		
 		moveD.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				System.out.println("6   " + domino.getX() + "  " + domino.getY());
+			
 				manageBeforeMove(domino);
 				undraw(domino,  domino.getDirection());
-				System.out.println("7   " + domino.getX() + "  " + domino.getY());
+				
 				KDController.moveSM("down");
-				System.out.println("9   " + domino.getX() + "  " + domino.getY());
+			
 				draw(domino,  domino.getDirection(), true);
 				
 				manageAfterMove(domino);
@@ -774,9 +1090,7 @@ public class PlayingUI extends JFrame{
 				KDController.rotateSM("clockwise");
 			
 				draw(domino,  domino.getDirection(), true);
-				
-				System.out.println(domino.getX() + "  " + domino.getY());
-				
+			
 				manageAfterMove(domino);
 				changeIfUnderneath(domino);
 				
@@ -793,8 +1107,6 @@ public class PlayingUI extends JFrame{
 				KDController.rotateSM("counterclockwise");
 			
 				draw(domino,  domino.getDirection(), true);
-				
-				System.out.println(domino.getX() + "  " + domino.getY());
 				
 				manageAfterMove(domino);
 				changeIfUnderneath(domino);
@@ -842,7 +1154,7 @@ public class PlayingUI extends JFrame{
 					displayPlayerOrder(score);
 					displayTurnNumber(score);
 					frameR.setVisible(true);
-					
+					/////////////////
 					if(currentDraft.getIdSortedDomino(0).hasDominoSelection() || currentDraft.getIdSortedDomino(0).getStatus().equals(DominoStatus.Discarded)) choose.setEnabled(false);
 					if(currentDraft.getIdSortedDomino(1).hasDominoSelection() || currentDraft.getIdSortedDomino(1).getStatus().equals(DominoStatus.Discarded)) choose2.setEnabled(false);
 					if(currentDraft.getIdSortedDomino(2).hasDominoSelection() || currentDraft.getIdSortedDomino(2).getStatus().equals(DominoStatus.Discarded)) choose3.setEnabled(false);
@@ -974,7 +1286,7 @@ public class PlayingUI extends JFrame{
 
 							public void actionPerformed(ActionEvent arg0) {
 								
-								KDController.saveGame(null, true);
+								KDController.saveGame(KingUI_Main.SAVE, true);
 								
 							}
 							
@@ -994,7 +1306,10 @@ public class PlayingUI extends JFrame{
 
 							public void actionPerformed(ActionEvent e) {
 								
-								System.out.println("FUCK YOU");
+								frame.dispose();
+								
+								new KingUI_Main().frame.setVisible(true);
+								
 								
 							}
 						
@@ -1156,7 +1471,7 @@ public class PlayingUI extends JFrame{
 
 							public void actionPerformed(ActionEvent arg0) {
 								
-								KDController.saveGame(null, true);
+								KDController.saveGame(KingUI_Main.SAVE, true);
 								
 							}
 							
@@ -1176,7 +1491,9 @@ public class PlayingUI extends JFrame{
 
 							public void actionPerformed(ActionEvent e) {
 								
-								System.out.println("FUCK YOU");
+								frame.dispose();
+								
+								new KingUI_Main().frame.setVisible(true);
 								
 							}
 						

@@ -25,24 +25,21 @@ import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
 import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
 import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom;
+import ca.mcgill.ecse223.kingdomino.model.Gameplay.Gamestatus;
 import ca.mcgill.ecse223.kingdomino.model.KingdomTerritory;
 import ca.mcgill.ecse223.kingdomino.model.Kingdomino;
 import ca.mcgill.ecse223.kingdomino.model.Player;
 
 public class KingUI_Main {
 	
+	public static String SAVE = null;
+	
 	public static JFrame frame = new JFrame("Kingdomino");
 	public static JPanel contPanel = new JPanel();
 	public static CardLayout c1 = new CardLayout();
 	public static int playerNum = 4;
 	public static ArrayList<String> bonusOptions = new ArrayList<String>();
-	
-	public static void main(String[] args) {
-		
-		new KingUI_Main().frame.setVisible(true);
-		
-	}
-	
+
 	public KingUI_Main() {
 		initComponents();
 	}
@@ -90,7 +87,23 @@ public class KingUI_Main {
 		
 		start.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				KDController.loadGame(null);
+				
+				String ans = JOptionPane.showInputDialog(null, "Provide file name (.data) or leave empty for default save!");
+				try {
+				if(!ans.isEmpty()) {
+					
+					SAVE = ans;
+					KDController.saveGame(ans, true);
+					
+				}
+				else {
+					KDController.saveGame(null, true);
+				}
+			}catch(Exception ex) {
+				
+			}
+				
+//				KDController.loadGame(null);
 				KingUI_Settings.initSettings();
 				c1.show(contPanel, "2");
 				
@@ -101,29 +114,51 @@ public class KingUI_Main {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				String s = System.getProperty("user.dir");
-				System.out.println(s);
 				ArrayList<String> fileName = KDController.fileSearch(s);
-				System.out.println(fileName);
 				String files = "Provide file name (.data) to load!\n\n";
 				for(String str : fileName) {
 					files = files+"    			        "+str+"\n";
 				}
 				String providedFile = JOptionPane.showInputDialog(null, files);
-
+				SAVE = providedFile;
+				
 				if(providedFile != null) {
 					if(providedFile.isEmpty()) {
 						JOptionPane.showMessageDialog(null, "Input is empty!");
 					}
+			
 					else {
 						if(!fileName.contains(providedFile)) {
 							JOptionPane.showMessageDialog(null, "File not found ");			
 						}else {
-							KDController.loadGame(providedFile);
-							frame.dispose();
-							Kingdomino kd = KingdominoApplication.getKingdomino();
-							Player player = kd.getCurrentGame().getNextPlayer();
-							DominoInKingdom dnk = (DominoInKingdom) player.getKingdom().getTerritory(player.getKingdom().getTerritories().size()-1);
-							new PlayingUI(player, -3, 3, dnk);
+							Kingdomino kingdomino = KDController.loadGame(providedFile);
+							
+							if(kingdomino.hasStateMachine()) {
+								
+								if(!kingdomino.getStateMachine().getGamestatus().equals(Gamestatus.Initializing)) {
+									
+									frame.dispose();
+									Kingdomino kd = KingdominoApplication.getKingdomino();
+									Player player = kd.getCurrentGame().getNextPlayer();
+									DominoInKingdom dnk = (DominoInKingdom) player.getKingdom().getTerritory(player.getKingdom().getTerritories().size()-1);
+									new PlayingUI(player, dnk.getX(), dnk.getY(), dnk);
+									
+								}
+								
+								else {
+									
+									JOptionPane.showMessageDialog(null, "NO Game in Progress, START a new game");
+									
+								}
+								
+							}
+							
+							else {
+								
+								JOptionPane.showMessageDialog(null, "NO Game in Progress, START a new game");
+								
+							}
+							
 						}
 					} 
 				}
@@ -132,9 +167,35 @@ public class KingUI_Main {
 		
 		search.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				KDController.loadGame(null);
-				KingUI_Stats.initComponents();
-				c1.show(contPanel, "6");
+				
+				String s = System.getProperty("user.dir");
+				ArrayList<String> fileName = KDController.fileSearch(s);
+				String files = "Choose file name (.data) from above to load stats\n\n";
+				for(String str : fileName) {
+					files = files+"    			        "+str+"\n";
+				}
+				
+				String providedFile = JOptionPane.showInputDialog(null, files);
+			
+				if(providedFile != null) {
+					if(providedFile.isEmpty()) {
+						JOptionPane.showMessageDialog(null, "Input is empty!");
+					}
+			
+					else {
+						if(!fileName.contains(providedFile)) {
+							JOptionPane.showMessageDialog(null, "File not found ");			
+						}else {
+							Kingdomino kd = KDController.loadGame(providedFile);
+							KingUI_Stats.initComponents();
+							c1.show(contPanel, "6");
+							
+							KingdominoApplication.setKingdomino(kd);
+							
+						}
+					}
+				}
+				
 			}
 		});
 	}

@@ -1,16 +1,9 @@
 package ca.mcgill.ecse223.kingdomino.view;
 
-import java.awt.CardLayout;
-
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,23 +11,19 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
 import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
-import ca.mcgill.ecse223.kingdomino.controller.KDController;
-import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
 import ca.mcgill.ecse223.kingdomino.model.User;
 
 public class KingUI_Stats extends JFrame {
-	static int wins = 0, played=0, loss=0;
+	
+static int wins = 0, played=0, loss=0;
 	 static double ratio= 0.0;
 	
 	 public KingUI_Stats(){
@@ -43,7 +32,6 @@ public class KingUI_Stats extends JFrame {
 	}
 	public static void initComponents() {
 		 JLabel stats;
-		 JLabel statsTwo;
 		 Border border;
 		 JButton back;
 	
@@ -101,7 +89,6 @@ public class KingUI_Stats extends JFrame {
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
 						.addComponent(stats)
 						.addComponent(list)
-						//.addComponent(input, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE )
 						.addGap(50)
 						
 						)
@@ -118,7 +105,6 @@ public class KingUI_Stats extends JFrame {
 						.addComponent(stats)
 						.addGap(50)
 						.addComponent(list)
-						//.addComponent(input,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE  )
 						.addGap(50)
 						)
 				)

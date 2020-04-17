@@ -972,9 +972,7 @@ public class KDController {
 		
 		int xPosPrevious = dInKingdom.getX();
 		int yPosPrevious = dInKingdom.getY();
-		
-		System.out.println("8     " + dInKingdom.getX() + "  " + dInKingdom.getY());
-		
+	
 		DominoStatus prevStatus=dInKingdom.getDomino().getStatus();
 
 		if(movement.equalsIgnoreCase("Right")) dInKingdom.setX(xPosPrevious + 1);
@@ -1432,7 +1430,24 @@ public class KDController {
 					}
 				}
 			}
-		}		
+		}
+		
+		//UPDATE PLAYER SCORES
+	
+		for(Player player : allPlayers) {
+			
+				if(player.hasUser()) {
+					
+					if(player.getCurrentRanking() == 1) {
+						
+						player.getUser().setWonGames(player.getUser().getWonGames()+1);
+						
+					}
+					
+					player.getUser().setPlayedGames(player.getUser().getPlayedGames()+1);
+				
+				}
+		}
 	}
 	
 	
@@ -1795,6 +1810,7 @@ public class KDController {
 				list.add(stri);
 			}
 		}
+		
 		return list;
 		
 	}

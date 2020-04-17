@@ -41,7 +41,7 @@ public class StartPlayingUI {
 	JPanel start = new JPanel(new BorderLayout());
 	JPanel score = new JPanel();
 	
-	JButton playing = new JButton("READY");
+	JButton playing = new JButton("Select Dominos");
 	
 	JButton choose = new JButton("Choose #1");
 	JButton choose2 = new JButton("Choose #2");
@@ -68,9 +68,7 @@ public class StartPlayingUI {
 		frameR.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frameR.setLocationRelativeTo(null);
 		frameR.setVisible(true);
-		
-		View.printNextRoundPlayerOrder(KingdominoApplication.getKingdomino());
-		
+	
 		drawFirstDraft();
 		
 	}
@@ -107,7 +105,6 @@ public class StartPlayingUI {
 		playing.setPreferredSize(new Dimension(400, 200));
 		playing.setFont(new Font("Times", Font.BOLD, 100));
 		playing.setForeground(Color.BLACK);
-		playing.setBackground(Color.PINK);
 		
 		start.add(playing, BorderLayout.CENTER);
 		
@@ -245,9 +242,6 @@ public class StartPlayingUI {
 						.addGroup(layout.createSequentialGroup()
 								.addComponent(browse)
 						)
-//						.addGroup(layout.createSequentialGroup()
-//								.addComponent(save)
-//						)
 						.addGroup(layout.createSequentialGroup()
 						)
 						.addGroup(layout.createSequentialGroup())
@@ -288,9 +282,6 @@ public class StartPlayingUI {
 					.addGroup(layout.createParallelGroup()
 							.addComponent(browse)
 					)
-//					.addGroup(layout.createParallelGroup()
-//							.addComponent(save)
-//					)
 					.addGroup(layout.createParallelGroup()
 					)
 					.addGroup(layout.createParallelGroup())
@@ -320,7 +311,13 @@ public class StartPlayingUI {
 			
 				}
 				
-				if(KDQuery.hasAllPlayersChosen()) playing.setEnabled(true);
+				if(KDQuery.hasAllPlayersChosen()) {
+					
+					playing.setEnabled(true);
+					playing.setText("CLICK ON ME");
+					playing.setBackground(Color.GREEN);
+					
+				}
 				
 			}
 		});
@@ -336,7 +333,15 @@ public class StartPlayingUI {
 	
 				}
 				
-				if(KDQuery.hasAllPlayersChosen()) playing.setEnabled(true);
+				
+				if(KDQuery.hasAllPlayersChosen()) {
+					
+					playing.setEnabled(true);
+					playing.setText("CLICK ON ME");
+					playing.setBackground(Color.GREEN);
+					
+				}
+				
 				
 			}
 		});
@@ -351,7 +356,13 @@ public class StartPlayingUI {
 					
 				}
 				
-				if(KDQuery.hasAllPlayersChosen()) playing.setEnabled(true);
+				if(KDQuery.hasAllPlayersChosen()) {
+					
+					playing.setEnabled(true);
+					playing.setText("CLICK ON ME");
+					playing.setBackground(Color.GREEN);
+					
+				}
 				
 			}
 		});
@@ -367,7 +378,15 @@ public class StartPlayingUI {
 			
 				}
 				
-				if(KDQuery.hasAllPlayersChosen()) playing.setEnabled(true);
+				
+				if(KDQuery.hasAllPlayersChosen()) {
+					
+					playing.setEnabled(true);
+					playing.setText("CLICK ON ME");
+					playing.setBackground(Color.GREEN);
+					
+				}
+				
 				
 			}
 		});

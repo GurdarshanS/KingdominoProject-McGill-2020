@@ -57,9 +57,7 @@ public class King_PlayerScreen extends JFrame {
 		}
 	
 	public static void initComponents() {
-		
-		//Kingdomino kd = KDController.loadGame(null);
-
+	
 		JLabel header = new JLabel("Players");
 		header.setFont(new Font("Times", Font.BOLD, 60));
 		Border headerBorder = BorderFactory.createLineBorder(Color.black);
@@ -71,10 +69,7 @@ public class King_PlayerScreen extends JFrame {
 		JLabel player4 = new JLabel("Player Green");
 		
 		done.setEnabled(false);
-//		ButtonGroup player1Group = new ButtonGroup();
-//		player1Group.add(createNew1);
-//		player1Group.add(browse1); necessary???
-		
+
 		JPanel p3 = new JPanel();
 		GroupLayout layout = new GroupLayout(p3);
 		p3.setLayout(layout);
@@ -160,8 +155,7 @@ public class King_PlayerScreen extends JFrame {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				KingUI_PlayerCreate.initComponents("blue");
 				KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
-				System.out.println("create new user1 initiated");
-				
+			
 			}
 		});
 			
@@ -170,8 +164,7 @@ public class King_PlayerScreen extends JFrame {
 					
 					new  AssignPlayer_Screen("blue");
 					KingUI_Main.c1.show(KingUI_Main.contPanel, "5");
-					System.out.println("create new user1 initiated");
-					
+				
 				}
 	
 			});
@@ -195,7 +188,6 @@ public class King_PlayerScreen extends JFrame {
 				public void actionPerformed(java.awt.event.ActionEvent evt) {
 					KingUI_PlayerCreate.initComponents("pink");
 					KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
-					System.out.println("create new user1 initiated");
 					
 				}
 			});
@@ -204,8 +196,7 @@ public class King_PlayerScreen extends JFrame {
 					public void actionPerformed(java.awt.event.ActionEvent evt) {
 						new  AssignPlayer_Screen("pink");
 						KingUI_Main.c1.show(KingUI_Main.contPanel, "5");
-						System.out.println("create new user1 initiated");
-						
+					
 					}
 		
 				});
@@ -230,7 +221,6 @@ public class King_PlayerScreen extends JFrame {
 					public void actionPerformed(java.awt.event.ActionEvent evt) {
 						KingUI_PlayerCreate.initComponents("yellow");
 						KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
-						System.out.println("create new user1 initiated");
 						
 					}
 				});
@@ -239,8 +229,7 @@ public class King_PlayerScreen extends JFrame {
 						public void actionPerformed(java.awt.event.ActionEvent evt) {
 							new  AssignPlayer_Screen("yellow");
 							KingUI_Main.c1.show(KingUI_Main.contPanel, "5");
-							System.out.println("create new user1 initiated");
-							
+						
 						}
 			
 					});
@@ -264,7 +253,6 @@ public class King_PlayerScreen extends JFrame {
 					public void actionPerformed(java.awt.event.ActionEvent evt) {
 						KingUI_PlayerCreate.initComponents("green");
 						KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
-						System.out.println("create new user1 initiated");
 						
 					}
 				});
@@ -273,7 +261,6 @@ public class King_PlayerScreen extends JFrame {
 							public void actionPerformed(java.awt.event.ActionEvent evt) {
 								new  AssignPlayer_Screen("green");
 								KingUI_Main.c1.show(KingUI_Main.contPanel, "5");
-								System.out.println("create new user1 initiated");
 								
 							}
 				
@@ -297,15 +284,12 @@ public class King_PlayerScreen extends JFrame {
 						done.addActionListener(new java.awt.event.ActionListener() {
 							public void actionPerformed(java.awt.event.ActionEvent evt) {
 							
-								//KDController.saveGame(null, true);
-								
 								KingdominoApplication.getKingdomino().setStateMachine();
 								KDController.draftReadySM();
-								System.out.println(KingdominoApplication.getStateMachine().getGamestatusFullName());
-								System.out.println(KingdominoApplication.getKingdomino().getCurrentGame().hasAllDominos());
+								
 								new StartPlayingUI();
 								KingUI_Main.frame.dispose();
-								System.out.println("Back");
+								
 						}
 				});
 	}

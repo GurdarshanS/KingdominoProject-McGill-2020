@@ -41,11 +41,7 @@ public class KingUI_PlayerCreate extends JFrame {
 		
 	}
 	public static void initComponents(String color) {
-		
-		// Layout Manager
-		//Container c =  getContentPane();
-		//setLayout(new GroupLayout(c));
-		
+	
 		// Swing components
 		JLabel name;
 		JTextField insertName;
@@ -88,14 +84,7 @@ public class KingUI_PlayerCreate extends JFrame {
 						User u = KDController.getUserByName(input);
 						Player p = KDQuery.getPlayerByColor(color);
 						KDController.assignPlayerToUser(p, u);
-						for(Player p1: KingdominoApplication.getKingdomino().getCurrentGame().getPlayers()) {
-							if(p1.hasUser()) {
-								System.out.println(p1.getColor()+" "+p1.getUser().getName());
-							}
-							else {
-								System.out.println(p1.getColor()+" no user");
-							}
-						}
+				
 						if(color.equalsIgnoreCase("blue")) {
 							King_PlayerScreen.browse1.setEnabled(false);
 							King_PlayerScreen.createNew1.setEnabled(false);

@@ -12,6 +12,7 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
@@ -146,7 +147,7 @@ public class KingUI_Settings extends JFrame{
 				three.setSelected(false);
 				four.setSelected(false);
 				KingUI_Main.playerNum = 2;
-				System.out.println("2");
+			
 			}
 		});
 		
@@ -156,7 +157,7 @@ public class KingUI_Settings extends JFrame{
 				three.setSelected(true);
 				four.setSelected(false);
 				KingUI_Main.playerNum = 3;
-				System.out.println("3");
+				
 			}
 		});
 		
@@ -166,19 +167,19 @@ public class KingUI_Settings extends JFrame{
 				three.setSelected(false);
 				four.setSelected(true);
 				KingUI_Main.playerNum = 4;
-				System.out.println("4");
+				
 			}
 		});
 		
 		yes.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				System.out.println("Harmony");
+				
 				KingUI_Main.bonusOptions.add("harmony");
 			}
 		});
 		no.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				System.out.println("Middle Kingdom");
+				
 				KingUI_Main.bonusOptions.add("middlekingdom");
 
 			}
@@ -206,26 +207,17 @@ public class KingUI_Settings extends JFrame{
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				Kingdomino kd = KingdominoApplication.getKingdomino();
 				if(!four.isSelected() || !reg.isSelected()) {
-					System.out.println("Select stuff plz");
+					
 				}else {
 					try {
 						KDController.setGameOptions(KingUI_Main.playerNum, KingUI_Main.bonusOptions);
 						KDController.startANewGame();
 						King_PlayerScreen.initComponents();
 						KingUI_Main.c1.show(KingUI_Main.contPanel,"3");
-						KDController.saveGame(null, true);
-						for(Player p : kd.getCurrentGame().getPlayers()) {
-							System.out.println(p.getColor()+" "+p.hasUser());
-						}
-						for(User u : kd.getUsers()) {
-							System.out.println(u.getName()+ " "+u.hasPlayerInGames());
-							
-							for(Player p : u.getPlayerInGames()) {
-								System.out.println(p.getGame().equals(kd.getCurrentGame()));
-							}
-						}
+						KDController.saveGame(KingUI_Main.SAVE, true);
+						
 					} catch(Exception e) {
-						System.out.println(e.getMessage());
+						
 					}
 				}
 			}
