@@ -35,8 +35,16 @@ public class AssignPlayer_Screen extends JFrame {
 		
 		
 		List<String> users = KDQuery.getAvailableUserNamesThisGame();
-		JList list = new JList(users.toArray());
-		list.setFont(new Font("Times", Font.BOLD, 16));
+		JList list;
+		if (!users.isEmpty()) {
+			list = new JList(users.toArray());
+			list.setFont(new Font("Times", Font.BOLD, 16));
+		}
+		else {
+			String[] emptyArray= {"no existing users"};
+			list = new JList(emptyArray);
+			list.setFont(new Font("Times", Font.BOLD, 16));
+		}
 		
 		JLabel name;
 		JTextField insertName;
