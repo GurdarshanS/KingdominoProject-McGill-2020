@@ -72,7 +72,10 @@ public class StartPlayingUI {
 		drawFirstDraft();
 		
 	}
-
+	/**
+	 * Provides user interface for the initial draft
+	 * @author All members 
+	 */
 	public void drawFirstDraft() {
 
 		playing.setEnabled(false);
@@ -293,7 +296,13 @@ public class StartPlayingUI {
 					
 				)
 		);
+		
 		browse.addActionListener(new ActionListener() {
+			/**
+			 * Launches UI to browse existing dominoes
+			 * @author All team
+			 * @param e
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				new BrowsingDominoes();
@@ -301,6 +310,11 @@ public class StartPlayingUI {
 			}
 		});
 		choose.addActionListener(new ActionListener() {
+			/**
+			 * Let's user select first domino from draft panel
+			 * @author All team
+			 * @param e
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				boolean chosen = KDController.chooseSM(currentDraft.getIdSortedDomino(0));
@@ -323,6 +337,11 @@ public class StartPlayingUI {
 		});
 		
 		choose2.addActionListener(new ActionListener() {
+			/**
+			 * Let's user select second domino from draft panel
+			 * @author All team
+			 * @param e
+			 */
 			public void actionPerformed(ActionEvent e) {
 
 				boolean chosen = KDController.chooseSM(currentDraft.getIdSortedDomino(1));
@@ -346,6 +365,11 @@ public class StartPlayingUI {
 			}
 		});
 		choose3.addActionListener(new ActionListener() {
+			/**
+			 * Let's user select third domino from draft panel
+			 * @author All team
+			 * @param e
+			 */
 			public void actionPerformed(ActionEvent e) {
 
 				boolean chosen = KDController.chooseSM(currentDraft.getIdSortedDomino(2));
@@ -368,6 +392,11 @@ public class StartPlayingUI {
 		});
 		
 		choose4.addActionListener(new ActionListener() {
+			/**
+			 * Let's user select fourth domino from draft panel
+			 * @author All team
+			 * @param e
+			 */
 			public void actionPerformed(ActionEvent e) {
 			
 				boolean chosen = KDController.chooseSM(currentDraft.getIdSortedDomino(3));
@@ -392,7 +421,11 @@ public class StartPlayingUI {
 		});
 		
 		playing.addActionListener(new ActionListener() {
-
+			/**
+			 * Starts the game after the first draft has ended
+			 * @author All team
+			 * @param arg0
+			 */
 			public void actionPerformed(ActionEvent arg0) {
 				
 				frameR.dispose();
