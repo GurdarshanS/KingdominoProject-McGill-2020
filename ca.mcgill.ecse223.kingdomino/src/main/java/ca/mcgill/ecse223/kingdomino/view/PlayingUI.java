@@ -677,34 +677,29 @@ public class PlayingUI extends JFrame{
 		
 	private void drawNewDomino(Player p1, int x, int y, DominoInKingdom domino) {
 		
-		System.out.println("3    " + domino.getX() + "  " + domino.getY());
 		
 		draw(domino, domino.getDirection(), true);
 		
-		System.out.println("4   " + domino.getX() + "  " + domino.getY());
 		
 		manageAfterMove(domino);
 		changeIfUnderneath(domino);
-		
-		System.out.println("5    " + domino.getX() + "  " + domino.getY());
+		if(KingdominoApplication.getKingdomino().getStateMachine().getGamestatusFullName()) {
+			
+		}
 		
 		if(!KDQuery.isThereAvailablePlacement(p1, domino)) discard.setEnabled(true);
 		
-		System.out.println("5.5   " + domino.getX() + "  " + domino.getY());
 		
 		moveR.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
-				System.out.println("6    " + domino.getX() + "  " + domino.getY());
 				
 				manageBeforeMove(domino);
 				undraw(domino,  domino.getDirection());
 				
-				System.out.println("7    " + domino.getX() + "  " + domino.getY());
 				
 				KDController.moveSM("right");
 			
-				System.out.println("9   " + domino.getX() + "  " + domino.getY());
 				
 				draw(domino,  domino.getDirection(), true);
 				
@@ -717,12 +712,10 @@ public class PlayingUI extends JFrame{
 		moveL.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
-				System.out.println("6    " + domino.getX() + "  " + domino.getY());
 				
 				manageBeforeMove(domino);
 				undraw(domino,  domino.getDirection());
 				
-				System.out.println("7    " + domino.getX() + "  " + domino.getY());
 				
 				KDController.moveSM("left");
 			
