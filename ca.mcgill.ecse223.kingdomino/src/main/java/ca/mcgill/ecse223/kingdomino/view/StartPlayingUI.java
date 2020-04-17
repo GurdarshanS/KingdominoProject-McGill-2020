@@ -74,13 +74,6 @@ public class StartPlayingUI {
 		drawFirstDraft();
 		
 	}
-	
-	public static void main(String[] args) {
-		
-		Kingdomino kd = KDController.loadGame("firstDraft.data");
-		StartPlayingUI ui = new StartPlayingUI();
-		
-	}
 
 	public void drawFirstDraft() {
 

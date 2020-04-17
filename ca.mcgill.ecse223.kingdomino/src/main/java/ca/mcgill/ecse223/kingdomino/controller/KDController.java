@@ -9,10 +9,13 @@ import ca.mcgill.ecse223.kingdomino.model.Player.PlayerColor;
 import ca.mcgill.ecse223.kingdomino.persistence.KDPersistence;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.google.common.collect.Sets;
 
@@ -1783,13 +1786,35 @@ public class KDController {
 		}
 		throw new java.lang.IllegalArgumentException("Domino with ID " + id + " not found.");
 	}
-	
-	
+	public static ArrayList<String> fileSearch(String s){
+		
+		Set<String> str = listFilesUsingJavaIO(s);
+		ArrayList<String> list = new ArrayList<String>();
+		for(String stri: str) {
+			if(stri.contains(".data")){
+				list.add(stri);
+			}
+		}
+		return list;
+		
+	}
 	
 	////////////////////////////////////////
 	/// ---- Private Helper Methods ---- ///
 	////////////////////////////////////////
-	
+	/**
+	 * 
+	 * This method returns all the file name inside a directory
+	 * Retrieved on Baeldung : https://www.baeldung.com/java-list-directory-files?fbclid=IwAR2peMbOXSEzbUPNn9Coe8XK9WHyimpyqI--L-9BcrFKJBF_jHsSPOqYiXM
+	 * @param dir
+	 * @return Set<String>
+	 */
+	private static Set<String> listFilesUsingJavaIO(String dir) {
+	    return Stream.of(new File(dir).listFiles())
+	      .filter(file -> !file.isDirectory())
+	      .map(File::getName)
+	      .collect(Collectors.toSet());
+	}
 
 	
 	private static List<List<Integer>> leftNeighborCoords (DominoInKingdom testDomino){

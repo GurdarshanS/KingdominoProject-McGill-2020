@@ -56,10 +56,8 @@ public class KingUI_PlayerCreate extends JFrame {
 		
 		// back button
 		back = new JButton("Back");
-		back.setFont(new Font("Times", Font.BOLD, 16));
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				King_PlayerScreen.initComponents();
 				KingUI_Main.c1.show(KingUI_Main.contPanel, "3");
 			}
 		});
@@ -77,7 +75,6 @@ public class KingUI_PlayerCreate extends JFrame {
 		
 		// text box
 		insertName = new JTextField();
-
 		insertName.setColumns(10);
 
 		// create name
@@ -103,29 +100,39 @@ public class KingUI_PlayerCreate extends JFrame {
 							King_PlayerScreen.browse1.setEnabled(false);
 							King_PlayerScreen.createNew1.setEnabled(false);
 							King_PlayerScreen.nouser1.setEnabled(false);
+							King_PlayerScreen.p1Complete = true;
+
 
 						}
 						if(color.equalsIgnoreCase("green")) {
 							King_PlayerScreen.browse4.setEnabled(false);
 							King_PlayerScreen.createNew4.setEnabled(false);
 							King_PlayerScreen.nouser4.setEnabled(false);
+							King_PlayerScreen.p4Complete = true;
+
 
 						}
 						if(color.equalsIgnoreCase("pink")) {
 							King_PlayerScreen.browse2.setEnabled(false);
 							King_PlayerScreen.createNew2.setEnabled(false);
 							King_PlayerScreen.nouser2.setEnabled(false);
+							King_PlayerScreen.p2Complete = true;
+
 
 						}
 						if(color.equalsIgnoreCase("yellow")) {
 							King_PlayerScreen.browse3.setEnabled(false);
 							King_PlayerScreen.createNew3.setEnabled(false);
 							King_PlayerScreen.nouser3.setEnabled(false);
+							King_PlayerScreen.p3Complete = true;
+
 						}
-						King_PlayerScreen.initComponents();
 						KingUI_Main.c1.show(KingUI_Main.contPanel, "3");
 					}catch(Exception ex) {
 						JOptionPane.showMessageDialog(null,ex.getMessage());
+					}if(King_PlayerScreen.p1Complete && King_PlayerScreen.p2Complete && King_PlayerScreen.p3Complete && King_PlayerScreen.p4Complete) {
+						King_PlayerScreen.done.setEnabled(true);
+						
 					}
 				}
 		});

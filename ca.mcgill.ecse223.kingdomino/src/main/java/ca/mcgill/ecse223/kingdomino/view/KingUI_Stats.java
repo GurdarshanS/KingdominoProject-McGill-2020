@@ -45,8 +45,7 @@ public class KingUI_Stats extends JFrame {
 		 JLabel stats;
 		 JLabel statsTwo;
 		 Border border;
-		 JButton back, search;
-		 Border borderTwo;
+		 JButton back;
 	
 		List<User> users = KingdominoApplication.getKingdomino().getUsers();
 		List<String> sList = new ArrayList<String>();
@@ -61,7 +60,7 @@ public class KingUI_Stats extends JFrame {
 				ratio = wins/played;
 			}
 			DecimalFormat df = new DecimalFormat("#.##");
-			String row = String.format("Users: %1$-20s \t\t Won: %2$-15d \t\t Lost: %3$-15d \t\t Played: %4$-15d \t\t Ratio: %5$-5s \n",
+			String row = String.format("User: %1$-20s \t\t Won: %2$-15d \t\t Lost: %3$-15d \t\t Played: %4$-15d \t\t Ratio: %5$-5s \n",
 										u.getName(), wins, loss, played, df.format(ratio));
 			
 			sList.add(row);
@@ -81,12 +80,11 @@ public class KingUI_Stats extends JFrame {
 		// box that says stats
 		border = BorderFactory.createLineBorder(Color.BLACK);
 		stats = new JLabel("Insert Username Below", SwingConstants.CENTER);
-		stats.setText("Player Statistics");
+		stats.setText("User Statistics");
 		stats.setBorder(border);
-		stats.setFont(new Font("Times", Font.BOLD, 55));
+		stats.setFont(new Font("Times", Font.BOLD, 50));
 		
 		
-		borderTwo = BorderFactory.createLineBorder(Color.BLACK);
 		JPanel p3 = new JPanel();
 		GroupLayout layout = new GroupLayout(p3);
 		p3.setLayout(layout);
@@ -97,7 +95,7 @@ public class KingUI_Stats extends JFrame {
 		layout.setHorizontalGroup(
 				layout.createSequentialGroup()
 				.addComponent(back)
-				.addGap(270)
+				.addGap(300)
 				.addGroup(layout.createSequentialGroup())
 				.addGroup(layout.createSequentialGroup()
 				.addGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
@@ -118,6 +116,7 @@ public class KingUI_Stats extends JFrame {
 				.addGroup(layout.createSequentialGroup()
 						.addGap(150)
 						.addComponent(stats)
+						.addGap(50)
 						.addComponent(list)
 						//.addComponent(input,GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE  )
 						.addGap(50)

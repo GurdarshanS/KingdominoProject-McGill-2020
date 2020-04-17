@@ -15,11 +15,19 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.Border;
 
+import ca.mcgill.ecse223.kingdomino.KingdominoApplication;
 import ca.mcgill.ecse223.kingdomino.controller.KDController;
+import ca.mcgill.ecse223.kingdomino.controller.KDQuery;
+import ca.mcgill.ecse223.kingdomino.model.DominoInKingdom;
+import ca.mcgill.ecse223.kingdomino.model.KingdomTerritory;
+import ca.mcgill.ecse223.kingdomino.model.Kingdomino;
+import ca.mcgill.ecse223.kingdomino.model.Player;
 
 public class KingUI_Main {
 	
@@ -49,15 +57,12 @@ public class KingUI_Main {
 		title.setBorder(blackline);
 		JButton start = new JButton("Start New Game");
 		JButton load = new JButton("Load Game");
-		JButton search = new JButton("Player Statistics");
+		JButton search = new JButton("User Statistics");
 		
 		JPanel p1 = new JPanel();
 		JPanel p2 = new JPanel(new GridBagLayout());
 		JPanel p3 = new JPanel(new BorderLayout());
 		
-		
-		p1.setBackground(Color.LIGHT_GRAY);
-		p2.setBackground(Color.LIGHT_GRAY);
 		
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.insets = new Insets(10, 10, 10, 10);
@@ -94,7 +99,34 @@ public class KingUI_Main {
 		
 		load.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				//KDController.loadGame();
+				
+				String s = System.getProperty("user.dir");
+				System.out.println(s);
+				ArrayList<String> fileName = KDController.fileSearch(s);
+				System.out.println(fileName);
+				String files = "Provide file name (.data) to load!\n\n";
+				for(String str : fileName) {
+					files = files+"    			        "+str+"\n";
+				}
+				String providedFile = JOptionPane.showInputDialog(null, files);
+
+				if(providedFile != null) {
+					if(providedFile.isEmpty()) {
+						JOptionPane.showMessageDialog(null, "Input is empty!");
+					}
+					else {
+						if(!fileName.contains(providedFile)) {
+							JOptionPane.showMessageDialog(null, "File not found ");			
+						}else {
+							KDController.loadGame(providedFile);
+							frame.dispose();
+							Kingdomino kd = KingdominoApplication.getKingdomino();
+							Player player = kd.getCurrentGame().getNextPlayer();
+							DominoInKingdom dnk = (DominoInKingdom) player.getKingdom().getTerritory(player.getKingdom().getTerritories().size()-1);
+							new PlayingUI(player, -3, 3, dnk);
+						}
+					} 
+				}
 			}
 		});
 		

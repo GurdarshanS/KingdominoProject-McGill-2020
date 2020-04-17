@@ -42,7 +42,12 @@ public class King_PlayerScreen extends JFrame {
 	static JButton createNew4 = new JButton("Assign New User");
 	static JButton browse4 = new JButton("Assign Existing User");
 	static JButton nouser4 = new JButton("No User");
-
+	static boolean p1Complete = false;
+	static boolean p2Complete = false;
+	static boolean p3Complete = false;
+	static boolean p4Complete = false;
+	static JButton done = new JButton("Done");
+	
 	public King_PlayerScreen() {
 		
 		initComponents();
@@ -65,7 +70,6 @@ public class King_PlayerScreen extends JFrame {
 		JLabel player3 = new JLabel("Player Yellow");
 		JLabel player4 = new JLabel("Player Green");
 		
-		JButton done = new JButton("Done");
 		done.setEnabled(false);
 //		ButtonGroup player1Group = new ButtonGroup();
 //		player1Group.add(createNew1);
@@ -157,21 +161,17 @@ public class King_PlayerScreen extends JFrame {
 				KingUI_PlayerCreate.initComponents("blue");
 				KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
 				System.out.println("create new user1 initiated");
-				if(!createNew1.isEnabled() && !createNew2.isEnabled() && !createNew3.isEnabled() && !createNew4.isEnabled()) {
-					done.setEnabled(true);
-				}
+				
 			}
 		});
 			
 			browse1.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(java.awt.event.ActionEvent evt) {
 					
-					new  AssignPlayer_Screen("yellow");
+					new  AssignPlayer_Screen("blue");
 					KingUI_Main.c1.show(KingUI_Main.contPanel, "5");
 					System.out.println("create new user1 initiated");
-					if(!createNew1.isEnabled() && !createNew2.isEnabled() && !createNew3.isEnabled() && !createNew4.isEnabled()) {
-						done.setEnabled(true);
-					}
+					
 				}
 	
 			});
@@ -181,11 +181,12 @@ public class King_PlayerScreen extends JFrame {
 					King_PlayerScreen.browse1.setEnabled(false);
 					King_PlayerScreen.createNew1.setEnabled(false);
 					King_PlayerScreen.nouser1.setEnabled(false);
-					if(!createNew1.isEnabled() && !createNew2.isEnabled() && !createNew3.isEnabled() && !createNew4.isEnabled()) {
+					p1Complete = true;
+					if(p1Complete && p2Complete && p3Complete && p4Complete) {
 						done.setEnabled(true);
+					
+					
 					}
-					
-					
 				}
 	
 			});
@@ -195,9 +196,7 @@ public class King_PlayerScreen extends JFrame {
 					KingUI_PlayerCreate.initComponents("pink");
 					KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
 					System.out.println("create new user1 initiated");
-					if(!createNew1.isEnabled() && !createNew2.isEnabled() && !createNew3.isEnabled() && !createNew4.isEnabled()) {
-						done.setEnabled(true);
-					}
+					
 				}
 			});
 				
@@ -206,9 +205,7 @@ public class King_PlayerScreen extends JFrame {
 						new  AssignPlayer_Screen("pink");
 						KingUI_Main.c1.show(KingUI_Main.contPanel, "5");
 						System.out.println("create new user1 initiated");
-						if(!createNew1.isEnabled() && !createNew2.isEnabled() && !createNew3.isEnabled() && !createNew4.isEnabled()) {
-							done.setEnabled(true);
-						}
+						
 					}
 		
 				});
@@ -218,8 +215,10 @@ public class King_PlayerScreen extends JFrame {
 						King_PlayerScreen.browse2.setEnabled(false);
 						King_PlayerScreen.createNew2.setEnabled(false);
 						King_PlayerScreen.nouser2.setEnabled(false);
-						if(!createNew1.isEnabled() && !createNew2.isEnabled() && !createNew3.isEnabled() && !createNew4.isEnabled()) {
+						p2Complete = true;
+						if(p1Complete && p2Complete && p3Complete && p4Complete) {
 							done.setEnabled(true);
+						
 						}
 						
 						
@@ -232,9 +231,7 @@ public class King_PlayerScreen extends JFrame {
 						KingUI_PlayerCreate.initComponents("yellow");
 						KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
 						System.out.println("create new user1 initiated");
-						if(!createNew1.isEnabled() && !createNew2.isEnabled() && !createNew3.isEnabled() && !createNew4.isEnabled()) {
-							done.setEnabled(true);
-						}
+						
 					}
 				});
 					
@@ -243,9 +240,7 @@ public class King_PlayerScreen extends JFrame {
 							new  AssignPlayer_Screen("yellow");
 							KingUI_Main.c1.show(KingUI_Main.contPanel, "5");
 							System.out.println("create new user1 initiated");
-							if(!createNew1.isEnabled() && !createNew2.isEnabled() && !createNew3.isEnabled() && !createNew4.isEnabled()) {
-								done.setEnabled(true);
-							}
+							
 						}
 			
 					});
@@ -255,10 +250,11 @@ public class King_PlayerScreen extends JFrame {
 							King_PlayerScreen.browse3.setEnabled(false);
 							King_PlayerScreen.createNew3.setEnabled(false);
 							King_PlayerScreen.nouser3.setEnabled(false);
-							if(!createNew1.isEnabled() && !createNew2.isEnabled() && !createNew3.isEnabled() && !createNew4.isEnabled()) {
+							p3Complete = true;
+							if(p1Complete && p2Complete && p3Complete && p4Complete) {
 								done.setEnabled(true);
-							}
 							
+							}
 							
 						}
 			
@@ -269,9 +265,7 @@ public class King_PlayerScreen extends JFrame {
 						KingUI_PlayerCreate.initComponents("green");
 						KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
 						System.out.println("create new user1 initiated");
-						if(!createNew1.isEnabled() && !createNew2.isEnabled() && !createNew3.isEnabled() && !createNew4.isEnabled()) {
-							done.setEnabled(true);
-						}
+						
 					}
 				});
 						
@@ -280,9 +274,7 @@ public class King_PlayerScreen extends JFrame {
 								new  AssignPlayer_Screen("green");
 								KingUI_Main.c1.show(KingUI_Main.contPanel, "5");
 								System.out.println("create new user1 initiated");
-								if(!createNew1.isEnabled() && !createNew2.isEnabled() && !createNew3.isEnabled() && !createNew4.isEnabled()) {
-									done.setEnabled(true);
-								}
+								
 							}
 				
 						});
@@ -292,8 +284,10 @@ public class King_PlayerScreen extends JFrame {
 								King_PlayerScreen.browse4.setEnabled(false);
 								King_PlayerScreen.createNew4.setEnabled(false);
 								King_PlayerScreen.nouser4.setEnabled(false);
-								if(!createNew1.isEnabled() && !createNew2.isEnabled() && !createNew3.isEnabled() && !createNew4.isEnabled()) {
+								p4Complete = true;
+								if(p1Complete && p2Complete && p3Complete && p4Complete) {
 									done.setEnabled(true);
+								
 								}
 								
 							}
@@ -303,15 +297,16 @@ public class King_PlayerScreen extends JFrame {
 						done.addActionListener(new java.awt.event.ActionListener() {
 							public void actionPerformed(java.awt.event.ActionEvent evt) {
 							
-								KDController.saveGame(null, true);
-								KingdominoApplication.getStateMachine();
-								KDController.draftReadySM();
+								//KDController.saveGame(null, true);
 								
+								KingdominoApplication.getKingdomino().setStateMachine();
+								KDController.draftReadySM();
+								System.out.println(KingdominoApplication.getStateMachine().getGamestatusFullName());
+								System.out.println(KingdominoApplication.getKingdomino().getCurrentGame().hasAllDominos());
 								new StartPlayingUI();
 								KingUI_Main.frame.dispose();
 								System.out.println("Back");
 						}
 				});
-		
 	}
 }
