@@ -99,6 +99,15 @@ public class PlayingUI extends JFrame{
 	int prevNumCrownsLeft;
 	int prevNumCrownsRight;
 	
+	/**
+	 * Displays the panel/frame for the playing screen
+	 * 
+	 * @author All team
+	 * @param p1
+	 * @param x
+	 * @param y
+	 * @param dom
+	 */
 	public PlayingUI(Player p1, int x, int y, DominoInKingdom dom) {
 
 		frameR.setSize(1350, 850);
@@ -108,7 +117,12 @@ public class PlayingUI extends JFrame{
 		drawInitialKingdom(p1);
 		drawNewDomino(p1,x,y,dom);
 	}
-
+	/**
+	 * Provides user interface for the kingdom playing screens
+	 * 
+	 * @author All team
+	 * @param p1
+	 */
 	private void drawInitialKingdom(Player p1) {
 
 		Border blackline = BorderFactory.createLineBorder(Color.DARK_GRAY);
@@ -394,12 +408,22 @@ public class PlayingUI extends JFrame{
 				)
 		);
 		save.addActionListener(new ActionListener() {
+			/**
+			 * Saves the game at the current point in the game
+			 * @author All team
+			 * @param e
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
-			KDController.saveGame(KingUI_Main.SAVE, true);
+				KDController.saveGame(KingUI_Main.SAVE, true);
 				
 		}});
 		browse.addActionListener(new ActionListener() {
+			/**
+			 * Displays the browse dominoe page 
+			 * @author All team
+			 * @param e
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				new BrowsingDominoes();
@@ -407,6 +431,11 @@ public class PlayingUI extends JFrame{
 			}
 		});
 		choose.addActionListener(new ActionListener() {
+			/**
+			 * Chooses the first domino
+			 * @author All team
+			 * @param e
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				boolean chosen = KDController.chooseSM(currentDraft.getIdSortedDomino(0));
@@ -441,6 +470,11 @@ public class PlayingUI extends JFrame{
 		});
 		
 		choose2.addActionListener(new ActionListener() {
+			/**
+			 * Chooses the second domino
+			 * @author All team
+			 * @param e
+			 */
 			public void actionPerformed(ActionEvent e) {
 
 				boolean chosen = KDController.chooseSM(currentDraft.getIdSortedDomino(1));
@@ -473,6 +507,11 @@ public class PlayingUI extends JFrame{
 			}
 		});
 		choose3.addActionListener(new ActionListener() {
+			/**
+			 * Chooses the third domino
+			 * @author All team
+			 * @param e
+			 */
 			public void actionPerformed(ActionEvent e) {
 
 				boolean chosen = KDController.chooseSM(currentDraft.getIdSortedDomino(2));
@@ -507,6 +546,11 @@ public class PlayingUI extends JFrame{
 		});
 		
 		choose4.addActionListener(new ActionListener() {
+			/**
+			 * Chooses the fourth domino
+			 * @author All team
+			 * @param e
+			 */
 			public void actionPerformed(ActionEvent e) {
 			
 				boolean chosen = KDController.chooseSM(currentDraft.getIdSortedDomino(3));
@@ -541,6 +585,11 @@ public class PlayingUI extends JFrame{
 		});
 		
 		nextRound.addActionListener(new ActionListener() {
+			/**
+			 * Advances to the next round
+			 * @author All team
+			 * @param e
+			 */
 			public void actionPerformed(ActionEvent e) {
 			
 				boolean ready = KDController.nextSelectionReadySM();
@@ -603,7 +652,14 @@ public class PlayingUI extends JFrame{
 			return x-(9*y)+41;
 			
 	}
-	
+	/**
+	 * draws an individual domino
+	 * 
+	 * @author All team
+	 * @param domino
+	 * @param dir
+	 * @param lastDomino
+	 */
 	private void draw(DominoInKingdom domino, DirectionKind dir, boolean lastDomino) {
 			
 			int squareToDraw = translate(domino.getX(), domino.getY());
@@ -639,7 +695,14 @@ public class PlayingUI extends JFrame{
 			}
 			
 		}
-	
+	/**
+	 * removes an individual domino
+	 * 
+	 * @author All team
+	 * @param domino
+	 * @param dir
+	 * @param lastDomino
+	 */
 	private void undraw(DominoInKingdom domino, DirectionKind dir) {
 			
 			int squareToDraw = translate(domino.getX(), domino.getY());
@@ -667,7 +730,14 @@ public class PlayingUI extends JFrame{
 			this.currentRight.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY)); 
 		
 		}
-		
+	/**
+	 * Draws the domino that has yet to be placed and allows it to be moved
+	 * 
+	 * @author All team
+	 * @param domino
+	 * @param dir
+	 * @param lastDomino
+	 */
 	private void drawNewDomino(Player p1, int x, int y, DominoInKingdom domino) {
 		
 		if(!KDQuery.isThereAvailablePlacement(p1, domino)) discard.setEnabled(true);
@@ -734,7 +804,12 @@ public class PlayingUI extends JFrame{
 			  frame.setVisible(true);
 			  
 			  lookKingdom1.addActionListener(new ActionListener() {
-
+				  /**
+					 * calls constructor to draw first players kingdom
+					 * 
+					 * @author All team
+					 * @param arg0
+					 */
 				public void actionPerformed(ActionEvent arg0) {
 					
 					Player blue = KDQuery.getPlayerByColor("blue");
@@ -747,7 +822,12 @@ public class PlayingUI extends JFrame{
 			  });
 			  
 			  lookKingdom2.addActionListener(new ActionListener() {
-
+				  /**
+					 * calls constructor to draw second players kingdom
+					 * 
+					 * @author All team
+					 * @param arg0
+					 */
 					public void actionPerformed(ActionEvent arg0) {
 						
 						Player pink = KDQuery.getPlayerByColor("pink");
@@ -760,7 +840,12 @@ public class PlayingUI extends JFrame{
 			});
 			  
 			  lookKingdom3.addActionListener(new ActionListener() {
-
+				  /**
+					 * calls constructor to draw third players kingdom
+					 * 
+					 * @author All team
+					 * @param arg0
+					 */
 					public void actionPerformed(ActionEvent arg0) {
 						
 						Player green = KDQuery.getPlayerByColor("green");
@@ -773,7 +858,12 @@ public class PlayingUI extends JFrame{
 			});
 			  
 			  lookKingdom4.addActionListener(new ActionListener() {
-
+				  /**
+					 * calls constructor to draw fourth players kingdom
+					 * 
+					 * @author All team
+					 * @param arg0
+					 */
 					public void actionPerformed(ActionEvent arg0) {
 						
 						Player yellow = KDQuery.getPlayerByColor("yellow");
@@ -786,7 +876,12 @@ public class PlayingUI extends JFrame{
 			 });
 			  
 			  saveStats.addActionListener(new ActionListener() {
-
+				  /**
+					 * saves the current game's statistics
+					 * 
+					 * @author All team
+					 * @param arg0
+					 */
 				public void actionPerformed(ActionEvent arg0) {
 					
 					KDController.saveGame(KingUI_Main.SAVE, true);
@@ -796,7 +891,12 @@ public class PlayingUI extends JFrame{
 			  });
 			  
 			  exit.addActionListener(new ActionListener() {
-
+				  /**
+					 * exits application
+					 * 
+					 * @author All team
+					 * @param arg0
+					 */
 				public void actionPerformed(ActionEvent e) {
 					
 					System.exit(0);
@@ -806,7 +906,12 @@ public class PlayingUI extends JFrame{
 			  });
 			  
 			  playAgain.addActionListener(new ActionListener() {
-
+				  /**
+					 * returns users to the main page to start a new game
+					 * 
+					 * @author All team
+					 * @param arg0
+					 */
 				public void actionPerformed(ActionEvent e) {
 					
 					frame.dispose();
@@ -921,7 +1026,12 @@ public class PlayingUI extends JFrame{
 				  frame.setVisible(true);
 				  
 				  lookKingdom1.addActionListener(new ActionListener() {
-
+					  /**
+						 * calls constructor to draw first players kingdom
+						 * 
+						 * @author All team
+						 * @param arg0
+						 */
 					public void actionPerformed(ActionEvent arg0) {
 						
 						Player blue = KDQuery.getPlayerByColor("blue");
@@ -934,7 +1044,12 @@ public class PlayingUI extends JFrame{
 				  });
 				  
 				  lookKingdom2.addActionListener(new ActionListener() {
-
+					  /**
+						 * calls constructor to draw second players kingdom
+						 * 
+						 * @author All team
+						 * @param arg0
+						 */
 						public void actionPerformed(ActionEvent arg0) {
 							
 							Player pink = KDQuery.getPlayerByColor("pink");
@@ -947,7 +1062,12 @@ public class PlayingUI extends JFrame{
 				});
 				  
 				  lookKingdom3.addActionListener(new ActionListener() {
-
+					  /**
+						 * calls constructor to draw third players kingdom
+						 * 
+						 * @author All team
+						 * @param arg0
+						 */
 						public void actionPerformed(ActionEvent arg0) {
 							
 							Player green = KDQuery.getPlayerByColor("green");
@@ -960,7 +1080,12 @@ public class PlayingUI extends JFrame{
 				});
 				  
 				  lookKingdom4.addActionListener(new ActionListener() {
-
+					  /**
+						 * calls constructor to draw fourth players kingdom
+						 * 
+						 * @author All team
+						 * @param arg0
+						 */
 						public void actionPerformed(ActionEvent arg0) {
 							
 							Player yellow = KDQuery.getPlayerByColor("yellow");
@@ -973,7 +1098,12 @@ public class PlayingUI extends JFrame{
 				 });
 				  
 				  saveStats.addActionListener(new ActionListener() {
-
+					  /**
+						 * saves the current games' players statistics
+						 * 
+						 * @author All team
+						 * @param arg0
+						 */
 					public void actionPerformed(ActionEvent arg0) {
 						
 						KDController.saveGame(KingUI_Main.SAVE, true);
@@ -981,7 +1111,12 @@ public class PlayingUI extends JFrame{
 					}
 					
 				  });
-				  
+				  /**
+					 * exits application
+					 * 
+					 * @author All team
+					 * @param arg0
+					 */
 				  exit.addActionListener(new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -991,7 +1126,12 @@ public class PlayingUI extends JFrame{
 					}
 				
 				  });
-				  
+				  /**
+					 * returns users to the main page to start a new game
+					 * 
+					 * @author All team
+					 * @param arg0
+					 */
 				  playAgain.addActionListener(new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -1009,6 +1149,12 @@ public class PlayingUI extends JFrame{
 		}
 		
 		moveR.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * move domino right
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				
@@ -1028,6 +1174,12 @@ public class PlayingUI extends JFrame{
 		});
 		
 		moveL.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * move domino left
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				
@@ -1046,6 +1198,12 @@ public class PlayingUI extends JFrame{
 		});
 		
 		moveU.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * move domino up
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				manageBeforeMove(domino);
@@ -1065,6 +1223,12 @@ public class PlayingUI extends JFrame{
 		});
 		
 		moveD.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * move domino down
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 			
 				manageBeforeMove(domino);
@@ -1082,6 +1246,12 @@ public class PlayingUI extends JFrame{
 		});
 		
 		rotateR.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * rotate domino right
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 			
 				manageBeforeMove(domino);
@@ -1099,6 +1269,12 @@ public class PlayingUI extends JFrame{
 		});
 		
 		rotateL.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * move domino left
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				manageBeforeMove(domino);
@@ -1115,6 +1291,12 @@ public class PlayingUI extends JFrame{
 		});
 		
 		place.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * places domino at current location 
+			 * Checks the state and other specificities
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				boolean placed = KDController.placeSM();
 			
@@ -1322,6 +1504,13 @@ public class PlayingUI extends JFrame{
 		});
 
 		discard.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * discards domino if unable to place on board
+			 * Checks the state and other specificities
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				boolean discarded = KDController.discardSM();
 				
@@ -1506,7 +1695,12 @@ public class PlayingUI extends JFrame{
 		});
 		
 	}
-		
+	/**
+	 * gets the Color of a Tile
+	 * 
+	 * @author All team
+	 * @param t1
+	 */
 	private Color getColor(TerrainType t1) {
 			Color c1 = null;
 			if(t1.equals(TerrainType.Forest)) {
@@ -1524,7 +1718,14 @@ public class PlayingUI extends JFrame{
 			}
 			return c1;
 		}
-		
+	/**
+	 * draws a domino's crowns on top of the 
+	 * tile color
+	 * 
+	 * @author All team
+	 * @param p1
+	 * @param n1
+	 */
 	private void addCrowns(JPanel p1, int n1) {
 			
 			JPanel crowns1 = new JPanel();
@@ -1548,7 +1749,14 @@ public class PlayingUI extends JFrame{
 			frameR.setVisible(true);
 			
 	}
-		
+	/**
+	 * remove a domino's crowns on top of the 
+	 * tile color
+	 * 
+	 * @author All team
+	 * @param p1
+	 * @param n1
+	 */
 	private void removeCrowns(JPanel p1, int n1) {
 			
 			if(n1==1) {
@@ -1569,7 +1777,13 @@ public class PlayingUI extends JFrame{
 			}
 	
 		}
-		
+	/**
+	 * Indicates that there is a domino underneath another domino (red)
+	 * 
+	 * @author All team
+	 * @param domino
+	
+	 */
 	private void changeIfUnderneath(DominoInKingdom domino) {
 			
 			int[] otherPosMine = KDQuery.calculateRightPos(domino);
@@ -1601,7 +1815,13 @@ public class PlayingUI extends JFrame{
 			}
 			
 		}
-		
+	/**
+	 * Removes the domino's crowns, and adds the dominos underneath
+	 * 
+	 * @author All team
+	 * @param domino
+	
+	 */
 	private void manageBeforeMove(DominoInKingdom domino) {
 			
 			removeCrowns(currentLeft, domino.getDomino().getLeftCrown());
@@ -1611,7 +1831,13 @@ public class PlayingUI extends JFrame{
 			addCrowns(currentRight, prevNumCrownsRight);
 			
 		}
-		
+	/**
+	 * Removes the previous domino's crowns, and adds the current dominos
+	 * 
+	 * @author All team
+	 * @param domino
+	
+	 */
 	private void manageAfterMove(DominoInKingdom domino) {
 						
 			prevNumCrownsLeft = currentLeft.getComponentCount();
@@ -1623,7 +1849,13 @@ public class PlayingUI extends JFrame{
 			addCrowns(currentRight, domino.getDomino().getRightCrown());
 			
 		}
-		
+	/**
+	 * Displays the order in which players select and play
+	 * 
+	 * @author All team
+	 * @param panel
+	
+	 */
 	private void displayPlayerOrder(JPanel panel) {
 		
 		List<Player> playerOrder = KingdominoApplication.getKingdomino().getCurrentGame().getPlayers();
@@ -1654,7 +1886,13 @@ public class PlayingUI extends JFrame{
 		}
 		
 	}
-
+	/**
+	 * Displays the current turn's number
+	 * 
+	 * @author All team
+	 * @param panel
+	
+	 */
 	private void displayTurnNumber(JPanel panel) {
 		
 		int turn = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer().getKingdom().getTerritories().size()-1;
