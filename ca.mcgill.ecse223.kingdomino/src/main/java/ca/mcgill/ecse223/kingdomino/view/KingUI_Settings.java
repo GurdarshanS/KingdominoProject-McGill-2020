@@ -28,6 +28,12 @@ import ca.mcgill.ecse223.kingdomino.model.User;
 
 public class KingUI_Settings extends JFrame{
 	
+	/**
+	 * launches UI for game setting
+	 * 
+	 * @author All team
+	 * @param none
+	 */
 	public static void initSettings() {
 		
 		JLabel title = new JLabel("Game Settings");
@@ -136,12 +142,25 @@ public class KingUI_Settings extends JFrame{
 		KingUI_Main.contPanel.add(p1, "2");
 		
 		back.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button to go back to previous UI panel
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
+			
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				KingUI_Main.c1.show(KingUI_Main.contPanel, "1");
 			}
 		});
 		
 		two.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button choose a 2-player game
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				two.setSelected(true);
 				three.setSelected(false);
@@ -152,6 +171,12 @@ public class KingUI_Settings extends JFrame{
 		});
 		
 		three.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button choose a 3-player game
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				two.setSelected(false);
 				three.setSelected(true);
@@ -162,6 +187,12 @@ public class KingUI_Settings extends JFrame{
 		});
 		
 		four.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button choose a 4-player game
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				two.setSelected(false);
 				three.setSelected(false);
@@ -172,12 +203,24 @@ public class KingUI_Settings extends JFrame{
 		});
 		
 		yes.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button choose harmony as bonus option
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				KingUI_Main.bonusOptions.add("harmony");
 			}
 		});
 		no.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button choose middle kingdom as bonus option
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				KingUI_Main.bonusOptions.add("middlekingdom");
@@ -186,17 +229,35 @@ public class KingUI_Settings extends JFrame{
 		});
 		
 		reg.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button to choose regular play
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				// regular game mode
 			}
 		});
 		
 		dyn.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button to choose dynasty play, to do in future
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				// to-do bonus feature
 			}
 		});
 		mighty.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button to choose mighty kingdom play, to do in future
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				// to-do bonus feature
 			}
@@ -204,6 +265,13 @@ public class KingUI_Settings extends JFrame{
 		
 		
 		cont.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button to continue after game settings are finished,
+			 * launches the user-player assignment page
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				Kingdomino kd = KingdominoApplication.getKingdomino();
 				if(!four.isSelected() || !reg.isSelected()) {

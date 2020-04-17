@@ -40,6 +40,14 @@ public class KingUI_PlayerCreate extends JFrame {
 		initComponents(color);
 		
 	}
+	
+	/**
+	 * launches UI that creates a new user
+	 * 
+	 * @author All team
+	 * @param evt
+	 */
+	
 	public static void initComponents(String color) {
 	
 		// Swing components
@@ -53,6 +61,14 @@ public class KingUI_PlayerCreate extends JFrame {
 		// back button
 		back = new JButton("Back");
 		back.addActionListener(new ActionListener() {
+			
+			/**
+			 * button to travel back to previous UI
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
+			
 			public void actionPerformed(ActionEvent e) {
 				KingUI_Main.c1.show(KingUI_Main.contPanel, "3");
 			}
@@ -77,6 +93,14 @@ public class KingUI_PlayerCreate extends JFrame {
 		done = new JButton("Create");
 		done.setFont(new Font("Times", Font.BOLD, 16));
 		done.addActionListener(new ActionListener() {
+			
+			/**
+			 * button to indicate that new user create and 
+			 * assigned to desired player
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(ActionEvent e) {
 					String input = insertName.getText();
 					try {

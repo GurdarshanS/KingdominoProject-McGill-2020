@@ -61,7 +61,13 @@ public class StartPlayingUI {
 	JLabel yellowP;
 	JLabel pinkP;
 	
-
+	/**
+	 * launches the UI that draws and interacts with the first
+	 * draft of the game
+	 * 
+	 * @author All team
+	 * @param none
+	 */
 	public StartPlayingUI() {
 		
 		frameR.setSize(1350, 850);
@@ -446,6 +452,15 @@ public class StartPlayingUI {
 		
 	}
 	
+	/**
+	 * draws a domino's crowns on top of the 
+	 * tile color
+	 * 
+	 * @author All team
+	 * @param p1
+	 * @param n1
+	 */
+	
 	private void addCrowns(JPanel p1, int n1) {
 		
 		JPanel crowns1 = new JPanel();
@@ -470,6 +485,13 @@ public class StartPlayingUI {
 		
 	}
 	
+	/**
+	 * gets the Color of a Tile
+	 * 
+	 * @author All team
+	 * @param t1
+	 */
+	
 	private Color getColor(TerrainType t1) {
 		Color c1 = null;
 		if(t1.equals(TerrainType.Forest)) {
@@ -487,6 +509,14 @@ public class StartPlayingUI {
 		}
 		return c1;
 	}
+	
+	/**
+	 * shows the players in their current round's order
+	 * from left to right
+	 * 
+	 * @author All team
+	 * @param panel
+	 */
 	
 	private void displayPlayerOrder(JPanel panel) {
 		
@@ -518,7 +548,14 @@ public class StartPlayingUI {
 		}
 		
 	}
-
+	
+	/**
+	 * shows number of turns that have been played against total number of 
+	 * available turns in the tame
+	 * 
+	 * @author All team
+	 * @param panel
+	 */
 	private void displayTurnNumber(JPanel panel) {
 		
 		int turn = KingdominoApplication.getKingdomino().getCurrentGame().getNextPlayer().getKingdom().getTerritories().size()-1;

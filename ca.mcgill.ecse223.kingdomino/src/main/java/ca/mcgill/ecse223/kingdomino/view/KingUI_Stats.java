@@ -30,6 +30,13 @@ static int wins = 0, played=0, loss=0;
 		
 		initComponents();
 	}
+	 
+	/**
+	 * launches UI to show statistics of users in this Kingdomino
+	 * 
+	 * @author All team
+	 * @param none
+	 */
 	public static void initComponents() {
 		 JLabel stats;
 		 Border border;
@@ -60,6 +67,12 @@ static int wins = 0, played=0, loss=0;
 		// back button
 		back = new JButton("Back");
 		back.addActionListener(new ActionListener() {
+			/**
+			 * button to return to previous UI
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(ActionEvent e) {
 				
 				KingUI_Main.c1.show(KingUI_Main.contPanel, "1");

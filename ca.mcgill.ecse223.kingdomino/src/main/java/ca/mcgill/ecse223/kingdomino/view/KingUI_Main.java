@@ -44,6 +44,12 @@ public class KingUI_Main {
 		initComponents();
 	}
 
+	/**
+	 * launches the Main UI of the game
+	 * 
+	 * @author All team
+	 * @param 
+	 */
 	private void initComponents() {
 			
 		frame.setSize(1350, 850);
@@ -86,6 +92,12 @@ public class KingUI_Main {
 		
 		
 		start.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button that indicates want to start a new game
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				String ans = JOptionPane.showInputDialog(null, "Provide file name (.data) or leave empty for default save!");
@@ -111,6 +123,12 @@ public class KingUI_Main {
 		});
 		
 		load.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button that indicates want to load an existing game
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				String s = System.getProperty("user.dir");
@@ -166,6 +184,13 @@ public class KingUI_Main {
 		});
 		
 		search.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button that indicates want to view user statistics across 
+			 * different existing game
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				String s = System.getProperty("user.dir");

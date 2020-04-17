@@ -56,6 +56,15 @@ public class King_PlayerScreen extends JFrame {
 		setTitle("Kingdomino");
 		}
 	
+	
+	/**
+	 * launches main UI page for either creating new users to assign to players,
+	 * browse existing users to assign to players, or choose no user for players
+	 * 
+	 * @author All team
+	 * @param none
+	 */
+	
 	public static void initComponents() {
 	
 		JLabel header = new JLabel("Players");
@@ -152,6 +161,12 @@ public class King_PlayerScreen extends JFrame {
 
 		
 		createNew1.addActionListener(new java.awt.event.ActionListener() {
+			/**
+			 * button that indicates want to create and assign a new user to player blue
+			 * 
+			 * @author All team
+			 * @param evt
+			 */
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				KingUI_PlayerCreate.initComponents("blue");
 				KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
@@ -160,6 +175,12 @@ public class King_PlayerScreen extends JFrame {
 		});
 			
 			browse1.addActionListener(new java.awt.event.ActionListener() {
+				/**
+				 * button that indicates want to assign an existing user to player blue
+				 * 
+				 * @author All team
+				 * @param evt
+				 */
 				public void actionPerformed(java.awt.event.ActionEvent evt) {
 					
 					new  AssignPlayer_Screen("blue");
@@ -169,6 +190,12 @@ public class King_PlayerScreen extends JFrame {
 	
 			});
 			nouser1.addActionListener(new java.awt.event.ActionListener() {
+				/**
+				 * button that indicates want to assign no user to player blue
+				 * 
+				 * @author All team
+				 * @param evt
+				 */
 				public void actionPerformed(java.awt.event.ActionEvent evt) {
 					
 					King_PlayerScreen.browse1.setEnabled(false);
@@ -185,6 +212,12 @@ public class King_PlayerScreen extends JFrame {
 			});
 			
 			createNew2.addActionListener(new java.awt.event.ActionListener() {
+				/**
+				 * button that indicates want to create and assign a new user to player pink
+				 * 
+				 * @author All team
+				 * @param evt
+				 */
 				public void actionPerformed(java.awt.event.ActionEvent evt) {
 					KingUI_PlayerCreate.initComponents("pink");
 					KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
@@ -193,6 +226,12 @@ public class King_PlayerScreen extends JFrame {
 			});
 				
 				browse2.addActionListener(new java.awt.event.ActionListener() {
+					/**
+					 * button that indicates want to assign an existing user to player pink
+					 * 
+					 * @author All team
+					 * @param evt
+					 */
 					public void actionPerformed(java.awt.event.ActionEvent evt) {
 						new  AssignPlayer_Screen("pink");
 						KingUI_Main.c1.show(KingUI_Main.contPanel, "5");
@@ -201,6 +240,12 @@ public class King_PlayerScreen extends JFrame {
 		
 				});
 				nouser2.addActionListener(new java.awt.event.ActionListener() {
+					/**
+					 * button that indicates want to assign no user to player pink
+					 * 
+					 * @author All team
+					 * @param evt
+					 */
 					public void actionPerformed(java.awt.event.ActionEvent evt) {
 						
 						King_PlayerScreen.browse2.setEnabled(false);
@@ -218,6 +263,12 @@ public class King_PlayerScreen extends JFrame {
 				});
 				
 				createNew3.addActionListener(new java.awt.event.ActionListener() {
+					/**
+					 * button that indicates want to create and assign a new user to player yellow
+					 * 
+					 * @author All team
+					 * @param evt
+					 */
 					public void actionPerformed(java.awt.event.ActionEvent evt) {
 						KingUI_PlayerCreate.initComponents("yellow");
 						KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
@@ -226,6 +277,12 @@ public class King_PlayerScreen extends JFrame {
 				});
 					
 					browse3.addActionListener(new java.awt.event.ActionListener() {
+						/**
+						 * button that indicates want to assign an existing user to player yellow
+						 * 
+						 * @author All team
+						 * @param evt
+						 */
 						public void actionPerformed(java.awt.event.ActionEvent evt) {
 							new  AssignPlayer_Screen("yellow");
 							KingUI_Main.c1.show(KingUI_Main.contPanel, "5");
@@ -234,6 +291,12 @@ public class King_PlayerScreen extends JFrame {
 			
 					});
 					nouser3.addActionListener(new java.awt.event.ActionListener() {
+						/**
+						 * button that indicates want to assign no user to player yellow
+						 * 
+						 * @author All team
+						 * @param evt
+						 */
 						public void actionPerformed(java.awt.event.ActionEvent evt) {
 							
 							King_PlayerScreen.browse3.setEnabled(false);
@@ -250,6 +313,12 @@ public class King_PlayerScreen extends JFrame {
 					});
 					
 				createNew4.addActionListener(new java.awt.event.ActionListener() {
+					/**
+					 * button that indicates want to create and assign a new user to player green
+					 * 
+					 * @author All team
+					 * @param evt
+					 */
 					public void actionPerformed(java.awt.event.ActionEvent evt) {
 						KingUI_PlayerCreate.initComponents("green");
 						KingUI_Main.c1.show(KingUI_Main.contPanel, "4");
@@ -258,6 +327,12 @@ public class King_PlayerScreen extends JFrame {
 				});
 						
 						browse4.addActionListener(new java.awt.event.ActionListener() {
+							/**
+							 * button that indicates want to assign an existing user to player green
+							 * 
+							 * @author All team
+							 * @param evt
+							 */
 							public void actionPerformed(java.awt.event.ActionEvent evt) {
 								new  AssignPlayer_Screen("green");
 								KingUI_Main.c1.show(KingUI_Main.contPanel, "5");
@@ -266,6 +341,12 @@ public class King_PlayerScreen extends JFrame {
 				
 						});
 						nouser4.addActionListener(new java.awt.event.ActionListener() {
+							/**
+							 * button that indicates want to assign no user to player green
+							 * 
+							 * @author All team
+							 * @param evt
+							 */
 							public void actionPerformed(java.awt.event.ActionEvent evt) {
 								
 								King_PlayerScreen.browse4.setEnabled(false);
@@ -282,6 +363,13 @@ public class King_PlayerScreen extends JFrame {
 						});
 				
 						done.addActionListener(new java.awt.event.ActionListener() {
+							/**
+							 * button that indicates player assignments are finished
+							 * and launches the first draft of the game
+							 * 
+							 * @author All team
+							 * @param evt
+							 */
 							public void actionPerformed(java.awt.event.ActionEvent evt) {
 							
 								KingdominoApplication.getKingdomino().setStateMachine();

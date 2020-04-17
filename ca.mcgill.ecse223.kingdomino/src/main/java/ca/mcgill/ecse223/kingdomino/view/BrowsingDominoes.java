@@ -23,6 +23,14 @@ public class BrowsingDominoes extends JFrame{
 		plotDoms();
 	}
 	
+	/**
+	 * constructs JPanel for displaying  the list of all
+	 * dominos in the game
+	 * 
+	 * @author All team
+	 * @param none
+	 */
+	
 	private void plotDoms() {
 			JTextArea textArea = new JTextArea();
 		  JScrollPane pan = new JScrollPane(textArea);

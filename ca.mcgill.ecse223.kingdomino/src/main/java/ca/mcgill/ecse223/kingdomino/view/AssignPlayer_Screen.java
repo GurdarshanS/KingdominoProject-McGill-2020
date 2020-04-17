@@ -25,10 +25,11 @@ public class AssignPlayer_Screen extends JFrame {
 	}
 	
 	/**
-	 * It does stuff!
+	 * launches UI to browse existing available users
+	 * and assign to player
 	 * 
 	 * @author Team
-	 * @param ColorIn String
+	 * @param ColorIn
 	 */
 	public static void initComponents(String ColorIn) {
 		
@@ -105,6 +106,13 @@ public class AssignPlayer_Screen extends JFrame {
 			);
 			
 			done.addActionListener(new ActionListener() {
+				
+				/**
+				 * confirms user assignment to the selected player
+				 * @author All team
+				 * @param e
+				 */
+				
 				public void actionPerformed(ActionEvent e) {
 				try {	
 					String input = insertName.getText();
@@ -151,6 +159,13 @@ public class AssignPlayer_Screen extends JFrame {
 				}
 			});
 				back.addActionListener(new ActionListener() {
+					/**
+					 * exits current assignment UI and back to 
+					 * main setup UI
+					 * 
+					 * @author All team
+					 * @param e
+					 */
 					public void actionPerformed(ActionEvent e) {
 						
 						KingUI_Main.c1.show(KingUI_Main.contPanel, "3");

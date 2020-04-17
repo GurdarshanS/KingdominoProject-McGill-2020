@@ -38,6 +38,13 @@ public class LookAtKingdom extends JFrame{
 	JLabel yellow = new JLabel("Player YELLOW");
 	JLabel pink = new JLabel("Player PINK");
 	
+	/**
+	 * launches UI to show player's kingdom after game over
+	 * 
+	 * @author All team
+	 * @param player
+	 */
+	
 	public LookAtKingdom(Player player) {
 		
 		frameR.setSize(1350, 850);
@@ -45,6 +52,13 @@ public class LookAtKingdom extends JFrame{
 		drawKingdom(player);
 		
 	}
+	
+	/**
+	 * draws a player's Kingdom based on his/her dominoes
+	 * 
+	 * @author All team
+	 * @param player
+	 */
 	
 	private void drawKingdom(Player player) {
 		
@@ -110,6 +124,16 @@ public class LookAtKingdom extends JFrame{
 	
 	}
 	
+	/**
+	 * draws an individual domino
+	 * 
+	 * @author All team
+	 * @param domino
+	 * @param dir
+	 * @param lastDomino
+	 */
+	
+	
 	private void draw(DominoInKingdom domino, DirectionKind dir, boolean lastDomino) {
 		
 		int squareToDraw = translate(domino.getX(), domino.getY());
@@ -143,11 +167,29 @@ public class LookAtKingdom extends JFrame{
 		
 	}
 	
+	/**
+	 * converts the (x,y) coordinate of a domino into a single index [1,81] that 
+	 * identifies a single block on the game board grid
+	 * 
+	 * @author All team
+	 * @param x
+	 * @param y
+	 */
+	
 	private int translate(int x, int y) {
 		
 		return x-(9*y)+41;
 		
 	}
+	
+	/**
+	 * draws a domino's crowns on top of the 
+	 * tile color
+	 * 
+	 * @author All team
+	 * @param p1
+	 * @param n1
+	 */
 	
 	private void addCrowns(JPanel p1, int n1) {
 		
@@ -170,6 +212,13 @@ public class LookAtKingdom extends JFrame{
 		}
 	
 	}
+	
+	/**
+	 * gets the Color of a Tile
+	 * 
+	 * @author All team
+	 * @param t1
+	 */
 	
 	private Color getColor(TerrainType t1) {
 		Color c1 = null;
