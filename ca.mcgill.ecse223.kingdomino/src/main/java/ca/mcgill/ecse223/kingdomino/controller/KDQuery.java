@@ -229,11 +229,13 @@ public class KDQuery {
 			else if (territories.get(i) instanceof DominoInKingdom)
 			{
 				DominoInKingdom t = (DominoInKingdom) territories.get(i);
-				int[] otherPos=calculateRightPos(t);
-				dominoPos[0][i]=t.getX();
-				dominoPos[1][i]=t.getY();
-				dominoPos[2][i]=otherPos[0];
-				dominoPos[3][i]=otherPos[1];
+				if (t.getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) {
+					int[] otherPos=calculateRightPos(t);
+					dominoPos[0][i]=t.getX();
+					dominoPos[1][i]=t.getY();
+					dominoPos[2][i]=otherPos[0];
+					dominoPos[3][i]=otherPos[1];
+				}
 
 			}
 		}

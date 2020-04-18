@@ -416,6 +416,7 @@ public class PlayingUI extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				
 				KDController.saveGame(KingUI_Main.SAVE, true);
+				JOptionPane.showMessageDialog(null, "Saved!");
 				
 		}});
 		browse.addActionListener(new ActionListener() {
@@ -885,6 +886,7 @@ public class PlayingUI extends JFrame{
 				public void actionPerformed(ActionEvent arg0) {
 					
 					KDController.saveGame(KingUI_Main.SAVE, true);
+					JOptionPane.showMessageDialog(null, "Saved!");
 					
 				}
 				
@@ -1107,6 +1109,7 @@ public class PlayingUI extends JFrame{
 					public void actionPerformed(ActionEvent arg0) {
 						
 						KDController.saveGame(KingUI_Main.SAVE, true);
+						JOptionPane.showMessageDialog(null, "Saved!");
 						
 					}
 					
@@ -1301,7 +1304,7 @@ public class PlayingUI extends JFrame{
 				boolean placed = KDController.placeSM();
 			
 				if(placed) {
-					
+
 					choose.setEnabled(true);
 					choose2.setEnabled(true);
 					choose3.setEnabled(true);
@@ -1469,7 +1472,7 @@ public class PlayingUI extends JFrame{
 							public void actionPerformed(ActionEvent arg0) {
 								
 								KDController.saveGame(KingUI_Main.SAVE, true);
-								
+								JOptionPane.showMessageDialog(null, "Saved!");
 							}
 							
 						  });
@@ -1661,6 +1664,7 @@ public class PlayingUI extends JFrame{
 							public void actionPerformed(ActionEvent arg0) {
 								
 								KDController.saveGame(KingUI_Main.SAVE, true);
+								JOptionPane.showMessageDialog(null, "Saved!");
 								
 							}
 							

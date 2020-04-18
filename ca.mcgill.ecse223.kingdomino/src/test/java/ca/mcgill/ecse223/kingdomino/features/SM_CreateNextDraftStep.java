@@ -117,7 +117,6 @@ public class SM_CreateNextDraftStep {
 	
 	@Given("there is a next draft")
 	public static void there_is_a_next_draft() {
-		View.printDominos(kd);
 		assertEquals(true,kd.getCurrentGame().hasNextDraft());
 	}
 	

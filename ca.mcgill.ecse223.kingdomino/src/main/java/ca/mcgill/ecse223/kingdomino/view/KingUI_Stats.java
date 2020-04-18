@@ -52,7 +52,7 @@ static int wins = 0, played=0, loss=0;
 				ratio = 0;
 			}
 			else {
-				ratio = wins/played;
+				ratio = wins/ (double) played;
 			}
 			DecimalFormat df = new DecimalFormat("#.##");
 			String row = String.format("User: %1$-20s \t\t Won: %2$-15d \t\t Lost: %3$-15d \t\t Played: %4$-15d \t\t Ratio: %5$-5s \n",
@@ -61,7 +61,14 @@ static int wins = 0, played=0, loss=0;
 			sList.add(row);
 		}
 		
-		JList list = new JList(sList.toArray());
+		JList list;
+		if (!sList.isEmpty()) {
+			list = new JList(sList.toArray());
+		}
+		else {
+			String[] emptyArray= {"no existing users"};
+			list = new JList(emptyArray);
+		}
 		list.setFont(new Font("Times", Font.PLAIN, 16));
 		
 		// back button

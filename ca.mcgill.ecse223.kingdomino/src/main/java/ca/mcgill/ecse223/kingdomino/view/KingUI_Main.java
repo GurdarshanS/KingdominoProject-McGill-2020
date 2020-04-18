@@ -101,23 +101,28 @@ public class KingUI_Main {
 			public void actionPerformed(java.awt.event.ActionEvent evt) {
 				
 				String ans = JOptionPane.showInputDialog(null, "Provide file name (.data) or leave empty for default save!");
-				try {
-				if(!ans.isEmpty()) {
-					
-					SAVE = ans;
-					KDController.saveGame(ans, true);
-					
+				if (ans!=null) {
+					if(!ans.isEmpty()) {
+						
+						SAVE = ans;
+						KDController.saveGame(ans, true);
+						Kingdomino kd = KDController.loadGame(ans);
+						
+						KingUI_Settings.initSettings();
+						c1.show(contPanel, "2");
+						
+						KingdominoApplication.setKingdomino(kd);
+					}
+					else {
+						KDController.saveGame(null, true);
+						Kingdomino kd = KDController.loadGame(null);
+						
+						KingUI_Settings.initSettings();
+						c1.show(contPanel, "2");
+						
+						KingdominoApplication.setKingdomino(kd);
+					}
 				}
-				else {
-					KDController.saveGame(null, true);
-				}
-			}catch(Exception ex) {
-				
-			}
-				
-//				KDController.loadGame(null);
-				KingUI_Settings.initSettings();
-				c1.show(contPanel, "2");
 				
 			}
 		});
@@ -133,10 +138,12 @@ public class KingUI_Main {
 				
 				String s = System.getProperty("user.dir");
 				ArrayList<String> fileName = KDController.fileSearch(s);
-				String files = "Provide file name (.data) to load!\n\n";
+				String files = "Choose file name (.data) from below to load game in progress\n\n";
 				for(String str : fileName) {
 					files = files+"    			        "+str+"\n";
 				}
+				files+=" \n";
+				
 				String providedFile = JOptionPane.showInputDialog(null, files);
 				SAVE = providedFile;
 				
@@ -195,11 +202,12 @@ public class KingUI_Main {
 				
 				String s = System.getProperty("user.dir");
 				ArrayList<String> fileName = KDController.fileSearch(s);
-				String files = "Choose file name (.data) from above to load stats\n\n";
+				String files = "Choose file name (.data) from below to load stats\n\n";
 				for(String str : fileName) {
 					files = files+"    			        "+str+"\n";
 				}
 				
+				files+=" \n";
 				String providedFile = JOptionPane.showInputDialog(null, files);
 			
 				if(providedFile != null) {
@@ -220,6 +228,7 @@ public class KingUI_Main {
 						}
 					}
 				}
+				KingdominoApplication.setKingdomino(null);
 				
 			}
 		});

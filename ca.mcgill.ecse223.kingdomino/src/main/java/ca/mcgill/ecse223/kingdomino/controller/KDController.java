@@ -1970,7 +1970,7 @@ public class KDController {
 		
 	}
 	
-	private static boolean isMiddleKingdom(Player player) {
+	public static boolean isMiddleKingdom(Player player) {
 		int [][] coords = KDQuery.getPlayerTerritoryCoordinates(player);
 		
 		List<Integer> x1 = new ArrayList<Integer>();
@@ -2005,14 +2005,31 @@ public class KDController {
 		}
 	}
 	
-	private static boolean isHarmony(Player player) {
+	public static boolean isHarmony(Player player) {
+		
+		
+		int numPlaced = 0;
+		
+		for (KingdomTerritory t:player.getKingdom().getTerritories()) {
+			if (t instanceof DominoInKingdom) {
+				if (((DominoInKingdom) t).getDomino().getStatus().equals(DominoStatus.PlacedInKingdom)) {
+					numPlaced+=1;
+				}
+			}
+		}
+		
+		if (numPlaced!=12) {
+			return false;
+		}
 		
 		int [][] coords = KDQuery.getPlayerTerritoryCoordinates(player);
+		
 		
 		List<Integer> x1 = new ArrayList<Integer>();
 		List<Integer> y1 = new ArrayList<Integer>();
 		List<Integer> x2 = new ArrayList<Integer>();
 		List<Integer> y2 = new ArrayList<Integer>();
+		
 		
 		for (int i=0;i<coords[0].length;i++) {
 			x1.add(coords[0][i]);
@@ -2412,7 +2429,7 @@ public class KDController {
 	
 	private static List<Integer> uniqueRandomSequence(int size,int min,int max){
 		List<Integer> sequence = new ArrayList<Integer>();
-		Random rand = new Random(2);			//seeded to get consistent random numbers to help development
+		Random rand = new Random();			//seeded to get consistent random numbers to help development
 												//remove seed before deployment
 		
 		while (sequence.size()<size){
